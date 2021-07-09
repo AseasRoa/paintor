@@ -1,0 +1,46 @@
+{
+  "root"           : true,
+  "env"            : {"browser" : true, "es6" : true, "es2021" : true},
+  "ignorePatterns" : ["node_modules/", "dist/", ".idea/", ".vscode/", ".env"],
+  "extends"        : ["airbnb-typescript"],
+  "parser"         : "@typescript-eslint/parser",
+  "plugins"        : ["@typescript-eslint"],
+  "parserOptions"  : {
+    "ecmaVersion"     : 2020,
+    "tsconfigRootDir" : ".",
+    "sourceType"      : "module",
+    "project"         : ["./tsconfig.json"]
+  },
+  "rules"          : {
+    "brace-style"                        : ["error", "1tbs", {"allowSingleLine" : true}],
+    "class-methods-use-this"             : "off",
+    "curly"                              : ["error", "multi-or-nest"],
+    "eqeqeq"                             : "error",
+    "guard-for-in"                       : "off",
+    "indent"                             : "off",
+    "import/extensions"                  : "off",
+    "import/prefer-default-export"       : "off",
+    "linebreak-style"                    : ["error", "unix"],
+    "no-cond-assign"                     : "off",
+    "no-continue"                        : "off",
+    "no-console"                         : "off",
+    "no-constant-condition"              : "off",
+    "no-extend-native"                   : "off",
+    "no-plusplus"                        : [
+      "error", {"allowForLoopAfterthoughts" : true}
+    ],
+    "no-restricted-syntax"               : "off",
+    "no-tabs"                            : "off",
+    "no-var"                             : "error",
+    "nonblock-statement-body-position"   : "off",
+    "semi"                               : "off",
+    "space-infix-ops"                    : "off",
+    "strict"                             : ["error", "global"],
+    // TypeScript
+    "@typescript-eslint/indent"          : [
+      "error", 2, {"SwitchCase" : 1, "MemberExpression" : 2}
+    ],
+    "@typescript-eslint/semi"            : ["error", "never"],
+    "@typescript-eslint/space-infix-ops" : "off"
+  }
+}

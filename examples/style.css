@@ -1,0 +1,52 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  line-height:1;
+  box-sizing: border-box;
+}
+
+#menu {
+  display: block;
+  position: absolute;
+  width: 10rem;
+}
+
+#menu > button {
+  width: 100%;
+  cursor: pointer;
+}
+
+#contents {
+  display: block;
+  position: absolute;
+  left: 10rem;
+  bottom: 0;
+  right: 30rem;
+  top: 0;
+  border: 0.1rem solid black;
+  padding: 1rem;
+  overflow: scroll;
+}
+
+#functionContents {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 30rem;
+  background-color: #22272e;
+}
+
+table {
+  border: 1px solid black;
+}
+
+table > tr > td {
+  border: 1px solid black;
+}
+
+pre, code {
+  margin: 0;
+  padding: 0;
+}

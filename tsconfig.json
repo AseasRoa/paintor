@@ -1,0 +1,33 @@
+{
+  "compilerOptions" : {
+    "allowJs"   : true,
+    "lib"       : ["DOM", "ESNext"],
+    "module"    : "ESNext",
+    "target"    : "ESNext",
+    "strict"    : true,
+    "sourceMap" : true,
+    "baseUrl"   : ".",
+    "declaration": true,
+    "paths": {
+        "*": [
+          "./*",
+          "../node_modules/*"
+        ]
+      }
+  },
+  "files": [
+    "types/index.d.ts"
+  ],
+  "include" : [
+    "src/**/*",
+    "types/**/*",
+    "examples/**/*",
+    ".eslintrc",
+    "webpack.config.js"
+  ],
+  "exclude"         : [
+    "node_modules",
+    "**/*.spec.ts",
+    "dist"
+  ]
+}
