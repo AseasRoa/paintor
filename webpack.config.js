@@ -2,7 +2,7 @@ import path from 'path'
 import { URL } from 'url'
 
 // eslint-disable-next-line
-const __filename = new URL(import.meta.url).href.replace('file:///', '')
+const __filename = new URL(import.meta.url).href.replace(/^file:[\/]+/, '')
 // eslint-disable-next-line
 const __dirname = path.dirname(__filename)
 
