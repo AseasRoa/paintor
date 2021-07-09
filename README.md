@@ -154,7 +154,7 @@ Learn about [HTML Attributes](https://www.w3schools.com/htmL/html_attributes.asp
 Use the first argument of each Element function to specify HTML attributes. In the example below we
 create an "a" element with its "href" attribute:
 ```javascript
-$.a({href: 'https://google.com'}, 'google.com')
+$.a({href: 'https://google.com'}, 'Link to google.com')
 ```
 ```html
 <a href="https://google.com">Link to google.com</a>
