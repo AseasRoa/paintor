@@ -7,7 +7,7 @@ export type Positions = string
 |'center top'|'center center'|'center bottom'
 |'x% y%'|'0px 0px'
 
-type CSSGeneral = 'initial'|'inherit'|'unset'
+type CSSGeneral = 'initial'|'inherit'|'revert'|'unset'
 
 type CSSPropertiesJsStyle = {
   /** @see https://www.w3schools.com/cssref/css3_pr_align-content.asp */
@@ -496,8 +496,28 @@ type CSSPropertiesJsStyle = {
   /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/mask */
   mask? : Combo<string|'none'|CSSGeneral|'url()'>,
 
+  /** @see https://www.w3schools.com/cssref/css3_pr_mask-image.asp */
+  maskImage? : Combo<string|'none'|CSSGeneral|'url()'>,
+
+  /** @see https://www.w3schools.com/cssref/css3_pr_mask-mode.asp */
+  maskMode? : Combo<string|'match-source'|'luminance'|'alpha'|CSSGeneral>,
+
+  /** @see https://www.w3schools.com/cssref/css3_pr_mask-origin.asp */
+  maskOrigin? : Combo<string
+  |'border-box'|'content-box'|'padding-box'|'margin-box'|'fill-box'|'stroke-box'|'view-box'
+  |CSSGeneral>,
+
+  /** @see https://www.w3schools.com/cssref/css3_pr_mask-position.asp */
+  maskPosition? : Combo<string|Positions|CSSGeneral>,
+
+  /** @see https://www.w3schools.com/cssref/css3_pr_mask-repeat.asp */
+  maskRepeat? : Combo<string|'repeat'|'repeat-x'|'repeat-y'|'space'|'round'|'no-repeat'|CSSGeneral>,
+
+  /** @see https://www.w3schools.com/cssref/css3_pr_mask-size.asp */
+  maskSize? : Combo<string|'auto'|'contain'|'cover'|CSSGeneral>,
+
   /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/mask-type */
-  unset? : Combo<'luminance'|'alpha'|CSSGeneral>,
+  maskType? : Combo<'luminance'|'alpha'|CSSGeneral>,
 
   /** @see https://www.w3schools.com/cssref/pr_dim_max-height.asp */
   maxHeight? : Combo<string|'none'|CSSGeneral>,
@@ -716,6 +736,9 @@ type CSSPropertiesJsStyle = {
   /** @see https://developer.mozilla.org/en-US/docs/Web/CSS/widows */
   widows? : Combo<number|CSSGeneral>,
 
+  /** @see https://www.w3schools.com/cssref/pr_dim_width.asp */
+  width? : Combo<string|'auto'|CSSGeneral>,
+
   /** @see https://www.w3schools.com/cssref/css3_pr_word-break.asp */
   wordBreak? : Combo<'normal'|'break-all'|'keep-all'|'break-word'|CSSGeneral>,
 
@@ -851,6 +874,14 @@ type CSSPropertiesHyphenStyle = {
   'margin-left'? : CSSPropertiesJsStyle['marginLeft'],
   'margin-right'? : CSSPropertiesJsStyle['marginRight'],
   'margin-top'? : CSSPropertiesJsStyle['marginTop'],
+  'mask'? : CSSPropertiesJsStyle['mask'],
+  'mask-image'? : CSSPropertiesJsStyle['maskImage'],
+  'mask-mode'? : CSSPropertiesJsStyle['maskMode'],
+  'mask-origin'? : CSSPropertiesJsStyle['maskOrigin'],
+  'mask-position'? : CSSPropertiesJsStyle['maskPosition'],
+  'mask-repeat'? : CSSPropertiesJsStyle['maskRepeat'],
+  'mask-size'? : CSSPropertiesJsStyle['maskSize'],
+  'mask-type'? : CSSPropertiesJsStyle['maskType'],
   'max-height'? : CSSPropertiesJsStyle['maxHeight'],
   'max-width'? : CSSPropertiesJsStyle['maxWidth'],
   'min-height'? : CSSPropertiesJsStyle['minHeight'],
@@ -898,6 +929,7 @@ type CSSPropertiesHyphenStyle = {
   'user-select'? : CSSPropertiesJsStyle['userSelect'],
   'vertical-align'? : CSSPropertiesJsStyle['verticalAlign'],
   'white-space'? : CSSPropertiesJsStyle['whiteSpace'],
+  'width'? : CSSPropertiesJsStyle['width'],
   'word-break'? : CSSPropertiesJsStyle['wordBreak'],
   'word-spacing'? : CSSPropertiesJsStyle['wordSpacing'],
   'word-wrap'? : CSSPropertiesJsStyle['wordWrap'],
