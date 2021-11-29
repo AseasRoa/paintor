@@ -26,13 +26,16 @@
     "no-console"                         : "off",
     "no-constant-condition"              : "off",
     "no-extend-native"                   : "off",
+    "no-lonely-if"                       : "off",
     "no-plusplus"                        : [
       "error", {"allowForLoopAfterthoughts" : true}
     ],
     "no-restricted-syntax"               : "off",
     "no-tabs"                            : "off",
     "no-var"                             : "error",
+    "no-unused-vars"                     : "off",
     "nonblock-statement-body-position"   : "off",
+    "prefer-destructuring"               : "warn",
     "semi"                               : "off",
     "space-infix-ops"                    : "off",
     "strict"                             : ["error", "global"],
@@ -41,6 +44,7 @@
       "error", 2, {"SwitchCase" : 1, "MemberExpression" : 2}
     ],
     "@typescript-eslint/semi"            : ["error", "never"],
-    "@typescript-eslint/space-infix-ops" : "off"
+    "@typescript-eslint/space-infix-ops" : "off",
+    "@typescript-eslint/no-unused-vars"  : "warn"
   }
 }
