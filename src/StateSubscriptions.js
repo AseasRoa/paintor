@@ -161,15 +161,4 @@ class StateSubscriptions {
   }
 }
 
-/**
- * @template T
- * @param {T} object - A generic parameter that flows through to the return type
- * @return {T}
- */
-function createState(object) {
-  const stateSubscriptions = new StateSubscriptions(object)
-
-  return stateSubscriptions.getState()
-}
-
-export { createState }
+export { StateSubscriptions }

@@ -1,3 +1,27 @@
+import { VirtualDocument, VirtualElement } from './VirtualDOM/VirtualDocument.js'
+import './typedefs.js'
+
+/**
+ * @see https://stackoverflow.com/questions/17575790/environment-detection-node-js-or-browser
+ * @return {boolean}
+ */
+export function isBrowserEnvironment() {
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval
+  const isBrowser = new Function('try {return this===window;}catch(e){ return false;}')
+
+  return isBrowser()
+}
+
+/**
+ * Get the global scope, depending on what is desired and what is possible
+ * @param {boolean} isBrowser
+ * @param {EnvironmentMode | string} [desiredMode]
+ * @return {TheGlobal}
+ */
+export function theGlobalScope(isBrowser, desiredMode = '') {
+  return (!isBrowser || desiredMode === 'server') ? new VirtualDocument() : document
+}
+
 /**
  * @param {Array} inputChildren
  * @param {Array} childrenStack
@@ -12,55 +36,81 @@ export function addChildrenToStack(inputChildren, childrenStack) {
 }
 
 /**
+ * @param {string} attributeName
+ * @return {boolean}
+ */
+export function isEventAttribute(attributeName) {
+  const eventNameLowerCase = attributeName.toLowerCase()
+
+  return eventNameLowerCase.indexOf('on') === 0
+}
+
+/**
  * @param {HTMLElement} element
- * @param {string} eventName
+ * @param {string} attributeName
  * @param {function} callback
  *
  * @returns {boolean}
  */
-export function addEventListenerIfPossible(element, eventName, callback) {
+export function addEventListenerIfPossible(element, attributeName, callback) {
   if (
     !(element instanceof Node)
-		|| typeof eventName !== 'string'
-		|| typeof callback !== 'function'
+		|| (typeof attributeName !== 'string')
+		|| (typeof callback !== 'function')
+    || (isEventAttribute(attributeName) === false)
   ) return false
 
-  const eventNameLowerCase = eventName.toLowerCase()
-
-  if (eventNameLowerCase.indexOf('on') !== 0)
-    return false
-
-  element.addEventListener(eventNameLowerCase.substr(2), callback)
+  element.addEventListener(attributeName.toLowerCase().substr(2), callback)
 
   return true
 }
 
 /**
+ * For multiple elements it's faster to use document fragment
  * @param {HTMLElement} element
+ * @param {HTMLElement[]} children
+ */
+function appendDOMChildrenToElement(element, children) {
+  if (children.length === 1) {
+    // It's faster to append single element like this
+    element.appendChild(children[0])
+  } else if (children.length > 1) {
+    // Using document fragment, because it's faster for multiple elements
+    const fragment = new DocumentFragment()
+
+    for (const child of children) {
+      if (child)
+        fragment.append(child)
+    }
+
+    element.appendChild(fragment)
+  }
+}
+
+/**
+ * @param {VirtualElement} element
+ * @param {VirtualElement[]} children
+ */
+function appendVirtualChildrenToElement(element, children) {
+  for (const child of children) {
+    if (child)
+      element.appendChild(child)
+  }
+}
+
+/**
+ * @param {TheElement} element
  * - The element in which to append the children
  *
- * @param {Array|HTMLElement} children
+ * @param {TheElement[]} children
  * - The children to append, one or many arguments.
  * For example `<node1, node2>` or `<[node1, node2], node3>`
  */
-export function appendChildrenToElement(element, ...children) {
-  for (const input of children) {
-    if (input instanceof Array) {
-      if (input.length > 1) {
-        // For multiple elements it's faster to use document fragment
-        const fragment = new DocumentFragment()
-
-        for (const child of input) {
-          if (child)
-            fragment.append(child)
-        }
-
-        element.appendChild(fragment)
-      } else if (input.length === 1)
-        element.appendChild(input[0])
-    } else if (input instanceof Node)
-      element.append(input)
-  }
+export function appendChildrenToElement(element, children) {
+  if (element instanceof VirtualElement)
+    appendVirtualChildrenToElement(element, children)
+  else
+    appendDOMChildrenToElement(element, children)
 }
 
 /**
@@ -97,10 +147,10 @@ export function extractVariablesFromFunction(fn) {
  * In the "data" object there are pairs of keys and values and the "handler" function is looped
  * once for each pair. The loop breaks if "false" is returned by the "handler" function.
  *
- * @param {Object|Array} data
+ * @param {Object | Array} data
  * @param {Function} handler
  *
- * @returns {boolean|Error}
+ * @returns {boolean | Error}
  */
 export function forLoopOne(data, handler) {
   if (!(data instanceof Object) && !(data instanceof Array))
@@ -126,7 +176,7 @@ export function forLoopOne(data, handler) {
  * @param {number} end
  * @param {Function} handler
  *
- * @returns {boolean|Error}
+ * @returns {boolean | Error}
  */
 export function forLoopTwo(start, end, handler) {
   if (typeof start !== 'number' || typeof end !== 'number')

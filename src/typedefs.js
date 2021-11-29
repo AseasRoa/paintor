@@ -1,10 +1,8 @@
-/**
- * @typedef {import('../types/index.d.ts').createState} CreateState
- */
+import { VirtualDocument, VirtualElement } from './VirtualDOM/VirtualDocument.js'
 
-/**
- * @typedef {import('../types/index.d.ts').paintor} Paintor
- */
+/** @typedef {import('../types/index.d.ts').paintor} PaintorFunction */
+
+/** @typedef {import('../types/index.d.ts').Paintor} Paintor */
 
 /**
  * @typedef {function} Contents
@@ -41,14 +39,14 @@
  * @property {function} [statementCallback]
  */
 
-/**
- * @typedef {Object<string, Subscription[]>} Subscriptions
- */
+/** @typedef {Object<string, Subscription[]>} Subscriptions */
 
-/**
- * @typedef {{}} State
- */
+/** @typedef {Object<string, any>} State */
 
-/**
- * @typedef {Object<string, State>} States
- */
+/** @typedef {Object<string, State>} States */
+
+/** @typedef {Document | VirtualDocument} TheGlobal */
+
+/** @typedef {HTMLElement | VirtualElement} TheElement */
+
+/** @typedef {'browser' | 'server'} EnvironmentMode */

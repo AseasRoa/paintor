@@ -1,4 +1,6 @@
 import { Paintor } from './Paintor.js'
+import { VirtualDocument } from './VirtualDOM/VirtualDocument.js'
+import { VirtualElement } from './VirtualDOM/VirtualElement.js'
 import './typedefs.js'
 
 /**
@@ -9,7 +11,7 @@ import './typedefs.js'
 class PaintorWrapper {
   /**
    * The main element in which to append all the contents
-   * @type {HTMLElement | null}
+   * @type {TheElement | null}
    */
   #containerElement = null
 
@@ -17,28 +19,48 @@ class PaintorWrapper {
   /** @type {Object<string, {}>} */
   #states = {}
 
+  /** @type {TheGlobal} */
+  #global
+
+  #finalHtmlCode = '' // In server mode this will hold the final html code
+
   /**
-   * @param {string|HTMLElement} target
+   * @param {string | TheElement} target
    * @param {{}} states
    * @param {*} contents
+   * @param {TheGlobal} theGlobal
    * @returns {PaintorWrapper}
    */
-  constructor(target, states, contents) {
+  constructor({
+    target,
+    states,
+    contents,
+    theGlobal,
+  }) {
+    this.#global = theGlobal
+
     const paintor = new Paintor(this)
     const result = this.#initConstructorArguments(target, states, contents)
 
     if (!(result instanceof Error)) {
       this.#clearContainerElement()
-      contents(paintor)
-      paintor.finalPaint()
+      contents(paintor, states)
+      this.#finalHtmlCode = paintor.finalPaint()
     }
   }
 
   /**
-   * @returns {HTMLElement}
+   * @returns {TheElement}
    */
   get containerElement() {
     return this.#containerElement
+  }
+
+  /**
+   * @return {HTMLDocument | VirtualDocument}
+   */
+  get global() {
+    return this.#global
   }
 
   /**
@@ -49,17 +71,55 @@ class PaintorWrapper {
   }
 
   /**
-   * @param {string|HTMLElement} target
-   * @param {State|States} states
+   * @return {string}
+   */
+  getHtmlCode() {
+    return this.#finalHtmlCode
+  }
+
+  /**
+   * @param {string | TheElement} target
+   * @param {State | States} states
    * @param {Contents} treeFunction
-   * @returns {Error|boolean}
+   * @returns {Error | boolean}
    */
   #initConstructorArguments(target, states, treeFunction) {
+    let valid
+
     // argument 1
-    if (target instanceof Node)
+    valid = this.#validateTarget(target)
+
+    if (valid instanceof Error) return valid
+
+    // argument 2
+    valid = this.#validateStates(states)
+
+    if (valid instanceof Error) return valid
+
+    // argument 3
+    valid = this.#validateTreeFunction(treeFunction)
+
+    if (valid instanceof Error) return valid
+
+    return true
+  }
+
+  /**
+   * @param {string | TheElement} target
+   * @returns {Error | boolean}
+   */
+  #validateTarget(target) {
+    const isVirtualGlobal = this.#global instanceof VirtualDocument
+
+    if (
+      (isVirtualGlobal && target instanceof VirtualElement)
+      || (!isVirtualGlobal && target instanceof Node)
+    )
       this.#containerElement = target
     else if (typeof target === 'string') {
-      this.#containerElement = document.getElementById(target)
+      this.#containerElement = (this.#global instanceof VirtualDocument)
+        ? this.#global.createElement('#container')
+        : document.getElementById(target)
 
       if (!this.#containerElement)
         return new Error(`Could not locate element #${target}`)
@@ -71,23 +131,34 @@ class PaintorWrapper {
       )
     }
 
-    // argument 2
+    return true
+  }
+
+  /**
+   * @param {State | States} states
+   * @return {Error | boolean}
+   */
+  #validateStates(states) {
     if (!(states instanceof Object))
       return new Error('states must be an Object')
 
     for (const stateName in states) {
-      if ('--state-path' in states[stateName])
-        this.states[stateName] = states[stateName]
-      else {
-        // Give an error when the object is not a state object
-        console.error(
-          `The input "${stateName}" is "${typeof states[stateName]}", `
-          + 'but it should be a state',
-        )
-      }
+      const state = states[stateName]
+
+      if ('--state-path' in state)
+        this.states[stateName] = state
+      else if (!(this.#global instanceof VirtualDocument))
+        console.error(`The input "${stateName}" is "${typeof state}", but it should be a state`)
     }
 
-    // argument 3
+    return true
+  }
+
+  /**
+   * @param {Contents} treeFunction
+   * @returns {Error | boolean}
+   */
+  #validateTreeFunction(treeFunction) {
     if (typeof treeFunction !== 'function')
       return new Error('treeFunction must be a function')
 

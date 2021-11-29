@@ -1,10 +1,11 @@
 import { ElementsCollector } from './ElementsCollector.js'
+import { VirtualDocument, VirtualElement } from './VirtualDOM/VirtualDocument.js'
 import {
   addChildrenToStack, addEventListenerIfPossible,
   appendChildrenToElement, extractVariablesFromFunction,
   forLoopOne,
   forLoopTwo,
-  insertAfter, setElementAttrOrProp, styleRuleModificator,
+  insertAfter, isEventAttribute, setElementAttrOrProp, styleRuleModificator,
 } from './functions.js'
 import htmlTags from './htmlTags.js'
 import './typedefs.js'
@@ -23,11 +24,15 @@ class Paintor {
   /** @type {PaintorWrapper} */
   #paintorWrapper
 
+  /** @type {TheGlobal} */
+  #global
+
   /**
    * @param {PaintorWrapper} paintorWrapper
    */
   constructor(paintorWrapper) {
     this.#paintorWrapper = paintorWrapper
+    this.#global = this.#paintorWrapper.global
   }
 
   /**
@@ -35,14 +40,17 @@ class Paintor {
    *
    * @param {string} tagName
    * @param {*} args
-   * Three variants are possible:<br>
+   * Different variants are possible:<br>
    * - String value - It will be textContent of the element. Use this in div tags and similar.
    * - Object value - For all the properties of the element, like "id", "class" and so on...
-   * - HTMLElement (multiple arguments) - For other calls of this same function
-   * @returns {HTMLElement}
+   * - Element (multiple arguments) - For other calls of this same function (creating children)
+   * - Array - Alternative for creating children
+   * @returns {TheElement}
    */
   createElement(tagName, ...args) {
-    const element = document.createElement(tagName)
+    const element = this.#global.createElement(tagName)
+    const isVirtualGlobal = this.#global instanceof VirtualDocument
+
     let children = []
     let argumentID = 0
 
@@ -54,13 +62,17 @@ class Paintor {
 
         element.textContent = argument
       } else if (argument instanceof Function) {
+        // TODO: I don't remember why I made this functionality and what it does
         const propertyName = 'propertyName'
         const bindFunction = argument
 
         this.#subscribeToBindings({ element, propertyName, bindFunction })
 
         element[propertyName] = bindFunction(element)
-      } else if (argument instanceof Node) {
+      } else if (
+        (isVirtualGlobal && argument instanceof VirtualElement)
+        || (!isVirtualGlobal && argument instanceof Node)
+      ) {
         // If Node, this is a child (created by this function) to be appended to its parent
 
         children.push(argument)
@@ -76,10 +88,7 @@ class Paintor {
         // If Object and first argument, this is a property
         // ! This condition needs to be at the end of the 'if' chain
 
-        this.#setPropertiesToElement({
-          element,
-          properties: argument,
-        })
+        this.#setPropertiesToElement(element, argument)
       }
     }
 
@@ -96,21 +105,35 @@ class Paintor {
   }
 
   /**
-   * At the end paint the DOM elements at level 0
+   * Browser mode: Append the DOM elements at level 0 to the container element
+   * <br>
+   * Server mode: Generate HTML code of the elements at level 0
+   *
+   * @return {string}
+   * Browser mode: Empty string
+   * <br>
+   * Server mode: The final HTML code
    */
   finalPaint() {
-    appendChildrenToElement(
-      this.#paintorWrapper.containerElement,
-      this.#collectedElements[0].getElements(),
-    )
+    let finalHtmlCode = ''
+
+    const children = this.#collectedElements[0].getElements()
+    const containerElement = this.#paintorWrapper.containerElement
+
+    appendChildrenToElement(containerElement, children)
+
+    if (this.#global instanceof VirtualDocument)
+      finalHtmlCode = containerElement.paintChildren()
 
     // Reset
     this.#collectedElements = [new ElementsCollector()]
+
+    return finalHtmlCode
   }
 
   /**
    * "FOR" loop
-   * @returns {Error|HTMLElement[]}
+   * @returns {Error | TheElement[]}
    */
   forLoop(...args) {
     // 1) Parse arguments
@@ -169,16 +192,17 @@ class Paintor {
 
   /**
    * "IF" condition
-   * @param {boolean|StatementBindFunction} condition
+   * @param {boolean | StatementBindFunction} condition
    * @param {function():void} handler
-   * @returns {HTMLElement[]}
+   * @returns {TheElement[]}
    */
   if(condition, handler) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
 
     if (typeof condition === 'function') {
       const bindFunction = condition
-      const commentElementBegin = document.createComment('IF BEGIN')
+      const commentElementBegin = this.#global.createComment('IF BEGIN')
+
       this.#collectedElements[thisLevel].addElement(commentElementBegin)
 
       /** @type {StatementCallback} */
@@ -212,7 +236,7 @@ class Paintor {
       handler()
 
     if (typeof condition === 'function') {
-      const commentElementEnd = document.createComment('IF END')
+      const commentElementEnd = this.#global.createComment('IF END')
 
       this.#collectedElements[thisLevel].addElement(commentElementEnd)
     }
@@ -221,7 +245,7 @@ class Paintor {
   }
 
   /**
-   * @param {Comment} beginElement
+   * @param {Comment | VirtualElement} beginElement
    * @param {HTMLElement[]} elements
    * @returns {boolean}
    * - Returns false if there is no element after which to insert the other elements,
@@ -230,7 +254,7 @@ class Paintor {
   #insertStatementElements(beginElement, elements) {
     let lastElement = beginElement
 
-    if (document.body.contains(lastElement) === false)
+    if (this.#global.body.contains(lastElement) === false)
       return false
 
     for (const newElement of elements) {
@@ -247,11 +271,17 @@ class Paintor {
    * BEGIN and END are pair of two comment elements, one of the following pairs:
    * <!--IF BEGIN--> and <!--IF END-->
    * <!--FOR BEGIN--> and <!--FOR END-->
-   * @param {Comment} beginElement
+   * @param {TheElement} beginElement
    * @returns {number} - The number of deleted elements or -1 on failure
    */
   #removeStatementElements(beginElement) {
-    if (beginElement.nodeType !== Node.COMMENT_NODE)
+    /**
+     * @type {number}
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
+     */
+    const COMMENT_NODE = 8 // Node.COMMENT_NODE
+
+    if (beginElement.nodeType !== COMMENT_NODE)
       return -1
 
     // Decide what will be the text content of the end element
@@ -276,7 +306,7 @@ class Paintor {
 
       let isBeginElement = false
 
-      if (currentElement.nodeType === Node.COMMENT_NODE) {
+      if (currentElement.nodeType === COMMENT_NODE) {
         const text = currentElement.textContent
 
         if (text === beginElementText) {
@@ -339,15 +369,24 @@ class Paintor {
   }
 
   /**
-   * @param {HTMLElement} element
-   * @param {Object<string, string|number|{}|Function>} properties
+   * @param {TheElement} element
+   * @param {Object<string, string | number | {} | Function>} properties
    */
-  #setPropertiesToElement({ element, properties }) {
+  #setPropertiesToElement(element, properties) {
     for (const propertyName in properties) {
-      const property = properties[propertyName]
+      let property = properties[propertyName]
 
-      if (addEventListenerIfPossible(element, propertyName, property))
-        continue
+      if (this.#global instanceof VirtualDocument) {
+        // When the property name is an event and the property is a function, turn it into a string
+        if (isEventAttribute(propertyName) && property instanceof Function)
+          property = property.toString()
+      } else {
+        // If the property name is an event (for example onClick), then is the value is a function,
+        // this function should not be called to get a value from it. Instead, it should be added
+        // as a listener
+        if (addEventListenerIfPossible(element, propertyName, property))
+          continue
+      }
 
       // if (propertyName === 'text') propertyName = 'textContent'
 
@@ -389,10 +428,10 @@ class Paintor {
   }
 
   /**
-   * @param {HTMLElement|Comment} element
+   * @param {TheElement} element
    * @param {string} propertyName
    * @param {string} [subPropertyName]
-   * @param {BindFunction|StatementBindFunction} [bindFunction]
+   * @param {BindFunction | StatementBindFunction} [bindFunction]
    * @param {StatementCallback} [statementCallback]
    */
   #subscribeToBindings({

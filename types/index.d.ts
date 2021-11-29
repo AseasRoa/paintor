@@ -4,10 +4,10 @@ import { Statements } from './Statements'
 type State = Record<any, any>
 type States = Record<string, State>
 
+export type Paintor = Elements | Statements
+
 export function paintor(
   target : string|HTMLElement,
   states: States,
-  contents: { (arg: Elements|Statements): void }
+  contents: { (paintor: Paintor, states?: States): void }
 ): any
-
-export function createState<T>(object: T) :T
