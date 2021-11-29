@@ -16,6 +16,25 @@
     class Tests {
       constructor() {
         this.#init()
+        paintor.environment = 'server'
+      }
+
+      ___exampleCreateElements() {
+        /** @type {Object<string, number>} */
+        const state = createState({clicks: 0})
+
+        /**
+         * @param {Paintor} $
+         * @param {{}} state
+         */
+        function alabala($, {state}) {
+          state.clicks
+          $.div('div 1')
+          $.div('div 2')
+          $.div('div 3')
+        }
+
+        paintor('container', {state}, alabala)
       }
 
       exampleCreateElements() {
@@ -31,16 +50,18 @@
           $.table(
             $.thead(
               $.tr(
-                $.th({colspan: 3}, 'The table header')
+                $.th({colspan: 3}, 'Table Header')
               ),
             ),
-            $.tr(
-              $.td('Row 1, Column 1'),
-              $.td('Row 1, Column 2'),
-            ),
-            $.tr(
-              $.td('Row 2, Column 1'),
-              $.td('Row 2, Column 2'),
+            $.tbody(
+              $.tr(
+                $.td('Row 1, Column 1'),
+                $.td('Row 1, Column 2'),
+              ),
+              $.tr(
+                $.td('Row 2, Column 1'),
+                $.td('Row 2, Column 2'),
+              )
             )
           )
         })
@@ -52,7 +73,7 @@
         paintor('container', {state}, ($) => {
           $.button({
             textContent: 'Click me',
-            onClick: () => {state.clicks++},
+            onClick: (element) => {state.clicks++},
           })
           $.p({ textContent: () => (state.clicks) })
         })
@@ -211,9 +232,7 @@
       }
 
       example100000Elements() {
-        const state = createState({ currentIndex: 0 })
-
-        paintor('container', { state }, ($) => {
+        paintor('container', {}, ($) => {
           for (let i = 0; i < 100000; i++) {
             $.button({
               textContent: i,
@@ -224,9 +243,9 @@
       }
 
       example1000Elements() {
-        const state = createState({currentIndex: 0})
+        const state = createState({ currentIndex: 0 })
 
-        paintor('container', {state}, ($) => {
+        paintor('container', { state }, ($) => {
           $.div('Move your mouse over the buttons. On every mouse enter, the index of the current button is written in all buttons.')
 
           for (let i = 0; i < 1000; i++) {
@@ -240,23 +259,114 @@
         })
       }
 
+      // SERVER EXAMPLES ---------------------------------------------------------------------------
+
+      serverExampleCreateTable() {
+        return paintor('', {}, ($) => {
+          $.table(
+            $.thead(
+              $.tr(
+                $.th({colspan: 3}, 'Table Header')
+              ),
+            ),
+            $.tbody(
+              $.tr(
+                $.td('Row 1, Column 1'),
+                $.td('Row 1, Column 2'),
+              ),
+              $.tr(
+                $.td('Row 2, Column 1'),
+                $.td('Row 2, Column 2'),
+              )
+            )
+          )
+        })
+      }
+
+      serverExampleUsingData() {
+        const data = { firstName: 'John', lastName: 'Smith' }
+
+        return paintor('', {data}, ($) => {
+          $.div(`My name is ${data.firstName} ${data.lastName}`)
+        })
+      }
+
+      serverInlineStyle() {
+        return paintor('container', {}, ($) => {
+          $.p({
+            style: 'color: blue; background-color: lightyellow; border: 1px solid red;',
+            textContent: 'Hello, World!'
+          })
+
+          $.p({
+            style: {color: 'Blue', backgroundColor: 'LightYellow', border: '1px solid red'},
+            textContent: 'Hello, World!'
+          })
+        })
+      }
+
+      server100000Elements() {
+        return paintor('container', {}, ($) => {
+          for (let i = 0; i < 100000; i++) {
+            $.button({
+              textContent: i,
+              style: {width: '46px', height: '46px'},
+            })
+          }
+        })
+      }
+
       /**
        * Initialize the menu buttons
        */
       #init() {
+        /**
+         * @see https://html-online.com/articles/get-url-parameters-javascript/
+         * @return {{}}
+         */
+        function getUrlVars() {
+          const vars = {}
+
+          window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value
+          })
+
+          return vars
+        }
+
+        const urlVars = getUrlVars()
+
+        if (urlVars.mode === 'server')
+        {
+          paintor.mode = 'server'
+        }
+
         document.querySelectorAll('#menu > button').forEach((element) => {
           element.onclick = (ev) => {
             // Draw the function contents
+            const mode = ev.target.dataset.mode
             const functionName = ev.target.dataset.function
-            const element = document.querySelector('#functionContents code')
-            console.log(element)
+            const codeViewElement = document.querySelector('#functionContents code')
+            const browserModeContainer = document.getElementById('container')
+            const serverModeContainer = document.getElementById('serverContainer')
 
-            element.innerHTML = this[functionName].toString().replace(/\n      /g, '\n')
+            // Clean the containers
+            browserModeContainer.innerText = ''
+            serverModeContainer.innerText = ''
 
-            hljs.highlightElement(element, {language: 'javascript'})
+            // Print code in the code view container
+            codeViewElement.innerHTML = this[functionName].toString().replace(/\n      /g, '\n')
+
+            hljs.highlightElement(codeViewElement, {language: 'javascript'})
 
             // Run the function
-            this[functionName]()
+            paintor.mode = mode
+            const htmlCode = this[functionName]('container')
+
+            // Server mode visualization
+            if (mode === 'server') {
+              document.getElementById('serverContainer').innerText = htmlCode
+            }
           }
         })
 
@@ -270,6 +380,7 @@
 </head>
 <body>
 <div id="menu">
+  <div class="label">Browser Mode</div>
   <button data-function="exampleCreateElements">Create HTML Elements</button>
   <button data-function="exampleCreateTable">Create a Table</button>
   <button data-function="exampleClicksCounterOne">Clicks Counter 1</button>
@@ -285,11 +396,16 @@
   <button data-function="exampleInlineStyleBinding">Inline Style Binding</button>
   <button data-function="example100000Elements">100,000 Elements</button>
   <button data-function="example1000Elements">1,000 Elements with Bindings</button>
+  <div class="label">Server Mode</div>
+  <button data-mode="server" data-function="serverExampleCreateTable">Create a Table</button>
+  <button data-mode="server" data-function="serverExampleUsingData">Using Data</button>
+  <button data-mode="server" data-function="serverInlineStyle">Inline Style Binding</button>
+  <button data-mode="server" data-function="server100000Elements">100,000 Elements</button>
 </div>
 <div id="contents">
   <div id="container"></div>
+  <pre id="serverContainer"></pre>
 </div>
 <pre id="functionContents"><code></code></pre>
-</pre>
 </body>
 </html>

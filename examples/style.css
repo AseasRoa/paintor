@@ -42,11 +42,19 @@ table {
   border: 1px solid black;
 }
 
-table > tr > td {
+table tr td {
   border: 1px solid black;
 }
 
 pre, code {
   margin: 0;
   padding: 0;
+  tab-size: 3;
+}
+
+.label {
+  padding: 0.5rem;
+  background-color: steelblue;
+  color: white;
+  cursor: default;
 }

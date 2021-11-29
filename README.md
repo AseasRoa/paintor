@@ -1,7 +1,7 @@
 
 # What is Paintor?
 
-Paintor is a small View library that works directly in the browser. It's JavaScript only. The idea is that instead of HTML code, you write JavaScript code that is structured like the HTML code.
+Paintor is a small View library that works in the browser or at the server. It uses JavaScript syntax that is structured like HTML.
 
 States are used to bind some input data with some DOM elements.
 
@@ -22,7 +22,7 @@ npm run start-server
 Go to http://localhost:8080/examples/ to view the examples.
 To view the source code of the examples, open `/examples/index.html`.
 
-## Usage
+## How to use it in the browser
 
 Paintor is a [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
 so import it as such:
@@ -145,6 +145,16 @@ paintor('container', {}, ($) => {
     <div>Child Three</div>
   </div>
 </div>
+```
+The same result can be obtained by using an array like this:
+```javascript
+paintor('container', {}, ($) => {
+  $.div('Parent', [
+    $.div('Child One'),
+    $.div('Child Two'),
+    $.div('Child Three')
+  ])
+})
 ```
 
 ## HTML Attributes
@@ -430,3 +440,23 @@ $.for(object, (key, value) => {
 <div>two => TWO</div>
 <div>three => THREE</div>
 ```
+
+## How to use it at the server
+
+Here the idea is to just generate HTML code. Instead of states, there is just data.
+There is no data binding, because there are no events.
+Event the first argument in `paintor()` is useless, it exists only for the syntax to be the same as the syntax for the browser.
+The generated output is returned as HTML code by `paintor()`.
+
+```javascript
+import {paintor} from 'paintor'
+
+const data = { firstName: 'John', lastName: 'Smith' }
+
+const htmlCode = paintor('', {data}, ($) => {
+  $.div(`My name is ${data.firstName} ${data.lastName}`)
+})
+
+console.log(htmlCode)
+```
+`className`, `innerText`, `innerHTML` and `style` are functional.
