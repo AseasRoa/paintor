@@ -1,43 +1,138 @@
-import { VirtualDocument, VirtualElement } from './VirtualDOM/VirtualDocument.js'
-import './typedefs.js'
+import { isState } from './State.js'
+import { symArrayAccess, symObjectAccess } from './symbols.js'
+
+/**
+ * @see https://github.com/purposeindustries/window-or-global/blob/master/lib/index.js
+ * @returns {Window | any}
+ */
+export function getGlobalObject() {
+  return (typeof self === 'object' && self.self === self && self)
+    || (typeof global === 'object' && global.global === global && global)
+    // @ts-ignore
+    || this
+}
+
+/**
+ * @see https://github.com/tmpfs/format-util/blob/master/format.js
+ * @param {string} fmt
+ * @param {...any[]} args
+ * @returns {string}
+ */
+export function format(fmt, ...args) {
+  const re = /(%?)(%([ojdsif]))/g
+
+  if (args.length > 0) {
+    /**
+     * @param {string} match
+     * @param {string} escaped % (for %%) or null (for anything else)
+     * @param {string} ptn %o or %s or whatever
+     * @param {string} flag The s from %s
+     * @returns {string}
+     */
+    const replacer = (match, escaped, ptn, flag) => {
+      let arg = args.shift()
+      let out = ''
+
+      switch (flag) {
+        case 'o':
+          if (Array.isArray(arg)) {
+            out = JSON.stringify(arg)
+          }
+          break
+        case 's':
+          out = '' + arg
+          break
+        case 'd':
+          out = '' + Number(arg)
+          break
+        case 'j':
+          out = JSON.stringify(arg)
+          break
+        case 'i':
+          out = '' + parseInt('' + arg, 10)
+          break
+        case 'f':
+          out = '' + parseFloat('' + arg)
+          break
+      }
+
+      if (!escaped) {
+        return out
+      }
+
+      // @ts-ignore
+      args.unshift(out)
+
+      return match
+    }
+
+    fmt = fmt.replace(re, replacer)
+  }
+
+  // arguments, remained after the formatting
+  if (args.length > 0) {
+    fmt += ' ' + args.join(' ')
+  }
+
+  // update escaped %% values
+  fmt = fmt.replace(/%{2,2}/g, '%')
+
+  return '' + fmt
+}
 
 /**
  * @see https://stackoverflow.com/questions/17575790/environment-detection-node-js-or-browser
- * @return {boolean}
+ * @returns {boolean}
  */
 export function isBrowserEnvironment() {
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval
-  const isBrowser = new Function('try {return this===window;}catch(e){ return false;}')
+  if (isBrowserEnvironment.isIt === undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const isBrowser = new Function('try {return this===window;}catch(e){ return false;}')
 
-  return isBrowser()
+    isBrowserEnvironment.isIt = isBrowser()
+  }
+
+  return isBrowserEnvironment.isIt ?? false
 }
 
 /**
- * Get the global scope, depending on what is desired and what is possible
- * @param {boolean} isBrowser
- * @param {EnvironmentMode | string} [desiredMode]
- * @return {TheGlobal}
- */
-export function theGlobalScope(isBrowser, desiredMode = '') {
-  return (!isBrowser || desiredMode === 'server') ? new VirtualDocument() : document
-}
-
-/**
- * @param {Array} inputChildren
- * @param {Array} childrenStack
+ * The environment doesn't change over time, so it's enough
+ * to determine it once. This variable is used to store the
+ * environment, it's a cache.
  *
- * @returns {Array}
+ * @type {undefined | boolean}
+ */
+isBrowserEnvironment.isIt = undefined
+
+/**
+ * @template T
+ * @param {T} inputChild
+ * @param {T[]} childrenStack
+ * @returns {T[]}
+ */
+export function addChildToStack(inputChild, childrenStack) {
+  childrenStack.push(inputChild)
+
+  return childrenStack
+}
+
+/**
+ * @template T
+ * @param {T[]} inputChildren
+ * @param {T[]} childrenStack
+ * @returns {T[]}
  */
 export function addChildrenToStack(inputChildren, childrenStack) {
-  for (const child of inputChildren)
+  for (const child of inputChildren) {
     childrenStack.push(child)
+  }
 
   return childrenStack
 }
 
 /**
  * @param {string} attributeName
- * @return {boolean}
+ * @returns {boolean}
  */
 export function isEventAttribute(attributeName) {
   const eventNameLowerCase = attributeName.toLowerCase()
@@ -46,41 +141,75 @@ export function isEventAttribute(attributeName) {
 }
 
 /**
- * @param {HTMLElement} element
- * @param {string} attributeName
- * @param {function} callback
+ * @param {string} char
+ * @returns {boolean}
+ */
+export function isWhitespace(char) {
+  return (
+    char === ' '
+    || char === '\t'
+    || char === '\r'
+    || char === '\n'
+  )
+}
+
+/**
+ * Turns a string into boolean.
+ * Covers the cases when the string is 'true', 'false' or a number.
  *
+ * @param {string} string
+ * @returns {boolean}
+ */
+export function stringToBoolean(string) {
+  if (string === 'true') return true
+
+  if (string === 'false') return false
+
+  const int = parseInt(string)
+
+  return (isNaN(int)) ? Boolean(string) : Boolean(int)
+}
+
+/**
+ * @param {Element} element
+ * @param {string} attributeName
+ * @param {EventListenerOrEventListenerObject} callback
  * @returns {boolean}
  */
 export function addEventListenerIfPossible(element, attributeName, callback) {
   if (
-    !(element instanceof Node)
+    !(element instanceof window.Node)
 		|| (typeof attributeName !== 'string')
 		|| (typeof callback !== 'function')
     || (isEventAttribute(attributeName) === false)
   ) return false
 
-  element.addEventListener(attributeName.toLowerCase().substr(2), callback)
+  const eventSmallName = attributeName.toLowerCase().substring(2)
+
+  element.addEventListener(eventSmallName, callback)
 
   return true
 }
 
 /**
  * For multiple elements it's faster to use document fragment
- * @param {HTMLElement} element
- * @param {HTMLElement[]} children
+ *
+ * @param {Node} element
+ * @param {Node[]} children
  */
 function appendDOMChildrenToElement(element, children) {
   if (children.length === 1) {
     // It's faster to append single element like this
     element.appendChild(children[0])
-  } else if (children.length > 1) {
+  }
+  else if (children.length > 1) {
     // Using document fragment, because it's faster for multiple elements
     const fragment = new DocumentFragment()
 
     for (const child of children) {
-      if (child)
+      if (child) {
         fragment.append(child)
+      }
     }
 
     element.appendChild(fragment)
@@ -88,81 +217,153 @@ function appendDOMChildrenToElement(element, children) {
 }
 
 /**
- * @param {VirtualElement} element
- * @param {VirtualElement[]} children
+ * @param {Node} element
+ * @param {Node[]} children
  */
 function appendVirtualChildrenToElement(element, children) {
   for (const child of children) {
-    if (child)
+    if (child) {
       element.appendChild(child)
+    }
   }
 }
 
 /**
- * @param {TheElement} element
- * - The element in which to append the children
- *
- * @param {TheElement[]} children
- * - The children to append, one or many arguments.
+ * @param {Node | null} element
+ * The element in which to append the children
+ * @param {Node[]} children
+ * The children to append, one or many arguments.
  * For example `<node1, node2>` or `<[node1, node2], node3>`
  */
 export function appendChildrenToElement(element, children) {
-  if (element instanceof VirtualElement)
-    appendVirtualChildrenToElement(element, children)
-  else
+  if (!element) return
+
+  if (isBrowserEnvironment() && element instanceof window.Node) {
     appendDOMChildrenToElement(element, children)
+  }
+  else {
+    appendVirtualChildrenToElement(element, children)
+  }
 }
 
 /**
- * Turns the input function to a string and extracts what looks like this: stateName.varName1
- * @param {*} fn
+ * In the "data" object there are pairs of keys and values
+ * and the "handler" function is looped once for each pair.
+ * The loop breaks if "false" is returned by the "handler"
+ * function.
+ *
+ * @template T
+ * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} data
+ * @param {ForLoopCallback<T>} handler
+ * @param {(key: number | string) => void} [beforeIterationCallback]
+ * @param {string | number | symbol} [keyToRender]
+ * @param {(key: number | string) => void} [iterationCallback]
+ * @returns {boolean}
+ * @throws {TypeError}
  */
-export function extractVariablesFromFunction(fn) {
-  // TODO: Make it also detect bracket notation
-
-  const string = fn.toString()
-  const pattern = /(?:[^\w_$.]|^)([a-zA-Z_$][\w_$]*)\.([\w_$.]+)/g
-  const list = {}
-
-  let matches
-
-  while ((matches = pattern.exec(string)) !== null) {
-    const base = matches[1] // base in base.pa.th
-    const path = matches[2] // pa.th in base.pa.th
-
-    if (!(base in list))
-      list[base] = {}
-
-    if (!(path in list[base]))
-      list[base][path] = []
-
-    if (!list[base][path].includes(fn))
-      list[base][path].push(fn)
+export function forEachLoop(
+  data,
+  handler,
+  beforeIterationCallback,
+  keyToRender,
+  iterationCallback,
+) {
+  if (
+    !(data instanceof Object)
+    && !(data instanceof Array)
+    && !(data instanceof Map)
+    && !(data instanceof Set)
+  ) {
+    throw new TypeError('"data" argument should be an Object or an Array')
   }
 
-  return list
-}
+  if (!(handler instanceof Function)) {
+    throw new TypeError('"handler" argument should be a Function')
+  }
 
-/**
- * In the "data" object there are pairs of keys and values and the "handler" function is looped
- * once for each pair. The loop breaks if "false" is returned by the "handler" function.
- *
- * @param {Object | Array} data
- * @param {Function} handler
- *
- * @returns {boolean | Error}
- */
-export function forLoopOne(data, handler) {
-  if (!(data instanceof Object) && !(data instanceof Array))
-    return new Error('"data" argument should be an Object or an Array')
+  const isProxy = isState(data)
 
-  if (!(handler instanceof Function))
-    return new Error('"handler" argument should be a Function')
+  if (
+    data instanceof Map
+    || data instanceof Set
+  ) {
+    // Force the proxy's "get" event by trying to access this dummy symbol key
+    // @ts-ignore
+    const nothing = isProxy ? data[symObjectAccess] : undefined
 
-  for (const key in data) {
-    const ret = handler(key, data[key])
+    for (const [key, value] of data.entries()) {
+      if (keyToRender !== undefined && keyToRender !== key) {
+        continue
+      }
 
-    if (ret === false) break
+      let val = isProxy ? () => value : value
+
+      if (beforeIterationCallback) {
+        val = beforeIterationCallback?.(val)
+      }
+
+      const ret = handler(val, key)
+
+      iterationCallback?.(key)
+
+      if (ret === false) break
+    }
+  }
+  else if (data instanceof Array) {
+    /**
+     * for-in doesn't work properly in this case,
+     * because the numeric index turns into string.
+     * That's why use the classic for loop is used.
+     */
+
+    // Force the proxy's "get" event by trying to access this dummy symbol key
+    // @ts-ignore
+    const nothing = isProxy ? data[symArrayAccess] : undefined
+
+    for (let key = 0; key < data.length; key++) {
+      if (keyToRender !== undefined && keyToRender !== key) {
+        continue
+      }
+
+      let value = isProxy ? () => data[key] : data[key]
+
+      if (beforeIterationCallback) {
+        value = beforeIterationCallback?.(value)
+      }
+
+      const ret = handler(value, key)
+
+      iterationCallback?.(key)
+
+      if (ret === false) break
+    }
+  }
+  else if (data instanceof Object) {
+    /**
+     * The Object loop must be at the end,
+     * because Array, Set and Map are also Object.
+     */
+
+    // Force the proxy's "get" event by trying to access this dummy symbol key
+    const nothing = isProxy ? data[symObjectAccess] : undefined
+
+    for (const key in data) {
+      if (keyToRender !== undefined && keyToRender !== key) {
+        continue
+      }
+
+      let value = isProxy ? () => data[key] : data[key]
+
+      if (beforeIterationCallback) {
+        value = beforeIterationCallback?.(value)
+      }
+
+      const ret = handler(value, key)
+
+      iterationCallback?.(key)
+
+      if (ret === false) break
+    }
   }
 
   return true
@@ -174,16 +375,17 @@ export function forLoopOne(data, handler) {
  *
  * @param {number} start
  * @param {number} end
- * @param {Function} handler
- *
+ * @param {ForLoopIterableCallback} handler
  * @returns {boolean | Error}
  */
-export function forLoopTwo(start, end, handler) {
-  if (typeof start !== 'number' || typeof end !== 'number')
+export function forLoop(start, end, handler) {
+  if (typeof start !== 'number' || typeof end !== 'number') {
     return new Error('"start" and "end" arguments should be numbers')
+  }
 
-  if (!(handler instanceof Function))
+  if (!(handler instanceof Function)) {
     return new Error('"handler" argument should be a Function')
+  }
 
   if (end >= start) {
     for (let key = start; key <= end; key++) {
@@ -191,7 +393,8 @@ export function forLoopTwo(start, end, handler) {
 
       if (ret === false) break
     }
-  } else {
+  }
+  else {
     for (let key = start; key >= end; key--) {
       const ret = handler(key)
 
@@ -203,40 +406,95 @@ export function forLoopTwo(start, end, handler) {
 }
 
 /**
+ * @template T
+ * @param {T[]} arr
+ * @param {number} key
+ * @returns {T[]}
+ */
+export function arrayRemoveKey(arr, key) {
+  return arr.filter(function (el, index) {
+    return index !== key
+  })
+}
+
+/**
+ * @template T
+ * @param {T[]} arr
+ * @param {T} value
+ * @returns {T[]}
+ */
+export function arrayRemoveValue(arr, value) {
+  return arr.filter(function (el) {
+    return el !== value
+  })
+}
+
+/**
  * Insert a new node after an existing node as a child node of a parent node
- * @see https://www.javascripttutorial.net/javascript-dom/javascript-insertafter/
  *
+ * @see https://www.javascripttutorial.net/javascript-dom/javascript-insertafter/
  * @param {Node} newNode
  * @param {Node} existingNode
  */
 export function insertAfter(newNode, existingNode) {
-  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling)
+  if (!existingNode) return
+
+  const { nextSibling, parentNode } = existingNode
+
+  if (parentNode) {
+    parentNode.insertBefore(newNode, nextSibling)
+  }
+}
+
+/**
+ *
+ * @param {HTMLElement} element
+ * @param {Object<string, (string | number | boolean)>}dataSet
+ */
+export function setDataSetAttributesToElement(element, dataSet) {
+  if (dataSet instanceof Object) {
+    for (const key in dataSet) {
+      const value = dataSet[key].toString()
+
+      element.setAttribute(`data-${key}`, value)
+    }
+  }
 }
 
 /**
  * Html elements have attributes and properties.
  * Here we set either the attribute ot the property.
- * Which one? Depends of the name of the attribute or property.
- * @param {HTMLElement} element
+ * Which one? Depends on the name of the attribute or property.
+ *
+ * @param {Element} element
  * @param {string} attrOrPropName
  * @param {*} value
  */
 export function setElementAttrOrProp(element, attrOrPropName, value) {
   // Decide between element attributes or element properties
   if (attrOrPropName in element) {
-    // eslint-disable-next-line
-    element[attrOrPropName] = value
-  } else
+    if (value instanceof Array) {
+      // @ts-ignore
+      element[attrOrPropName] = format.apply(null, value)
+    }
+    else {
+      // @ts-ignore
+      element[attrOrPropName] = value
+    }
+  }
+  else {
     element.setAttribute(attrOrPropName, value)
+  }
 }
 
 /**
  * Modify the value of a CSS rule, if needed
+ *
  * @param {string} name
  * @param {*} value
  * @returns {*}
  */
-export function styleRuleModificator(name, value) {
+export function modifyStyleRule(name, value) {
   let output = value
 
   if (
@@ -256,3 +514,70 @@ export function styleRuleModificator(name, value) {
 
   return output
 }
+
+/**
+ * @param {string} str
+ * @returns {HTMLElement}
+ */
+export function stringToHTML(str) {
+  const parser = new DOMParser()
+  const doc    = parser.parseFromString(str, 'text/html')
+
+  return doc.body
+}
+
+/**
+ * @param {Map<any, any> | Set<any> | Object<any, any>} object
+ * @param {any} key
+ * @returns {boolean}
+ */
+export function objectHasKey(object, key) {
+  if (object instanceof Map || object instanceof Set) {
+    return object.has(key)
+  }
+  else {
+    return (key in object)
+  }
+}
+
+/**
+ * @param {Map<any, any> | Set<any> | Object<any, any>} object
+ * @param {any} key
+ * @returns {any}
+ */
+export function objectGetValue(object, key) {
+  if (object instanceof Map) {
+    return object.get(key)
+  }
+  else if (object instanceof Set) {
+    return object.has(key) ? key : undefined
+  }
+  else {
+    return object[key]
+  }
+}
+
+// /**
+//  * @template K, T
+//  * @param {T[] | Object<K, T> | Map<K, T> | Set<T>} input
+//  * @param {(value: T, key: K) => boolean} callback
+//  */
+// export function forEach(input, callback) {
+//   if (input instanceof Set) {
+//     for (const value of input) {
+//       if (callback(value, value) === false) break
+//     }
+//   }
+// }
+//
+// const set = new Set(['One', 'Two', 'Three'])
+//
+// forEach(set, (value, key) => {
+//   console.log(key, value)
+// })
+//
+// const obj = { a: 'a' }
+//
+// for (const o of obj) {
+//   console.log(o)
+// }

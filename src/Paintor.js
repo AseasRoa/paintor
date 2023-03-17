@@ -1,501 +1,356 @@
-import { ElementsCollector } from './ElementsCollector.js'
-import { VirtualDocument, VirtualElement } from './VirtualDOM/VirtualDocument.js'
-import {
-  addChildrenToStack, addEventListenerIfPossible,
-  appendChildrenToElement, extractVariablesFromFunction,
-  forLoopOne,
-  forLoopTwo,
-  insertAfter, isEventAttribute, setElementAttrOrProp, styleRuleModificator,
-} from './functions.js'
-import htmlTags from './htmlTags.js'
-import './typedefs.js'
+import { ElementsCreator } from './ElementsCreator.js'
+import { appendChildrenToElement, isBrowserEnvironment } from './functions.js'
+import { Window as SrWindow } from './SrDOM/Window.js'
+
+const isBrowserEnv = isBrowserEnvironment()
+const srWindow = new SrWindow()
 
 class Paintor {
-  /**
-   * Each element of this array represents a Level of HTML elements.
-   * Level 0 is the main level where eventually all elements are placed.
-   * A new level is created from IF and FOR in order to collect the elements separately. Then,
-   * when the IF or FOR statement ends, the collected elements are moved to the upper level
-   * and that new level is deleted.
-   * @type ElementsCollector[]
-   */
-  #collectedElements = [new ElementsCollector()]
-
-  /** @type {PaintorWrapper} */
-  #paintorWrapper
-
-  /** @type {TheGlobal} */
-  #global
+  /** @type {string} */
+  #containerCustomElementName = ''
 
   /**
-   * @param {PaintorWrapper} paintorWrapper
-   */
-  constructor(paintorWrapper) {
-    this.#paintorWrapper = paintorWrapper
-    this.#global = this.#paintorWrapper.global
-  }
-
-  /**
-   * Create HTML element
+   * The main element in which to append all the contents
    *
-   * @param {string} tagName
-   * @param {*} args
-   * Different variants are possible:<br>
-   * - String value - It will be textContent of the element. Use this in div tags and similar.
-   * - Object value - For all the properties of the element, like "id", "class" and so on...
-   * - Element (multiple arguments) - For other calls of this same function (creating children)
-   * - Array - Alternative for creating children
-   * @returns {TheElement}
+   * @type {HTMLElement | ShadowRoot | null}
    */
-  createElement(tagName, ...args) {
-    const element = this.#global.createElement(tagName)
-    const isVirtualGlobal = this.#global instanceof VirtualDocument
+  #containerElement = null
 
-    let children = []
-    let argumentID = 0
+  /** @type {HTMLElement[]} */
+  #finalElements = []
 
-    for (const argument of args) {
-      argumentID += 1
+  /**
+   * In server mode this will hold the final WebApi code
+   *
+   * @type {string}
+   */
+  #finalHtmlCode = ''
 
-      if (typeof argument === 'string' || typeof argument === 'number') {
-        // In case of a string, it is the Text content of the node
+  /** @type {boolean} */
+  #isStatic = false
 
-        element.textContent = argument
-      } else if (argument instanceof Function) {
-        // TODO: I don't remember why I made this functionality and what it does
-        const propertyName = 'propertyName'
-        const bindFunction = argument
+  /** @type {Model[]} */
+  #models = []
 
-        this.#subscribeToBindings({ element, propertyName, bindFunction })
+  /** @type {Map<Translation | null, string>} */
+  #staticHtmlCodes = new Map()
 
-        element[propertyName] = bindFunction(element)
-      } else if (
-        (isVirtualGlobal && argument instanceof VirtualElement)
-        || (!isVirtualGlobal && argument instanceof Node)
-      ) {
-        // If Node, this is a child (created by this function) to be appended to its parent
+  /** @type {Translation[]} */
+  #translations = []
 
-        children.push(argument)
-      } else if (argument instanceof Array) {
-        // If Array, it contains children to be added to their parent
-
-        children = addChildrenToStack(argument, children)
-      } else if (argument instanceof Error) {
-        // Error message
-
-        element.textContent = argument
-      } else if (argument instanceof Object && argumentID === 1) {
-        // If Object and first argument, this is a property
-        // ! This condition needs to be at the end of the 'if' chain
-
-        this.#setPropertiesToElement(element, argument)
-      }
+  /**
+   * @param {string | HTMLElement} container
+   * @returns {void}
+   */
+  appendTo(container) {
+    if (!isBrowserEnv) {
+      throw new Error('You can only do this in browser environment')
     }
 
-    appendChildrenToElement(element, children)
-
-    if (children.length >= 0) {
-      const elcLevel = this.#collectedElements.length - 1
-
-      this.#collectedElements[elcLevel].removeTheseElements(children)
-      this.#collectedElements[elcLevel].addElement(element)
-    }
-
-    return element
+    this.#render(container, window, false)
   }
 
   /**
-   * Browser mode: Append the DOM elements at level 0 to the container element
-   * <br>
-   * Server mode: Generate HTML code of the elements at level 0
-   *
-   * @return {string}
-   * Browser mode: Empty string
-   * <br>
-   * Server mode: The final HTML code
+   * @param {...Model} models
+   * @returns {Paintor}
    */
-  finalPaint() {
-    let finalHtmlCode = ''
-
-    const children = this.#collectedElements[0].getElements()
-    const containerElement = this.#paintorWrapper.containerElement
-
-    appendChildrenToElement(containerElement, children)
-
-    if (this.#global instanceof VirtualDocument)
-      finalHtmlCode = containerElement.paintChildren()
-
-    // Reset
-    this.#collectedElements = [new ElementsCollector()]
-
-    return finalHtmlCode
-  }
-
-  /**
-   * "FOR" loop
-   * @returns {Error | TheElement[]}
-   */
-  forLoop(...args) {
-    // 1) Parse arguments
-    if (args.length < 2 || args.length > 3)
-      return new Error(`Wrong number of arguments. Expected 2 or 3, got ${args.length}`)
-
-    let data
-    let handler
-    let start = 0
-    let end = 0
-
-    // 1 when the input is Object/Array,
-    // 2 when the input is a number,
-    // 3 if two numbers
-    let loopType = 0
-
-    if (args.length === 2) {
-      [data, handler] = args
-
-      if (typeof args[0] !== 'number')
-        loopType = 1
-      else {
-        loopType = 2
-
-        if (args[0] >= 0) {
-          start = 0
-          end = args[0] - 1
-        } else {
-          start = -args[0] - 1
-          end = 0
+  compose(...models) {
+    if (models instanceof Array) {
+      for (const model of models) {
+        if (model instanceof Array) {
+          this.#models = [...this.#models, () => model]
+        }
+        else {
+          this.#models.push(model)
         }
       }
-    } else if (args.length === 3) {
-      [start, end, handler] = args
-      loopType = 3
     }
 
-    // 2) Run For
-    const levels = this.#beforeStatement()
+    //this.#models = models
 
-    let result = null
+    return this
+  }
 
-    if (loopType === 1)
-      result = forLoopOne(data, handler)
+  getElements() {
+    this.#render(null, window, true)
 
-    else if (loopType === 2 || loopType === 3)
-      result = forLoopTwo(start, end, handler)
-
-    const elements = this.#afterStatement(levels)
-
-    if (result instanceof Error)
-      return result
-
-    return elements
+    return this.#finalElements
   }
 
   /**
-   * "IF" condition
-   * @param {boolean | StatementBindFunction} condition
-   * @param {function():void} handler
-   * @returns {TheElement[]}
+   * @param {object} [options]
+   * @param {string} [options.indent='']
+   * @returns {string}
    */
-  if(condition, handler) {
-    const { thisLevel, upperLevel } = this.#beforeStatement()
+  getHtml(options) {
+    if (this.#isStatic) {
+      return this.getStaticHtml(options)
+    }
 
-    if (typeof condition === 'function') {
-      const bindFunction = condition
-      const commentElementBegin = this.#global.createComment('IF BEGIN')
+    const window = this.#getSrWindow()
 
-      this.#collectedElements[thisLevel].addElement(commentElementBegin)
+    this.#render('', window, true, options)
 
-      /** @type {StatementCallback} */
-      const statementCallback = (allow) => {
-        this.#collectedElements[0].removeAllElements()
-        this.#removeStatementElements(commentElementBegin)
+    return this.#finalHtmlCode
+  }
 
-        if (allow) handler()
+  /**
+   * @param {object} [options]
+   * @param {string} [options.indent='']
+   * @returns {string}
+   */
+  getStaticHtml(options) {
+    const key = this.#translations[0] ?? null
 
-        const success = this.#insertStatementElements(
-          commentElementBegin,
-          this.#collectedElements[0].getElements(),
-        )
+    if (!this.#staticHtmlCodes.has(key)) {
+      const window = this.#getSrWindow()
 
-        if (!success)
-          console.error('Element ', commentElementBegin, ' does not exist anymore')
+      this.#render('', window, true, options)
+      this.#staticHtmlCodes.set(
+        key,
+        this.#finalHtmlCode,
+      )
+    }
+
+    return this.#staticHtmlCodes.get(key) ?? ''
+  }
+
+  getElementsSr() {
+    const window = this.#getSrWindow()
+
+    this.#render('', window, true)
+
+    return this.#finalElements
+  }
+
+  /**
+   * @param {string | HTMLElement} container
+   * @returns {void}
+   */
+  paint(container) {
+    if (!isBrowserEnv) {
+      throw new Error('You can only use this function in browser environment')
+    }
+
+    if (typeof container !== 'string' && !(container instanceof HTMLElement)) {
+      throw new Error(
+        'Wrong type for the container element. '
+        + 'Expected <string> or <Node>, '
+        + `got <${typeof container}>`,
+      )
+    }
+
+    this.#render(container, window, true)
+  }
+
+  /**
+   * @param {boolean} [on=true]
+   * @returns {Paintor}
+   */
+  static(on = true) {
+    this.#isStatic = on
+
+    return this
+  }
+
+  /**
+   * @param {...Translation} translations
+   * @returns {Paintor}
+   */
+  useTranslations(...translations) {
+    // Reset translations here, because the whole api chain (containing this function)
+    // can be executed multiple times, but with different translations every time.
+    this.#translations = []
+
+    translations.map((item) => {
+      if (item instanceof Array) {
+        item.forEach((subItem) => {
+          if (!this.#translations.includes(subItem)) {
+            this.#translations = [...this.#translations, subItem]
+          }
+        })
       }
+      else if (item instanceof Object) {
+        if (!this.#translations.includes(item)) {
+          this.#translations = [...this.#translations, item]
+        }
+      }
+    })
 
-      this.#subscribeToBindings({
-        element: commentElementBegin,
-        propertyName: '--if',
-        bindFunction,
-        statementCallback,
-      })
-    }
-
-    const allow = (condition instanceof Function) ? condition() : condition
-
-    // Run the handler function
-    if (allow && (typeof handler === 'function'))
-      handler()
-
-    if (typeof condition === 'function') {
-      const commentElementEnd = this.#global.createComment('IF END')
-
-      this.#collectedElements[thisLevel].addElement(commentElementEnd)
-    }
-
-    return this.#afterStatement({ thisLevel, upperLevel })
+    return this
   }
 
   /**
-   * @param {Comment | VirtualElement} beginElement
-   * @param {HTMLElement[]} elements
-   * @returns {boolean}
-   * - Returns false if there is no element after which to insert the other elements,
-   * otherwise returns true
+   * Clear contents of the container element
    */
-  #insertStatementElements(beginElement, elements) {
-    let lastElement = beginElement
+  #clearContainerElement() {
+    const el = this.#containerElement
 
-    if (this.#global.body.contains(lastElement) === false)
-      return false
+    while (el?.firstChild) {
+      el.removeChild(el.firstChild)
+    }
+  }
 
-    for (const newElement of elements) {
-      insertAfter(newElement, lastElement)
+  /**
+   * This method is for tricking TS that the string-rendering DOM's Window
+   * has the same type of the browser DOM's window
+   *
+   * @returns {Window}
+   */
+  #getSrWindow() {
+    // @ts-ignore
+    return srWindow
+  }
 
-      lastElement = newElement
+  /**
+   * @param {string | HTMLElement | null} container
+   * @param {Window} window
+   * @param {Translation[]} translations
+   * @param {Model[]} models
+   * @returns {boolean}
+   * @throws {Error}
+   */
+  #init(container, window, translations, models) {
+    this.#initContainer(container, window)
+    this.#initTranslations(translations)
+    this.#initModels(models)
+
+    return true
+  }
+
+  /**
+   * @param {string | HTMLElement | null} container
+   * @param {Window} window
+   * @returns {boolean}
+   */
+  #initContainer(container, window) {
+    const isSr = window.document.baseURI === ''
+
+    if (typeof container === 'string') {
+      this.#containerElement = (isSr)
+        ? window.document.createElement('#container')
+        : window.document.getElementById(container)
+
+      // if (!this.#containerElement) {
+      //   throw new Error(`Could not locate element #${container}`)
+      // }
+
+      if (!this.#containerElement) {
+        this.#containerCustomElementName = container
+      }
+    }
+    else {
+      this.#containerElement = container
     }
 
     return true
   }
 
   /**
-   * Remove all DOM elements, starting after BEGIN element and ending before END element.
-   * BEGIN and END are pair of two comment elements, one of the following pairs:
-   * <!--IF BEGIN--> and <!--IF END-->
-   * <!--FOR BEGIN--> and <!--FOR END-->
-   * @param {TheElement} beginElement
-   * @returns {number} - The number of deleted elements or -1 on failure
+   * @param {Model[]} models
+   * @returns {boolean}
+   * @throws {Error}
    */
-  #removeStatementElements(beginElement) {
-    /**
-     * @type {number}
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-     */
-    const COMMENT_NODE = 8 // Node.COMMENT_NODE
-
-    if (beginElement.nodeType !== COMMENT_NODE)
-      return -1
-
-    // Decide what will be the text content of the end element
-    const beginElementText = beginElement.textContent
-    let endElementText = ''
-
-    if (beginElementText === 'IF BEGIN')
-      endElementText = 'IF END'
-    else if (beginElementText === 'FOR BEGIN')
-      endElementText = 'FOR END'
-    else
-      return -1
-
-    // Delete elements until the 'end' element is found
-    let currentElement = beginElement.nextSibling
-    let statementsCounter = 0
-    let deletedElements = 0
-
-    while (true) {
-      if (currentElement === null)
-        break
-
-      let isBeginElement = false
-
-      if (currentElement.nodeType === COMMENT_NODE) {
-        const text = currentElement.textContent
-
-        if (text === beginElementText) {
-          statementsCounter += 1
-          isBeginElement = true
-        } else if (text === endElementText) {
-          statementsCounter -= 1
-
-          if (statementsCounter < 0)
-            break
-        }
+  #initModels(models) {
+    for (let model of models) {
+      if (typeof model !== 'function') {
+        throw new Error('The model must be a function')
       }
-
-      const { nextSibling } = currentElement
-
-      // Mark any BEGIN element from inner statements for further deletion
-      if (isBeginElement) currentElement['--deleted'] = true
-
-      currentElement.remove()
-      deletedElements += 1
-      currentElement = nextSibling
     }
 
-    return deletedElements
+    return true
   }
 
   /**
-   * This method should be called in the IF or FOR loop before calling the handler
-   * @returns {{thisLevel : number, upperLevel : number}}
+   * @param {Translation[]} translations
+   * @returns {boolean}
+   * @throws {Error}
    */
-  #beforeStatement() {
-    // Create a new level for collecting
-    const thisLevel = this.#collectedElements.length
-    const upperLevel = thisLevel - 1
-
-    this.#collectedElements.push(new ElementsCollector())
-
-    return { thisLevel, upperLevel }
-  }
-
-  /**
-   * This method should be called in the IF or FOR loop after calling the handler
-   * @param {number} thisLevel
-   * @param {number} upperLevel
-   * @returns {HTMLElement[]}
-   */
-  #afterStatement({ thisLevel, upperLevel }) {
-    // Save what will be returned, because the array will be cleared
-    const elements = this.#collectedElements[thisLevel].getElements()
-
-    // Move everything collected at this level to the upper level...
-    this.#collectedElements[upperLevel].importElements(this.#collectedElements[thisLevel])
-    this.#collectedElements[thisLevel].removeAllElements()
-
-    // ... and clean this level
-    delete this.#collectedElements[thisLevel]
-    this.#collectedElements.pop()
-
-    return elements
-  }
-
-  /**
-   * @param {TheElement} element
-   * @param {Object<string, string | number | {} | Function>} properties
-   */
-  #setPropertiesToElement(element, properties) {
-    for (const propertyName in properties) {
-      let property = properties[propertyName]
-
-      if (this.#global instanceof VirtualDocument) {
-        // When the property name is an event and the property is a function, turn it into a string
-        if (isEventAttribute(propertyName) && property instanceof Function)
-          property = property.toString()
-      } else {
-        // If the property name is an event (for example onClick), then is the value is a function,
-        // this function should not be called to get a value from it. Instead, it should be added
-        // as a listener
-        if (addEventListenerIfPossible(element, propertyName, property))
-          continue
-      }
-
-      // if (propertyName === 'text') propertyName = 'textContent'
-
-      if (property instanceof Function) {
-        const bindFunction = property
-
-        this.#subscribeToBindings({ element, propertyName, bindFunction })
-
-        const value = bindFunction(element)
-
-        setElementAttrOrProp(element, propertyName, value)
-      } else if (propertyName === 'style' && property instanceof Object) {
-        const styleRules = property
-
-        for (const ruleName in styleRules) {
-          const ruleValue = styleRules[ruleName]
-          let finalValue = ''
-
-          if (ruleValue instanceof Function) {
-            const bindFunction = ruleValue
-
-            this.#subscribeToBindings({
-              element,
-              propertyName,
-              subPropertyName: ruleName,
-              bindFunction,
-            })
-
-            finalValue = bindFunction(element)
-          } else
-            finalValue = ruleValue
-
-          // eslint-disable-next-line no-param-reassign
-          element.style[ruleName] = styleRuleModificator(ruleName, finalValue)
-        }
-      } else
-        setElementAttrOrProp(element, propertyName, property)
+  #initTranslations(translations) {
+    if (!(translations instanceof Array)) {
+      throw new Error('The argument \'translations\' must be an Array')
     }
+
+    this.#translations = translations
+
+    return true
   }
 
   /**
-   * @param {TheElement} element
-   * @param {string} propertyName
-   * @param {string} [subPropertyName]
-   * @param {BindFunction | StatementBindFunction} [bindFunction]
-   * @param {StatementCallback} [statementCallback]
+   * @param {HTMLElement | string | null} container
+   * @param {Window} window
+   * @param {boolean} clearContainer
+   * @param {object} [htmlOptions]
+   * @param {string} [htmlOptions.indent]
+   * @throws {Error}
    */
-  #subscribeToBindings({
-    element,
-    propertyName,
-    subPropertyName = '',
-    bindFunction,
-    statementCallback,
-  }) {
-    const result = extractVariablesFromFunction(bindFunction)
+  #render(container, window, clearContainer = true, htmlOptions = {}) {
+    this.#init(container, window, this.#translations, this.#models)
 
-    for (const stateName in result) {
-      if (!(stateName in this.#paintorWrapper.states)) {
-        // console.error(`State "${stateName}" is not defined`)
-        continue
-      }
+    if (clearContainer) {
+      this.#clearContainerElement()
+    }
 
-      for (const path in result[stateName]) {
-        const exploded = path.split('.')
+    const models = this.#models
+    const translations = this.#translations
 
-        let obj = this.#paintorWrapper.states[stateName]
+    if (!window) {
+      throw new Error('Missing window element')
+    }
 
-        for (let key = 0; key < exploded.length - 1; key++) {
-          const value = exploded[key]
-          obj = obj[value]
+    if (
+      !this.#containerElement
+      && this.#containerCustomElementName
+    ) {
+      // Custom Elements
+
+      /**
+       * @param {Paintor} paintor
+       * @returns {CustomElementConstructor}
+       */
+      const getCustomElementConstructor = (paintor) => {
+        return class extends HTMLElement {
+          constructor() {
+            super()
+            this.attachShadow({ mode: 'open' })
+          }
+
+          connectedCallback() {
+            if (!this.shadowRoot) {
+              throw new Error('Missing shadow root')
+            }
+
+            paintor.#containerElement = this.shadowRoot
+
+            const creator = new ElementsCreator(
+              window, paintor.#containerElement, models, translations,
+            )
+            const children = creator.getCreatedElements()
+
+            appendChildrenToElement(paintor.#containerElement, children)
+          }
         }
-
-        const stateSubscriptions = this.#paintorWrapper.states[stateName]['--subscribe']
-
-        stateSubscriptions.subscribe(
-          path,
-          element,
-          propertyName,
-          subPropertyName,
-          bindFunction,
-          statementCallback,
-        )
       }
+
+      customElements.define(
+        this.#containerCustomElementName,
+        getCustomElementConstructor(this),
+      )
+    }
+    else {
+      if (!this.#containerElement) {
+        throw new Error('Missing containerElement')
+      }
+
+      // DOM or Virtual
+      const creator = new ElementsCreator(
+        window, this.#containerElement, models, translations,
+      )
+
+      this.#finalHtmlCode = creator.finalPaint(htmlOptions)
+      this.#finalElements = creator.finalElements
     }
   }
 }
-
-/**
- * https://stackoverflow.com/questions/13851088/how-to-bind-function-arguments-without-binding-this
- *
- * @param boundArgs
- * @returns {function(...[*]) : *}
- */
-Function.prototype.bindArgs = function bindArgs(...boundArgs) {
-  const targetFunction = this
-
-  return function targetFunctionCaller(...args) {
-    return targetFunction.call(this, ...boundArgs, ...args)
-  }
-}
-
-// Add methods in the prototype for each standard HTML tag
-for (const tagName of htmlTags)
-  Paintor.prototype[tagName] = Paintor.prototype.createElement.bindArgs(tagName)
-
-// "for" is placed below, otherwise if it is in the class, the typings for its multiple
-// overloads doesn't work correctly.
-// Must have an empty row below this comment section, otherwise it is considered a description
-
-Paintor.prototype.for = Paintor.prototype.forLoop
 
 export { Paintor }

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="examples/style.css">
+  <link rel="stylesheet" href="examples/highlight/github-dark-dimmed.min.css">
+  <script src="examples/highlight/highlight.min.js"></script>
+  <script type="module">
+    import { paintor, createState, compose, createTranslation } from './src/index.js'
+    // import { paintor, createState } from '/dist/paintor.js'
+
+    class Tests {
+      constructor() {
+        this.#init()
+      }
+
+      'html-elements'() {
+        paintor.compose(($) => {
+          $.div('div 1')
+          $.div('div 2')
+          $.div('div 3')
+        }).paint('html-elements')
+      }
+
+      'html-elements-html'() {
+        paintor.compose(($) => {
+          $.html`
+            <div>div 1</div>
+            <div>div 2</div>
+            <div>div 3</div>
+          `
+        }).paint('html-elements-html')
+      }
+
+      'a-table'() {
+        compose(($) => {
+          $.table(
+             $.thead(
+                $.tr(
+                   $.th({colspan: 3}, 'Table Header')
+                ),
+             ),
+             $.tbody(
+                $.tr(
+                   $.td('Row 1, Column 1'),
+                   $.td('Row 1, Column 2'),
+                ),
+                $.tr(
+                   $.td('Row 2, Column 1'),
+                   $.td('Row 2, Column 2'),
+                )
+             )
+          )
+        }).paint('a-table')
+      }
+
+      'a-table-html'() {
+        compose(($) => {
+          $.html`
+            <table>
+               <thead>
+                  <tr>
+                     <th colspan="3">Table Header</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>Row 1, Column 1</td>
+                     <td>Row 1, Column 2</td>
+                  </tr>
+                  <tr>
+                     <td>Row 2, Column 1</td>
+                     <td>Row 2, Column 2</td>
+                  </tr>
+               </tbody>
+            </table>
+          `
+        }).paint('a-table-html')
+      }
+
+      'counter-1'() {
+        const state = createState({clicks: 0})
+
+        compose(($) => {
+          $.button({
+            textContent: 'Click me',
+            onClick: () => state.clicks++,
+          })
+          $.p({ textContent: () => state.clicks })
+        }).paint('counter-1')
+      }
+
+      'counter-1-html'() {
+        const state = createState({clicks: 0})
+
+        compose(($) => {
+          $.html`
+            <button onClick=${() => state.clicks++}>Click me</button>
+            <p>${() => state.clicks}</p>
+          `
+        }).paint('counter-1-html')
+      }
+
+      'counter-2'() {
+        const state = createState({clicks: 0})
+
+        compose(($) => {
+          $.button({
+            textContent: () => `Clicked ${state.clicks} times`,
+            onClick: () => {state.clicks++},
+          })
+          $.p({ textContent: () => (`${state.clicks} clicks`) })
+        }).paint('counter-2')
+      }
+
+      'counter-2-html'() {
+        const state = createState({clicks: 0})
+
+        compose(($) => {
+          $.html`
+            <button onClick=${() => state.clicks++}>${() => `Clicked ${state.clicks} times`}</button>
+            <p>${() => `${state.clicks} clicks`}</p>
+          `
+        }).paint('counter-2-html')
+      }
+
+      'counter-3'() {
+        const state = createState({clicksA: 0, clicksB: 0})
+
+        compose(($) => {
+          $.button({
+            textContent: () => `Button A: ${state.clicksA} clicks`,
+            onClick: () => {state.clicksA++},
+          })
+          $.button({
+            textContent: () => `Button B: ${state.clicksB} clicks`,
+            onClick: () => {state.clicksB++},
+          })
+          $.p({ innerHTML: () => (
+               `Button A clicked <b>${state.clicksA}</b> times`
+               + ` and Button B clicked <b>${state.clicksB}</b> times`
+            )
+          })
+        }).paint('counter-3')
+      }
+
+      'counter-3-html'() {
+        const state = createState({clicksA: 0, clicksB: 0})
+
+        compose(($) => {
+          $.html`
+            <button onClick=${()=>state.clicksA++}>${() => `Button A: ${state.clicksA} clicks`}</button>
+            <button onClick=${()=>state.clicksB++}>${() => `Button A: ${state.clicksB} clicks`}</button>
+            <p>
+             Button A clicked <b>${() => state.clicksA}</b> times
+              and Button B clicked <b>${() => state.clicksB}</b> times</p>
+          `
+        }).paint('counter-3-html')
+      }
+
+      'counter-4'() {
+        const stateA = createState({clicks: 0})
+        const stateB = createState({clicks: 0})
+
+        compose(($) => {
+          $.button({
+            textContent: () => `Button A: ${stateA.clicks} clicks`,
+            onClick: () => {stateA.clicks++},
+          })
+          $.button({
+            textContent: () => `Button B: ${stateB.clicks} clicks`,
+            onClick: () => {stateB.clicks++},
+          })
+          $.p({ innerHTML: () => (
+               `Button A clicked <b>${stateA.clicks}</b> times`
+               + ` and Button B clicked <b>${stateB.clicks}</b> times`
+            )
+          })
+        }).paint('counter-4')
+      }
+
+      'counter-5'() {
+        const state = createState([0, 0])
+
+        compose(($) => {
+          $.button({
+            textContent: () => `Button A: ${state[0]} clicks`,
+            onClick: () => state[0]++,
+          })
+          $.button({
+            textContent: () => `Button B: ${state[1]} clicks`,
+            onClick: () => state[1]++,
+          })
+          $.p({ innerHTML: () => (
+               `Button A clicked <b>${state[0]}</b> times`
+               + ` and Button B clicked <b>${state[1]}</b> times`) })
+        }).paint('counter-5')
+      }
+
+      'counter-6'() {
+        const state = createState({
+          A: {clicks: 0},
+          B: {clicks: 0},
+        })
+
+        compose(($) => {
+          $.button({
+            textContent: () => `Button A: ${state.A.clicks} clicks`,
+            onClick: () => {state.A.clicks++},
+          })
+          $.button({
+            textContent: () => `Button B: ${state.B.clicks} clicks`,
+            onClick: () => {state.B.clicks++},
+          })
+          $.p({ innerHTML: () => (`Button A clicked <b>${state.A.clicks}</b> times and Button B clicked <b>${state.B.clicks}</b> times`) })
+        }).paint('counter-6')
+      }
+
+      'format-strings'() {
+        compose(($) => {
+          $.div({ textContent : () => ['%s%d', 'div', 1] })
+          $.div({ textContent : ['%s%d', 'div', 2] })
+        }).paint('format-strings')
+      }
+
+      'translate-strings'() {
+        const array = ['div3', 'div4']
+        const object = {div5 : 'div5', div6 : 'div6'}
+        const translateObject = {
+          'div1' : 'Div One',
+          'div2' : 'Div Two',
+          'div3' : 'Div Three',
+          'div4' : 'Div Four',
+          'div5' : 'Div Five',
+          'div6' : 'Div Six',
+        }
+
+        compose(($) => {
+          $.div('div1')
+          $.div({ textContent : 'div2' })
+
+          $.br()
+
+          $.forEach(array, (value, key) => {
+            $.div({textContent: `${key} => ${value}`})
+          })
+
+          $.br()
+
+          $.forEach(object, (value, key) => {
+            $.div({textContent: `${key} => ${value}`})
+          })
+        })
+        .useTranslations(translateObject)
+        .paint('translate-strings')
+      }
+
+      'translate-and-format-strings'() {
+        const translateObject = {
+          'div' : 'Div',
+          'Div2' : 'Div Two'
+        }
+
+        compose(($) => {
+          $.div({ textContent : () => ['%s%d', 'div', 1] })
+          $.div({ textContent : () => ['%s%d', 'div', 2] })
+
+          $.br()
+
+          $.div({ textContent : ['%s%d', 'div', 1] })
+          $.div({ textContent : ['%s%d', 'div', 2] })
+        })
+        .useTranslations(translateObject)
+        .paint('translate-and-format-strings')
+      }
+
+      'for-if'() {
+        compose(($) => {
+          $.for(0, 10, (i) => {
+            const isOddNumber = i % 2 > 0
+
+            $.if(isOddNumber, () => {
+              $.div({textContent: `index ${i}`})
+            })
+          })
+        }).paint('for-if')
+      }
+
+      'for-with-array'() {
+        const array = ['One', 'Two', 'Three']
+
+        compose(($) => {
+          $.forEach(array, (value, key) => {
+            $.div({textContent: `${key} => ${value}`})
+          })
+        }).paint('for-with-array')
+      }
+
+      'for-with-object'() {
+        const object = {
+          'one': 'ONE',
+          'two': 'TWO',
+          'three': 'THREE'
+        }
+
+        compose(($) => {
+          $.forEach(object, (value, key) => {
+            $.div({textContent: `${key}: ${value}`})
+          })
+        }).paint('for-with-object')
+      }
+
+      'dynamic-if'() {
+        const state = createState({clicks: 0})
+
+        compose(($) => {
+          $.button({
+            textContent: () => `${state.clicks} clicks`,
+            onClick: () => state.clicks++,
+          })
+
+          $.if(() => (state.clicks % 2 > 0), () => {
+            $.div({textContent: () => `This div element is created only at odd number of clicks`})
+          })
+        }).paint('dynamic-if')
+      }
+
+      'dynamic-for'() {
+        const state = createState([])
+
+        compose(($) => {
+          $.button({
+            textContent : 'Click to add <li> element',
+            onClick : () => {
+              state.push({ counter : state.length + 1})
+            }
+          })
+
+          $.ul(
+             $.forEach(() => state, (value, key) => {
+               $.li(`li element #${value.counter}`)
+             })
+          )
+        }).paint('dynamic-for')
+      }
+
+      'inline-style'() {
+        compose(($) => {
+          // Example where style is a string
+          $.p({
+            style: 'color: blue; background-color: lightyellow; border: 1px solid red;',
+            textContent: 'Hello, World!'
+          })
+
+          // Example where style is an object
+          $.p({
+            style: {color: 'Blue', 'background-color': 'LightYellow', border: '1px solid red'},
+            textContent: 'Hello, World!'
+          })
+        }).paint('inline-style')
+      }
+
+      'inline-style-binding'() {
+        const state = createState({fontSize: 18})
+
+        compose(($) => {
+          $.button({
+            textContent: () => `Decrease Font Size`,
+            onClick: () => {state.fontSize--},
+          })
+
+          $.button({
+            textContent: () => `Increase Font Size`,
+            onClick: () => {state.fontSize++},
+          })
+
+          $.p({
+            style: {
+              fontSize: () => `${state.fontSize}px`
+            },
+            textContent: () => `Font size is ${state.fontSize}px`
+          })
+        }).paint('inline-style-binding')
+      }
+
+      'many-elements-100000'() {
+        compose(($) => {
+          for (let i = 1; i <= 100000; i++) {
+            $.button({
+              textContent: i,
+              style: {width: '46px', height: '46px'},
+            })
+          }
+        }).paint('many-elements-100000')
+      }
+
+      'many-elements-100000-html'() {
+        compose(($) => {
+          $.html`
+          <for from="1" to="100000">${(i) =>
+             $.html`<button style="width: 46px; height: 46px">${i}</button>`
+          }</for>
+          `
+        }).paint('many-elements-100000-html')
+      }
+
+      'many-elements-1000-with-binding'() {
+        const state = createState({ currentIndex: 0 })
+
+        compose(($) => {
+          $.div('Move your mouse over the buttons. On every mouse enter, the index of the current button is written in all buttons.')
+
+          for (let i = 0; i < 1000; i++) {
+            $.button({
+              textContent: () => state.currentIndex,
+              style: {width: '46px', height: '46px'},
+              onMouseEnter: (event) => {state.currentIndex = i},
+              onClick: (event) => {event.target.textContent = 'Hello'}
+            })
+          }
+        }).paint('many-elements-1000-with-binding')
+      }
+
+      // SERVER EXAMPLES ---------------------------------------------------------------------------
+
+      serverExampleCreateTable() {
+        return compose(($) => {
+          $.table(
+             $.thead(
+                $.tr(
+                   $.th({colspan: 3}, 'Table Header')
+                ),
+             ),
+             $.tbody(
+                $.tr(
+                   $.td('Row 1, Column 1'),
+                   $.td('Row 1, Column 2'),
+                ),
+                $.tr(
+                   $.td('Row 2, Column 1'),
+                   $.td('Row 2, Column 2'),
+                )
+             )
+          )
+        }).getHtml({ indent: '\t' })
+      }
+
+      serverExampleUsingData() {
+        const data = { firstName: 'John', lastName: 'Smith' }
+
+        return compose(($) => {
+          $.div(`My name is ${data.firstName} ${data.lastName}`)
+        }).getHtml({ indent: '\t' })
+      }
+
+      serverInlineStyle() {
+        return compose(($) => {
+          $.p({
+            style: 'color: blue; background-color: lightyellow; border: 1px solid red;',
+            textContent: 'Hello, World!'
+          })
+
+          $.p({
+            style: {color: 'Blue', backgroundColor: 'LightYellow', border: '1px solid red'},
+            textContent: 'Hello, World!'
+          })
+        }).getHtml({ indent: '\t' })
+      }
+
+      server100000Elements() {
+        return compose(($) => {
+          for (let i = 0; i < 100000; i++) {
+            $.button({
+              textContent: i,
+              style: {width: '46px', height: '46px'},
+            })
+          }
+        }).getHtml({ indent: '\t' })
+      }
+
+      /**
+       * Initialize the menu buttons
+       */
+      #init() {
+        document.getElementById('menu').onclick = (ev) => {
+          const element = ev.target
+
+          if (!(element instanceof HTMLButtonElement)) {
+            return
+          }
+
+          // Draw the function contents
+          const mode = ev.target.dataset.mode
+          const functionName = ev.target.dataset.function
+          const codeViewElement = document.querySelector('#functionContents code')
+          const browserModeContainer = document.getElementById('container')
+          const serverModeContainer = document.getElementById('serverContainer')
+
+          // Clean the containers
+          //browserModeContainer.innerText = ''
+          serverModeContainer.innerText = ''
+
+          for (const child of browserModeContainer.children) {
+            child.style.display = 'none'
+          }
+
+          let newlyCreated = false
+
+          if (browserModeContainer.getElementsByTagName(functionName).length === 0) {
+            browserModeContainer.appendChild(document.createElement(functionName))
+
+            newlyCreated = true
+          }
+
+          for (const el of browserModeContainer.getElementsByTagName(functionName)) {
+            el.style.display = ''
+          }
+
+          // Print code in the code view container
+          codeViewElement.textContent = this[functionName].toString()
+          .replace(/\n      /g, '\n')
+          .split('\n').slice(1, -1).join('\n') // remove first and last rows
+          .replace(/^  /gm, '') // indent left
+
+          hljs.highlightElement(codeViewElement, {language: 'javascript'})
+
+          if (!newlyCreated) {
+            return
+          }
+
+          // Run the function
+          const htmlCode = this[functionName]('container')
+
+          // Server mode visualization
+          if (mode === 'server') {
+            document.getElementById('serverContainer').innerText = htmlCode
+          }
+        }
+
+        // Click at the first button to load the first example
+        document.querySelector('#menu > button').click()
+      }
+    }
+
+    new Tests()
+  </script>
+</head>
+<body>
+<div id="menu">
+  <div class="label">Browser Mode</div>
+  <button data-function="html-elements">Create HTML Elements</button>
+  <button data-function="html-elements-html">Create HTML Elements (HTML)</button>
+  <button data-function="a-table">Create a Table</button>
+  <button data-function="a-table-html">Create a Table (HTML)</button>
+  <button data-function="counter-1">Clicks Counter 1</button>
+  <button data-function="counter-1-html">Clicks Counter 1 (HTML)</button>
+  <button data-function="counter-2">Clicks Counter 2</button>
+  <button data-function="counter-2-html">Clicks Counter 2 (HTML)</button>
+  <button data-function="counter-3">Clicks Counter 3<br>One State</button>
+  <button data-function="counter-3-html">Clicks Counter 3<br>One State (HTML)</button>
+  <button data-function="counter-4">Clicks Counter 4<br>Two States</button>
+  <button data-function="counter-5">Clicks Counter 5<br>One Array State</button>
+  <button data-function="counter-6">Clicks Counter 6<br>States in a State</button>
+  <button data-function="format-strings">Format Strings</button>
+  <button data-function="translate-strings">Translate Strings</button>
+  <button data-function="translate-and-format-strings">Translate & Format Strings</button>
+  <button data-function="for-if">forEach() & if()</button>
+  <button data-function="for-with-array">forEach() With Array of Data</button>
+  <button data-function="for-with-object">forEach() With Object of Data</button>
+  <button data-function="dynamic-if">Dynamic if()</button>
+  <button data-function="dynamic-for">Dynamic forEach()</button>
+  <button data-function="inline-style">Inline Style</button>
+  <button data-function="inline-style-binding">Inline Style Binding</button>
+  <button data-function="many-elements-100000">100,000 Elements</button>
+  <button data-function="many-elements-100000-html">100,000 Elements (HTML)</button>
+  <button data-function="many-elements-1000-with-binding">1,000 Elements with Bindings</button>
+  <div class="label">Server Mode</div>
+  <button data-mode="server" data-function="serverExampleCreateTable">Create a Table</button>
+  <button data-mode="server" data-function="serverExampleUsingData">Using Data</button>
+  <button data-mode="server" data-function="serverInlineStyle">Inline Style Binding</button>
+  <button data-mode="server" data-function="server100000Elements">100,000 Elements</button>
+</div>
+<div id="contents">
+  <div id="container"></div>
+  <pre id="serverContainer"></pre>
+</div>
+<pre id="functionContents"><code></code></pre>
+</body>
+</html>

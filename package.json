@@ -1,32 +1,40 @@
 {
-  "author": {
-    "name": "AseasRoa",
-    "email": "aseasroa@yahoo.com"
-  },
-  "description": "",
-  "homepage": "https://github.com/AseasRoa/paintor",
-  "keywords": [],
-  "license": "MIT",
-  "main": "src/index.js",
   "name": "paintor",
-  "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "lint": "eslint --config .eslintrc --ext .js,.ts ./src ./types",
-    "lint-fix": "npm run lint -- --fix",
-    "start-server": "npx webpack serve"
+  "version": "1.0.0",
+  "author": {
+    "name": "AseasRoa"
   },
+  "description": "Vanilla JavaScript View library for the browser and for the server",
+  "homepage": "https://github.com/AseasRoa/paintor",
+  "keywords": [
+    "view"
+  ],
+  "license": "MIT",
   "type": "module",
-  "types": "types/index.d.ts",
-  "version": "0.0.2",
+  "types": "./src/types/global.d.ts",
+  "main": "./dist/paintor.js",
+  "module": "./dist/paintor.js",
+  "exports": "./dist/paintor.js",
+  "scripts": {
+    "dev": "vite",
+    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "build": "vite build"
+  },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
-    "eslint": "^7.29.0",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "typescript": "^4.3.5",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2"
+    "@types/node": "^18.15.3",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "@vitest/coverage-c8": "^0.29.3",
+    "eslint": "^8.36.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-jsdoc": "^40.0.3",
+    "eslint-plugin-vitest-globals": "^1.3.1",
+    "jsdom": "^21.1.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.0",
+    "vitest": "^0.29.3"
   },
   "repository": {
     "type": "git",

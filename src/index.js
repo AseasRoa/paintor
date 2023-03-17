@@ -1,42 +1,46 @@
-import { PaintorWrapper } from './PaintorWrapper.js'
-import { StateSubscriptions } from './StateSubscriptions.js'
-import { isBrowserEnvironment, theGlobalScope } from './functions.js'
-import './typedefs.js'
+import { Paintor } from './Paintor.js'
+import { createState } from './State.js'
+import { createTranslation } from './Translation.js'
 
-const isBrowser = isBrowserEnvironment()
-
-/** @type {PaintorFunction} */
-const paintor = function paintor(target, states, contents) {
-  const { mode } = paintor
-  const theGlobal = theGlobalScope(isBrowser, mode)
-
-  const result = new PaintorWrapper({
-    target,
-    states,
-    contents,
-    theGlobal,
-  })
-
-  if (mode === 'server')
-    return result.getHtmlCode()
-
-  return result
+/**
+ * @param {Model} model
+ * @returns {Model}
+ */
+// eslint-disable-next-line @typescript-eslint/no-shadow
+const createModel = (model) => {
+  return model
 }
 
 /**
- * @template T
- * @param {T} object - A generic parameter that flows through to the return type
- * @return {T}
+ * @param {string} [container]
+ * @returns {void | string}
  */
-const createState = function createState(object) {
-  const stateSubscriptions = new StateSubscriptions(object)
-
-  return stateSubscriptions.getState()
+const paintor = function (container = '') {
+  /**
+   * Current version
+   */
+  return new Paintor().paint(container)
 }
 
-paintor.mode = (isBrowser) ? 'browser' : 'server'
-paintor.state = createState
-paintor.createState = createState
+/**
+ * @param {...Model} models
+ * @returns {Paintor}
+ */
+paintor.compose = function (...models) {
+  return new Paintor().compose(...models)
+}
+
+/**
+ * @param {...Translation} translations
+ * @returns {Paintor}
+ */
+paintor.useTranslations = function (...translations) {
+  return new Paintor().useTranslations(...translations)
+}
+
+paintor.createModel = createModel
+
+const compose = paintor.compose
 
 export default paintor
-export { paintor, createState }
+export { paintor, compose, createState, createModel, createTranslation, Paintor }

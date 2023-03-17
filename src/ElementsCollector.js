@@ -1,22 +1,35 @@
 /**
- * This class has an array where HTML elements are stored. Its methods provide
- * an interface for managing this array.
+ * This class has an array where HTML elements are stored.
+ * The class methods provide an interface for managing this array.
  */
 class ElementsCollector {
-  /** @type HTMLElement[] */
+  /** @type {Node[]} */
   elements = []
 
   /**
    * Add one element to the array of collected elements
-   * @param element
+   *
+   * @param {Node} element
    */
   addElement(element) {
-    this.elements.push(element)
+    if (element) this.elements.push(element)
+  }
+
+  /**
+   * Add multiple elements to the array of collected elements
+   *
+   * @param {Node[]} elements
+   */
+  addElements(elements) {
+    for (let element of elements) {
+      this.elements.push(element)
+    }
   }
 
   /**
    * Returns the array of collected elements
-   * @returns {HTMLElement[]}
+   *
+   * @returns {Node[]}
    */
   getElements() {
     return this.elements
@@ -24,13 +37,15 @@ class ElementsCollector {
 
   /**
    * Import the elements from another ElementsCollector into this one
+   *
    * @param {ElementsCollector} elementsCollector
    */
   importElements(elementsCollector) {
     const elements = elementsCollector.getElements()
 
-    for (const element of elements)
+    for (const element of elements) {
       this.addElement(element)
+    }
   }
 
   /**
@@ -42,21 +57,16 @@ class ElementsCollector {
 
   /**
    * From the list of collected elements remove any element present in the input array
-   * @param {HTMLElement[]} elements
+   *
+   * @param {Node[]} elements
    */
   removeTheseElements(elements) {
     if (elements.length > 0) {
-      const newElements = []
-
-      for (const element of this.elements) {
-        if (elements.indexOf(element) === -1)
-          newElements.push(element)
-      }
-
-      this.elements = newElements
+      this.elements = this.elements.filter(
+        (element) => !(elements.includes(element)),
+      )
     }
   }
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export { ElementsCollector }

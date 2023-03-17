@@ -1,33 +1,33 @@
 {
   "compilerOptions" : {
     "allowJs"   : true,
+    "checkJs"   : true,
+    "noEmit"    : true,
+    "emitDeclarationOnly": false,
     "lib"       : ["DOM", "ESNext"],
+    "moduleResolution" : "Node",
     "module"    : "ESNext",
     "target"    : "ESNext",
     "strict"    : true,
     "sourceMap" : true,
     "baseUrl"   : ".",
     "declaration": true,
+    "declarationDir": "./types",
+    "types": ["node", "vitest/globals"],
     "paths": {
-        "*": [
-          "./*",
-          "../node_modules/*"
-        ]
-      }
+      //"*": ["./src/types/*.d.ts", "./types/*.d.ts"]
+    },
+    "allowSyntheticDefaultImports" : true
   },
-  "files": [
-    "types/index.d.ts"
-  ],
   "include" : [
+    "*.js",
     "src/**/*",
-    "types/**/*",
-    "examples/**/*",
-    ".eslintrc",
-    "webpack.config.js"
+    "tests/**/*",
+    "examples/**/*"
   ],
-  "exclude"         : [
+  "exclude" : [
     "node_modules",
-    "**/*.spec.ts",
-    "dist"
+    "dist",
+    "types"
   ]
 }

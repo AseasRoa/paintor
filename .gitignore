@@ -1,6 +1,7 @@
 # Directories
 .idea/
 .vscode/
+coverage/
 node_modules/
 
 # Files
