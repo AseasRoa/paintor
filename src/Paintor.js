@@ -33,8 +33,8 @@ class Paintor {
   /** @type {boolean} */
   #isStatic = false
 
-  /** @type {Model[]} */
-  #models = []
+  /** @type {Template[]} */
+  #templates = []
 
   /** @type {Map<Translation | null, string>} */
   #staticHtmlCodes = new Map()
@@ -55,22 +55,20 @@ class Paintor {
   }
 
   /**
-   * @param {...Model} models
+   * @param {...Template} templates
    * @returns {Paintor}
    */
-  compose(...models) {
-    if (models instanceof Array) {
-      for (const model of models) {
-        if (model instanceof Array) {
-          this.#models = [...this.#models, () => model]
+  compose(...templates) {
+    if (templates instanceof Array) {
+      for (const template of templates) {
+        if (template instanceof Array) {
+          this.#templates = [...this.#templates, () => template]
         }
         else {
-          this.#models.push(model)
+          this.#templates.push(template)
         }
       }
     }
-
-    //this.#models = models
 
     return this
   }
@@ -210,14 +208,14 @@ class Paintor {
    * @param {string | HTMLElement | null} container
    * @param {Window} window
    * @param {Translation[]} translations
-   * @param {Model[]} models
+   * @param {Template[]} templates
    * @returns {boolean}
    * @throws {Error}
    */
-  #init(container, window, translations, models) {
+  #init(container, window, translations, templates) {
     this.#initContainer(container, window)
     this.#initTranslations(translations)
-    this.#initModels(models)
+    this.#initTemplates(templates)
 
     return true
   }
@@ -231,17 +229,18 @@ class Paintor {
     const isSr = window.document.baseURI === ''
 
     if (typeof container === 'string') {
-      // @ts-ignore
-      this.#containerElement = (isSr)
-        ? window.document.createElement('#container')
-        : window.document.querySelector(container)
-
-      if (!this.#containerElement && !isValidCustomElementName(container)) {
-        throw new Error(`Could not find an element using the following query: ${container}`)
-      }
-
-      if (!this.#containerElement) {
+      if (isValidCustomElementName(container)) {
         this.#containerCustomElementName = container
+      }
+      else {
+        // @ts-ignore
+        this.#containerElement = (isSr)
+          ? window.document.createElement('#container')
+          : window.document.querySelector(container)
+
+        if (!this.#containerElement) {
+          throw new Error(`Could not find an element by the following query: ${container}`)
+        }
       }
     }
     else {
@@ -252,14 +251,14 @@ class Paintor {
   }
 
   /**
-   * @param {Model[]} models
+   * @param {Template[]} templates
    * @returns {boolean}
    * @throws {Error}
    */
-  #initModels(models) {
-    for (let model of models) {
-      if (typeof model !== 'function') {
-        throw new Error('The model must be a function')
+  #initTemplates(templates) {
+    for (let template of templates) {
+      if (typeof template !== 'function') {
+        throw new Error('The template must be a function')
       }
     }
 
@@ -290,13 +289,13 @@ class Paintor {
    * @throws {Error}
    */
   #render(container, window, clearContainer = true, htmlOptions = {}) {
-    this.#init(container, window, this.#translations, this.#models)
+    this.#init(container, window, this.#translations, this.#templates)
 
     if (clearContainer) {
       this.#clearContainerElement()
     }
 
-    const models = this.#models
+    const templates = this.#templates
     const translations = this.#translations
 
     if (!window) {
@@ -328,7 +327,7 @@ class Paintor {
             paintor.#containerElement = this.shadowRoot
 
             const creator = new ElementsCreator(
-              window, paintor.#containerElement, models, translations,
+              window, paintor.#containerElement, templates, translations,
             )
             const children = creator.getCreatedElements()
 
@@ -349,7 +348,7 @@ class Paintor {
 
       // DOM or Virtual
       const creator = new ElementsCreator(
-        window, this.#containerElement, models, translations,
+        window, this.#containerElement, templates, translations,
       )
 
       this.#finalHtmlCode = creator.finalPaint(htmlOptions)

@@ -69,28 +69,28 @@ class ElementsCreator {
    */
   #isSr = true
 
-  /** @type {Model[]} */
-  #models = []
+  /** @type {Template[]} */
+  #templates = []
 
   /**
    * @param {Window} window
    * @param {HTMLElement | ShadowRoot} containerElement
-   * @param {Model[]} models
+   * @param {Template[]} templates
    * @param {Translation[]} [translations=[]]
    */
-  constructor(window, containerElement, models, translations = []) {
+  constructor(window, containerElement, templates, translations = []) {
     this.#window = window
     this.#document = window.document
     this.#isSr = this.#document.baseURI === ''
     this.#containerElement = containerElement
-    this.#models = models
+    this.#templates = templates
     this.#translations = translations
 
     this.#dummyHtmlElement = this.#document.createElement('template')
 
-    for (const model of this.#models) {
+    for (const template of this.#templates) {
       // @ts-ignore
-      const returnedValue = model(this)
+      const returnedValue = template(this)
 
       if (returnedValue && typeof returnedValue === 'string') {
         this.html(returnedValue)

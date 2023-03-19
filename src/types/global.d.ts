@@ -4,17 +4,17 @@ type Statements = import('./Statements').Statements
 type State = Record<any, any> | Array<any> | Set<any> | Map<any, any>
 type States = Record<string, State>
 type Tree = Elements & Statements
-type Model = (tree : Tree) => HTMLElement | HTMLElement[] | string | Paintor | Paintor[] | Model | void
+type Template = (tree : Tree) => HTMLElement | HTMLElement[] | string | Paintor | Paintor[] | Template | void
 type Translation = Record<string, any>
 
 type PaintorTree = Tree
-type PaintorModel = Model
+type PaintorTemplate = Template
 
 interface Paintor {
   (container: string | HTMLElement): void | string,
-  createModel: PaintorModel,
+  createTemplate: PaintorTemplate,
   useTranslations : (...translations: Translation[]) => Paintor,
-  compose: (...models: Model[]) => Paintor,
+  compose: (...templates: Template[]) => Paintor,
   static: (on?: boolean) => Paintor,
   paint: (container: string | HTMLElement) => void,
   appendTo: (container: string | HTMLElement) => void,
@@ -23,7 +23,7 @@ interface Paintor {
 }
 
 declare module 'paintor' {
-  function createModel(model: Model) : Model
+  function createTemplate(template: Template) : Template
 
   /**
    * @template T
@@ -44,11 +44,10 @@ declare module 'paintor' {
   function createTranslation(...defaultPaths: string[]) : Promise<Translation>
 
   /**
-   * @param {Model} models
+   * @param {Template} templates
    * @returns {Paintor}
    */
-  function compose(...models: Model[]): Paintor
+  function compose(...templates: Template[]): Paintor
 
-  //const compose: (...models: Model[]) => Paintor
   const paintor: Paintor // & ((container: string | HTMLElement) => PaintorInterface)
 }
