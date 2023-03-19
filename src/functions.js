@@ -154,6 +154,14 @@ export function isWhitespace(char) {
 }
 
 /**
+ * @param {string} name
+ * @returns {boolean}
+ */
+export function isValidCustomElementName(name) {
+  return /^[a-z][a-z0-9-]+$/.test(name) && name.includes('-')
+}
+
+/**
  * Turns a string into boolean.
  * Covers the cases when the string is 'true', 'false' or a number.
  *

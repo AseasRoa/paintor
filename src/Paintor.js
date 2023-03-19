@@ -1,5 +1,9 @@
 import { ElementsCreator } from './ElementsCreator.js'
-import { appendChildrenToElement, isBrowserEnvironment } from './functions.js'
+import {
+  appendChildrenToElement,
+  isBrowserEnvironment,
+  isValidCustomElementName,
+} from './functions.js'
 import { Window as SrWindow } from './SrDOM/Window.js'
 
 const isBrowserEnv = isBrowserEnvironment()
@@ -227,13 +231,14 @@ class Paintor {
     const isSr = window.document.baseURI === ''
 
     if (typeof container === 'string') {
+      // @ts-ignore
       this.#containerElement = (isSr)
         ? window.document.createElement('#container')
-        : window.document.getElementById(container)
+        : window.document.querySelector(container)
 
-      // if (!this.#containerElement) {
-      //   throw new Error(`Could not locate element #${container}`)
-      // }
+      if (!this.#containerElement && !isValidCustomElementName(container)) {
+        throw new Error(`Could not find an element using the following query: ${container}`)
+      }
 
       if (!this.#containerElement) {
         this.#containerCustomElementName = container

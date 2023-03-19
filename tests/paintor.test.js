@@ -17,7 +17,7 @@ describe('Paintor Tests', () => {
       $.div('div 1')
       $.div('div 2')
       $.div('div 3')
-    }).paint(id)
+    }).paint(`#${id}`)
 
     expect(container.childNodes.length).toBe(3)
   })
