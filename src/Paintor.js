@@ -16,11 +16,11 @@ class Paintor {
   /**
    * The main element in which to append all the contents
    *
-   * @type {HTMLElement | ShadowRoot | null}
+   * @type {HTMLElement[]}
    */
-  #containerElement = null
+  #containerDOMElements = []
 
-  /** @type {HTMLElement[]} */
+  /** @type {HTMLElement[][]} */
   #finalElements = []
 
   /**
@@ -126,7 +126,7 @@ class Paintor {
   }
 
   /**
-   * @param {string | HTMLElement} container
+   * @param {string | HTMLElement | HTMLElement[]} container
    * @returns {void}
    */
   paint(container) {
@@ -134,7 +134,12 @@ class Paintor {
       throw new Error('You can only use this function in browser environment')
     }
 
-    if (typeof container !== 'string' && !(container instanceof HTMLElement)) {
+    if (
+      typeof container !== 'string'
+      && !(container instanceof HTMLElement)
+      && !(container instanceof NodeList)
+      && !(container instanceof Array)
+    ) {
       throw new Error(
         'Wrong type for the container element. '
         + 'Expected <string> or <Node>, '
@@ -185,11 +190,13 @@ class Paintor {
   /**
    * Clear contents of the container element
    */
-  #clearContainerElement() {
-    const el = this.#containerElement
-
-    while (el?.firstChild) {
-      el.removeChild(el.firstChild)
+  #clearContainerElements() {
+    if (this.#containerDOMElements) {
+      for (const el of this.#containerDOMElements) {
+        while (el?.firstChild) {
+          el.removeChild(el.firstChild)
+        }
+      }
     }
   }
 
@@ -205,7 +212,7 @@ class Paintor {
   }
 
   /**
-   * @param {string | HTMLElement | null} container
+   * @param {string | HTMLElement | HTMLElement[] | null} container
    * @param {Window} window
    * @param {Translation[]} translations
    * @param {Template[]} templates
@@ -221,7 +228,7 @@ class Paintor {
   }
 
   /**
-   * @param {string | HTMLElement | null} container
+   * @param {string | HTMLElement| HTMLElement[] | null} container
    * @param {Window} window
    * @returns {boolean}
    */
@@ -234,17 +241,29 @@ class Paintor {
       }
       else {
         // @ts-ignore
-        this.#containerElement = (isSr)
-          ? window.document.createElement('#container')
-          : window.document.querySelector(container)
+        this.#containerDOMElements = (isSr)
+          ? [window.document.createElement('#container')]
+          : window.document.querySelectorAll(container)
 
-        if (!this.#containerElement) {
+        if (!this.#containerDOMElements) {
           throw new Error(`Could not find an element by the following query: ${container}`)
         }
       }
     }
-    else {
-      this.#containerElement = container
+    else if (container instanceof HTMLElement) {
+      this.#containerDOMElements = [container]
+    }
+    else if (container instanceof NodeList) {
+      this.#containerDOMElements = container
+    }
+    else if (container instanceof Array) {
+      for (const element of container) {
+        if (!(element instanceof HTMLElement)) {
+          throw new Error('All elements in the input array must be DOM elements')
+        }
+      }
+
+      this.#containerDOMElements = container
     }
 
     return true
@@ -281,18 +300,18 @@ class Paintor {
   }
 
   /**
-   * @param {HTMLElement | string | null} container
+   * @param { string | HTMLElement | HTMLElement[] | null} container
    * @param {Window} window
-   * @param {boolean} clearContainer
+   * @param {boolean} clearContainers
    * @param {object} [htmlOptions]
    * @param {string} [htmlOptions.indent]
    * @throws {Error}
    */
-  #render(container, window, clearContainer = true, htmlOptions = {}) {
+  #render(container, window, clearContainers = true, htmlOptions = {}) {
     this.#init(container, window, this.#translations, this.#templates)
 
-    if (clearContainer) {
-      this.#clearContainerElement()
+    if (clearContainers) {
+      this.#clearContainerElements()
     }
 
     const templates = this.#templates
@@ -302,17 +321,13 @@ class Paintor {
       throw new Error('Missing window element')
     }
 
-    if (
-      !this.#containerElement
-      && this.#containerCustomElementName
-    ) {
+    if (this.#containerCustomElementName) {
       // Custom Elements
 
       /**
-       * @param {Paintor} paintor
        * @returns {CustomElementConstructor}
        */
-      const getCustomElementConstructor = (paintor) => {
+      const getCustomElementConstructor = () => {
         return class extends HTMLElement {
           constructor() {
             super()
@@ -324,35 +339,41 @@ class Paintor {
               throw new Error('Missing shadow root')
             }
 
-            paintor.#containerElement = this.shadowRoot
-
             const creator = new ElementsCreator(
-              window, paintor.#containerElement, templates, translations,
+              window, this.shadowRoot, templates, translations,
             )
             const children = creator.getCreatedElements()
 
-            appendChildrenToElement(paintor.#containerElement, children)
+            appendChildrenToElement(this.shadowRoot, children)
           }
         }
       }
 
       customElements.define(
         this.#containerCustomElementName,
-        getCustomElementConstructor(this),
+        getCustomElementConstructor(),
       )
     }
     else {
-      if (!this.#containerElement) {
-        throw new Error('Missing containerElement')
+      // DOM or Virtual
+
+      if (this.#containerDOMElements.length === 0) {
+        const creator = new ElementsCreator(
+          window, null, templates, translations,
+        )
+
+        this.#finalHtmlCode = creator.finalPaint(htmlOptions)
+        this.#finalElements.push(creator.finalElements)
       }
 
-      // DOM or Virtual
-      const creator = new ElementsCreator(
-        window, this.#containerElement, templates, translations,
-      )
+      for (const element of this.#containerDOMElements) {
+        const creator = new ElementsCreator(
+          window, element, templates, translations,
+        )
 
-      this.#finalHtmlCode = creator.finalPaint(htmlOptions)
-      this.#finalElements = creator.finalElements
+        this.#finalHtmlCode = creator.finalPaint(htmlOptions)
+        this.#finalElements.push(creator.finalElements)
+      }
     }
   }
 }

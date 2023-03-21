@@ -34,7 +34,7 @@ class ElementsCreator {
   /**
    * The main element in which to append all the contents
    *
-   * @type {HTMLElement | ShadowRoot}
+   * @type {HTMLElement | ShadowRoot | null}
    */
   #containerElement
 
@@ -74,7 +74,7 @@ class ElementsCreator {
 
   /**
    * @param {Window} window
-   * @param {HTMLElement | ShadowRoot} containerElement
+   * @param {HTMLElement | ShadowRoot | null} containerElement
    * @param {Template[]} templates
    * @param {Translation[]} [translations=[]]
    */
@@ -100,19 +100,27 @@ class ElementsCreator {
           ? returnedValue.getElementsSr()
           : returnedValue.getElements()
 
-        this.#collectedElements[0].addElements(generatedChildren)
+        for (const childrenGroup of generatedChildren) {
+          this.#collectedElements[0].addElements(childrenGroup)
+        }
       }
       else if (returnedValue instanceof Function) {
         // @ts-ignore
         returnedValue(this)
       }
       else if (returnedValue instanceof Array) {
-        // Check if all elements are Paintor
         let allPaintor = true
+        let allFunctions = true
 
         for (const value of returnedValue) {
           if (!(value instanceof Paintor)) {
             allPaintor = false
+
+            break
+          }
+
+          if (!(value instanceof Function)) {
+            allFunctions = false
 
             break
           }
@@ -126,7 +134,17 @@ class ElementsCreator {
               ? value.getElementsSr()
               : value.getElements()
 
-            this.#collectedElements[0].addElements(generatedChildren)
+            for (const childrenGroup of generatedChildren) {
+              this.#collectedElements[0].addElements(childrenGroup)
+            }
+          }
+        }
+        else if (allFunctions) {
+          for (const value of returnedValue) {
+            if (!(value instanceof Function)) break
+
+            // @ts-ignore
+            value(this)
           }
         }
       }
@@ -227,8 +245,10 @@ class ElementsCreator {
             ? argument.getElementsSr()
             : argument.getElements()
 
-          for (const child of generatedChildren) {
-            children.push(child)
+          for (const childrenGroup of generatedChildren) {
+            for (const child of childrenGroup) {
+              children.push(child)
+            }
           }
         }
       }
@@ -259,8 +279,8 @@ class ElementsCreator {
         && !(argument instanceof Function)
         && argumentID === 1
       ) {
-        // If Object and first argument, this is a property
-        // ! This condition needs to be at the end of the 'if' chain
+        // If Object, and the first argument, this is a property.
+        // This condition needs to be at the end of the 'if' chain.
 
         // @ts-ignore
         this.#setPropertiesToElement(element, argument)
