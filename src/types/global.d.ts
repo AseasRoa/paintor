@@ -3,16 +3,16 @@ type Statements = import('./Statements').Statements
 
 type State = Record<any, any> | Array<any> | Set<any> | Map<any, any>
 type States = Record<string, State>
-type Tree = Elements & Statements
-type Template = (tree : Tree) => HTMLElement | HTMLElement[] | string | Paintor | Paintor[] | Template | void
+type TemplateTree = Elements & Statements
+type Template = (tree : TemplateTree) => HTMLElement | HTMLElement[] | string | Paintor | Paintor[] | Template | void
 type Translation = Record<string, any>
 
-type PaintorTree = Tree
+type PaintorTemplateTree = TemplateTree
 type PaintorTemplate = Template
 
 interface Paintor {
   (container: string | HTMLElement): void | string,
-  createTemplate: PaintorTemplate,
+  createTemplate: Template,
   useTranslations : (...translations: Translation[]) => Paintor,
   compose: (...templates: Template[]) => Paintor,
   static: (on?: boolean) => Paintor,
