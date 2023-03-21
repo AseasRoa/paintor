@@ -3,44 +3,22 @@ import { createState } from './State.js'
 import { createTranslation } from './Translation.js'
 
 /**
- * @param {Template} template
- * @returns {Template}
- */
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const createTemplate = (template) => {
-  return template
-}
-
-/**
- * @param {string} [container]
- * @returns {void | string}
- */
-const paintor = function (container = '') {
-  /**
-   * Current version
-   */
-  return new Paintor().paint(container)
-}
-
-/**
  * @param {...Template} templates
  * @returns {Paintor}
  */
-paintor.compose = function (...templates) {
+function compose(...templates) {
   return new Paintor().compose(...templates)
 }
 
 /**
- * @param {...Translation} translations
- * @returns {Paintor}
+ * @param {Template} template
+ * @returns {Template}
  */
-paintor.useTranslations = function (...translations) {
-  return new Paintor().useTranslations(...translations)
+function createTemplate(template) {
+  return template
 }
 
-paintor.createTemplate = createTemplate
-
-const compose = paintor.compose
+const paintor = { compose, createState, createTemplate, createTranslation }
 
 export default paintor
 export { paintor, compose, createState, createTemplate, createTranslation, Paintor }

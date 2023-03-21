@@ -11,7 +11,6 @@ type PaintorTemplateTree = TemplateTree
 type PaintorTemplate = Template
 
 interface Paintor {
-  (container: string | HTMLElement): void | string,
   createTemplate: Template,
   useTranslations : (...translations: Translation[]) => Paintor,
   compose: (...templates: Template[]) => Paintor,
@@ -23,7 +22,11 @@ interface Paintor {
 }
 
 declare module 'paintor' {
-  function createTemplate(template: Template) : Template
+  /**
+   * @param {Template} templates
+   * @returns {Paintor}
+   */
+  function compose(...templates: Template[]): Paintor
 
   /**
    * @template T
@@ -31,6 +34,8 @@ declare module 'paintor' {
    * @returns {T} A proxy object/array that looks the same as the input object/array
    */
   function createState<T>(object : T) : T
+
+  function createTemplate(template: Template) : Template
 
   /**
    * @template T
@@ -43,11 +48,10 @@ declare module 'paintor' {
    */
   function createTranslation(...defaultPaths: string[]) : Promise<Translation>
 
-  /**
-   * @param {Template} templates
-   * @returns {Paintor}
-   */
-  function compose(...templates: Template[]): Paintor
-
-  const paintor: Paintor // & ((container: string | HTMLElement) => PaintorInterface)
+  const paintor: {
+    compose: typeof compose,
+    createState: typeof createState,
+    createTemplate: typeof createTemplate,
+    createTranslation: typeof createTranslation
+  }
 }
