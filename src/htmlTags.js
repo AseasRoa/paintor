@@ -31,4 +31,4 @@ const htmlTags = [
   'wbr',
 ]
 
-export default htmlTags
+export { htmlTags }

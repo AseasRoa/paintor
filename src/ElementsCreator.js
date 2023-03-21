@@ -17,7 +17,7 @@ import {
   setElementAttrOrProp,
   stringToHTML,
 } from './functions.js'
-import htmlTags from './htmlTags.js'
+import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
 import { Paintor } from './Paintor.js'
 import { isState } from './State.js'
@@ -238,8 +238,20 @@ class ElementsCreator {
           element.innerHTML = `(${argument.toString()})()`
         }
         else {
-          const inlineScript = this.#document.createTextNode(`(${argument.toString()})()`)
-          element.appendChild(inlineScript)
+          if (element instanceof HTMLScriptElement) {
+            const inlineScript = this.#document.createTextNode(`(${argument.toString()})()`)
+            element.appendChild(inlineScript)
+          }
+          else if (argumentID === 1) {
+            // It's the first argument and it's a function
+
+            const propsObject = ('value' in element)
+              ? { value: argument }
+              : { textContent: argument }
+
+            // @ts-ignore
+            this.#setPropertiesToElement(element, propsObject)
+          }
         }
       }
       else if (
