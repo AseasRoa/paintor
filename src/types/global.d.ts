@@ -22,11 +22,8 @@ interface Paintor {
 }
 
 declare module 'paintor' {
-  /**
-   * @param {Template} templates
-   * @returns {Paintor}
-   */
   function compose(...templates: Template[]): Paintor
+  function compose(templates: Template[]): Paintor
 
   /**
    * @template T

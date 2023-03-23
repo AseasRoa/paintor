@@ -3,7 +3,7 @@ import { createState } from './State.js'
 import { createTranslation } from './Translation.js'
 
 /**
- * @param {...Template} templates
+ * @param {...Template | Template[]} templates
  * @returns {Paintor}
  */
 function compose(...templates) {
