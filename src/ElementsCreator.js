@@ -1052,6 +1052,7 @@ class ElementsCreator {
             item.elements.forEach((element) => {
               // @ts-ignore
               lastElement.after(element)
+              lastElement = element
             })
           }
         }
