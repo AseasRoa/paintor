@@ -376,13 +376,17 @@ class Paintor {
         this.#finalElements.push(creator.finalElements)
       }
 
-      for (const element of this.#containerDOMElements) {
-        const creator = new ElementsCreator(
-          window, element, templates, translations,
-        )
+      if (this.#containerDOMElements
+        && Symbol.iterator in this.#containerDOMElements
+      ) {
+        for (const element of this.#containerDOMElements) {
+          const creator = new ElementsCreator(
+            window, element, templates, translations,
+          )
 
-        this.#finalHtmlCode = creator.finalPaint(htmlOptions)
-        this.#finalElements.push(creator.finalElements)
+          this.#finalHtmlCode = creator.finalPaint(htmlOptions)
+          this.#finalElements.push(creator.finalElements)
+        }
       }
     }
   }

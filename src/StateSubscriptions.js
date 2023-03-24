@@ -1,5 +1,5 @@
 import { setElementAttrOrProp, modifyStyleRule } from './functions.js'
-import { symArrayAccess, symObjectAccess } from './symbols.js'
+import { symArrayAccess, symObjectAccess, symStateId } from './symbols.js'
 
 /** @typedef {Object<*,*>} StateProxy */
 
@@ -382,9 +382,19 @@ class StateSubscriptions {
     }
 
     handler.set = (target, prop, value) => {
+      if (
+        typeof prop === 'symbol'
+        && (
+          prop === symArrayAccess
+          || prop === symObjectAccess
+          || prop === symStateId
+        )
+      ) {
+        target[prop] = value
+      }
       // Array's length is set every time after
       // adding or removing elements
-      if (target instanceof Array && prop === 'length') {
+      else if (target instanceof Array && prop === 'length') {
         target[prop] = value
 
         this.#onArrayLengthChange(target)
