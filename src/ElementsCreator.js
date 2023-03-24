@@ -262,15 +262,21 @@ class ElementsCreator {
             const inlineScript = this.#document.createTextNode(`(${argument.toString()})()`)
             element.appendChild(inlineScript)
           }
-          else if (argumentID === 1) {
-            // It's the first argument and it's a function
+          else {
+            if (
+              'value' in element
+              && !(element instanceof HTMLLIElement) // <li> has value, but it accepts only numbers
+            ) {
+              // @ts-ignore
+              this.#setPropertiesToElement(element, { value: argument })
+            }
+            else {
+              const textNode = this.#document.createTextNode(
+                this.#translate(argument()),
+              )
 
-            const propsObject = ('value' in element)
-              ? { value: argument }
-              : { textContent: argument }
-
-            // @ts-ignore
-            this.#setPropertiesToElement(element, propsObject)
+              children = addChildToStack(textNode, children)
+            }
           }
         }
       }
