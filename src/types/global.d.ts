@@ -4,7 +4,13 @@ type Statements = import('./Statements').Statements
 type State = Record<any, any> | Array<any> | Set<any> | Map<any, any>
 type States = Record<string, State>
 type TemplateTree = Elements & Statements
-type Template = (tree : TemplateTree) => HTMLElement | HTMLElement[] | string | Paintor | Paintor[] | Template | Template[] | void
+type Template = (tree : TemplateTree) => (
+  void
+  | string
+  | HTMLElement | HTMLElement[]
+  | Paintor | Paintor[]
+  | Template | Template[]
+)
 type Translation = Record<string, any>
 
 type PaintorTemplateTree = TemplateTree
@@ -15,7 +21,7 @@ interface Paintor {
   useTranslations : (...translations: Translation[]) => Paintor,
   compose: (...templates: Template[]) => Paintor,
   static: (on?: boolean) => Paintor,
-  paint: (container: string | HTMLElement | HTMLElement[]) => void,
+  paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   appendTo: (container: string | HTMLElement) => void,
   getHtml: (options?: { indent?:string }) => string,
   getStaticHtml: (options?: { indent?:string }) => string

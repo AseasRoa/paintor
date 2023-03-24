@@ -16,7 +16,7 @@ class Paintor {
   /**
    * The main element in which to append all the contents
    *
-   * @type {HTMLElement[]}
+   * @type {HTMLElement[] | HTMLCollection}
    */
   #containerDOMElements = []
 
@@ -55,7 +55,7 @@ class Paintor {
   }
 
   /**
-   * @param {...Template} templates
+   * @param {...Template | Template[]} templates
    * @returns {Paintor}
    */
   compose(...templates) {
@@ -126,7 +126,7 @@ class Paintor {
   }
 
   /**
-   * @param {string | HTMLElement | HTMLElement[]} container
+   * @param {string | HTMLElement | HTMLElement[] | HTMLCollection} container
    * @returns {void}
    */
   paint(container) {
@@ -134,11 +134,16 @@ class Paintor {
       throw new Error('You can only use this function in browser environment')
     }
 
+    if (!container) {
+      throw new Error('No container selected.')
+    }
+
     if (
       typeof container !== 'string'
       && !(container instanceof HTMLElement)
       && !(container instanceof NodeList)
       && !(container instanceof Array)
+      && !(container instanceof HTMLCollection)
     ) {
       throw new Error(
         'Wrong type for the container element. '
@@ -191,7 +196,9 @@ class Paintor {
    * Clear contents of the container element
    */
   #clearContainerElements() {
-    if (this.#containerDOMElements) {
+    if (this.#containerDOMElements
+      && Symbol.iterator in this.#containerDOMElements
+    ) {
       for (const el of this.#containerDOMElements) {
         while (el?.firstChild) {
           el.removeChild(el.firstChild)
@@ -212,7 +219,7 @@ class Paintor {
   }
 
   /**
-   * @param {string | HTMLElement | HTMLElement[] | null} container
+   * @param {string | HTMLElement | HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
    * @param {Translation[]} translations
    * @param {Template[]} templates
@@ -228,7 +235,7 @@ class Paintor {
   }
 
   /**
-   * @param {string | HTMLElement| HTMLElement[] | null} container
+   * @param {string | HTMLElement| HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
    * @returns {boolean}
    */
@@ -253,7 +260,10 @@ class Paintor {
     else if (container instanceof HTMLElement) {
       this.#containerDOMElements = [container]
     }
-    else if (container instanceof NodeList) {
+    else if (
+      container instanceof NodeList
+      || container instanceof HTMLCollection
+    ) {
       this.#containerDOMElements = container
     }
     else if (container instanceof Array) {
@@ -300,7 +310,7 @@ class Paintor {
   }
 
   /**
-   * @param { string | HTMLElement | HTMLElement[] | null} container
+   * @param { string | HTMLElement | HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
    * @param {boolean} clearContainers
    * @param {object} [htmlOptions]
