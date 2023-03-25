@@ -179,7 +179,7 @@ export function stringToBoolean(string) {
 }
 
 /**
- * @param {Element} element
+ * @param {Element | Text} element
  * @param {string} attributeName
  * @param {EventListenerOrEventListenerObject} callback
  * @returns {boolean}
@@ -474,7 +474,7 @@ export function setDataSetAttributesToElement(element, dataSet) {
  * Here we set either the attribute ot the property.
  * Which one? Depends on the name of the attribute or property.
  *
- * @param {Element} element
+ * @param {Element | Text} element
  * @param {string} attrOrPropName
  * @param {*} value
  */
@@ -491,7 +491,9 @@ export function setElementAttrOrProp(element, attrOrPropName, value) {
     }
   }
   else {
-    element.setAttribute(attrOrPropName, value)
+    if (element instanceof Element) {
+      element.setAttribute(attrOrPropName, value)
+    }
   }
 }
 

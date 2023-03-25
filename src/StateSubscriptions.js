@@ -357,18 +357,18 @@ class StateSubscriptions {
 
           if (target instanceof Set) {
             if (prop === 'add') {
-              this.#onPropCreate(target, prop)
+              this.#onPropCreate(receiver, prop)
             }
             else if (prop === 'delete') {
-              this.#onPropDelete(target, prop)
+              this.#onPropDelete(receiver, prop)
             }
           }
           else if (target instanceof Map) {
             if (prop === 'set') {
-              this.#onPropCreate(target, prop)
+              this.#onPropCreate(receiver, prop)
             }
             else if (prop === 'delete') {
-              this.#onPropDelete(target, prop)
+              this.#onPropDelete(receiver, prop)
             }
           }
 
@@ -381,7 +381,7 @@ class StateSubscriptions {
       return target[prop]
     }
 
-    handler.set = (target, prop, value) => {
+    handler.set = (target, prop, value, receiver) => {
       if (
         typeof prop === 'symbol'
         && (
@@ -397,17 +397,17 @@ class StateSubscriptions {
       else if (target instanceof Array && prop === 'length') {
         target[prop] = value
 
-        this.#onArrayLengthChange(target)
+        this.#onArrayLengthChange(receiver)
       }
       else if (Object.hasOwn(target, prop)) {
         target[prop] = value
 
-        this.#onPropUpdate(target, prop)
+        this.#onPropUpdate(receiver, prop)
       }
       else {
         target[prop] = value
 
-        this.#onPropCreate(target, prop)
+        this.#onPropCreate(receiver, prop)
       }
 
       return true

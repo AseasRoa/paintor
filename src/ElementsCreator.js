@@ -271,9 +271,9 @@ class ElementsCreator {
               this.#setPropertiesToElement(element, { value: argument })
             }
             else {
-              const textNode = this.#document.createTextNode(
-                this.#translate(argument()),
-              )
+              const textNode = this.#document.createTextNode('')
+
+              this.#setPropertiesToElement(textNode, { textContent: argument })
 
               children = addChildToStack(textNode, children)
             }
@@ -735,7 +735,7 @@ class ElementsCreator {
   }
 
   /**
-   * @param {HTMLElement} element
+   * @param {HTMLElement | Text} element
    * @param {Object<string, string|number|Object<*,*>|function(*):*|BindFunction>} properties
    */
   #setPropertiesToElement(element, properties) {
@@ -804,10 +804,17 @@ class ElementsCreator {
 
         setElementAttrOrProp(element, propertyName, value)
       }
-      else if (propertyName === 'style' && property instanceof Object) {
+      else if (
+        element instanceof HTMLElement
+        && propertyName === 'style'
+        && property instanceof Object
+      ) {
         this.#setStylesToElement(element, property)
       }
-      else if (propertyName === 'data') {
+      else if (
+        element instanceof HTMLElement
+        && propertyName === 'data'
+      ) {
         if (property instanceof Object) {
           setDataSetAttributesToElement(element, property)
         }
