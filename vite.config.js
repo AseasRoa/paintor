@@ -49,6 +49,12 @@ export default defineConfig({
           format: 'amd',
           exports: 'named',
         },
+        {
+          entryFileNames: '[name].js',
+          format: 'es',
+          exports: 'named',
+          dir: 'docs/assets',
+        },
       ],
     },
   },

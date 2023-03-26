@@ -20,7 +20,10 @@
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "build": "vite build"
+    "build": "vite build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
@@ -34,6 +37,7 @@
     "jsdom": "^21.1.1",
     "typescript": "^5.0.2",
     "vite": "^4.2.0",
+    "vitepress": "^1.0.0-alpha.60",
     "vitest": "^0.29.3"
   },
   "repository": {
