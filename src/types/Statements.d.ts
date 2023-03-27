@@ -65,7 +65,7 @@ export interface Statements {
   forState<
     Keys extends string | number,
     Values,
-    Obj extends (Record<Keys, Values> | Map<Keys, Values>),
+    Obj extends Record<Keys, Values>,
     Input extends Obj,
   >(
     input : Input,
@@ -77,7 +77,7 @@ export interface Statements {
    * when the state is either Array or Set type.
    */
   forState<
-    Obj extends (Array<any> | Set<any>),
+    Obj extends Array<any>,
     Input extends Obj,
   >(
     array : Input,
