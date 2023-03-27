@@ -1,7 +1,7 @@
 ## Basic Usage
 
-The idea is that we compose our view with one or more templates, which we render into a DOM element.
-We can also use one or more states. We can also generate an HTML string instead of the whole view.
+The idea is that we compose our view with one or more templates, which we then render into one or
+more DOM element, or we can generate an HTML string. The templates may also use one or more states.
 
 ## In the Browser
 
@@ -13,7 +13,7 @@ is also displayed in the \<span\> element reactively:
 <div id="container"></div>
 
 <script type="module">
-  import { compose, createState } from '/path-to/paintor.js'
+  import { compose, createState } from '/assets/paintor.js'
   
   const state = createState({ clicks: 0 })
 
@@ -28,7 +28,7 @@ is also displayed in the \<span\> element reactively:
 
 `createState()` creates a reactive version of the input Object.
 
-`compose()` accepts one or more callback functions, called **Templates**, in which you
+`compose()` accepts one or more callback functions, called [Templates](../templates/creating-templates.md), in which you
 can build an HTML-like tree. `compose()` returns an instance of `Paintor`, which has the `paint()`
 method, which renders the DOM elements and paints them into a DOM element with id "container".
 
@@ -36,7 +36,7 @@ The following examples are all doing the same thing, only the syntax is differen
 
 ::: code-group
 ```js [named imports (recommended)]
-import { compose, createTemplate, createState } from '/path-to/paintor.js'
+import { compose, createTemplate, createState } from '/assets/paintor.js'
 
 const state = createState(/* ... */)
 const template = createTemplate(/* ... */)
@@ -44,7 +44,7 @@ const template = createTemplate(/* ... */)
 compose(template).paint(/* ... */)
 ```
 ```js [named import]
-import { paintor } from '/path-to/paintor.js'
+import { paintor } from '/assets/paintor.js'
 
 const state = paintor.createState(/* ... */)
 const template = paintor.createTemplate(/* ... */)
@@ -52,7 +52,7 @@ const template = paintor.createTemplate(/* ... */)
 paintor.compose(model).paint(/* ... */)
 ```
 ```js [default import]
-import paintor from '/path-to/paintor.js'
+import paintor from '/assets/paintor.js'
 
 const state = paintor.createState(/* ... */)
 const template = paintor.createTemplate(/* ... */)
@@ -60,7 +60,7 @@ const template = paintor.createTemplate(/* ... */)
 paintor.compose(model).paint(/* ... */)
 ```
 ```js [new Paintor()]
-import { createTemplate, createState, Paintor } from '/path-to/paintor.js'
+import { createTemplate, createState, Paintor } from '/assets/paintor.js'
 
 const state = createState(/* ... */)
 const template = createTemplate(/* ... */)

@@ -136,24 +136,24 @@ Elements can be mixed with text:
 ```
 ## Free Style
 
-You probably noticed that the method calls in the template function aren't entangled in any way, you
-can actually have other blocks of code in between:
+You probably noticed that in the examples above the method calls in the template function aren't
+entangled in any way. Other blocks of code can exist in between:
 
 ```js
 ($) => {
-  /* Put some code here */
+  /* ... */
   
   $.h1('h1 element')
 
-  /* Put some code here */
+  /* ... */
   
   $.h2('h2 element')
 
-  /* Put some code here */
+  /* ... */
   
   $.h3('h3 element')
 
-  /* Put some code here */
+  /* ... */
 }
 ```
 

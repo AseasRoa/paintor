@@ -18,7 +18,7 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */
@@ -29,7 +29,7 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */
@@ -40,7 +40,7 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */
@@ -60,7 +60,7 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */
@@ -73,7 +73,7 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */
@@ -86,7 +86,7 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */
@@ -113,7 +113,7 @@ Use the name of the Custom Element in `paint()`:
 <custom-element></custom-element>
 
 <script type="module">
-  import { compose } from '/path-to/paintor.js'
+  import { compose } from '/assets/paintor.js'
 
   compose(($) => {
     /* ... */

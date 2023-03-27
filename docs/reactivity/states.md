@@ -17,7 +17,7 @@ reactive.
 ::: code-group
 ```html [object -> state, increment 'state.count']
 <script type="module">
-  import { createState } from '/path-to/paintor.js'
+  import { createState } from '/assets/paintor.js'
   
   /* Create a State from an Object */
   const object = { count: 0 }
@@ -32,7 +32,7 @@ reactive.
 ```
 ```html [object -> state, increment 'object.count']
 <script type="module">
-  import { createState } from '/path-to/paintor.js'
+  import { createState } from '/assets/paintor.js'
   
   /* Create a State from an Object */
   const object = { count: 0 }

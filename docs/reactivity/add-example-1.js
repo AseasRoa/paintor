@@ -8,7 +8,7 @@ setInterval(() => {
 }, 5000)
 
 compose(($) => {
-  $.forEach(state, (value, key) => {
+  $.forState(state, (value, key) => {
     $.p(() => `key: ${key} value: ${value}` )
   })
 }).paint('add-example-1')

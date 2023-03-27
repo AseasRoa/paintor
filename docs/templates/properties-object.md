@@ -43,7 +43,9 @@ $.input(
 <input class="buttonClass" title="This is a button" type="button" value="Click me">
 ```
 
+::: info
 `style` and `data-*` attributes are a little bit more special, they will be explained later.
+:::
 
 ## HTML DOM Element Properties
 

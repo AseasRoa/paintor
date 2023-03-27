@@ -6,7 +6,7 @@
 
 ```js
 <script type="module">
-  import paintor from '/path-to/paintor.js'
+  import paintor from '/assets/paintor.js'
 </script>
 ```
 
@@ -38,8 +38,8 @@ When imported, `paintor` is an object, containing the following functions:
 - `createState()`
 - `createTemplate()`
 - `createTranslation()`
- 
-and a class, which is not used directly:
+
+and a class, which should only be used as a type:
 - `Paintor`
 
 If you prefer, you can import each of these as named imports:
@@ -54,7 +54,7 @@ import {
 } from 'paintor'
 ```
 
-Also, `paintor` itself is available as named import:
+`paintor` is also available as a default import:
 ```js
-import { paintor } from 'paintor'
+import paintor from 'paintor'
 ```
