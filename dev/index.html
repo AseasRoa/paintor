@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Paintor Sandbox</title>
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<custom-element></custom-element>
+
+<script type="module">
+  import { compose, createState, createTemplate } from '../src/index.js'
+
+  const state = createState({ clicks: 0 })
+
+  compose(($) => {
+    $.div(
+      $.button({ onClick: () => state.clicks++ }, 'Click me'),
+      $.span(() => state.clicks)
+    )
+  }).paint('custom-element')
+
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+  root: 'dev',
   /**
    * @see https://vitejs.dev/config/server-options.html
    */
@@ -19,13 +20,9 @@ export default defineConfig({
   build: {
     target: 'esnext',
     minify: 'esbuild',
-    outDir: 'dist',
+    outDir: '../dist',
     sourcemap: true,
-    // lib: {
-    //   entry: 'src/index.js',
-    //   name: 'paintor',
-    //   formats: ['es', 'umd'],
-    // },
+    emptyOutDir: true,
     rollupOptions: {
       // https://stackoverflow.com/questions/71500190/how-to-keep-root-level-export-when-building-with-vite-in-format-esm
       preserveEntrySignatures: 'exports-only',
@@ -53,7 +50,7 @@ export default defineConfig({
           entryFileNames: '[name].js',
           format: 'es',
           exports: 'named',
-          dir: 'docs/assets',
+          dir: 'docs/v1.x/assets',
         },
       ],
     },
