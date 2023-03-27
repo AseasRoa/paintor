@@ -32,16 +32,6 @@ class ElementsCreator {
   finalElements = []
 
   /**
-   * The main element in which to append all the contents
-   *
-   * @type {HTMLElement | ShadowRoot | null}
-   */
-  #containerElement
-
-  /** @type {Translation[]} */
-  #translations = []
-
-  /**
    * Each element of this array represents a Level of HTML elements.
    * Level 0 is the main level where eventually all elements are placed.
    * A new level is created from IF and FOR in order to collect the
@@ -53,14 +43,18 @@ class ElementsCreator {
    */
   #collectedElements = [new ElementsCollector()]
 
-  /** @type {HTMLTemplateElement} */
-  #dummyHtmlElement
+  /**
+   * The main element in which to append all the contents
+   *
+   * @type {HTMLElement | ShadowRoot | null}
+   */
+  #containerElement
 
   /** @type {Document} */
   #document
 
-  /** @type {Window} */
-  #window
+  /** @type {HTMLTemplateElement} */
+  #dummyHtmlElement
 
   /**
    * Is String-Rendering mode
@@ -71,6 +65,12 @@ class ElementsCreator {
 
   /** @type {Template[]} */
   #templates = []
+
+  /** @type {Translation[]} */
+  #translations = []
+
+  /** @type {Window} */
+  #window
 
   /**
    * @param {Window} window
@@ -357,7 +357,7 @@ class ElementsCreator {
   }
 
   /**
-   * For loop for objects, arrays, maps and sets
+   * "for" loop for objects, arrays, maps and sets
    *
    * @template T
    * @param {T | function() : T} input
@@ -365,64 +365,19 @@ class ElementsCreator {
    * @returns {Node[] | Error}
    */
   forEach(input, handler) {
-    /**
-     * @param {any} value
-     * @returns {any}
-     */
-    const beforeIterationCallback = (value) => {
-      return this.#translate(value)
-    }
+    return this.#forEachLoop(1, input, handler)
+  }
 
-    if (isState(input)) {
-      /**
-       * @param {State} data
-       * @param {ElementsCollector} elementsCollector
-       * @param {string | number | symbol} [keyToRender]
-       * @returns {RenderedElementsMap}
-       */
-      const callbackForState = (data, elementsCollector, keyToRender) => {
-        /** @type {RenderedElementsMap} */
-        const renderedElementsMap = []
-
-        /**
-         * Initially there is 1 element - the forEach-begin element.
-         * We want to start after this element.
-         */
-        let index = elementsCollector.getElements().length
-
-        /**
-         * @param {number | string} key
-         */
-        const onIteration = (key) => {
-          const elementsFromCollector = elementsCollector.getElements()
-          const elements = elementsFromCollector.slice(index)
-
-          renderedElementsMap.push({ key, elements })
-
-          index = elementsFromCollector.length
-        }
-
-        forEachLoop(data, handler, beforeIterationCallback, keyToRender, onIteration)
-
-        return renderedElementsMap
-      }
-
-      return this.#statementHandlerForState('forEach', input, callbackForState)
-    }
-
-    /**
-     * @param {State} data
-     */
-    const callback = (data) => {
-      forEachLoop(data, handler, beforeIterationCallback)
-    }
-
-    if (input instanceof Function) {
-      // @ts-ignore
-      return this.#statementHandlerForFunction('forEach', input, callback)
-    }
-
-    return this.#statementHandler('forEach', input, callback)
+  /**
+   * "for" loop for states
+   *
+   * @template T
+   * @param {State} input
+   * @param {ForLoopCallback<T>} handler
+   * @returns {Node[] | Error}
+   */
+  forState(input, handler) {
+    return this.#forEachLoop(2, input, handler)
   }
 
   /**
@@ -575,6 +530,74 @@ class ElementsCreator {
     this.#collectedElements.push(new ElementsCollector())
 
     return { thisLevel, upperLevel }
+  }
+
+  /**
+   * @template T
+   * @param {ForLoopType} forLoopType
+   * @param {(T | function() : T) | State} input
+   * @param {ForLoopCallback<T>} handler
+   * @returns {Node[] | Error}
+   */
+  #forEachLoop(forLoopType, input, handler) {
+    /**
+     * @param {any} value
+     * @returns {any}
+     */
+    const beforeIterationCallback = (value) => {
+      return this.#translate(value)
+    }
+
+    if (isState(input)) {
+      /**
+       * @param {State} data
+       * @param {ElementsCollector} elementsCollector
+       * @param {string | number | symbol} [keyToRender]
+       * @returns {RenderedElementsMap}
+       */
+      const callbackForState = (data, elementsCollector, keyToRender) => {
+        /** @type {RenderedElementsMap} */
+        const renderedElementsMap = []
+
+        /**
+         * Initially there is 1 element - the forEach-begin element.
+         * We want to start after this element.
+         */
+        let index = elementsCollector.getElements().length
+
+        /**
+         * @param {number | string} key
+         */
+        const onIteration = (key) => {
+          const elementsFromCollector = elementsCollector.getElements()
+          const elements = elementsFromCollector.slice(index)
+
+          renderedElementsMap.push({ key, elements })
+
+          index = elementsFromCollector.length
+        }
+
+        forEachLoop(forLoopType, data, handler, beforeIterationCallback, keyToRender, onIteration)
+
+        return renderedElementsMap
+      }
+
+      return this.#statementHandlerForState('forEach', input, callbackForState)
+    }
+
+    /**
+     * @param {State} data
+     */
+    const callback = (data) => {
+      forEachLoop(forLoopType, data, handler, beforeIterationCallback)
+    }
+
+    if (input instanceof Function) {
+      // @ts-ignore
+      return this.#statementHandlerForFunction('forEach', input, callback)
+    }
+
+    return this.#statementHandler('forEach', input, callback)
   }
 
   /**
@@ -1039,7 +1062,7 @@ class ElementsCreator {
 
         for (const item of commentElementEnd.renderedElementsMap) {
           if (item.key === i) {
-            const elements = item.elements
+            const { elements } = item
 
             lastElement = (elements.length > 0)
               ? elements[elements.length - 1]

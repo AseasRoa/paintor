@@ -34,11 +34,9 @@ export interface Statements {
     elseHandler?: { (): void }
   ) : HTMLElement[]
 
-  // for(
-  //   iterations : number,
-  //   handler : (key:number) => boolean | any
-  // ) : HTMLElement[] | Error
-
+  /**
+   * Calls a callback function for each element in the input Object or Map.
+   */
   forEach<
     Keys extends string | number,
     Values,
@@ -49,12 +47,41 @@ export interface Statements {
     handler : (value : VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any
   ) : HTMLElement[] | Error
 
+  /**
+   * Calls a callback function for each element in the input Array or Set.
+   */
   forEach<
     Obj extends (Array<any> | Set<any>),
     Input extends Obj | (() => (Obj)),
   >(
     array : Input,
-    handler : (array : VariantValuesType<Input>, key : number) => boolean | any
+    handler : (value : VariantValuesType<Input>, key : number) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the state,
+   * when the state is either Object or Map type.
+   */
+  forState<
+    Keys extends string | number,
+    Values,
+    Obj extends (Record<Keys, Values> | Map<Keys, Values>),
+    Input extends Obj,
+  >(
+    input : Input,
+    handler : (value : () => VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the state,
+   * when the state is either Array or Set type.
+   */
+  forState<
+    Obj extends (Array<any> | Set<any>),
+    Input extends Obj,
+  >(
+    array : Input,
+    handler : (value : () => VariantValuesType<Input>, key : number) => boolean | any
   ) : HTMLElement[] | Error
 
   for(

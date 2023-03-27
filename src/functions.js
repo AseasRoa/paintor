@@ -261,6 +261,7 @@ export function appendChildrenToElement(element, children) {
  * function.
  *
  * @template T
+ * @param {1 | 2} forLoopType
  * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} data
  * @param {ForLoopCallback<T>} handler
  * @param {(key: number | string) => void} [beforeIterationCallback]
@@ -270,6 +271,7 @@ export function appendChildrenToElement(element, children) {
  * @throws {TypeError}
  */
 export function forEachLoop(
+  forLoopType,
   data,
   handler,
   beforeIterationCallback,
@@ -289,7 +291,7 @@ export function forEachLoop(
     throw new TypeError('"handler" argument should be a Function')
   }
 
-  const isProxy = isState(data)
+  const isProxy = forLoopType === 2 && isState(data)
 
   if (
     data instanceof Map
