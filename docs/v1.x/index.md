@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /v1.x/introduction/what-is-paintor
+      link: /introduction/what-is-paintor
     - theme: alt
       text: View on GitHub
       link: https://github.com/AseasRoa/paintor

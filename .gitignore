@@ -2,8 +2,8 @@
 .idea/
 .vscode/
 coverage/
-docs/.vitepress/cache/
-docs/.vitepress/dist/
+docs/*/.vitepress/cache/
+docs/*/.vitepress/dist/
 node_modules/
 
 # Files

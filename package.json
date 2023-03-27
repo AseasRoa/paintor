@@ -21,9 +21,9 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "build": "vite build",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:dev": "vitepress dev docs/v1.x",
+    "docs:build": "vitepress build docs/v1.x",
+    "docs:serve": "vitepress serve docs/v1.x"
   },
   "devDependencies": {
     "@types/node": "^18.15.3",

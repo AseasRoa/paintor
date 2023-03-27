@@ -2,9 +2,11 @@ import { defineConfig } from 'vitepress';
 
 // refer https://vitepress.vuejs.org/config/introduction for details
 export default defineConfig({
+  base: '/',
   lang: 'en-US',
   title: 'Paintor Docs',
   description: 'Paintor View Library Documentation',
+  lastUpdated: true,
 
   head: [
     [
@@ -18,6 +20,16 @@ export default defineConfig({
   ],
 
   themeConfig: {
+    nav: [
+      { text: 'View on GitHub', link: 'https://github.com/AseasRoa/paintor' },
+      {
+        text: 'v1',
+        items: [
+          { text: 'v1.x', link: '/' },
+          { text: 'v0.x', link: '/v0.x/' },
+        ]
+      }
+    ],
     sidebar: [
       {
         text: 'Introduction',

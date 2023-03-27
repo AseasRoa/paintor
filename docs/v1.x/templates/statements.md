@@ -4,7 +4,7 @@ There is no support for the HTML-syntax for the following statements.
 
 ## if-statement
 
-In the [Template Tree](./template-tree.md) there is an `if` method, which has three arguments:
+In the [Template Tree](template-tree.md) there is an `if` method, which has three arguments:
 
 - condition - A boolean variable.
 - handler - A callback that will be executed when the condition is `true`.
@@ -37,7 +37,7 @@ If `loggedIn` is `false`, the result will be:
 
 ## for-statement
 
-In the [Template Tree](./template-tree.md) there is a `for` method, which has three arguments:
+In the [Template Tree](template-tree.md) there is a `for` method, which has three arguments:
 
 - from - This is the index of the first iteration, an integer value.
 - to - This is the index of the last iteration, an integer value.
@@ -82,7 +82,7 @@ $.ul(
 
 ## forEach-statement
 
-In the [Template Tree](./template-tree.md) there is a `forEach` method, which has two arguments:
+In the [Template Tree](template-tree.md) there is a `forEach` method, which has two arguments:
 
 - input - Could be Object, [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
   , Array or [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
