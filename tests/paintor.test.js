@@ -119,4 +119,40 @@ describe('Paintor Tests', () => {
 
     expect(p.textContent).toBe('10')
   })
+
+  test('New DOM element, created from the State, is reactive', () => {
+    const container = document.body
+
+    /** @type {Object<string, string>} */
+    const object = {}
+    const state = createState(object)
+
+    compose(($) => {
+      $.forState(state, (value, key) => {
+        $.div(
+          { style: { color: value } },
+          () => `${key}:${value()}`,
+        )
+      })
+    }).paint(container)
+
+    // Initially we have no <li> elements
+    let div = container.getElementsByTagName('div')[0]
+
+    expect(div).toBe(undefined)
+
+    // Create one <li> element
+    state.color = 'red'
+
+    div = container.getElementsByTagName('div')[0]
+
+    expect(div instanceof HTMLDivElement).toBe(true)
+    expect(div.textContent).toBe('color:red')
+    expect(div.style.color).toBe('red')
+
+    // Change text content
+    state.color = 'blue'
+    expect(div.textContent).toBe('color:blue')
+    expect(div.style.color).toBe('blue')
+  })
 })
