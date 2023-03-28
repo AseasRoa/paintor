@@ -1,3 +1,5 @@
+<script> import '/./reactivity/states.js' </script>
+
 In Paintor, you can bind values from an Object with properties of different DOM elements.
 So, when such value changes, it causes the property to which it is bound to change automatically,
 and vice versa. This Object is then called a State.
@@ -73,11 +75,10 @@ But first, in order to achieve reactivity, here are few IMPORTANT things to reme
 
 ### Change the DOM on State changes
 
-Let's have two buttons, `-` and `+`, and a \<span\> element between them. With the buttons we
-increment or decrement a value in `state`, which is bound to the text content of the \<span\>
-element:
+Let's have two buttons, `-` and `+`, and a \<span\> element between them. Clicking on the buttons is
+changing `state.value`, which is bound with the text content of the \<span\> element:
 
-<script> import '/./reactivity/states.js' </script>
+Click on the `-` and `+` buttons below the source code to try it out:
 
 ::: code-group
 <<< @/./reactivity/states-example-1.js [JavaScript]
@@ -85,8 +86,6 @@ element:
 <states-example-1></states-example-1>
 ```
 :::
-
-Click on the `-` and `+` buttons below to try it out:
 
 <div class="example">
   <p></p>
@@ -96,15 +95,17 @@ Click on the `-` and `+` buttons below to try it out:
 
 ### Change the State on DOM changes
 
+Let's have `state.text` and an input field from which `state.text` can be changed.
+
+Type something in the input field below the source code. You should see the same text that you are
+typing on the right side of the input field, where the \<span\> is.
+
 ::: code-group
 <<< @/./reactivity/states-example-2.js [JavaScript]
 ```html [HTML]
 <states-example-2></states-example-2>
 ```
 :::
-
-Type something in the input field below. You should see the same text that you are typing on the
-right side of the input field, where the \<span\> is.
 
 <div class="example">
   <p></p>
@@ -151,9 +152,9 @@ One State can serve multiple [Templates](../templates/creating-templates) at the
   <p></p>
 </div>
 
-## Inner States
+## State in State
 
-States are recursive.
+When the State is made of an object, containing objects, these internal objects are also States.
 
 ::: code-group
 <<< @/./reactivity/states-example-5.js [JavaScript]
@@ -182,3 +183,9 @@ States are recursive.
   <states-example-array></states-example-array>
   <p></p>
 </div>
+
+#### Map and Set
+
+::: warning
+JavaScript's Map and Set do not provide full reactivity in Paintor. Don't use them for States.
+:::

@@ -23,18 +23,18 @@ two examples are doing exactly the same:
 element. For example, we have ``$.a()`` for \<a\>, ``$.p()`` for \<p\>, ``$.input()`` for \<input\>,
 and so on.
 
-These are a little bit special:
+These are a little bit special, they will be explained later:
 
 - ``$.html()``
 - ``$.script()``
-- ``$.style()``
 
 And there are few extra methods, such as:
 
 - ``$.createElement()`` - for creating a custom element.
 - ``$.if()`` - ``if`` statement.
 - ``$.for()`` - ``for`` iteration loop, starting with one number and ending with another.
-- ``$.forEach()`` - to iterate over Array, Object, Set, Map or a state.
+- ``$.forEach()`` - to iterate over Array, Object, Set or Map.
+- ``$.forState()`` - to iterate over [State](../reactivity/states).
 
 
 

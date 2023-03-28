@@ -6,7 +6,7 @@ export default defineConfig({
   lang: 'en-US',
   title: 'Paintor Docs',
   description: 'Paintor View Library Documentation',
-  lastUpdated: true,
+  lastUpdated: false,
 
   head: [
     [
@@ -47,6 +47,7 @@ export default defineConfig({
           { text: 'Creating Templates', link: '/templates/creating-templates'},
           { text: 'Painting Templates', link: '/templates/painting-templates'},
           { text: 'Template Tree', link: '/templates/template-tree'},
+          { text: 'HTML Syntax', link: '/templates/html-syntax'},
           { text: 'Properties Object', link: '/templates/properties-object'},
           { text: 'Statements', link: '/templates/statements'}
         ]
@@ -56,14 +57,14 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'States', link: '/reactivity/states'},
-          { text: 'Add/Remove Elements', link: '/reactivity/add-remove-elements'}
+          { text: 'Add and Remove Elements', link: '/reactivity/add-remove-elements'}
         ]
       },
       {
-        text: 'Examples',
+        text: 'HTML Syntax',
         collapsed: false,
         items: [
-          { text: 'Example', link: '/examples/example1'}
+          { text: 'HTML Syntax', link: '/html-syntax/html-syntax'}
         ]
       }
     ]
