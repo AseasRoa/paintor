@@ -11,7 +11,7 @@ the fetched translations are used in `useTranslations()`, as shown below:
 ```js
 import { compose, fetchTranslations } from './assets/paintor.js'
 
-const translations = fetchTranslations('/path/to/en.js')
+const translations = await fetchTranslations('/path/to/en.js')
 
 compose(/* ... */).useTranslations(tranlstions).paint('#container')
 ```
@@ -44,7 +44,7 @@ It is also necessary for the files to export their translation Object as a defau
 Now use `fetchTranslations()` like this, pointing to the default translation:
 
 ```js
-const translations = fetchTranslations('/translations/en.js')
+const translations = await fetchTranslations('/translations/en.js')
 ```
 
 `fetchTranslations()` gets the user's language code from the `lang` attribute of the `html` tag,
