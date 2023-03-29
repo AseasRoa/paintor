@@ -768,7 +768,7 @@ class ElementsCreator {
       if (this.#isSr) {
         // When the property name is an event and the property is a function, turn it into a string
         if (isEventAttribute(propertyName) && property instanceof Function) {
-          setElementAttrOrProp(this.#window, element, propertyName, property)
+          setElementAttrOrProp(element, propertyName, property)
 
           continue
         }
@@ -825,7 +825,7 @@ class ElementsCreator {
           value = this.#translate(value)
         }
 
-        setElementAttrOrProp(this.#window, element, propertyName, value)
+        setElementAttrOrProp(element, propertyName, value)
       }
       else if (
         // @ts-ignore
@@ -871,7 +871,7 @@ class ElementsCreator {
           property = this.#translate(property)
         }
 
-        setElementAttrOrProp(this.#window, element, propertyName, property)
+        setElementAttrOrProp(element, propertyName, property)
       }
     }
   }

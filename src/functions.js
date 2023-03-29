@@ -478,12 +478,11 @@ export function setDataSetAttributesToElement(element, dataSet) {
  * Here we set either the attribute ot the property.
  * Which one? Depends on the name of the attribute or property.
  *
- * @param {Window} window
  * @param {Element | Text} element
  * @param {string} attrOrPropName
  * @param {*} value
  */
-export function setElementAttrOrProp(window, element, attrOrPropName, value) {
+export function setElementAttrOrProp(element, attrOrPropName, value) {
   // Decide between element attributes or element properties
   if (attrOrPropName in element) {
     if (value instanceof Array) {
@@ -496,9 +495,7 @@ export function setElementAttrOrProp(window, element, attrOrPropName, value) {
     }
   }
   else {
-    // @ts-ignore
-    if (element instanceof window.Element) {
-      // @ts-ignore
+    if ('setAttribute' in element) {
       element.setAttribute(attrOrPropName, value)
     }
   }
@@ -573,28 +570,3 @@ export function objectGetValue(object, key) {
     return object[key]
   }
 }
-
-// /**
-//  * @template K, T
-//  * @param {T[] | Object<K, T> | Map<K, T> | Set<T>} input
-//  * @param {(value: T, key: K) => boolean} callback
-//  */
-// export function forEach(input, callback) {
-//   if (input instanceof Set) {
-//     for (const value of input) {
-//       if (callback(value, value) === false) break
-//     }
-//   }
-// }
-//
-// const set = new Set(['One', 'Two', 'Three'])
-//
-// forEach(set, (value, key) => {
-//   console.log(key, value)
-// })
-//
-// const obj = { a: 'a' }
-//
-// for (const o of obj) {
-//   console.log(o)
-// }
