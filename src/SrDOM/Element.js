@@ -98,6 +98,30 @@ export class Element extends Node {
   }
 
   /**
+   * @param {string} attributeName
+   * @returns {string | null}
+   */
+  getAttribute(attributeName) {
+    let name = ''
+
+    // Fix the name
+    name = attributeName.trim().toLowerCase()
+
+    if (!name) {
+      return null
+    }
+
+    const index = this.#attributes.findIndex((attribute) => attribute.name === name)
+
+    if (index === -1) {
+      return null
+    }
+    else {
+      return this.#attributes[index].value
+    }
+  }
+
+  /**
    * Removes the element from the children list of its parent.
    *
    * @returns {void}
