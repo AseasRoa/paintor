@@ -56,10 +56,10 @@ const createSingleTranslation = async function (defaultPath, locale) {
 
 /**
  * @param {...string} defaultPaths
- * @returns {Promise<Translation>}
+ * @returns {Promise<Translation[]>}
  * @throws
  */
-const createTranslation = async function (...defaultPaths) {
+const fetchTranslations = async function (...defaultPaths) {
   const locale = getLocale()
 
   const promises = []
@@ -68,15 +68,7 @@ const createTranslation = async function (...defaultPaths) {
     promises.push(createSingleTranslation(path, locale))
   }
 
-  let translation = {}
-
-  const translations = await Promise.all(promises)
-
-  translations.forEach((value) => {
-    translation = { ...translation, ...value }
-  })
-
-  return translation
+  return Promise.all(promises)
 }
 
-export { createTranslation }
+export { fetchTranslations }

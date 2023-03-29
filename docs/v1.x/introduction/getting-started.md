@@ -37,7 +37,7 @@ When imported, `paintor` is an object, containing the following functions:
 - `compose()`
 - `createState()`
 - `createTemplate()`
-- `createTranslation()`
+- `fetchTranslations()`
 
 and a class, which should only be used as a type:
 - `Paintor`
@@ -49,7 +49,7 @@ import {
   compose,
   createState,
   createTemplate,
-  createTranslation,
+  fetchTranslations,
   Paintor
 } from 'paintor'
 ```

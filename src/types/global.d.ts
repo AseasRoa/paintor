@@ -49,12 +49,12 @@ declare module 'paintor' {
    * exist, the provided file name will be used.
    * @returns {Promise<Translation>}
    */
-  function createTranslation(...defaultPaths: string[]) : Promise<Translation>
+  function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
 
   const paintor: {
     compose: typeof compose,
     createState: typeof createState,
     createTemplate: typeof createTemplate,
-    createTranslation: typeof createTranslation
+    fetchTranslations: typeof fetchTranslations
   }
 }
