@@ -768,7 +768,7 @@ class ElementsCreator {
       if (this.#isSr) {
         // When the property name is an event and the property is a function, turn it into a string
         if (isEventAttribute(propertyName) && property instanceof Function) {
-          setElementAttrOrProp(element, propertyName, property)
+          setElementAttrOrProp(this.#window, element, propertyName, property)
 
           continue
         }
@@ -825,20 +825,24 @@ class ElementsCreator {
           value = this.#translate(value)
         }
 
-        setElementAttrOrProp(element, propertyName, value)
+        setElementAttrOrProp(this.#window, element, propertyName, value)
       }
       else if (
-        element instanceof HTMLElement
+        // @ts-ignore
+        element instanceof this.#window.HTMLElement
         && propertyName === 'style'
         && property instanceof Object
       ) {
+        // @ts-ignore
         this.#setStylesToElement(element, property)
       }
       else if (
-        element instanceof HTMLElement
+        // @ts-ignore
+        element instanceof this.#window.HTMLElement
         && propertyName === 'data'
       ) {
         if (property instanceof Object) {
+          // @ts-ignore
           setDataSetAttributesToElement(element, property)
         }
       }
@@ -851,7 +855,23 @@ class ElementsCreator {
         }
       }
       else {
-        setElementAttrOrProp(element, propertyName, this.#translate(property))
+        if (
+          propertyName === 'innerText'
+          || (
+            propertyName === 'value'
+            && (
+              // Can't use HTMLInputElement here, because it does not exist in SrDOM
+              // @ts-ignore
+              element.tagName === 'INPUT'
+              // @ts-ignore
+              && (element.getAttribute('type') ?? '').toLowerCase() === 'button'
+            )
+          )
+        ) {
+          property = this.#translate(property)
+        }
+
+        setElementAttrOrProp(this.#window, element, propertyName, property)
       }
     }
   }

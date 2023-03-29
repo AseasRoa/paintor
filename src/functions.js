@@ -299,6 +299,7 @@ export function forEachLoop(
   ) {
     // Force the proxy's "get" event by trying to access this dummy symbol key
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const nothing = isProxy ? data[symObjectAccess] : undefined
 
     for (const [key, value] of data.entries()) {
@@ -328,6 +329,7 @@ export function forEachLoop(
 
     // Force the proxy's "get" event by trying to access this dummy symbol key
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const nothing = isProxy ? data[symArrayAccess] : undefined
 
     for (let key = 0; key < data.length; key++) {
@@ -476,11 +478,12 @@ export function setDataSetAttributesToElement(element, dataSet) {
  * Here we set either the attribute ot the property.
  * Which one? Depends on the name of the attribute or property.
  *
+ * @param {Window} window
  * @param {Element | Text} element
  * @param {string} attrOrPropName
  * @param {*} value
  */
-export function setElementAttrOrProp(element, attrOrPropName, value) {
+export function setElementAttrOrProp(window, element, attrOrPropName, value) {
   // Decide between element attributes or element properties
   if (attrOrPropName in element) {
     if (value instanceof Array) {
@@ -493,7 +496,9 @@ export function setElementAttrOrProp(element, attrOrPropName, value) {
     }
   }
   else {
-    if (element instanceof Element) {
+    // @ts-ignore
+    if (element instanceof window.Element) {
+      // @ts-ignore
       element.setAttribute(attrOrPropName, value)
     }
   }
