@@ -30,6 +30,14 @@ const createSingleTranslation = async function (defaultPath, locale) {
 
   let translation = null
 
+  /**
+   * Matches on /path/to/filename.ext
+   * [1] /path/to/
+   * [2] filename
+   * [3] .ext
+   *
+   * @type {RegExpMatchArray | null}
+   */
   const match = defaultPath.match(/^(.*?)([^.\/\\]+)(.\w+)$/m)
 
   if (match === null) {

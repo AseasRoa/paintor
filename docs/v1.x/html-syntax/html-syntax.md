@@ -30,7 +30,7 @@ This is important.
 ## Statements
 
 ::: warning
-Statements for the HTML syntax are under development
+Statements for the HTML syntax are under development.
 :::
 
 ## Reactivity

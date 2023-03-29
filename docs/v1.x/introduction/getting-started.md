@@ -2,11 +2,11 @@
 
 #### Browser
 
-`/dist/paintor.js` is an ES module
+There is a file `paintor.js` in `/dist`. It is an [ES Module](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules).
 
 ```js
 <script type="module">
-  import paintor from '/assets/paintor.js'
+  import paintor from '/path/to/paintor.js'
 </script>
 ```
 

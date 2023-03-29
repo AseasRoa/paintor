@@ -63,7 +63,8 @@ export default defineConfig({
         text: 'Translations',
         collapsed: false,
         items: [
-          { text: 'Translations', link: '/translations/translations'}
+          { text: 'Translations', link: '/translations/translations'},
+          { text: 'Fetch Translations', link: '/translations/fetch-translations'}
         ]
       },
       {

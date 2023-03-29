@@ -1,5 +1,9 @@
 <script> import '/./translations/translations.js' </script>
 
+::: warning
+Translations are experimental in Paintor and their implementation may change!
+:::
+
 ## Translations
 
 In Paintor, translations can be used to translate the rendered texts in different languages.
