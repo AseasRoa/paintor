@@ -47,7 +47,6 @@ export default defineConfig({
           { text: 'Creating Templates', link: '/templates/creating-templates'},
           { text: 'Painting Templates', link: '/templates/painting-templates'},
           { text: 'Template Tree', link: '/templates/template-tree'},
-          { text: 'HTML Syntax', link: '/templates/html-syntax'},
           { text: 'Properties Object', link: '/templates/properties-object'},
           { text: 'Statements', link: '/templates/statements'}
         ]
@@ -58,6 +57,13 @@ export default defineConfig({
         items: [
           { text: 'States', link: '/reactivity/states'},
           { text: 'Add and Remove Elements', link: '/reactivity/add-remove-elements'}
+        ]
+      },
+      {
+        text: 'Translations',
+        collapsed: false,
+        items: [
+          { text: 'Translations', link: '/translations/translations'}
         ]
       },
       {

@@ -14,7 +14,7 @@ would produce \<html\> elements, this is not the case. Here is how `html()` is u
 Note that the method is used as a [Tag Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates).
 This is important.
 
-## Downsides of the HTML Syntax
+## Characteristics
 
 - **Code Highlighting**: The HTML code may not be highlighted if your IDE does not support code
   highlighting in template literals.

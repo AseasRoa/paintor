@@ -1,4 +1,4 @@
-import { compose, createState, createTranslation } from '/assets/paintor.js'
+import { compose } from '/assets/paintor.js'
 
 const translationEn = { GREETING: 'Hello' }
 
