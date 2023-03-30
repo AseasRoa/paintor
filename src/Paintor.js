@@ -20,7 +20,7 @@ class Paintor {
    */
   #containerDOMElements = []
 
-  /** @type {HTMLElement[][]} */
+  /** @type {Node[][]} */
   #finalElements = []
 
   /**
@@ -228,6 +228,7 @@ class Paintor {
    */
   #init(container, window, translations, templates) {
     this.#finalElements = []
+    this.#finalHtmlCode = ''
 
     this.#initContainer(container, window)
     this.#initTranslations(translations)

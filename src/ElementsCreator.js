@@ -28,7 +28,7 @@ import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
  */
 
 class ElementsCreator {
-  /** @type {HTMLElement[]} */
+  /** @type {Node[]} */
   finalElements = []
 
   /**
@@ -262,7 +262,6 @@ class ElementsCreator {
               'value' in element
               && !(element instanceof HTMLLIElement) // <li> has value, but it accepts only numbers
             ) {
-              // @ts-ignore
               this.#setPropertiesToElement(element, { value: argument })
             }
             else {
@@ -283,7 +282,6 @@ class ElementsCreator {
         // If Object, and the first argument, this is a property.
         // This condition needs to be at the end of the 'if' chain.
 
-        // @ts-ignore
         this.#setPropertiesToElement(element, argument)
       }
     }
@@ -318,7 +316,6 @@ class ElementsCreator {
       appendChildrenToElement(containerElement, children)
     }
 
-    // @ts-ignore
     this.finalElements = children
 
     if (this.#isSr) {
@@ -650,7 +647,6 @@ class ElementsCreator {
   #htmlForTemplateLiteral(strings, ...keys) {
     const htmlTemplateParser = new HtmlTemplateParser(strings, keys)
 
-    // @ts-ignore
     return htmlTemplateParser.generate(this)
   }
 
