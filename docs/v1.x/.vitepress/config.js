@@ -73,6 +73,13 @@ export default defineConfig({
         items: [
           { text: 'HTML Syntax', link: '/html-syntax/html-syntax'}
         ]
+      },
+      {
+        text: 'Components',
+        collapsed: false,
+        items: [
+          { text: 'Components', link: '/components/components'}
+        ]
       }
     ]
   },

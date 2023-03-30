@@ -32,6 +32,8 @@ is also displayed in the \<span\> element reactively:
 can build an HTML-like tree. `compose()` returns an instance of `Paintor`, which has the `paint()`
 method, which renders the DOM elements and paints them into a DOM element with id "container".
 
+It can be said that `compose()` returns a [Component](../components/components.md).
+
 The following examples are all doing the same thing, only the syntax is different:
 
 ::: code-group

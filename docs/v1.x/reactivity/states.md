@@ -1,5 +1,7 @@
 <script> import '/./reactivity/states.js' </script>
 
+## What is a State?
+
 In Paintor, you can bind values from an Object with properties of different DOM elements.
 So, when such value changes, it causes the property to which it is bound to change automatically,
 and vice versa. This Object is then called a State.

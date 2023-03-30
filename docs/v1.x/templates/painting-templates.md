@@ -8,7 +8,7 @@ The argument could be:
 - HTMLCollection
 - NodeList
 
-## Paint one element
+## Paint One Element
 
 In all three example below, we have only one \<div\> element with unique id `myId`. Only this
 element is being selected in all examples, but in different ways:
@@ -49,7 +49,7 @@ element is being selected in all examples, but in different ways:
 ```
 :::
 
-## Paint multiple elements
+## Paint Multiple Elements
 
 What if we have multiple elements with the same class?
 
