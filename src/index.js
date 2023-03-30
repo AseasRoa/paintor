@@ -18,7 +18,7 @@ function createTemplate(template) {
   return template
 }
 
-const paintor = { compose, createState, createTemplate, fetchTranslations }
+const paintor = { compose, createState, createTemplate, fetchTranslations, Paintor }
 
 export default paintor
 export { paintor, compose, createState, createTemplate, fetchTranslations, Paintor }

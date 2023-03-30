@@ -28,17 +28,19 @@ interface Paintor {
 }
 
 declare module 'paintor' {
-  function compose(...templates: Template[]): Paintor
-  function compose(templates: Template[]): Paintor
+  export { Paintor } from 'src/index.js'
+
+  export function compose(...templates: Template[]): Paintor
+  export function compose(templates: Template[]): Paintor
 
   /**
    * @template T
    * @param {T} object Your input object or array
    * @returns {T} A proxy object/array that looks the same as the input object/array
    */
-  function createState<T>(object : T) : T
+  export function createState<T>(object : T) : T
 
-  function createTemplate(template: Template) : Template
+  export function createTemplate(template: Template) : Template
 
   /**
    * @template T
@@ -49,12 +51,13 @@ declare module 'paintor' {
    * exist, the provided file name will be used.
    * @returns {Promise<Translation>}
    */
-  function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
+  export function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
 
-  const paintor: {
+  export const paintor: {
     compose: typeof compose,
     createState: typeof createState,
     createTemplate: typeof createTemplate,
-    fetchTranslations: typeof fetchTranslations
+    fetchTranslations: typeof fetchTranslations,
+    Paintor: Paintor
   }
 }
