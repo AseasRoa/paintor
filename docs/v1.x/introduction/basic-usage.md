@@ -29,7 +29,7 @@ is also displayed in the \<span\> element reactively:
 `createState()` creates a reactive version of the input Object.
 
 `compose()` accepts one or more callback functions, called [Templates](../templates/creating-templates.md), in which you
-can build an HTML-like tree. `compose()` returns an instance of `Paintor`, which has the `paint()`
+can build an HTML-like tree. `compose()` returns an instance of `Component`, which has the `paint()`
 method, which renders the DOM elements and paints them into a DOM element with id "container".
 
 It can be said that `compose()` returns a [Component](../components/components.md).
@@ -61,13 +61,13 @@ const template = paintor.createTemplate(/* ... */)
 
 paintor.compose(model).paint(/* ... */)
 ```
-```js [new Paintor()]
-import { createTemplate, createState, Paintor } from '/assets/paintor.js'
+```js [new Component()]
+import { createTemplate, createState, Component } from '/assets/paintor.js'
 
 const state = createState(/* ... */)
 const template = createTemplate(/* ... */)
 
-new Paintor().compose(template).paint(/* ... */)
+new Component().compose(template).paint(/* ... */)
 ```
 :::
 

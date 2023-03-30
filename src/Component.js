@@ -9,7 +9,7 @@ import { Window as SrWindow } from './SrDOM/Window.js'
 const isBrowserEnv = isBrowserEnvironment()
 const srWindow = new SrWindow()
 
-class Paintor {
+class Component {
   /** @type {string} */
   #containerCustomElementName = ''
 
@@ -33,7 +33,7 @@ class Paintor {
   /** @type {boolean} */
   #isStatic = false
 
-  /** @type {(Template | Paintor)[]} */
+  /** @type {(Template | Component)[]} */
   #templates = []
 
   /** @type {Map<Translation | null, string>} */
@@ -55,8 +55,8 @@ class Paintor {
   }
 
   /**
-   * @param {(Template | Paintor)[]} templates
-   * @returns {Paintor}
+   * @param {(Template | Component)[]} templates
+   * @returns {Component}
    */
   compose(...templates) {
     if (templates instanceof Array) {
@@ -159,7 +159,7 @@ class Paintor {
 
   /**
    * @param {boolean} [on=true]
-   * @returns {Paintor}
+   * @returns {Component}
    */
   static(on = true) {
     this.#isStatic = on
@@ -169,7 +169,7 @@ class Paintor {
 
   /**
    * @param {...Translation} translations
-   * @returns {Paintor}
+   * @returns {Component}
    */
   useTranslations(...translations) {
     // Reset translations here, because the whole api chain (containing this function)
@@ -225,7 +225,7 @@ class Paintor {
    * @param {string | HTMLElement | HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
    * @param {Translation[]} translations
-   * @param {(Template | Paintor)[]} templates
+   * @param {(Template | Component)[]} templates
    * @returns {boolean}
    * @throws {Error}
    */
@@ -286,7 +286,7 @@ class Paintor {
   }
 
   /**
-   * @param {(Template | Paintor)[]} templates
+   * @param {(Template | Component)[]} templates
    * @returns {boolean}
    * @throws {Error}
    */
@@ -294,7 +294,7 @@ class Paintor {
     for (let template of templates) {
       if (
         !(template instanceof Function)
-        && !(template instanceof Paintor)
+        && !(template instanceof Component)
       ) {
         throw new Error('The template must be a function')
       }
@@ -401,4 +401,4 @@ class Paintor {
   }
 }
 
-export { Paintor }
+export { Component }

@@ -1,13 +1,13 @@
-import { Paintor } from './Paintor.js'
+import { Component } from './Component.js'
 import { createState } from './State.js'
 import { fetchTranslations } from './Translation.js'
 
 /**
- * @param {(Template | Paintor)[]} templates
- * @returns {Paintor}
+ * @param {(Template | Component)[]} templates
+ * @returns {Component}
  */
 function compose(...templates) {
-  return new Paintor().compose(...templates)
+  return new Component().compose(...templates)
 }
 
 /**
@@ -18,7 +18,7 @@ function createTemplate(template) {
   return template
 }
 
-const paintor = { compose, createState, createTemplate, fetchTranslations, Paintor }
+const paintor = { compose, createState, createTemplate, fetchTranslations, Component }
 
 export default paintor
-export { paintor, compose, createState, createTemplate, fetchTranslations, Paintor }
+export { paintor, compose, createState, createTemplate, fetchTranslations, Component }

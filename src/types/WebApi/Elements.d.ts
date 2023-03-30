@@ -3,7 +3,7 @@ import { GlobalElementAttributes } from './ElementAttributes'
 import { GlobalProperties } from './ElementProperties'
 
 type Children = Array<any // Added any, because it shows error when using two children -> string and array of strings
-| Error | HTMLElement | HTMLElement[] | string | Paintor | void>
+| Error | HTMLElement | HTMLElement[] | string | Component | void>
 
 export interface Elements {
   /**

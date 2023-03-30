@@ -19,7 +19,7 @@ import {
 } from './functions.js'
 import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
-import { Paintor } from './Paintor.js'
+import { Component } from './Component.js'
 import { isState } from './State.js'
 import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
 
@@ -63,7 +63,7 @@ class ElementsCreator {
    */
   #isSr = true
 
-  /** @type {(Template | Paintor)[]} */
+  /** @type {(Template | Component)[]} */
   #templates = []
 
   /** @type {Translation[]} */
@@ -75,7 +75,7 @@ class ElementsCreator {
   /**
    * @param {Window} window
    * @param {HTMLElement | ShadowRoot | null} containerElement
-   * @param {(Template | Paintor)[]} templates
+   * @param {(Template | Component)[]} templates
    * @param {Translation[]} [translations=[]]
    */
   constructor(window, containerElement, templates, translations = []) {
@@ -96,7 +96,7 @@ class ElementsCreator {
         if (returnedValue && typeof returnedValue === 'string') {
           this.html(returnedValue)
         }
-        else if (returnedValue instanceof Paintor) {
+        else if (returnedValue instanceof Component) {
           const generatedChildren = (this.#isSr)
             // @ts-ignore
             ? returnedValue.useTranslations(this.#translations).getElementsSr()
@@ -112,12 +112,12 @@ class ElementsCreator {
           returnedValue(this)
         }
         else if (returnedValue instanceof Array) {
-          let allPaintor   = true
+          let allComponents   = true
           let allFunctions = true
 
           for (const value of returnedValue) {
-            if (!(value instanceof Paintor)) {
-              allPaintor = false
+            if (!(value instanceof Component)) {
+              allComponents = false
 
               break
             }
@@ -129,9 +129,9 @@ class ElementsCreator {
             }
           }
 
-          if (allPaintor) {
+          if (allComponents) {
             for (const value of returnedValue) {
-              if (!(value instanceof Paintor)) break
+              if (!(value instanceof Component)) break
 
               const generatedChildren = (this.#isSr)
                 ? value.getElementsSr()
@@ -152,7 +152,7 @@ class ElementsCreator {
           }
         }
       }
-      else if (template instanceof Paintor) {
+      else if (template instanceof Component) {
         const generatedChildren = (this.#isSr)
           ? template.useTranslations(this.#translations).getElementsSr()
           : template.useTranslations(this.#translations).getElements()
@@ -249,7 +249,7 @@ class ElementsCreator {
 
         element.textContent = this.#translate(argument.message)
       }
-      else if (argument instanceof Paintor) {
+      else if (argument instanceof Component) {
         const generatedChildren = (this.#isSr)
           ? argument.getElementsSr()
           : argument.getElements()

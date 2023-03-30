@@ -1,5 +1,4 @@
 import { compose, createState } from '../src/index.js'
-import { Window } from '../src/SrDOM/Window.js'
 
 describe('Paintor Tests', () => {
   const id = 'container'

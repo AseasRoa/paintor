@@ -40,9 +40,10 @@ When imported, `paintor` is an object, containing the following functions:
 - `fetchTranslations()`
 
 and a class, which should only be used as a type:
-- `Paintor`
+- `Component`
 
 If you prefer, you can import each of these as named imports:
+
 ```js
 import {
   paintor,
@@ -50,7 +51,7 @@ import {
   createState,
   createTemplate,
   fetchTranslations,
-  Paintor
+  Component
 } from 'paintor'
 ```
 

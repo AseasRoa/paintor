@@ -3,8 +3,8 @@ import { HtmlTemplateParserElement } from './HtmlTemplateParserElement.js'
 import { SELF_CLOSING_TAGS } from './constants.js'
 
 /**
- * This class is used to turn JS templates (containing HTML code) into
- * properly ordered Paintor functions.
+ * This class is used to turn JS template literals (containing HTML code) into
+ * properly ordered Template Tree.
  */
 class HtmlTemplateParser {
   #attrName = ''

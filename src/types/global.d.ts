@@ -8,7 +8,7 @@ type Template = (tree : TemplateTree) => (
   void
   | string
   | HTMLElement | HTMLElement[]
-  | Paintor | Paintor[]
+  | Component | Component[]
   | Template | Template[]
 )
 type Translation = Record<string, any>
@@ -16,11 +16,11 @@ type Translation = Record<string, any>
 type PaintorTemplateTree = TemplateTree
 type PaintorTemplate = Template
 
-interface Paintor {
+interface Component {
   createTemplate: Template,
-  useTranslations : (...translations: Translation[]) => Paintor,
-  compose: (...templates: (Template | Paintor)[]) => Paintor,
-  static: (on?: boolean) => Paintor,
+  useTranslations : (...translations: Translation[]) => Component,
+  compose: (...templates: (Template | Component)[]) => Component,
+  static: (on?: boolean) => Component,
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   appendTo: (container: string | HTMLElement) => void,
   getHtml: (options?: { indent?:string }) => string,
@@ -28,10 +28,10 @@ interface Paintor {
 }
 
 declare module 'paintor' {
-  export { Paintor } from 'src/index.js'
+  export { Component } from 'src/index.js'
 
-  export function compose(...templates: (Template | Paintor)[]): Paintor
-  export function compose(templates: (Template | Paintor)[]): Paintor
+  export function compose(...templates: (Template | Component)[]): Component
+  export function compose(templates: (Template | Component)[]): Component
 
   /**
    * @template T
@@ -58,6 +58,6 @@ declare module 'paintor' {
     createState: typeof createState,
     createTemplate: typeof createTemplate,
     fetchTranslations: typeof fetchTranslations,
-    Paintor: Paintor
+    Component: Component
   }
 }
