@@ -237,18 +237,13 @@ class ElementsCreator {
         element.textContent = this.#translate(argument.message)
       }
       else if (argument instanceof Paintor) {
-        if (0 && this.#isSr) {
-          //element.innerHTML = argument.getHtml()
-        }
-        else {
-          const generatedChildren = (this.#isSr)
-            ? argument.getElementsSr()
-            : argument.getElements()
+        const generatedChildren = (this.#isSr)
+          ? argument.getElementsSr()
+          : argument.getElements()
 
-          for (const childrenGroup of generatedChildren) {
-            for (const child of childrenGroup) {
-              children.push(child)
-            }
+        for (const childrenGroup of generatedChildren) {
+          for (const child of childrenGroup) {
+            children = addChildToStack(child, children)
           }
         }
       }
