@@ -227,6 +227,8 @@ class Paintor {
    * @throws {Error}
    */
   #init(container, window, translations, templates) {
+    this.#finalElements = []
+
     this.#initContainer(container, window)
     this.#initTranslations(translations)
     this.#initTemplates(templates)
