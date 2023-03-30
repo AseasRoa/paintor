@@ -33,7 +33,7 @@ class Paintor {
   /** @type {boolean} */
   #isStatic = false
 
-  /** @type {Template[]} */
+  /** @type {(Template | Paintor)[]} */
   #templates = []
 
   /** @type {Map<Translation | null, string>} */
@@ -55,17 +55,19 @@ class Paintor {
   }
 
   /**
-   * @param {...Template | Template[]} templates
+   * @param {(Template | Paintor)[]} templates
    * @returns {Paintor}
    */
   compose(...templates) {
     if (templates instanceof Array) {
-      for (const template of templates) {
-        if (template instanceof Array) {
-          this.#templates = [...this.#templates, () => template]
+      for (const item of templates) {
+        if (item instanceof Array) {
+          for (const template of item) {
+            this.#templates.push(template)
+          }
         }
         else {
-          this.#templates.push(template)
+          this.#templates.push(item)
         }
       }
     }
@@ -172,7 +174,8 @@ class Paintor {
   useTranslations(...translations) {
     // Reset translations here, because the whole api chain (containing this function)
     // can be executed multiple times, but with different translations every time.
-    this.#translations = []
+    // EDIT: Commented out, so that translations can be used in Components
+    // this.#translations = []
 
     translations.map((item) => {
       if (item instanceof Array) {
@@ -222,7 +225,7 @@ class Paintor {
    * @param {string | HTMLElement | HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
    * @param {Translation[]} translations
-   * @param {Template[]} templates
+   * @param {(Template | Paintor)[]} templates
    * @returns {boolean}
    * @throws {Error}
    */
@@ -283,13 +286,16 @@ class Paintor {
   }
 
   /**
-   * @param {Template[]} templates
+   * @param {(Template | Paintor)[]} templates
    * @returns {boolean}
    * @throws {Error}
    */
   #initTemplates(templates) {
     for (let template of templates) {
-      if (typeof template !== 'function') {
+      if (
+        !(template instanceof Function)
+        && !(template instanceof Paintor)
+      ) {
         throw new Error('The template must be a function')
       }
     }

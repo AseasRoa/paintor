@@ -19,7 +19,7 @@ type PaintorTemplate = Template
 interface Paintor {
   createTemplate: Template,
   useTranslations : (...translations: Translation[]) => Paintor,
-  compose: (...templates: Template[]) => Paintor,
+  compose: (...templates: (Template | Paintor)[]) => Paintor,
   static: (on?: boolean) => Paintor,
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   appendTo: (container: string | HTMLElement) => void,
@@ -30,8 +30,8 @@ interface Paintor {
 declare module 'paintor' {
   export { Paintor } from 'src/index.js'
 
-  export function compose(...templates: Template[]): Paintor
-  export function compose(templates: Template[]): Paintor
+  export function compose(...templates: (Template | Paintor)[]): Paintor
+  export function compose(templates: (Template | Paintor)[]): Paintor
 
   /**
    * @template T

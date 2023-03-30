@@ -63,7 +63,7 @@ class ElementsCreator {
    */
   #isSr = true
 
-  /** @type {Template[]} */
+  /** @type {(Template | Paintor)[]} */
   #templates = []
 
   /** @type {Translation[]} */
@@ -75,7 +75,7 @@ class ElementsCreator {
   /**
    * @param {Window} window
    * @param {HTMLElement | ShadowRoot | null} containerElement
-   * @param {Template[]} templates
+   * @param {(Template | Paintor)[]} templates
    * @param {Translation[]} [translations=[]]
    */
   constructor(window, containerElement, templates, translations = []) {
@@ -89,63 +89,76 @@ class ElementsCreator {
     this.#dummyHtmlElement = this.#document.createElement('template')
 
     for (const template of this.#templates) {
-      // @ts-ignore
-      const returnedValue = template(this)
-
-      if (returnedValue && typeof returnedValue === 'string') {
-        this.html(returnedValue)
-      }
-      else if (returnedValue instanceof Paintor) {
-        const generatedChildren = (this.#isSr)
-          ? returnedValue.getElementsSr()
-          : returnedValue.getElements()
-
-        for (const childrenGroup of generatedChildren) {
-          this.#collectedElements[0].addElements(childrenGroup)
-        }
-      }
-      else if (returnedValue instanceof Function) {
+      if (template instanceof Function) {
         // @ts-ignore
-        returnedValue(this)
-      }
-      else if (returnedValue instanceof Array) {
-        let allPaintor = true
-        let allFunctions = true
+        const returnedValue = template(this)
 
-        for (const value of returnedValue) {
-          if (!(value instanceof Paintor)) {
-            allPaintor = false
+        if (returnedValue && typeof returnedValue === 'string') {
+          this.html(returnedValue)
+        }
+        else if (returnedValue instanceof Paintor) {
+          const generatedChildren = (this.#isSr)
+            // @ts-ignore
+            ? returnedValue.useTranslations(this.#translations).getElementsSr()
+            // @ts-ignore
+            : returnedValue.useTranslations(this.#translations).getElements()
 
-            break
-          }
-
-          if (!(value instanceof Function)) {
-            allFunctions = false
-
-            break
+          for (const childrenGroup of generatedChildren) {
+            this.#collectedElements[0].addElements(childrenGroup)
           }
         }
+        else if (returnedValue instanceof Function) {
+          // @ts-ignore
+          returnedValue(this)
+        }
+        else if (returnedValue instanceof Array) {
+          let allPaintor   = true
+          let allFunctions = true
 
-        if (allPaintor) {
           for (const value of returnedValue) {
-            if (!(value instanceof Paintor)) break
+            if (!(value instanceof Paintor)) {
+              allPaintor = false
 
-            const generatedChildren = (this.#isSr)
-              ? value.getElementsSr()
-              : value.getElements()
+              break
+            }
 
-            for (const childrenGroup of generatedChildren) {
-              this.#collectedElements[0].addElements(childrenGroup)
+            if (!(value instanceof Function)) {
+              allFunctions = false
+
+              break
+            }
+          }
+
+          if (allPaintor) {
+            for (const value of returnedValue) {
+              if (!(value instanceof Paintor)) break
+
+              const generatedChildren = (this.#isSr)
+                ? value.getElementsSr()
+                : value.getElements()
+
+              for (const childrenGroup of generatedChildren) {
+                this.#collectedElements[0].addElements(childrenGroup)
+              }
+            }
+          }
+          else if (allFunctions) {
+            for (const value of returnedValue) {
+              if (!(value instanceof Function)) break
+
+              // @ts-ignore
+              value(this)
             }
           }
         }
-        else if (allFunctions) {
-          for (const value of returnedValue) {
-            if (!(value instanceof Function)) break
+      }
+      else if (template instanceof Paintor) {
+        const generatedChildren = (this.#isSr)
+          ? template.useTranslations(this.#translations).getElementsSr()
+          : template.useTranslations(this.#translations).getElements()
 
-            // @ts-ignore
-            value(this)
-          }
+        for (const childrenGroup of generatedChildren) {
+          this.#collectedElements[0].addElements(childrenGroup)
         }
       }
     }
