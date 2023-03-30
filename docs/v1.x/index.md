@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Paintor
-  text: View library for the browser and for the server.
-  tagline: Built and working entirely on Vanilla JavaScript.
+  text: View Framework for Browser and Server
+  tagline: 100% JavaScript
   actions:
     - theme: brand
       text: Get Started
