@@ -38,7 +38,7 @@
     "no-extend-native"                   : "off",
     "no-lonely-if"                       : "off",
     "no-plusplus"                        : [
-      "error", {"allowForLoopAfterthoughts" : true}
+      "warn", {"allowForLoopAfterthoughts" : true}
     ],
     "no-restricted-syntax"               : "off",
     "no-tabs"                            : "off",
