@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: Paintor
-  text: View Framework for Browser and Server
+  text: Ugly, but Elegant View Framework for Browser and Server
   tagline: 100% JavaScript
   actions:
     - theme: brand

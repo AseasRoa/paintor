@@ -11,4 +11,4 @@ or static HTML on the server.
 - **Reactivity**: Through [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
   and DOM events.
 - **SSR**: The output can be HTML code for server-side rendering.
-- **Translations (i18n)**: Render the templates in the client's language.
+- **Internationalization (i18n)**: Render the templates in the client's language.

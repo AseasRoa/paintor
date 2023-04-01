@@ -14,7 +14,7 @@ is also displayed in the \<span\> element reactively:
 
 <script type="module">
   import { compose, createState } from '/assets/paintor.js'
-  
+
   const state = createState({ clicks: 0 })
 
   compose(($) => {
@@ -23,16 +23,18 @@ is also displayed in the \<span\> element reactively:
       $.span(() => state.clicks)
     )
   }).paint('#container')
+
 </script>
 ```
 
+`compose()` creates a [Component](../components/components.md). In its arguments it accepts:
+- One or more callback functions, called [Templates](../templates/creating-templates.md), in which
+  you can build an HTML-like tree. `compose()` returns an instance of `Component`, which has
+  `paint()` method, which renders the DOM elements and paints them into a DOM element with id
+  "container".
+- One or more `Component` instances.
+
 `createState()` creates a reactive version of the input Object.
-
-`compose()` accepts one or more callback functions, called [Templates](../templates/creating-templates.md), in which you
-can build an HTML-like tree. `compose()` returns an instance of `Component`, which has the `paint()`
-method, which renders the DOM elements and paints them into a DOM element with id "container".
-
-It can be said that `compose()` returns a [Component](../components/components.md).
 
 The following examples are all doing the same thing, only the syntax is different:
 

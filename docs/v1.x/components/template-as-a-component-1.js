@@ -1,6 +1,6 @@
 import { compose, createState, createTemplate } from '/assets/paintor.js'
 
-const component = createTemplate(($) => {
+const plusMinusTemplate = createTemplate(($) => {
   const state = createState({ value: 0 })
 
   $.div(
@@ -11,7 +11,7 @@ const component = createTemplate(($) => {
 })
 
 compose(
-  component,
-  component,
-  component
+  plusMinusTemplate,
+  plusMinusTemplate,
+  plusMinusTemplate
 ).paint('components-example-1')

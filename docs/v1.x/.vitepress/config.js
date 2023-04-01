@@ -60,11 +60,11 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Translations',
+        text: 'Internationalization',
         collapsed: false,
         items: [
-          { text: 'Translations', link: '/translations/translations'},
-          { text: 'Fetch Translations', link: '/translations/fetch-translations'}
+          { text: 'Translations', link: '/internationalization/translations'},
+          { text: 'Fetch Translations', link: '/internationalization/fetch-translations'}
         ]
       },
       {
@@ -78,7 +78,8 @@ export default defineConfig({
         text: 'Components',
         collapsed: false,
         items: [
-          { text: 'Components', link: '/components/components'}
+          { text: 'Components', link: '/components/components'},
+          { text: 'Template as a Component', link: '/components/template-as-a-component'}
         ]
       }
     ]

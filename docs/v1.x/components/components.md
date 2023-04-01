@@ -8,41 +8,60 @@ In Paintor, there are two ways to make components:
 - With `compose()`
 - With [Templates](../templates/creating-templates.md)
 
-## compose() as a Component
+## Create a Component with compose()
+
+`compose()` returns an instance of a class called 'Component', which can be used as an input to
+another `compose()` function.
 
 ::: code-group
-<<< @/./components/components-example-3.js [JavaScript]
+```js [Pass as Arguments]
+import { compose } from '/assets/paintor.js'
+
+const componentOne = compose(/* ... */)
+const componentTwo = compose(/* ... */)
+
+const app = compose(
+  componentOne,
+  componentTwo
+)
+
+app.paint('#app')
+```
+```js [Pass as an Array]
+import { compose } from '/assets/paintor.js'
+
+const componentOne = compose(/* ... */)
+const componentTwo = compose(/* ... */)
+
+const app = compose([
+  componentOne,
+  componentTwo
+])
+
+app.paint('#app')
+```
+:::
+
+Or, you can use instances of the 'Component' class in [Templates](../templates/creating-templates.md).
+
+::: code-group
+<<< @/./components/components-in-templates.js [JavaScript]
 ```html [HTML]
-<components-example-3></components-example-3>
+<components-in-templates></components-in-templates>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <components-example-3></components-example-3>
+  <components-in-templates></components-in-templates>
   <p></p>
 </div>
 
-## Template as a Component
+Or, you can do mixed.
 
-The example below shows a single Template with its own internal [State](../reactivity/states.md). Because this Template can be used
-as independent piece of UI multiple times, we can call it a Component.
+## Reactivity
 
-::: code-group
-<<< @/./components/components-example-1.js [JavaScript]
-```html [HTML]
-<components-example-1></components-example-1>
-```
-:::
-
-<div class="example">
-  <p></p>
-  <components-example-1></components-example-1>
-  <p></p>
-</div>
-
-The same Template can be used in another Template, but there is a catch - the Template Tree must be
-[entangled](../templates/template-tree.md#entangled-style).
+Each component can have its own internal state if `createState()` is used inside the template:
 
 ::: code-group
 <<< @/./components/components-example-2.js [JavaScript]
@@ -54,5 +73,18 @@ The same Template can be used in another Template, but there is a catch - the Te
 <div class="example">
   <p></p>
   <components-example-2></components-example-2>
+  <p></p>
+</div>
+
+::: code-group
+<<< @/./components/components-example-3.js [JavaScript]
+```html [HTML]
+<components-example-3></components-example-3>
+```
+:::
+
+<div class="example">
+  <p></p>
+  <components-example-3></components-example-3>
   <p></p>
 </div>
