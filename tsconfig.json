@@ -4,7 +4,7 @@
     "checkJs"   : true,
     "noEmit"    : true,
     "emitDeclarationOnly": false,
-    "lib"       : ["DOM", "ESNext"],
+    "lib"       : ["DOM", "ESNext", "DOM.Iterable"],
     "moduleResolution" : "Node",
     "module"    : "ESNext",
     "target"    : "ESNext",

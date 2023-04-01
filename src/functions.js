@@ -162,6 +162,14 @@ export function isValidCustomElementName(name) {
 }
 
 /**
+ * @param {string} selector
+ * @returns {boolean}
+ */
+export function selectorEndsWithId(selector) {
+  return /#[a-z0-9-]+\s*$/.test(selector)
+}
+
+/**
  * Turns a string into boolean.
  * Covers the cases when the string is 'true', 'false' or a number.
  *

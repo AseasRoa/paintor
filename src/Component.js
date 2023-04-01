@@ -1,8 +1,8 @@
 import { ElementsCreator } from './ElementsCreator.js'
 import {
-  appendChildrenToElement,
   isBrowserEnvironment,
   isValidCustomElementName,
+  selectorEndsWithId,
 } from './functions.js'
 import { Window as SrWindow } from './SrDOM/Window.js'
 
@@ -10,8 +10,14 @@ const isBrowserEnv = isBrowserEnvironment()
 const srWindow = new SrWindow()
 
 class Component {
+  /** @type {boolean} */
+  #renderCustomElements = false
+
   /** @type {string} */
-  #containerCustomElementName = ''
+  #selectorNonId = ''
+
+  /** @type {string} */
+  #selector = ''
 
   /**
    * The main element in which to append all the contents
@@ -75,6 +81,9 @@ class Component {
     return this
   }
 
+  /**
+   * @returns {Node[][]}
+   */
   getElements() {
     this.#render(null, window, true)
 
@@ -119,6 +128,9 @@ class Component {
     return this.#staticHtmlCodes.get(key) ?? ''
   }
 
+  /**
+   * @returns {Node[][]}
+   */
   getElementsSr() {
     const window = this.#getSrWindow()
 
@@ -199,9 +211,7 @@ class Component {
    * Clear contents of the container element
    */
   #clearContainerElements() {
-    if (this.#containerDOMElements
-      && Symbol.iterator in this.#containerDOMElements
-    ) {
+    if (this.#containerDOMElements) {
       for (const el of this.#containerDOMElements) {
         while (el?.firstChild) {
           el.removeChild(el.firstChild)
@@ -249,10 +259,17 @@ class Component {
     const isSr = window.document.baseURI === ''
 
     if (typeof container === 'string') {
+      this.#selector = container
+      this.#renderCustomElements = false
+
       if (isValidCustomElementName(container)) {
-        this.#containerCustomElementName = container
+        this.#renderCustomElements = true
       }
       else {
+        if (!selectorEndsWithId(container)) {
+          this.#selectorNonId = container
+        }
+
         // @ts-ignore
         this.#containerDOMElements = (isSr)
           ? [window.document.createElement('#container')]
@@ -340,13 +357,14 @@ class Component {
       throw new Error('Missing window element')
     }
 
-    if (this.#containerCustomElementName) {
+    if (this.#renderCustomElements) {
       // Custom Elements
 
       /**
+       * @param {Component} component
        * @returns {CustomElementConstructor}
        */
-      const getCustomElementConstructor = () => {
+      const getCustomElementConstructor = (component) => {
         return class extends HTMLElement {
           constructor() {
             super()
@@ -358,46 +376,76 @@ class Component {
               throw new Error('Missing shadow root')
             }
 
-            const creator = new ElementsCreator(
-              window, this.shadowRoot, templates, translations,
-            )
-            const children = creator.getCreatedElements()
-
-            appendChildrenToElement(this.shadowRoot, children)
+            component.#renderElements(window, this.shadowRoot, templates, translations, htmlOptions)
           }
         }
       }
 
       customElements.define(
-        this.#containerCustomElementName,
-        getCustomElementConstructor(),
+        this.#selector,
+        getCustomElementConstructor(this),
       )
     }
     else {
-      // DOM or Virtual
+      // DOM or SrDOM
 
-      if (this.#containerDOMElements.length === 0) {
-        const creator = new ElementsCreator(
-          window, null, templates, translations,
+      if (this.#selectorNonId) {
+        const domObserver = new MutationObserver((mutationList) => {
+          for (const mutation of mutationList) {
+            const addedNodes = mutation.addedNodes
+
+            for (let node of addedNodes) {
+              // we track only elements, skip other nodes (e.g. text nodes)
+              if (!(node instanceof HTMLElement)) continue
+
+              // check the inserted element for being a code snippet
+              if (node.matches(this.#selectorNonId)) {
+                this.#renderElements(window, node, templates, translations, htmlOptions)
+              }
+
+              // or maybe there's a code snippet somewhere in its subtree?
+              // for (let containerElement of node.querySelectorAll(this.#selectorNonId)) {
+              //   this.#renderElements(window, containerElement, templates, translations, htmlOptions)
+              // }
+            }
+
+          }
+        })
+
+        domObserver.observe(
+          document.body,
+          { attributes: false, childList: true, characterData: false, subtree: true },
         )
-
-        this.#finalHtmlCode = creator.finalPaint(htmlOptions)
-        this.#finalElements.push(creator.finalElements)
       }
 
-      if (this.#containerDOMElements
-        && Symbol.iterator in this.#containerDOMElements
-      ) {
-        for (const element of this.#containerDOMElements) {
-          const creator = new ElementsCreator(
-            window, element, templates, translations,
-          )
-
-          this.#finalHtmlCode = creator.finalPaint(htmlOptions)
-          this.#finalElements.push(creator.finalElements)
+      if (this.#containerDOMElements.length === 0) {
+        this.#renderElements(window, null, templates, translations, htmlOptions)
+      }
+      else {
+        for (const containerElement of this.#containerDOMElements) {
+          this.#renderElements(window, containerElement, templates, translations, htmlOptions)
         }
       }
     }
+  }
+
+  /**
+   * @param {Window} window
+   * @param {Element | ShadowRoot | null} container
+   * @param {(Template | Component)[]} templates
+   * @param {Translation[]} translations
+   * @param {object} [htmlOptions]
+   * @param {string} [htmlOptions.indent]
+   * @throws {Error}
+   */
+  #renderElements(window, container, templates, translations, htmlOptions = {}) {
+    const creator = new ElementsCreator(
+      window, container, templates, translations,
+    )
+    creator.render()
+
+    this.#finalHtmlCode = creator.getHtmlCode(htmlOptions)
+    this.#finalElements.push(creator.getCreatedElements())
   }
 }
 

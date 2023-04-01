@@ -28,9 +28,6 @@ import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
  */
 
 class ElementsCreator {
-  /** @type {Node[]} */
-  finalElements = []
-
   /**
    * Each element of this array represents a Level of HTML elements.
    * Level 0 is the main level where eventually all elements are placed.
@@ -46,7 +43,7 @@ class ElementsCreator {
   /**
    * The main element in which to append all the contents
    *
-   * @type {HTMLElement | ShadowRoot | null}
+   * @type {Element | ShadowRoot | null}
    */
   #containerElement
 
@@ -74,7 +71,7 @@ class ElementsCreator {
 
   /**
    * @param {Window} window
-   * @param {HTMLElement | ShadowRoot | null} containerElement
+   * @param {HTMLElement | Element | ShadowRoot | null} containerElement
    * @param {(Template | Component)[]} templates
    * @param {Translation[]} [translations=[]]
    */
@@ -87,80 +84,13 @@ class ElementsCreator {
     this.#translations = translations
 
     this.#dummyHtmlElement = this.#document.createElement('template')
+  }
 
-    for (const template of this.#templates) {
-      if (template instanceof Function) {
-        // @ts-ignore
-        const returnedValue = template(this)
+  appendChildrenToContainer() {
+    const containerElement = this.#containerElement
 
-        if (returnedValue && typeof returnedValue === 'string') {
-          this.html(returnedValue)
-        }
-        else if (returnedValue instanceof Component) {
-          const generatedChildren = (this.#isSr)
-            // @ts-ignore
-            ? returnedValue.useTranslations(this.#translations).getElementsSr()
-            // @ts-ignore
-            : returnedValue.useTranslations(this.#translations).getElements()
-
-          for (const childrenGroup of generatedChildren) {
-            this.#collectedElements[0].addElements(childrenGroup)
-          }
-        }
-        else if (returnedValue instanceof Function) {
-          // @ts-ignore
-          returnedValue(this)
-        }
-        else if (returnedValue instanceof Array) {
-          let allComponents   = true
-          let allFunctions = true
-
-          for (const value of returnedValue) {
-            if (!(value instanceof Component)) {
-              allComponents = false
-
-              break
-            }
-
-            if (!(value instanceof Function)) {
-              allFunctions = false
-
-              break
-            }
-          }
-
-          if (allComponents) {
-            for (const value of returnedValue) {
-              if (!(value instanceof Component)) break
-
-              const generatedChildren = (this.#isSr)
-                ? value.getElementsSr()
-                : value.getElements()
-
-              for (const childrenGroup of generatedChildren) {
-                this.#collectedElements[0].addElements(childrenGroup)
-              }
-            }
-          }
-          else if (allFunctions) {
-            for (const value of returnedValue) {
-              if (!(value instanceof Function)) break
-
-              // @ts-ignore
-              value(this)
-            }
-          }
-        }
-      }
-      else if (template instanceof Component) {
-        const generatedChildren = (this.#isSr)
-          ? template.useTranslations(this.#translations).getElementsSr()
-          : template.useTranslations(this.#translations).getElements()
-
-        for (const childrenGroup of generatedChildren) {
-          this.#collectedElements[0].addElements(childrenGroup)
-        }
-      }
+    if (containerElement) {
+      appendChildrenToElement(containerElement, this.getCreatedElements())
     }
   }
 
@@ -310,40 +240,6 @@ class ElementsCreator {
   }
 
   /**
-   * - Browser mode: Append the DOM elements at level 0 to the container element
-   * - Server mode: Generate HTML code of the elements at level 0
-   *
-   * @param {object} htmlOptions
-   * @param {string} [htmlOptions.indent='']
-   * @returns {string}
-   * - Browser mode: Empty string
-   * - Server mode: The final HTML code
-   */
-  finalPaint(htmlOptions) {
-    let finalHtmlCode = ''
-
-    const children = this.getCreatedElements()
-    const containerElement = this.#containerElement
-
-    if (containerElement) {
-      appendChildrenToElement(containerElement, children)
-    }
-
-    this.finalElements = children
-
-    if (this.#isSr) {
-      const virtualContainer = containerElement
-
-      if (virtualContainer) {
-        // @ts-ignore
-        finalHtmlCode = virtualContainer.paintChildren(htmlOptions)
-      }
-    }
-
-    return finalHtmlCode
-  }
-
-  /**
    * For loop with from-to numbers
    *
    * @param {number} from
@@ -389,12 +285,32 @@ class ElementsCreator {
    * @returns {Node[]}
    */
   getCreatedElements() {
-    const elements = this.#collectedElements[0].getElements()
+    return this.#collectedElements[0].getElements()
+  }
 
-    // Reset
-    this.#collectedElements = [new ElementsCollector()]
+  /**
+   * - Browser mode: Returns an empty string
+   * - Server mode: Generate HTML code of the elements at level 0
+   *
+   * @param {object} htmlOptions
+   * @param {string} [htmlOptions.indent='']
+   * @returns {string}
+   * - Browser mode: Empty string
+   * - Server mode: The final HTML code
+   */
+  getHtmlCode(htmlOptions) {
+    let htmlCode = ''
 
-    return elements
+    if (this.#isSr) {
+      const containerElement = this.#containerElement
+
+      if (containerElement) {
+        // @ts-ignore
+        htmlCode = containerElement.paintChildren(htmlOptions)
+      }
+    }
+
+    return htmlCode
   }
 
   /**
@@ -462,6 +378,87 @@ class ElementsCreator {
     return (condition instanceof Function)
       ? this.#statementHandlerForFunction('if', condition, callback)
       : this.#statementHandler('if', condition, callback)
+  }
+
+  render() {
+    this.#collectedElements = [new ElementsCollector()] // Reset
+
+    for (const template of this.#templates) {
+      if (template instanceof Function) {
+        // @ts-ignore
+        const returnedValue = template(this)
+
+        if (returnedValue && typeof returnedValue === 'string') {
+          this.html(returnedValue)
+        }
+        else if (returnedValue instanceof Component) {
+          const generatedChildren = (this.#isSr)
+            // @ts-ignore
+            ? returnedValue.useTranslations(this.#translations).getElementsSr()
+            // @ts-ignore
+            : returnedValue.useTranslations(this.#translations).getElements()
+
+          for (const childrenGroup of generatedChildren) {
+            this.#collectedElements[0].addElements(childrenGroup)
+          }
+        }
+        else if (returnedValue instanceof Function) {
+          // @ts-ignore
+          returnedValue(this)
+        }
+        else if (returnedValue instanceof Array) {
+          let allComponents   = true
+          let allFunctions = true
+
+          for (const value of returnedValue) {
+            if (!(value instanceof Component)) {
+              allComponents = false
+
+              break
+            }
+
+            if (!(value instanceof Function)) {
+              allFunctions = false
+
+              break
+            }
+          }
+
+          if (allComponents) {
+            for (const value of returnedValue) {
+              if (!(value instanceof Component)) break
+
+              const generatedChildren = (this.#isSr)
+                ? value.getElementsSr()
+                : value.getElements()
+
+              for (const childrenGroup of generatedChildren) {
+                this.#collectedElements[0].addElements(childrenGroup)
+              }
+            }
+          }
+          else if (allFunctions) {
+            for (const value of returnedValue) {
+              if (!(value instanceof Function)) break
+
+              // @ts-ignore
+              value(this)
+            }
+          }
+        }
+      }
+      else if (template instanceof Component) {
+        const generatedChildren = (this.#isSr)
+          ? template.useTranslations(this.#translations).getElementsSr()
+          : template.useTranslations(this.#translations).getElements()
+
+        for (const childrenGroup of generatedChildren) {
+          this.#collectedElements[0].addElements(childrenGroup)
+        }
+      }
+    }
+
+    this.appendChildrenToContainer()
   }
 
   /**
