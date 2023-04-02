@@ -154,4 +154,38 @@ describe('Paintor Tests', () => {
     expect(div.textContent).toBe('color:blue')
     expect(div.style.color).toBe('blue')
   })
+
+  /**
+   * This tests the ability of Paintor to place elements in correct order.
+   *
+   * Note:
+   * There is an issue that the top level of elements have no parent element,
+   * which makes it impossible to use functions like 'after' or 'insertBefore',
+   * because they require parent element. Trick is needed for the test example below
+   * to work in the browser. Without it, the newly added element would be placed
+   * after the 'for' loop's end comment.
+   * However, this problem does not happen in JsDOM, so this test example doesn't
+   * test exactly that.
+   */
+  test('Array State push new element', () => {
+    const container = document.body
+
+    const state = createState([ 0 ])
+
+    compose(($) => {
+      $.forState(state, (value) => {
+        $.div(value)
+      })
+    }).paint(container)
+
+    state.push(1)
+
+    const elements = container.getElementsByTagName('div')
+    const allElements = container.querySelectorAll('*')
+
+    expect(elements.length).toBe(2)
+    expect(allElements[0].previousSibling instanceof Comment).toBe(true)
+    expect(allElements[0].nextSibling).toBe(allElements[1])
+    expect(allElements[1].nextSibling instanceof Comment).toBe(true)
+  })
 })
