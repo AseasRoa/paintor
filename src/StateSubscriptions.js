@@ -397,7 +397,7 @@ class StateSubscriptions {
       else if (target instanceof Array && prop === 'length') {
         target[prop] = value
 
-        this.#onArrayLengthChange(receiver)
+        // this.#onArrayLengthChange(receiver)
       }
       else if (Object.hasOwn(target, prop)) {
         target[prop] = value
