@@ -578,3 +578,26 @@ export function objectGetValue(object, key) {
     return object[key]
   }
 }
+
+/**
+ * @see https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+ * @template T
+ * @param {T[]} array
+ * @param {number} oldIndex
+ * @param {number} newIndex
+ * @returns {T[]}
+ */
+export function arrayMoveIndex(array, oldIndex, newIndex) {
+  if (newIndex >= array.length) {
+    let k = newIndex - array.length + 1
+
+    while (k--) {
+      // @ts-ignore
+      array.push(undefined)
+    }
+  }
+
+  array.splice(newIndex, 0, array.splice(oldIndex, 1)[0])
+
+  return array
+}

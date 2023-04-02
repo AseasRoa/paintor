@@ -1,3 +1,5 @@
+import { arrayMoveIndex } from './functions.js'
+
 /**
  * This class has an array where HTML elements are stored.
  * The class methods provide an interface for managing this array.
@@ -66,6 +68,30 @@ class ElementsCollector {
         (element) => !(elements.includes(element)),
       )
     }
+  }
+
+  /**
+   * @param {Node} elementToMove
+   * @param {Node} referenceElement
+   */
+  moveElementAfterAnother(elementToMove, referenceElement) {
+    const indexOfElementToMove    = this.elements.indexOf(elementToMove)
+    const indexOfReferenceElement = this.elements.indexOf(referenceElement)
+
+    if (indexOfElementToMove === -1 || indexOfReferenceElement === -1) {
+      throw new Error('Cannot move one element after another, because one element is missing')
+    }
+
+    if (indexOfReferenceElement - indexOfElementToMove === 1) {
+      // no need to move
+      return
+    }
+
+    this.elements = arrayMoveIndex(
+      this.elements,
+      indexOfElementToMove,
+      indexOfReferenceElement + 1,
+    )
   }
 }
 

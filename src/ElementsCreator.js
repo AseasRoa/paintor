@@ -50,15 +50,20 @@ class ElementsCreator {
   /** @type {Document} */
   #document
 
-  /** @type {HTMLTemplateElement} */
-  #dummyHtmlElement
-
   /**
    * Is String-Rendering mode
    *
    * @type {boolean}
    */
   #isSr = true
+
+  /**
+   * Used only for Browser rendering.
+   * This element is used by html(), in its simple mode.
+   *
+   * @type {HTMLTemplateElement | null}
+   */
+  #reusableTemplateElement = null
 
   /** @type {(Template | Component)[]} */
   #templates = []
@@ -82,8 +87,6 @@ class ElementsCreator {
     this.#containerElement = containerElement
     this.#templates = templates
     this.#translations = translations
-
-    this.#dummyHtmlElement = this.#document.createElement('template')
   }
 
   appendChildrenToContainer() {
@@ -95,15 +98,10 @@ class ElementsCreator {
   }
 
   /**
-   * Create HTML element
+   * Create a DOM element (or multiple elements) and put it into the elements collector
    *
    * @param {string} tagName
    * @param {*} args
-   * Different variants are possible:<br>
-   * - String value - It will be textContent of the element. Use this in div tags and similar.
-   * - Object value - For all the properties of the element, like "id", "class" and so on...
-   * - Element (multiple arguments) - For other calls of this same function (creating children)
-   * - Array - Alternative for creating children
    * @returns {HTMLElement | Text}
    */
   createElement(tagName, ...args) {
@@ -132,7 +130,9 @@ class ElementsCreator {
       else if (typeof argument === 'number') {
         // The number is converted into a string
 
-        const textNode = this.#document.createTextNode(argument.toString())
+        const textNode = this.#document.createTextNode(
+          argument.toString(),
+        )
 
         children = addChildToStack(textNode, children)
       }
@@ -526,10 +526,10 @@ class ElementsCreator {
    */
   #beforeStatement() {
     // Create a new level for collecting
-    const thisLevel = this.#collectedElements.length
-    const upperLevel = thisLevel - 1
-
     this.#collectedElements.push(new ElementsCollector())
+
+    const thisLevel = this.#collectedElements.length - 1
+    const upperLevel = thisLevel - 1
 
     return { thisLevel, upperLevel }
   }
@@ -623,13 +623,19 @@ class ElementsCreator {
       elements = [element]
     }
     else {
-      if (false && 'DOMParser' in this.#document) {
-        // @ts-ignore
-        elements = stringToHTML(string.trim() ?? '').childNodes
+      if (
+        false
+        && 'DOMParser' in this.#window
+      ) {
+        elements = Array.from(stringToHTML(string.trim() ?? '').childNodes)
       }
       else {
+        if (!this.#reusableTemplateElement) {
+          this.#reusableTemplateElement = this.#document.createElement('template')
+        }
+
         // In DOM, we can reuse the same element
-        const template = this.#dummyHtmlElement
+        const template = this.#reusableTemplateElement
 
         //element.setHTML(string.trim() ?? '')
         template.innerHTML = string.trim() ?? ''
@@ -954,6 +960,10 @@ class ElementsCreator {
        * @type {StatementRepaintFunction}
        */
       const statementRepaintFunction = (bindFunctionResult) => {
+        if (this.#isSr) {
+          return
+        }
+
         // Clean all contents.
         this.#collectedElements[0].removeAllElements()
         this.#removeStatementElements(commentElementBegin)
@@ -1036,9 +1046,19 @@ class ElementsCreator {
         return
       }
 
-      // Remove what is not in the updated state
-      for (let i = commentElementEnd.renderedElementsMap.length - 1; i >= 0; i--) {
-        const item = commentElementEnd.renderedElementsMap[i]
+      if (this.#isSr) {
+        return
+      }
+
+      /**
+       * Elements have been deleted from the state?
+       * - Remove the DOM elements not present in the updated state
+       * - Remove these same elements from .renderedElementsMap
+       */
+      let index = commentElementEnd.renderedElementsMap.length
+
+      while (index--) {
+        const item = commentElementEnd.renderedElementsMap[index]
 
         if (!(objectHasKey(updatedState, item.key))) {
           item.elements.forEach((element) => {
@@ -1047,7 +1067,7 @@ class ElementsCreator {
           })
 
           commentElementEnd.renderedElementsMap
-            = arrayRemoveKey(commentElementEnd.renderedElementsMap, i)
+            = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
         }
       }
 
@@ -1096,21 +1116,45 @@ class ElementsCreator {
         }
 
         if (!isKeyInRenderedElementsMap) {
-          const added = callback(
-            updatedState,
-            this.#collectedElements[0],
-            i,
-          )
+          let isTemporaryLevel = false
+
+          if (commentElementBegin.parentElement) {
+            // When the loop is in inner level, make a new temporary collector,
+            // which will be deleted after that. Otherwise, the new elements are
+            // placed on level 0
+            this.#collectedElements.push(new ElementsCollector())
+            isTemporaryLevel = true
+          }
+
+          const level = this.#collectedElements.length - 1
+          const added = callback(updatedState, this.#collectedElements[level], i)
 
           for (const item of added) {
             renderedElementsMapNew.push(item)
 
             // eslint-disable-next-line @typescript-eslint/no-loop-func
             item.elements.forEach((element) => {
+              if (level === 0) {
+                /**
+                 * Parent element is needed in order to apply 'after'.
+                 * But if for example there is a for loop (for a state) at top level and
+                 * immediately after that a new element is added to the state, that new
+                 * element can't be properly added after the previous one, because of the
+                 * lack of parent element.
+                 * Because of this, let's reorder the collected elements.
+                 */
+
+                this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
+              }
+
               // @ts-ignore
               lastElement.after(element)
               lastElement = element
             })
+          }
+
+          if (isTemporaryLevel) {
+            this.#collectedElements.pop()
           }
         }
       }
@@ -1129,7 +1173,7 @@ class ElementsCreator {
       statementRepaintFunction,
     )
 
-    // In this callback the for loop is called
+    // In this callback the 'for' loop is called
     commentElementEnd.renderedElementsMap = callback(
       state,
       this.#collectedElements[thisLevel],
