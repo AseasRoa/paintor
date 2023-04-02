@@ -128,19 +128,17 @@ button, it will be re-created at the same place after 1 second:
   <p></p>
 </div>
 
-## Applying Array methods over State Array
+## Applying Array mutating methods over State Array
 
 In JavaScript there are multiple [methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)
-to manipulate an Array. Many of them will work when you apply them over State Arrays in Paintor:
+to manipulate an Array. Some of them are mutating the input Array, and they will also work on a
+State Array:
 
-Methods that work:
 - copyWithin()
 - push()
 - reverse()
 - shift()
 - pop()
+- sort()
 - splice()
 - unshift()
-
-Methods that won't work:
-- sort()
