@@ -1,5 +1,6 @@
-import { setElementAttrOrProp, modifyStyleRule } from './functions.js'
+import { setElementAttrOrProp, modifyStyleRule, appendChildrenToElement } from './functions.js'
 import { symArrayAccess, symObjectAccess, symStateId } from './symbols.js'
+import { Component } from './Component.js'
 
 /** @typedef {Object<*,*>} StateProxy */
 
@@ -276,10 +277,20 @@ class StateSubscriptions {
           }
         }
         else {
+          if (result instanceof Component) {
+            // @ts-ignore
+            element.innerHTML = ''
+
+            const generatedChildren = result.getElements()
+
+            appendChildrenToElement(element, generatedChildren[0])
+
+            return
+          }
           /**
            * @see Remark "() => value"
            */
-          if (result instanceof Function) {
+          else if (result instanceof Function) {
             result = result()
           }
 

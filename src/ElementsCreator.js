@@ -208,11 +208,7 @@ class ElementsCreator {
               this.#setPropertiesToElement(element, { value: argument })
             }
             else {
-              const textNode = this.#document.createTextNode('')
-
-              this.#setPropertiesToElement(textNode, { textContent: argument })
-
-              children = addChildToStack(textNode, children)
+              this.#setPropertiesToElement(element, { textContent: argument })
             }
           }
         }
@@ -364,12 +360,30 @@ class ElementsCreator {
      */
     const callback = (data) => {
       if (Boolean(data)) {
-        if (typeof handler === 'function') {
+        if (handler instanceof Component) {
+          const generatedChildren = (this.#isSr)
+            ? handler.getElementsSr()
+            : handler.getElements()
+
+          const level = this.#collectedElements.length - 1
+
+          this.#collectedElements[level].addElements(generatedChildren[0])
+        }
+        else if (handler instanceof Function) {
           handler()
         }
       }
       else {
-        if (typeof elseHandler === 'function') {
+        if (elseHandler instanceof Component) {
+          const generatedChildren = (this.#isSr)
+            ? elseHandler.getElementsSr()
+            : elseHandler.getElements()
+
+          const level = this.#collectedElements.length - 1
+
+          this.#collectedElements[level].addElements(generatedChildren[0])
+        }
+        else if (elseHandler instanceof Function) {
           elseHandler()
         }
       }
@@ -766,10 +780,10 @@ class ElementsCreator {
 
   /**
    * @param {HTMLElement | Text} element
-   * @param {Object<string, string|number|Object<*,*>|function(*):*|BindFunction>} properties
+   * @param {Object<string, string|number|Object<*,*>|function(*):*|BindFunction|HTMLElement>} properties
    */
   #setPropertiesToElement(element, properties) {
-    for (const propertyName in properties) {
+    for (let propertyName in properties) {
       let property = properties[propertyName]
 
       if (this.#isSr) {
@@ -812,7 +826,16 @@ class ElementsCreator {
 
         let value = bindFunction(element)
 
-        if (value instanceof Function) {
+        if (value instanceof Component) {
+          const generatedChildren = (this.#isSr)
+            ? value.getElementsSr()
+            : value.getElements()
+
+          appendChildrenToElement(element, generatedChildren[0])
+
+          propertyName = ''
+        }
+        else if (value instanceof Function) {
           /**
            * Remark "() => value"
            *
@@ -821,6 +844,10 @@ class ElementsCreator {
            * returns a function. Resolve the returned function here.
            */
           value = value()
+        }
+        else {
+          const textNode = this.#document.createTextNode(value.toString())
+          element.appendChild(textNode)
         }
 
         unsetSuggestedItems()
@@ -832,7 +859,9 @@ class ElementsCreator {
           value = this.#translate(value)
         }
 
-        setElementAttrOrProp(element, propertyName, value)
+        if (propertyName) {
+          setElementAttrOrProp(element, propertyName, value)
+        }
       }
       else if (
         // @ts-ignore
