@@ -27,30 +27,33 @@ Multiple translation objects can be used. `useTranslations()` accepts one or mor
 or an array of objects, or objects mixed with arrays of objects.
 
 ::: code-group
+
 ```js [Multiple objects]
 const translationOne = { /* ... */ }
 const translationTwo = { /* ... */ }
 
-compose(($) => {
+component(($) => {
   /* ... */
 }).useTranslations(translationOne, translationTwo).paint('#container')
 ```
+
 ```js [Array of objects]
 const translationOne = { /* ... */ }
 const translationTwo = { /* ... */ }
-const translations = [ translationOne, translationTwo ]
+const translations   = [translationOne, translationTwo]
 
-compose(($) => {
+component(($) => {
   /* ... */
 }).useTranslations(translations).paint('#container')
 ```
-```js [Mixed]
-const translationOne = { /* ... */ }
-const translationTwo = { /* ... */ }
-const translationThree = { /* ... */ }
-const translations = [ translationOne, translationTwo ]
 
-compose(($) => {
+```js [Mixed]
+const translationOne   = { /* ... */ }
+const translationTwo   = { /* ... */ }
+const translationThree = { /* ... */ }
+const translations     = [translationOne, translationTwo]
+
+component(($) => {
   /* ... */
 }).useTranslations(translations, translationThree).paint('#container')
 ```

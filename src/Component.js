@@ -5,7 +5,7 @@ import {
   selectorEndsWithId,
 } from './functions.js'
 import { Window as SrWindow } from './SrDOM/Window.js'
-import { createState } from './State.js'
+import { state } from './state.js'
 
 const isBrowserEnv = isBrowserEnvironment()
 const srWindow = new SrWindow()
@@ -52,18 +52,6 @@ class Component {
   #translations = []
 
   /**
-   * @param {string | HTMLElement} container
-   * @returns {void}
-   */
-  appendTo(container) {
-    if (!isBrowserEnv) {
-      throw new Error('You can only do this in browser environment')
-    }
-
-    this.#render(container, window, false)
-  }
-
-  /**
    * @returns {Node[][]}
    */
   getElements() {
@@ -84,13 +72,15 @@ class Component {
   }
 
   /**
+   * Renders the components into an HTML code and returns it
+   *
    * @param {object} [options]
    * @param {string} [options.indent='']
    * @returns {string}
    */
-  getHtml(options) {
+  html(options) {
     if (this.#isStatic) {
-      return this.getStaticHtml(options)
+      return this.staticHtml(options)
     }
 
     const window = this.#getSrWindow()
@@ -98,27 +88,6 @@ class Component {
     this.#render('', window, true, options)
 
     return this.#finalHtmlCode
-  }
-
-  /**
-   * @param {object} [options]
-   * @param {string} [options.indent='']
-   * @returns {string}
-   */
-  getStaticHtml(options) {
-    const key = this.#translations[0] ?? null
-
-    if (!this.#staticHtmlCodes.has(key)) {
-      const window = this.#getSrWindow()
-
-      this.#render('', window, true, options)
-      this.#staticHtmlCodes.set(
-        key,
-        this.#finalHtmlCode,
-      )
-    }
-
-    return this.#staticHtmlCodes.get(key) ?? ''
   }
 
   /**
@@ -162,6 +131,27 @@ class Component {
   }
 
   /**
+   * @param {object} [options]
+   * @param {string} [options.indent='']
+   * @returns {string}
+   */
+  staticHtml(options) {
+    const key = this.#translations[0] ?? null
+
+    if (!this.#staticHtmlCodes.has(key)) {
+      const window = this.#getSrWindow()
+
+      this.#render('', window, true, options)
+      this.#staticHtmlCodes.set(
+        key,
+        this.#finalHtmlCode,
+      )
+    }
+
+    return this.#staticHtmlCodes.get(key) ?? ''
+  }
+
+  /**
    * @param {TemplateTree} tree
    * @returns {void
    *   | string
@@ -174,12 +164,12 @@ class Component {
   }
 
   /**
-   * @param {(Template | Component)[]} templates
+   * @param {...(Template | Template[] | Component | Component[])} from
    * @returns {Component}
    */
-  useTemplates(...templates) {
-    if (templates instanceof Array) {
-      for (const item of templates) {
+  useTemplates(...from) {
+    if (from instanceof Array) {
+      for (const item of from) {
         if (item instanceof Array) {
           for (const template of item) {
             this.#templates.push(template)
@@ -325,7 +315,7 @@ class Component {
   #initTemplates(templates) {
     if (this.template instanceof Function) {
       this.state = (this.state)
-        ? createState(this.state)
+        ? state(this.state)
         : this.state
 
       // @ts-ignore

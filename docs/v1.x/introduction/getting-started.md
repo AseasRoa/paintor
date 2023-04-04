@@ -34,9 +34,9 @@ import paintor from 'paintor'
 ## The Main Functions
 
 When imported, `paintor` is an object, containing the following functions:
-- `compose()`
-- `createState()`
-- `createTemplate()`
+- `component()`
+- `state()`
+- `template()`
 - `fetchTranslations()`
 
 and a class, which should only be used as a type:
@@ -47,9 +47,9 @@ If you prefer, you can import each of these as named imports:
 ```js
 import {
   paintor,
-  compose,
-  createState,
-  createTemplate,
+  component,
+  state,
+  template,
   fetchTranslations,
   Component
 } from 'paintor'

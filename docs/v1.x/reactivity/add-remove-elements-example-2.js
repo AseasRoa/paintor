@@ -1,12 +1,12 @@
-import { compose, createState } from '/assets/paintor.js'
+import { component, state } from '/assets/paintor.js'
 
-const state = createState({ number: 0 })
+component(($) => {
+  const localState = state({ number: 0 })
 
-setInterval(() => {
-  state.number++
-}, 1000)
+  setInterval(() => {
+    localState.number++
+  }, 1000)
 
-compose(($) => {
   $.style(`
     td {
       padding: 0.2rem 1rem;
@@ -14,7 +14,7 @@ compose(($) => {
     }
   `)
 
-  $.forState(state, (value, key) => {
+  $.forState(localState, (value, key) => {
     $.table(
       $.thead(
         $.tr(
@@ -40,12 +40,12 @@ compose(($) => {
           $.td(() => '<' + value() + '>')
         ),
         $.tr(
-          $.td('() => state[key]'),
-          $.td(() => state[key])
+          $.td('() => localState[key]'),
+          $.td(() => localState[key])
         ),
         $.tr(
-          $.td(`() => '<' + state[key] + '>'`),
-          $.td(() => '<' + state[key] + '>')
+          $.td(`() => '<' + localState[key] + '>'`),
+          $.td(() => '<' + localState[key] + '>')
         ),
         $.tr(
           $.td('value()'),
@@ -64,8 +64,8 @@ compose(($) => {
           $.td(() => '<' + value + '>')
         ),
         $.tr(
-          $.td(`'<' + state[key] + '>'`),
-          $.td('<' + state[key] + '>')
+          $.td(`'<' + localState[key] + '>'`),
+          $.td('<' + localState[key] + '>')
         )
       )
     )

@@ -1,4 +1,4 @@
-import { compose, createState } from '../src/index.js'
+import { component, state } from '../src/index.js'
 
 /**
  * @param {NodeListOf<Element>} elements
@@ -44,9 +44,9 @@ describe('State: Array', () => {
   test('delete', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a', 'b', 'c' ])
+    const arrayState = state([ 'a', 'b', 'c' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -63,9 +63,9 @@ describe('State: Array', () => {
   test('copyWithin()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a', 'b', 'c', 'd', 'e' ])
+    const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -83,9 +83,9 @@ describe('State: Array', () => {
   test('pop()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a', 'b', 'c' ])
+    const arrayState = state([ 'a', 'b', 'c' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -114,9 +114,9 @@ describe('State: Array', () => {
   test('push()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a' ])
+    const arrayState = state([ 'a' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -133,9 +133,9 @@ describe('State: Array', () => {
   test('reverse()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a', 'b', 'c' ])
+    const arrayState = state([ 'a', 'b', 'c' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -152,9 +152,9 @@ describe('State: Array', () => {
   test('shift()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a', 'b', 'c' ])
+    const arrayState = state([ 'a', 'b', 'c' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -171,9 +171,9 @@ describe('State: Array', () => {
   test('sort()', () => {
     const container = document.body
 
-    let arrayState = createState([ 'March', 'Jan', 'Feb', 'Dec' ])
+    let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -191,9 +191,9 @@ describe('State: Array', () => {
   test('splice()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'a', 'c', 'd' ])
+    const arrayState = state([ 'a', 'c', 'd' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })
@@ -217,9 +217,9 @@ describe('State: Array', () => {
   test('unshift()', () => {
     const container = document.body
 
-    const arrayState = createState([ 'c' ])
+    const arrayState = state([ 'c' ])
 
-    compose(($) => {
+    component(($) => {
       $.forState(arrayState, (value) => {
         $.div(value)
       })

@@ -20,7 +20,7 @@ import {
 import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
 import { Component } from './Component.js'
-import { isState } from './State.js'
+import { isState } from './state.js'
 import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
 
 /**

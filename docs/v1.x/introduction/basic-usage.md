@@ -1,11 +1,11 @@
 ## Basic Usage
 
-The idea is that we compose our view with one or more templates, which we then render into one or
+The idea is that we component our view with one or more templates, which we then render into one or
 more DOM element, or we can generate an HTML string. The templates may also use one or more states.
 
 ## In the Browser
 
-Here is an example of a simple clicks counter. We have a `state`, a \<button\> and a \<span\>.
+Here is an example of a simple clicks counter. We have a `localState`, a \<button\> and a \<span\>.
 When the \<button\> is clicked, it increments the `clicks` property of the state, and this property
 is also displayed in the \<span\> element reactively:
 
@@ -13,63 +13,63 @@ is also displayed in the \<span\> element reactively:
 <div id="container"></div>
 
 <script type="module">
-  import { compose, createState } from '/assets/paintor.js'
+  import { component, state } from '/assets/paintor.js'
+  
+  component(($) => {
+    const localState = state({ clicks: 0 })
 
-  const state = createState({ clicks: 0 })
-
-  compose(($) => {
     $.div(
-      $.button({ onClick: () => state.clicks++ }, 'Click me'),
-      $.span(() => state.clicks)
+      $.button({ onClick: () => localState.clicks++ }, 'Click me'),
+      $.span(() => localState.clicks)
     )
   }).paint('#container')
 
 </script>
 ```
 
-`compose()` creates a [Component](../components/components.md). In its arguments it accepts:
+`component()` creates a [Component](../components/components.md). In its arguments it accepts:
 - One or more callback functions, called [Templates](../templates/creating-templates.md), in which
-  you can build an HTML-like tree. `compose()` returns an instance of `Component`, which has
+  you can build an HTML-like tree. `component()` returns an instance of `Component`, which has
   `paint()` method, which renders the DOM elements and paints them into a DOM element with id
   "container".
 - One or more `Component` instances.
 
-`createState()` creates a reactive version of the input Object.
+`state()` creates a reactive version of the input Object.
 
 The following examples are all doing the same thing, only the syntax is different:
 
 ::: code-group
 ```js [named imports (recommended)]
-import { compose, createTemplate, createState } from '/assets/paintor.js'
+import { component, state, template } from '/assets/paintor.js'
 
-const state = createState(/* ... */)
-const template = createTemplate(/* ... */)
+const myState = state(/* ... */)
+const myTemplate = template(/* ... */)
 
-compose(template).paint(/* ... */)
+component(myTemplate).paint(/* ... */)
 ```
 ```js [named import]
 import { paintor } from '/assets/paintor.js'
 
-const state = paintor.createState(/* ... */)
-const template = paintor.createTemplate(/* ... */)
+const myState = paintor.state(/* ... */)
+const myTemplate = paintor.template(/* ... */)
 
-paintor.compose(model).paint(/* ... */)
+paintor.component(myTemplate).paint(/* ... */)
 ```
 ```js [default import]
 import paintor from '/assets/paintor.js'
 
-const state = paintor.createState(/* ... */)
-const template = paintor.createTemplate(/* ... */)
+const myState = paintor.state(/* ... */)
+const myTemplate = paintor.template(/* ... */)
 
-paintor.compose(model).paint(/* ... */)
+paintor.component(myTemplate).paint(/* ... */)
 ```
 ```js [new Component()]
-import { createTemplate, createState, Component } from '/assets/paintor.js'
+import { state, template, Component } from '/assets/paintor.js'
 
-const state = createState(/* ... */)
-const template = createTemplate(/* ... */)
+const myState = state(/* ... */)
+const myTemplate = template(/* ... */)
 
-new Component().compose(template).paint(/* ... */)
+new Component().component(myTemplate).paint(/* ... */)
 ```
 :::
 
@@ -77,25 +77,25 @@ The argument of `paint()` can be a [selector](https://developer.mozilla.org/en-U
 
 ## On the Server
 
-On the server, `getHtml()` is used instead of `paint()`:
+On the server, `html()` is used instead of `paint()`:
 
 ```js
-import { compose } from 'paintor'
+import { component } from 'paintor'
 
-compose(($) => {
+component(($) => {
   $.div('Hello, World')
-}).getHtml()
+}).html()
 ```
 
-`getHtml()` renders an HTML string:
+`html()` renders an HTML string:
 
 ```html
 <div>Hello, World</div>
 ```
 
-`getHtml()` can be used in the browser as well.
+`html()` can be used in the browser as well.
 
 ::: warning
-`createState()` is useless when generating HTML code, because the code is a string and is not
+`state()` is useless when generating HTML code, because the code is a string and is not
 reactive.
 :::

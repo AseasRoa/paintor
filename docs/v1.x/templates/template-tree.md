@@ -181,13 +181,13 @@ Or when a Template is used in another Template, the order of the rendered elemen
 expected:
 
 ```js
-import { compose, createTemplate } from 'paintor'
+import { component, template } from 'paintor'
 
-const buttonTpl = createTemplate(($) => {
+const buttonTpl = template(($) => {
   $.button('Button')
 })
 
-compose(($) => {
+component(($) => {
   $.div($.span('This span is actually rendered after the button'), buttonTpl($))
 }).paint('#container')
 ```

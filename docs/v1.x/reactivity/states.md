@@ -8,44 +8,44 @@ and vice versa. This Object is then called a State.
 
 ## Object <--> State
 
-To create a State, use the function `createState()`. It takes a regular Object and returns a
+To create a State, use the function `state()`. It takes a regular Object and returns a
 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 of it. This makes both, the original Object and the State bound together. When the values of one
 change, the values of the other also change.
 
 ::: warning
-`createState()` is useless when generating HTML code, because the code is a string and is not
+`state()` is useless when generating HTML code, because the code is a string and is not
 reactive.
 :::
 
 ::: code-group
-```html [object -> state, increment 'state.count']
+```html [object -> myState, increment 'myState.count']
 <script type="module">
-  import { createState } from '/assets/paintor.js'
+  import { state } from '/assets/paintor.js'
   
   /* Create a State from an Object */
   const object = { count: 0 }
-  const state = createState(object)
+  const myState = state(object)
    
-  /* Increment state.count on every second */
+  /* Increment myState.count on every second */
   setInterval(() => {
-    state.count++
-    console.log(`object.count: ${object.count} | state.count: ${state.count}`)
+	  myState.count++
+    console.log(`object.count: ${object.count} | myState.count: ${myState.count}`)
   }, 1000)
 </script>
 ```
-```html [object -> state, increment 'object.count']
+```html [object -> myState, increment 'object.count']
 <script type="module">
-  import { createState } from '/assets/paintor.js'
+  import { state } from '/assets/paintor.js'
   
   /* Create a State from an Object */
   const object = { count: 0 }
-  const state = createState(object)
+  const myState = state(object)
 
   /* Increment object.count on every second */
   setInterval(() => {
 	object.count++
-    console.log(`object.count: ${object.count} | state.count: ${state.count}`)
+    console.log(`object.count: ${object.count} | myState.count: ${myState.count}`)
   }, 1000)
 </script>
 ```
@@ -54,14 +54,14 @@ reactive.
 If we run either of these for 3 seconds, the output will be:
 
 ```bash
-object.count: 1 | state.count: 1
-object.count: 2 | state.count: 2
-object.count: 3 | state.count: 3
+object.count: 1 | myState.count: 1
+object.count: 2 | myState.count: 2
+object.count: 3 | myState.count: 3
 ```
 
-When `state.count` is incremented, `object.count` is also incremented.
+When `myState.count` is incremented, `object.count` is also incremented.
 
-When `object.count` is incremented,`state.count` is also incremented.
+When `object.count` is incremented,`myState.count` is also incremented.
 
 ## State <--> DOM
 
@@ -71,14 +71,14 @@ the State's values with the DOM.
 But first, in order to achieve reactivity, here are few IMPORTANT things to remember:
 
 - Although the State and the original Object are bound together, in the Template you should work
-  with the State. For example, `state.value` would be reactive, but `object.value` not.
+  with the State. For example, `myState.value` would be reactive, but `object.value` not.
 - Where you want to reactively get a value from the State, wrap it in a callback function. For
-  example, use `() => state.value` instead of `state.value`.
+  example, use `() => myState.value` instead of `myState.value`.
 
 ### Change the DOM on State changes
 
 Let's have two buttons, `-` and `+`, and a \<span\> element between them. Clicking on the buttons is
-changing `state.value`, which is bound with the text content of the \<span\> element:
+changing `myState.value`, which is bound with the text content of the \<span\> element:
 
 Click on the `-` and `+` buttons below the source code to try it out:
 
@@ -97,7 +97,7 @@ Click on the `-` and `+` buttons below the source code to try it out:
 
 ### Change the State on DOM changes
 
-Let's have `state.text` and an input field from which `state.text` can be changed.
+Let's have `myState.text` and an input field from which `myState.text` can be changed.
 
 Type something in the input field below the source code. You should see the same text that you are
 typing on the right side of the input field, where the \<span\> is.

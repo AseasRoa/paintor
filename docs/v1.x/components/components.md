@@ -5,22 +5,22 @@
 Components are independent and reusable pieces of UI.
 
 In Paintor, there are two ways to make components:
-- With `compose()`
+- With `component()`
 - With [Templates](../templates/creating-templates.md)
 
-## Create a Component with compose()
+## Create a Component with component()
 
-`compose()` returns an instance of a class called 'Component', which can be used as an input to
-another `compose()` function.
+`component()` returns an instance of a class called 'Component', which can be used as an input to
+another `component()` function.
 
 ::: code-group
 ```js [Pass as Arguments]
-import { compose } from '/assets/paintor.js'
+import { component } from '/assets/paintor.js'
 
-const componentOne = compose(/* ... */)
-const componentTwo = compose(/* ... */)
+const componentOne = component(/* ... */)
+const componentTwo = component(/* ... */)
 
-const app = compose(
+const app = component(
   componentOne,
   componentTwo
 )
@@ -28,12 +28,12 @@ const app = compose(
 app.paint('#app')
 ```
 ```js [Pass as an Array]
-import { compose } from '/assets/paintor.js'
+import { component } from '/assets/paintor.js'
 
-const componentOne = compose(/* ... */)
-const componentTwo = compose(/* ... */)
+const componentOne = component(/* ... */)
+const componentTwo = component(/* ... */)
 
-const app = compose([
+const app = component([
   componentOne,
   componentTwo
 ])
@@ -61,7 +61,7 @@ Or, you can do mixed.
 
 ## Reactivity
 
-Each component can have its own internal state if `createState()` is used inside the template:
+Each component can have its own internal state if `state()` is used inside the template:
 
 ::: code-group
 <<< @/./components/components-example-2.js [JavaScript]

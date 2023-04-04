@@ -1,16 +1,16 @@
-import { compose, createState } from '/assets/paintor.js'
+import { component, state } from '/assets/paintor.js'
 
-const state = createState([ '0', '1', '2', '3', '4' ])
+component(($) => {
+  const localState = state([ '0', '1', '2', '3', '4' ])
 
-compose(($) => {
-  $.forState(state, (value, key) => {
+  $.forState(localState, (value, key) => {
     $.button({
       textContent: value,
       onClick: (event) => {
-        delete state[key]
+        delete localState[key]
 
         setTimeout(() => {
-          state[key] = key.toString()
+          localState[key] = key.toString()
         }, 1000)
       }
     })

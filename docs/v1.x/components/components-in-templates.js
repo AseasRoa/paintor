@@ -1,24 +1,24 @@
-import { compose, createState, createTemplate } from '/assets/paintor.js'
+import { component, template } from '/assets/paintor.js'
 
-const componentOne = compose(($) => $.button('1'))
-const componentTwo = compose(($) => $.button('2'))
-const templateOne = createTemplate(($) => {
+const componentOne = component(($) => $.button('1'))
+const componentTwo = component(($) => $.button('2'))
+const templateOne = template(($) => {
   $.div(
     componentOne,
     componentTwo
   )
 })
 
-const componentThree = compose(($) => $.button('3'))
-const componentFour = compose(($) => $.button('4'))
-const templateTwo = createTemplate(($) => {
+const componentThree = component(($) => $.button('3'))
+const componentFour = component(($) => $.button('4'))
+const templateTwo = template(($) => {
   $.div(
     componentThree,
     componentFour
   )
 })
 
-const app = compose(
+const app = component(
   templateOne,
   templateTwo
 )

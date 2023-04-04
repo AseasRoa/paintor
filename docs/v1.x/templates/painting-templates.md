@@ -18,9 +18,9 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint('#myId')
 </script>
@@ -29,9 +29,9 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint(document.querySelector('#myId'))
 </script>
@@ -40,9 +40,9 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint(document.getElementById('myId'))
 </script>
@@ -60,9 +60,9 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint('.myClass')
 </script>
@@ -73,9 +73,9 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint(document.querySelectorAll('.myClass'))
 </script>
@@ -86,9 +86,9 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint(document.getElementsByClassName('.myClass'))
 </script>
@@ -113,9 +113,9 @@ Use the name of the Custom Element in `paint()`:
 <custom-element></custom-element>
 
 <script type="module">
-  import { compose } from '/assets/paintor.js'
+  import { component } from '/assets/paintor.js'
 
-  compose(($) => {
+  component(($) => {
     /* ... */
   }).paint('custom-element')
 </script>

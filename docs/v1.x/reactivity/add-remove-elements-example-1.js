@@ -1,25 +1,25 @@
-import { compose, createState } from '/assets/paintor.js'
+import { component, state } from '/assets/paintor.js'
 
-const state = createState([])
+component(($) => {
+  const localState = state([])
 
-let number = 1
+  let number = 1
 
-setInterval(() => {
-  // Cleanup the state on too many elements
-  // and reset the number
-  if (state.length > 9) {
-    while (state.length > 0) {
-      state.pop()
+  setInterval(() => {
+    // Cleanup the state on too many elements
+    // and reset the number
+    if (localState.length > 9) {
+      while (localState.length > 0) {
+        localState.pop()
+      }
+
+      number = 1
     }
 
-    number = 1
-  }
+    localState.push(`<${number++}>`)
+  }, 1000)
 
-  state.push(`<${number++}>`)
-}, 1000)
-
-compose(($) => {
-  $.forState(state, (value, key) => {
+  $.forState(localState, (value, key) => {
     $.span(value())
   })
 }).paint('add-remove-elements-example-1')

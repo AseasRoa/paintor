@@ -10,9 +10,9 @@ let stateIdCounter = 0
  * @returns {T}
  * A proxy object/array that looks the same as the input object/array
  */
-const createState = function createState(object) {
+const state = function state(object) {
   if (!(object instanceof Object)) {
-    throw new Error('createState() only accepts Object, Array, Set or Map as input value.')
+    throw new Error('state() only accepts Object, Array, Set or Map as input value.')
   }
 
   const stateSubscriptions = new StateSubscriptions()
@@ -33,4 +33,4 @@ const isState = function (object) {
   return (object instanceof Object) && (symStateId in object)
 }
 
-export { createState, isState }
+export { state, isState }

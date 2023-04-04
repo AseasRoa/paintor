@@ -1,7 +1,7 @@
-import { compose } from '/assets/paintor.js'
+import { component } from '/assets/paintor.js'
 
 const translationEn = { GREETING: 'Hello!', QUESTION: 'How are you today?' }
 
-compose(($) => {
+component(($) => {
   $.div('GREETING', ' ', 'QUESTION')
 }).useTranslations(translationEn).paint('translations-example-1')

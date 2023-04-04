@@ -1,4 +1,4 @@
-import { compose, createState } from '../src/index.js'
+import { component, state } from '../src/index.js'
 
 describe('Paintor Tests', () => {
   const id = 'container'
@@ -12,7 +12,7 @@ describe('Paintor Tests', () => {
     container.id = id
     document.body.appendChild(container)
 
-    compose(($) => {
+    component(($) => {
       $.div('div 1')
       $.div('div 2')
       $.div('div 3')
@@ -26,7 +26,7 @@ describe('Paintor Tests', () => {
     container.id = id
     document.body.appendChild(container)
 
-    compose(($) => {
+    component(($) => {
       $.div('div 1')
       $.div('div 2')
       $.div('div 3')
@@ -39,7 +39,7 @@ describe('Paintor Tests', () => {
     const container = document.createElement('web-component-element')
     document.body.appendChild(container)
 
-    compose(($) => {
+    component(($) => {
       $.div('div 1')
       $.div('div 2')
       $.div('div 3')
@@ -51,7 +51,7 @@ describe('Paintor Tests', () => {
   test('Paint a table', () => {
     const container = document.body
 
-    compose(($) => {
+    component(($) => {
       $.table(
         $.tr(
           $.td('Row 1, Column 1'),
@@ -93,16 +93,16 @@ describe('Paintor Tests', () => {
   test('Using state: simple counter', () => {
     const container = document.body
 
-    const state = createState({ clicks: 0 })
+    const globalState = state({ clicks: 0 })
 
-    compose(($) => {
+    component(($) => {
       $.button({
         textContent: 'Click me',
         onClick: () => {
-          state.clicks += 1
+          globalState.clicks += 1
         },
       })
-      $.p({ textContent: () => (state.clicks) })
+      $.p({ textContent: () => (globalState.clicks) })
     }).paint(container)
 
     const button = container.getElementsByTagName('button')[0]
@@ -124,10 +124,10 @@ describe('Paintor Tests', () => {
 
     /** @type {Object<string, string>} */
     const object = {}
-    const state = createState(object)
+    const globalState = state(object)
 
-    compose(($) => {
-      $.forState(state, (value, key) => {
+    component(($) => {
+      $.forState(globalState, (value, key) => {
         $.div(
           { style: { color: value } },
           () => `${key}:${value()}`,
@@ -141,7 +141,7 @@ describe('Paintor Tests', () => {
     expect(div).toBe(undefined)
 
     // Create one <li> element
-    state.color = 'red'
+    globalState.color = 'red'
 
     div = container.getElementsByTagName('div')[0]
 
@@ -150,7 +150,7 @@ describe('Paintor Tests', () => {
     expect(div.style.color).toBe('red')
 
     // Change text content
-    state.color = 'blue'
+    globalState.color = 'blue'
     expect(div.textContent).toBe('color:blue')
     expect(div.style.color).toBe('blue')
   })

@@ -1,4 +1,4 @@
-import { isState } from './State.js'
+import { isState } from './state.js'
 import { symArrayAccess, symObjectAccess } from './symbols.js'
 
 /**

@@ -1,12 +1,12 @@
 ## Single Template
 
-In the example below, the anonymous function used as an argument in `compose()` is a **template**.
+In the example below, the anonymous function used as an argument in `component()` is a **template**.
 In its body, it contains the data necessary to build the view.
 
 ```js
-import { compose } from 'paintor'
+import { component } from 'paintor'
 
-compose(($) => {
+component(($) => {
   $.div('Hello, World')
 }).paint('#container')
 ```
@@ -17,52 +17,54 @@ variable name can be used, it's a matter of choice.
 The template function can be defined outside, like this:
 
 ```js
-import { compose, createTemplate } from '/assets/paintor.js'
+import { component, template } from '/assets/paintor.js'
 
-const template = createTemplate(($) => {
+const myTemplate = template(($) => {
   /* ... */
 })
 
-compose(template).paint('#container')
+component(myTemplate).paint('#container')
 ```
 
 ::: info
-The function `createTemplate()` is not required, but infers the necessary TypeScript types, which
-makes everything type safe and provides for code completion.
+Technically `template()` is not required, as it simply returns the input function.
+However, it infers the necessary TypeScript types, which makes everything type safe and provides for
+code completion, without the need to write any types.
 :::
 
 ## Multiple Templates
 
-One `compose()` function accepts multiple templates. In this case, the templates will be rendered
-in the order they are used in `compose()`:
+One `component()` function accepts multiple templates. In this case, the templates will be rendered
+in the order they are used in `component()`:
 
 ```js
-import { compose, createTemplate } from '/assets/paintor.js'
+import { component, template } from '/assets/paintor.js'
 
-const templateOne = createTemplate(($) => {
+const templateOne = template(($) => {
   /* ... */
 })
 
-const templateTwo = createTemplate(($) => {
+const templateTwo = template(($) => {
   /* ... */
 })
 
-const templateThree = createTemplate(($) => {
+const templateThree = template(($) => {
   /* ... */
 })
 
-compose(
+component(
   templateOne,
   templateTwo,
   templateThree
 ).paint('#container')
 ```
 
-`compose()` also accepts an array of templates:
+`component()` also accepts an array of templates:
+
 ```js
 /* ... */
 
-compose(
+component(
   [
     templateOne,
     templateTwo,

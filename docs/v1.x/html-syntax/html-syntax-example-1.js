@@ -1,16 +1,16 @@
-import { compose, createState } from '/assets/paintor.js'
+import { component, state } from '/assets/paintor.js'
 
-compose(($) => {
-  const state = createState({ time: Date().toLocaleString() })
+component(($) => {
+  const localState = state({ time: new Date().toLocaleTimeString() })
 
   setInterval(() => {
-    state.time = Date().toLocaleString()
+    localState.time = new Date().toLocaleTimeString()
   }, 1000)
 
   $.html`
   <div>
     <label>Current Time: </label>
-    ${ () => state.time }
+    ${ () => localState.time }
   </div>
   `
 }).paint('html-syntax-example-1')

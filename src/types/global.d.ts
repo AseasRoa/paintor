@@ -13,35 +13,30 @@ type Template = (tree : TemplateTree) => (
 )
 type Translation = Record<string, any>
 
-type PaintorTemplateTree = TemplateTree
-type PaintorTemplate = Template
-
 interface Component {
-  createTemplate: Template,
-  useTranslations : (...translations: Translation[]) => Component,
-  compose: (...templates: (Template | Component)[]) => Component,
-  static: (on?: boolean) => Component,
+  component: (...from: (Template | Component)[]) => Component,
+  html: (options?: { indent?:string }) => string,
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
-  appendTo: (container: string | HTMLElement) => void,
-  getHtml: (options?: { indent?:string }) => string,
-  getStaticHtml: (options?: { indent?:string }) => string,
-  template: Template
+  static: (on?: boolean) => Component,
+  staticHtml: (options?: { indent?:string }) => string,
+  template: Template,
+  useTranslations : (...translations: Translation[]) => Component,
 }
 
 declare module 'paintor' {
   export { Component } from 'src/index.js'
 
-  export function compose(...templates: (Template | Component)[]): Component
-  export function compose(templates: (Template | Component)[]): Component
+  export function component(...from: (Template | Component)[]): Component
+  export function component(from: (Template | Component)[]): Component
 
   /**
    * @template T
    * @param {T} object Your input object or array
    * @returns {T} A proxy object/array that looks the same as the input object/array
    */
-  export function createState<T>(object : T) : T
+  export function state<T>(object : T) : T
 
-  export function createTemplate(template: Template) : Template
+  export function template(from: Template) : Template
 
   /**
    * @template T
@@ -55,10 +50,10 @@ declare module 'paintor' {
   export function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
 
   export const paintor: {
-    compose: typeof compose,
-    createState: typeof createState,
-    createTemplate: typeof createTemplate,
+    component: typeof component,
     fetchTranslations: typeof fetchTranslations,
+    state: typeof state,
+    template: typeof template,
     Component: Component
   }
 }

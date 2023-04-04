@@ -1,12 +1,12 @@
-import { compose, createState } from '/assets/paintor.js'
+import { component, state } from '/assets/paintor.js'
 
-const object = { value: 0 }
-const state = createState(object)
+component(($) => {
+  const object = { value: 0 }
+  const localState = state(object)
 
-compose(($) => {
   $.div(
-    $.button({ onClick: () => state.value-- }, '-'),
-    $.span(() => state.value), // The callback here is needed for reactivity
-    $.button({ onClick: () => state.value++ }, '+')
+    $.button({ onClick: () => localState.value-- }, '-'),
+    $.span(() => localState.value), // The callback here is needed for reactivity
+    $.button({ onClick: () => localState.value++ }, '+')
   )
 }).paint('states-example-1')

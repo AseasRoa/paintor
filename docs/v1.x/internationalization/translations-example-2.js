@@ -1,8 +1,8 @@
-import { compose } from '/assets/paintor.js'
+import { component } from '/assets/paintor.js'
 
 const translationEn = { NOT_TRANSLATED: 'Translated' }
 
-compose(($) => {
+component(($) => {
   $.div('NOT_TRANSLATED')
   $.div({ textContent: 'NOT_TRANSLATED' })
   $.div({ innerText: 'NOT_TRANSLATED' })

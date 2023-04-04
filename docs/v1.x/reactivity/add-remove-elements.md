@@ -33,16 +33,16 @@ original value.
 In other words:
 
 ```js
-const state = createState({ mouse: 'Jerry' })
+component(($) => {
+  const localState = state({ mouse: 'Jerry' })
 
-compose(($) => {
-  $.forEach(state, (value, key) => {
+  $.forEach(localState, (value, key) => {
     // value is a string 'Jerry'
   })
 
-  $.forState(state, (value, key) => {
+  $.forState(localState, (value, key) => {
     // value is a function like this:
-    // () => state[key]
+    // () => localState[key]
   })
 })
 ```

@@ -1,15 +1,15 @@
-import { compose, createState } from '/assets/paintor.js'
+import { component, state } from '/assets/paintor.js'
 
-const state = createState([ 0, 0, 0 ])
+const globalState = state([ 0, 0, 0 ])
 
 setInterval(() => {
-  state[0]++
-  state[1] = state[0] * 2
-  state[2] = state[0] * 3
+  globalState[0]++
+  globalState[1] = globalState[0] * 2
+  globalState[2] = globalState[0] * 3
 }, 2000)
 
-compose(($) => {
-  $.p(() => `1 * Number = ${state[0]}` )
-  $.p(() => `2 * Number = ${state[1]}` )
-  $.p(() => `3 * Number = ${state[2]}` )
+component(($) => {
+  $.p(() => `1 * Number = ${globalState[0]}` )
+  $.p(() => `2 * Number = ${globalState[1]}` )
+  $.p(() => `3 * Number = ${globalState[2]}` )
 }).paint('states-example-array')

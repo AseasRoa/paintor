@@ -1,18 +1,18 @@
-import { compose, createState, createTemplate } from '/assets/paintor.js'
+import { component, state, template } from '/assets/paintor.js'
 
-const plusMinusTemplate = createTemplate(($) => {
-  const state = createState({ value: 0 })
+const plusMinusTemplate = template(($) => {
+  const localState = state({ value: 0 })
 
   return [
     $.div(
-      $.button({ onClick: () => state.value-- }, '-'),
-      $.span(() => state.value),
-      $.button({ onClick: () => state.value++ }, '+')
+      $.button({ onClick: () => localState.value-- }, '-'),
+      $.span(() => localState.value),
+      $.button({ onClick: () => localState.value++ }, '+')
     )
   ]
 })
 
-compose(($) => {
+component(($) => {
   $.div('Component 1', plusMinusTemplate($))
   $.div('Component 2', plusMinusTemplate($))
   $.div('Component 3', plusMinusTemplate($))

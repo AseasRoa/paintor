@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Paintor Sandbox</title>
-	<link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8">
+  <title>Paintor Sandbox</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
 <custom-element></custom-element>
 
 <script type="module">
-  import { compose, createState, createTemplate } from '../src/index.js'
+  import { component, state, template } from '../src/index.js'
 
-  const state = createState({ clicks: 0 })
+  const mainTemplate = template(($) => {
+    const localState = state({ clicks: 0 })
 
-  compose(($) => {
     $.div(
-      $.button({ onClick: () => state.clicks++ }, 'Click me'),
-      $.span(() => state.clicks)
+      $.button({ onClick: () => localState.clicks++ }, 'Click me'),
+      $.div(() => localState.clicks)
     )
-  }).paint('custom-element')
+  })
+
+  const app = component(mainTemplate)
+
+  app.paint('custom-element')
 
 </script>
 </body>
