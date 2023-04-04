@@ -24,7 +24,7 @@ interface Component {
 }
 
 declare module 'paintor' {
-  export { Component } from 'src/index.js'
+  export { Component } from 'src/Component.js'
 
   export function component(...from: (Template | Component)[]): Component
   export function component(from: (Template | Component)[]): Component

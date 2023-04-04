@@ -1,4 +1,4 @@
-import { component, state } from '../src/index.js'
+import { component, state } from '../src/paintor.js'
 
 describe('Paintor Tests', () => {
   const id = 'container'

@@ -28,7 +28,7 @@ export default defineConfig({
       preserveEntrySignatures: 'exports-only',
       // https://rollupjs.org/guide/en/#big-list-of-options
       input: {
-        paintor: 'src/index.js',
+        paintor: 'src/paintor.js',
       },
       output: [
         {
