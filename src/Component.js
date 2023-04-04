@@ -5,19 +5,13 @@ import {
   selectorEndsWithId,
 } from './functions.js'
 import { Window as SrWindow } from './SrDOM/Window.js'
+import { createState } from './State.js'
 
 const isBrowserEnv = isBrowserEnvironment()
 const srWindow = new SrWindow()
 
 class Component {
-  /** @type {boolean} */
-  #renderCustomElements = false
-
-  /** @type {string} */
-  #selectorNonId = ''
-
-  /** @type {string} */
-  #selector = ''
+  state = null
 
   /**
    * The main element in which to append all the contents
@@ -39,11 +33,20 @@ class Component {
   /** @type {boolean} */
   #isStatic = false
 
-  /** @type {(Template | Component)[]} */
-  #templates = []
+  /** @type {boolean} */
+  #renderCustomElements = false
+
+  /** @type {string} */
+  #selector = ''
+
+  /** @type {string} */
+  #selectorNonId = ''
 
   /** @type {Map<Translation | null, string>} */
   #staticHtmlCodes = new Map()
+
+  /** @type {(Template | Component)[]} */
+  #templates = []
 
   /** @type {Translation[]} */
   #translations = []
@@ -61,31 +64,21 @@ class Component {
   }
 
   /**
-   * @param {(Template | Component)[]} templates
-   * @returns {Component}
+   * @returns {Node[][]}
    */
-  compose(...templates) {
-    if (templates instanceof Array) {
-      for (const item of templates) {
-        if (item instanceof Array) {
-          for (const template of item) {
-            this.#templates.push(template)
-          }
-        }
-        else {
-          this.#templates.push(item)
-        }
-      }
-    }
+  getElements() {
+    this.#render(null, window, true)
 
-    return this
+    return this.#finalElements
   }
 
   /**
    * @returns {Node[][]}
    */
-  getElements() {
-    this.#render(null, window, true)
+  getElementsSr() {
+    const window = this.#getSrWindow()
+
+    this.#render('', window, true)
 
     return this.#finalElements
   }
@@ -129,17 +122,6 @@ class Component {
   }
 
   /**
-   * @returns {Node[][]}
-   */
-  getElementsSr() {
-    const window = this.#getSrWindow()
-
-    this.#render('', window, true)
-
-    return this.#finalElements
-  }
-
-  /**
    * @param {string | HTMLElement | HTMLElement[] | HTMLCollection} container
    * @returns {void}
    */
@@ -175,6 +157,39 @@ class Component {
    */
   static(on = true) {
     this.#isStatic = on
+
+    return this
+  }
+
+  /**
+   * @param {TemplateTree} tree
+   * @returns {void
+   *   | string
+   *   | HTMLElement | HTMLElement[]
+   *   | Component | Component[]
+   *   | Template | Template[]
+   * }
+   */
+  template(tree) {
+  }
+
+  /**
+   * @param {(Template | Component)[]} templates
+   * @returns {Component}
+   */
+  useTemplates(...templates) {
+    if (templates instanceof Array) {
+      for (const item of templates) {
+        if (item instanceof Array) {
+          for (const template of item) {
+            this.#templates.push(template)
+          }
+        }
+        else {
+          this.#templates.push(item)
+        }
+      }
+    }
 
     return this
   }
@@ -308,6 +323,15 @@ class Component {
    * @throws {Error}
    */
   #initTemplates(templates) {
+    if (this.template instanceof Function) {
+      this.state = (this.state)
+        ? createState(this.state)
+        : this.state
+
+      // @ts-ignore
+      this.#templates.push(this.template.bind(this))
+    }
+
     for (let template of templates) {
       if (
         !(template instanceof Function)

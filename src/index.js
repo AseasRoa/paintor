@@ -7,7 +7,7 @@ import { fetchTranslations } from './Translation.js'
  * @returns {Component}
  */
 function compose(...templates) {
-  return new Component().compose(...templates)
+  return new Component().useTemplates(...templates)
 }
 
 /**

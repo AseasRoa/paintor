@@ -24,7 +24,8 @@ interface Component {
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   appendTo: (container: string | HTMLElement) => void,
   getHtml: (options?: { indent?:string }) => string,
-  getStaticHtml: (options?: { indent?:string }) => string
+  getStaticHtml: (options?: { indent?:string }) => string,
+  template: Template
 }
 
 declare module 'paintor' {
