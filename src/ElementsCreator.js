@@ -394,13 +394,17 @@ class ElementsCreator {
       : this.#statementHandler('if', condition, callback)
   }
 
-  render() {
+  async render() {
     this.#collectedElements = [new ElementsCollector()] // Reset
 
     for (const template of this.#templates) {
       if (template instanceof Function) {
         // @ts-ignore
-        const returnedValue = template(this)
+        let returnedValue = template(this)
+
+        if (returnedValue instanceof Promise) {
+          returnedValue = await returnedValue
+        }
 
         if (returnedValue && typeof returnedValue === 'string') {
           this.html(returnedValue)
