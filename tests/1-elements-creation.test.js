@@ -9,7 +9,17 @@ describe('Elements Creation', () => {
   })
 
   describe('Paint in elements, selected in different ways', () => {
-    test('Paint in element, selected by Element', () => {
+    test('(SSR) 3 divs', () => {
+      const html = component(($) => {
+        $.div('div 1')
+        $.div('div 2')
+        $.div('div 3')
+      }).html()
+
+      expect(html).toBe('<div>div 1</div><div>div 2</div><div>div 3</div>')
+    })
+
+    test('(DOM) 3 divs, element is Element', () => {
       const container = document.createElement('div')
       container.id = id
       document.body.appendChild(container)
@@ -23,7 +33,7 @@ describe('Elements Creation', () => {
       expect(container.childNodes.length).toBe(3)
     })
 
-    test('Paint in element, selected by id', () => {
+    test('(DOM) 3 divs, element queried by Id', () => {
       const container = document.createElement('div')
       container.id = id
       document.body.appendChild(container)
@@ -37,7 +47,7 @@ describe('Elements Creation', () => {
       expect(container.childNodes.length).toBe(3)
     })
 
-    test('Paint in Custom Element', () => {
+    test('(DOM) 3 divs, element is a Custom Element', () => {
       const container = document.createElement('component-element')
       document.body.appendChild(container)
 
@@ -51,8 +61,25 @@ describe('Elements Creation', () => {
     })
   })
 
-  describe('Check Order of Elements', () => {
-    test('Paint a table', () => {
+  describe('Check Order of Rendered Elements', () => {
+    test('(SSR) Table', () => {
+      const html = component(($) => {
+        $.table(
+          $.tr(
+            $.td('Row 1, Column 1'),
+            $.td('Row 1, Column 2'),
+          ),
+          $.tr(
+            $.td('Row 2, Column 1'),
+            $.td('Row 2, Column 2'),
+          ),
+        )
+      }).html()
+
+      expect(html).toBe('<table><tr><td>Row 1, Column 1</td><td>Row 1, Column 2</td></tr><tr><td>Row 2, Column 1</td><td>Row 2, Column 2</td></tr></table>')
+    })
+
+    test('(DOM) Table', () => {
       const container = document.body
 
       component(($) => {
@@ -94,7 +121,25 @@ describe('Elements Creation', () => {
       expect(table.children[1].children[1].textContent).toBe('Row 2, Column 2')
     })
 
-    test('Correct order of elements when automatically calling template functions', () => {
+    test('(SSR) Correct order of elements when automatically calling template functions', () => {
+      const liFragments = template(($) => {
+        $.li('li-fragment-1')
+        $.li('li-fragment-2')
+      })
+
+      const html = component(($) => {
+        $.ul(
+          $.li('li-1'),
+          liFragments,
+          $.li('li-2'),
+          liFragments,
+        )
+      }).html()
+
+      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
+    })
+
+    test('(DOM) Correct order of elements when automatically calling template functions', () => {
       const container = document.body
 
       const liFragments = template(($) => {
@@ -123,7 +168,30 @@ describe('Elements Creation', () => {
       ])
     })
 
-    test('Correct order of elements when manually calling template functions', () => {
+    test('(SSR) Correct order of elements when manually calling template functions', () => {
+      /**
+       * Template function, created without the wrapper
+       *
+       * @param {TemplateTree} $
+       */
+      const liFragments = ($) => {
+        $.li('li-fragment-1')
+        $.li('li-fragment-2')
+      }
+
+      const html = component(($) => {
+        $.ul(
+          $.li('li-1'),
+          liFragments($),
+          $.li('li-2'),
+          liFragments($),
+        )
+      }).html()
+
+      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
+    })
+
+    test('(DOM) Correct order of elements when manually calling template functions', () => {
       const container = document.body
 
       /**
