@@ -895,7 +895,7 @@ class ElementsCreator {
           value = value()
         }
         else {
-          const textNode = this.#document.createTextNode(value.toString())
+          const textNode = this.#document.createTextNode((value ?? '').toString())
           element.appendChild(textNode)
         }
 
