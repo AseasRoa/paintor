@@ -1,16 +1,5 @@
 import { component, state } from '../src/paintor.js'
-
-/**
- * @param {NodeListOf<Element>} elements
- * @param {any[]} values
- */
-function expectTextContentsToBeLike(elements, values) {
-  expect(elements.length).toBe(values.length)
-
-  values.forEach((value, index) => {
-    expect(elements[index].textContent).toBe(value)
-  })
-}
+import { expectTextContentsToBeLike } from './functions.js'
 
 /**
  * 'for' loops in Paintor contain these 'begin' and 'end' Comment elements.
