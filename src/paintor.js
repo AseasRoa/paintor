@@ -1,6 +1,7 @@
 import { Component } from './Component.js'
 import { state } from './state.js'
 import { fetchTranslations } from './Translation.js'
+import { symTemplateFunction } from './symbols.js'
 
 /**
  * @param {...(Template | Template[] | Component | Component[])} from
@@ -11,10 +12,19 @@ function component(...from) {
 }
 
 /**
+ * Returns the input function, but marked to be used easily in Paintor
+ *
  * @param {Template} from
  * @returns {Template}
  */
 function template(from) {
+  /**
+   * Mark the function, so it can be recognized later
+   * as a Template function
+   */
+  // @ts-ignore
+  from[symTemplateFunction] = true
+
   return from
 }
 

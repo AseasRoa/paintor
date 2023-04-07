@@ -38,6 +38,14 @@ class ElementsCollector {
   }
 
   /**
+   * @param {Node} element
+   * @returns {boolean}
+   */
+  hasElement(element) {
+    return this.elements.indexOf(element) > -1
+  }
+
+  /**
    * Import the elements from another ElementsCollector into this one
    *
    * @param {ElementsCollector} elementsCollector
@@ -47,26 +55,6 @@ class ElementsCollector {
 
     for (const element of elements) {
       this.addElement(element)
-    }
-  }
-
-  /**
-   * Clears the array of collected elements
-   */
-  removeAllElements() {
-    this.elements = []
-  }
-
-  /**
-   * From the list of collected elements remove any element present in the input array
-   *
-   * @param {Node[]} elements
-   */
-  removeTheseElements(elements) {
-    if (elements.length > 0) {
-      this.elements = this.elements.filter(
-        (element) => !(elements.includes(element)),
-      )
     }
   }
 
@@ -92,6 +80,26 @@ class ElementsCollector {
       indexOfElementToMove,
       indexOfReferenceElement + 1,
     )
+  }
+
+  /**
+   * Clears the array of collected elements
+   */
+  removeAllElements() {
+    this.elements = []
+  }
+
+  /**
+   * From the list of collected elements remove any element present in the input array
+   *
+   * @param {Node[]} elements
+   */
+  removeTheseElements(elements) {
+    if (elements.length > 0) {
+      this.elements = this.elements.filter(
+        (element) => !(elements.includes(element)),
+      )
+    }
   }
 }
 

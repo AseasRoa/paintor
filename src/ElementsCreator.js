@@ -1,3 +1,4 @@
+import { Component } from './Component.js'
 import { ElementsCollector } from './ElementsCollector.js'
 import {
   addChildrenToStack,
@@ -19,9 +20,9 @@ import {
 } from './functions.js'
 import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
-import { Component } from './Component.js'
 import { isState } from './state.js'
 import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
+import { symTemplateFunction } from './symbols.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol), elements: (Node)[]}>} RenderedElementsMap
@@ -87,14 +88,11 @@ class ElementsCreator {
     this.#containerElement = containerElement
     this.#templates = templates
     this.#translations = translations
-  }
 
-  appendChildrenToContainer() {
-    const containerElement = this.#containerElement
-
-    if (containerElement) {
-      appendChildrenToElement(containerElement, this.getCreatedElements())
-    }
+    // htmlTags.forEach((tagName) => {
+    //   // @ts-ignore
+    //   this[tagName] = this[tagName].bind(this)
+    // })
   }
 
   /**
@@ -191,24 +189,38 @@ class ElementsCreator {
         }
       }
       else if (argument instanceof Function) {
-        if (this.#isSr) {
-          // @ts-ignore
-          element.innerHTML = `(${argument.toString()})()`
+        // Is it a Template function?
+        if (argument[symTemplateFunction]) {
+          const { thisLevel, upperLevel } = this.#beforeStatement()
+
+          argument(this)
+
+          const generatedElements = this.#collectedElements[thisLevel].getElements()
+
+          children = addChildrenToStack(generatedElements, children)
+
+          this.#afterStatement({ thisLevel, upperLevel })
         }
         else {
-          if (element instanceof HTMLScriptElement) {
-            const inlineScript = this.#document.createTextNode(`(${argument.toString()})()`)
-            element.appendChild(inlineScript)
+          if (this.#isSr) {
+            // @ts-ignore
+            element.innerHTML = `(${argument.toString()})()`
           }
           else {
-            if (
-              'value' in element
-              && !(element instanceof HTMLLIElement) // <li> has value, but it accepts only numbers
-            ) {
-              this.#setPropertiesToElement(element, { value: argument })
+            if (element instanceof HTMLScriptElement) {
+              const inlineScript = this.#document.createTextNode(`(${argument.toString()})()`)
+              element.appendChild(inlineScript)
             }
             else {
-              this.#setPropertiesToElement(element, { textContent: argument })
+              if (
+                'value' in element
+                && !(element instanceof HTMLLIElement) // <li> has value, but it accepts only numbers
+              ) {
+                this.#setPropertiesToElement(element, { value: argument })
+              }
+              else {
+                this.#setPropertiesToElement(element, { textContent: argument })
+              }
             }
           }
         }
@@ -225,9 +237,34 @@ class ElementsCreator {
       }
     }
 
-    appendChildrenToElement(element, children)
-
     const level = this.#collectedElements.length - 1
+
+    /**
+     * Along with the known children, there might be unknown children,
+     * created from a function call such as templateCall($). These unknown
+     * children would be placed after the first known child.
+     *
+     * @example
+     * $.div($.span(), templateCall($))
+     *
+     * However, the scenario when the function call is the first argument is
+     * not covered:
+     * @example
+     * $.div(templateCall($), $.span())
+     */
+    if (children.length > 0) {
+      const collectedElements = this.#collectedElements[level].getElements()
+      const indexOfFirstKnownChild = collectedElements.indexOf(children[0])
+
+      if (indexOfFirstKnownChild > -1) {
+        if (children.length < collectedElements.length - indexOfFirstKnownChild) {
+          // Replace the children with all collected elements, starting from the first known child
+          children = collectedElements.slice(indexOfFirstKnownChild)
+        }
+      }
+    }
+
+    appendChildrenToElement(element, children)
 
     this.#collectedElements[level].removeTheseElements(children)
     this.#collectedElements[level].addElement(element)
@@ -476,7 +513,7 @@ class ElementsCreator {
       }
     }
 
-    this.appendChildrenToContainer()
+    this.#appendChildrenToContainer()
   }
 
   /**
@@ -500,6 +537,14 @@ class ElementsCreator {
     this.#collectedElements.pop()
 
     return elements
+  }
+
+  #appendChildrenToContainer() {
+    const containerElement = this.#containerElement
+
+    if (containerElement) {
+      appendChildrenToElement(containerElement, this.getCreatedElements())
+    }
   }
 
   /**
