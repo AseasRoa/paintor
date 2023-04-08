@@ -1,6 +1,5 @@
-import { setElementAttrOrProp, modifyStyleRule, appendChildrenToElement } from './functions.js'
+import { setElementAttrOrProp, modifyStyleRule } from './functions.js'
 import { symArrayAccess, symObjectAccess, symStateId } from './symbols.js'
-import { Component } from './Component.js'
 
 /** @typedef {Object<*,*>} StateProxy */
 
@@ -271,26 +270,17 @@ class StateSubscriptions {
         else if (
           propertyName === '--if'
           || propertyName === '--for'
+          || propertyName === '--nest'
         ) {
           if (statementRepaintFunction instanceof Function) {
             statementRepaintFunction(result)
           }
         }
         else {
-          if (result instanceof Component) {
-            // @ts-ignore
-            element.innerHTML = ''
-
-            const generatedChildren = result.getElements()
-
-            appendChildrenToElement(element, generatedChildren[0])
-
-            return
-          }
           /**
            * @see Remark "() => value"
            */
-          else if (result instanceof Function) {
+          if (result instanceof Function) {
             result = result()
           }
 

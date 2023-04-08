@@ -219,7 +219,57 @@ class ElementsCreator {
                 this.#setPropertiesToElement(element, { value: argument })
               }
               else {
-                this.#setPropertiesToElement(element, { textContent: argument })
+                this.#statementHandlerForFunction(
+                  'nest',
+                  argument,
+                  false,
+                  // eslint-disable-next-line @typescript-eslint/no-loop-func
+                  (
+                    value,
+                    isInitialRun,
+                    commentElementBegin, // Should be Comment element on the first run only
+                    commentElementEnd, // Should be Comment element on the first run only
+                  ) => {
+                    if (value instanceof Function || value instanceof Component) {
+                      if (value instanceof Component) {
+                        const generatedChildren = (this.#isSr)
+                          ? value.getElementsSr()
+                          : value.getElements()
+
+                        if (isInitialRun) {
+                          addChildToStack(commentElementBegin, children)
+                          children = addChildrenToStack(generatedChildren[0], children)
+                          addChildToStack(commentElementEnd, children)
+                        }
+                        else {
+                          this.#collectedElements[0].addElements(generatedChildren[0])
+                        }
+                      }
+                      else if (symTemplateFunction in value) {
+                        // @ts-ignore
+                        value(this)
+
+                        if (isInitialRun) {
+                          const level = this.#collectedElements.length - 1
+
+                          const generatedElements = this.#collectedElements[level].getElements()
+
+                          addChildToStack(commentElementBegin, children)
+                          addChildrenToStack(generatedElements, children)
+                          addChildToStack(commentElementEnd, children)
+                        }
+                        else {
+                          children = [] // maybe not necessary
+                        }
+                      }
+                    }
+                    else {
+                      if (isInitialRun && commentElementBegin) {
+                        this.#unsubscribeElementAndItsChildren(commentElementBegin)
+                        this.#setPropertiesToElement(element, { textContent: argument })
+                      }
+                    }
+                  })
               }
             }
           }
@@ -269,6 +319,7 @@ class ElementsCreator {
     this.#collectedElements[level].removeTheseElements(children)
     this.#collectedElements[level].addElement(element)
 
+    //console.log('createElement', this.#collectedElements[level].getElements())
     return element
   }
 
@@ -427,7 +478,7 @@ class ElementsCreator {
     }
 
     return (condition instanceof Function)
-      ? this.#statementHandlerForFunction('if', condition, callback)
+      ? this.#statementHandlerForFunction('if', condition, true, callback)
       : this.#statementHandler('if', condition, callback)
   }
 
@@ -659,7 +710,7 @@ class ElementsCreator {
 
     if (input instanceof Function) {
       // @ts-ignore
-      return this.#statementHandlerForFunction('forEach', input, callback)
+      return this.#statementHandlerForFunction('forEach', input, true, callback)
     }
 
     return this.#statementHandler('forEach', input, callback)
@@ -830,8 +881,9 @@ class ElementsCreator {
   /**
    * @param {HTMLElement | Text} element
    * @param {Object<string, string|number|Object<*,*>|function(*):*|BindFunction|HTMLElement>} properties
+   * @param {any[]} [childrenStack]
    */
-  #setPropertiesToElement(element, properties) {
+  #setPropertiesToElement(element, properties, childrenStack) {
     for (let propertyName in properties) {
       let property = properties[propertyName]
 
@@ -859,12 +911,6 @@ class ElementsCreator {
         /** @type {BindFunction} */
         const bindFunction = property
 
-        // this.#subscribeToBindings({
-        //   element,
-        //   propertyName,
-        //   bindFunction,
-        // })
-
         setSuggestItems(
           element,
           propertyName,
@@ -880,7 +926,20 @@ class ElementsCreator {
             ? value.getElementsSr()
             : value.getElements()
 
-          appendChildrenToElement(element, generatedChildren[0])
+          addChildrenToStack(generatedChildren[0], childrenStack ?? [])
+
+          propertyName = ''
+        }
+        else if (value instanceof Function && value[symTemplateFunction]) {
+          const { thisLevel, upperLevel } = this.#beforeStatement()
+
+          value(this)
+
+          const generatedElements = this.#collectedElements[thisLevel].getElements()
+
+          addChildrenToStack(generatedElements, childrenStack ?? [])
+
+          this.#afterStatement({ thisLevel, upperLevel })
 
           propertyName = ''
         }
@@ -974,13 +1033,6 @@ class ElementsCreator {
         const propertyName = 'style'
         const bindFunction = ruleValue
 
-        // this.#subscribeToBindings({
-        //   element,
-        //   propertyName,
-        //   subPropertyName: ruleName,
-        //   bindFunction,
-        // })
-
         setSuggestItems(
           element,
           propertyName,
@@ -1019,12 +1071,13 @@ class ElementsCreator {
   }
 
   /**
-   * @param {'if' | 'for' | 'forEach'} type
+   * @param {'if' | 'for' | 'forEach' | 'nest'} type
    * @param {function(): any} bindFunction
-   * @param {function(boolean | State): void} callback
+   * @param {boolean} autoAddCommentElements
+   * @param {function((boolean | State | Template | Component), boolean, Comment?, Comment?): void} callback
    * @returns {Node[]}
    */
-  #statementHandlerForFunction(type, bindFunction, callback) {
+  #statementHandlerForFunction(type, bindFunction, autoAddCommentElements, callback) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
     const isFunction = bindFunction instanceof Function
 
@@ -1032,7 +1085,9 @@ class ElementsCreator {
       const commentElementBegin = this.#document.createComment(`${type}-begin`)
       const commentElementEnd   = this.#document.createComment(`${type}-end`)
 
-      this.#collectedElements[thisLevel].addElement(commentElementBegin)
+      if (autoAddCommentElements) {
+        this.#collectedElements[thisLevel].addElement(commentElementBegin)
+      }
 
       /**
        * @type {StatementRepaintFunction}
@@ -1042,16 +1097,18 @@ class ElementsCreator {
           return
         }
 
+        const level = this.#collectedElements.length - 1
+
         // Clean all contents.
-        this.#collectedElements[0].removeAllElements()
+        this.#collectedElements[level].removeAllElements()
         this.#removeStatementElements(commentElementBegin)
 
         // Create the new elements
-        callback(bindFunctionResult)
+        callback(bindFunctionResult, false, null, null)
 
         const success = this.#insertStatementElements(
           commentElementBegin,
-          this.#collectedElements[0].getElements(),
+          this.#collectedElements[level].getElements(),
         )
 
         if (!success) {
@@ -1072,19 +1129,20 @@ class ElementsCreator {
 
       const resolved = bindFunction()
 
-      // TODO maybe this one should be below the callback below?
       unsetSuggestedItems()
 
       // Run the handler function
-      callback(resolved)
+      callback(resolved, true, commentElementBegin, commentElementEnd)
 
-      this.#collectedElements[thisLevel].addElement(commentElementEnd)
+      if (autoAddCommentElements) {
+        this.#collectedElements[thisLevel].addElement(commentElementEnd)
+      }
     }
     else {
       const resolved = bindFunction
 
       // Run the handler function
-      callback(resolved)
+      callback(resolved, false, null, null)
     }
 
     return this.#afterStatement({ thisLevel, upperLevel })
