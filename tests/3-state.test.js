@@ -7,7 +7,7 @@ describe('State', () => {
     document.body.innerHTML = ''
   })
 
-  test('Using state: simple counter', () => {
+  test('Simple Counter', () => {
     const container = document.body
 
     const globalState = state({ clicks: 0 })

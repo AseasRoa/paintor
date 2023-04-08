@@ -121,6 +121,53 @@ describe('Elements Creation', () => {
       expect(table.children[1].children[1].textContent).toBe('Row 2, Column 2')
     })
 
+    test('(SSR) Correct order of elements when automatically calling a Component', () => {
+      const liFragments = component(($) => {
+        $.li('li-fragment-1')
+        $.li('li-fragment-2')
+      })
+
+      const html = component(($) => {
+        $.ul(
+          $.li('li-1'),
+          liFragments,
+          $.li('li-2'),
+          liFragments,
+        )
+      }).html()
+
+      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
+    })
+
+    test('(DOM) Correct order of elements when automatically calling a Component', () => {
+      const container = document.body
+
+      const liFragments = component(($) => {
+        $.li('li-fragment-1')
+        $.li('li-fragment-2')
+      })
+
+      component(($) => {
+        $.ul(
+          $.li('li-1'),
+          liFragments,
+          $.li('li-2'),
+          liFragments,
+        )
+      }).paint(container)
+
+      let ul = container.getElementsByTagName('ul')[0]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'li-1',
+        'li-fragment-1',
+        'li-fragment-2',
+        'li-2',
+        'li-fragment-1',
+        'li-fragment-2',
+      ])
+    })
+
     test('(SSR) Correct order of elements when automatically calling template functions', () => {
       const liFragments = template(($) => {
         $.li('li-fragment-1')
