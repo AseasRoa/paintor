@@ -65,8 +65,8 @@ When `object.count` is incremented,`myState.count` is also incremented.
 
 ## State <--> DOM
 
-Now that we have a State, we can use it in a [Template](../templates/creating-templates) to bind
-the State's values with the DOM.
+Now that we have a State, we can use it in a [Template](../templates/what-are-templates.md)
+to bind the State's values with the DOM.
 
 But first, in order to achieve reactivity, here are few IMPORTANT things to remember:
 
@@ -117,7 +117,7 @@ typing on the right side of the input field, where the \<span\> is.
 
 ## One State in many Templates
 
-One State can serve multiple [Templates](../templates/creating-templates) at the same time.
+One State can serve multiple [Templates](../templates/what-are-templates.md) at the same time.
 
 ::: code-group
 <<< @/./reactivity/states-example-3.js [JavaScript]

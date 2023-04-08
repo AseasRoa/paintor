@@ -1,13 +1,5 @@
 <script> import '/./components/components.js' </script>
 
-## What are Components?
-
-Components are independent and reusable pieces of UI.
-
-In Paintor, there are two ways to make components:
-- With `component()`
-- With [Templates](../templates/creating-templates.md)
-
 ## Create a Component with component()
 
 `component()` returns an instance of a class called 'Component', which can be used as an input to
@@ -42,7 +34,7 @@ app.paint('#app')
 ```
 :::
 
-Or, you can use instances of the 'Component' class in [Templates](../templates/creating-templates.md).
+Or, you can use instances of the 'Component' class in [Templates](../templates/what-are-templates.md).
 
 ::: code-group
 <<< @/./components/components-in-templates.js [JavaScript]

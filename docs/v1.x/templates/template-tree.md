@@ -1,3 +1,45 @@
+## What is a Template Tree?
+
+This is the HTML-like structure in a [Template](./what-are-templates.md),
+built in JavaScript. Some call it HyperScript.
+
+```js
+// This function is a Template
+($) => {
+  // Use the $ argument to build a tree
+  $.table(
+    $.thead(
+      $.tr(
+        $.td(/* ... */),
+        $.td(/* ... */)
+      )
+    ),
+    $.tbody(
+      $.tr(
+        $.td(/* ... */),
+        $.td(/* ... */)
+      )
+    )
+  )
+}
+```
+In a [Template](./what-are-templates.md) function, `$` is an Object, containing a bunch of functions. There is a function for each HTML
+element. For example, we have `$.a()` for \<a\>, `$.p()` for \<p\>, `$.input()` for \<input\>,
+and so on.
+
+These are a little bit special, they will be explained later:
+
+- `$.html()`
+- `$.script()`
+
+And there are few extra function, such as:
+
+- `$.createElement()` - for creating a custom element.
+- `$.if()` - `if` statement.
+- `$.for()` - `for` iteration loop, starting with one number and ending with another.
+- `$.forEach()` - to iterate over Array, Object, Set or Map.
+- `$.forState()` - to iterate over [State](../reactivity/states).
+
 ## Naming
 
 The argument name in the template function doesn't matter, it's a matter of choice. The following
@@ -17,26 +59,6 @@ two examples are doing exactly the same:
   myTree.h3('h3 element')
 }
 ```
-## What is the Tree?
-
-``$`` is an instance of a class, which provides a bunch of methods. There is a method for each HTML
-element. For example, we have ``$.a()`` for \<a\>, ``$.p()`` for \<p\>, ``$.input()`` for \<input\>,
-and so on.
-
-These are a little bit special, they will be explained later:
-
-- ``$.html()``
-- ``$.script()``
-
-And there are few extra methods, such as:
-
-- ``$.createElement()`` - for creating a custom element.
-- ``$.if()`` - ``if`` statement.
-- ``$.for()`` - ``for`` iteration loop, starting with one number and ending with another.
-- ``$.forEach()`` - to iterate over Array, Object, Set or Map.
-- ``$.forState()`` - to iterate over [State](../reactivity/states).
-
-
 
 ## Syntax
 
@@ -134,37 +156,11 @@ Elements can be mixed with text:
 ```html
 <p>The quick brown <strong>fox</strong> jumps over the lazy <strong>dog</strong></p>
 ```
-## Free Style
 
-You probably noticed that in the examples above the method calls in the template function aren't
-entangled in any way. Other blocks of code can exist in between:
-
-```js
-($) => {
-  /* ... */
-  
-  $.h1('h1 element')
-
-  /* ... */
-  
-  $.h2('h2 element')
-
-  /* ... */
-  
-  $.h3('h3 element')
-
-  /* ... */
-}
-```
-
-However, this style has its quirks and can't be used everywhere!
-
-::: warning
-Keep in mind that the order and the time of execution (of the methods) matters.
-:::
+## The Template Tree is Synchronous
 
 In the following example the \<h2\> element will not be rendered,
-because `$.h2()` is executed after everything else is rendered:
+because `$.h2()` is executed after the tree has already been rendered:
 ```js
 ($) => {
   $.h1('h1 element')
@@ -175,62 +171,4 @@ because `$.h2()` is executed after everything else is rendered:
 ```html
 <h1>h1 element</h1>
 <h3>h3 element</h3>
-```
-
-Or when a Template is used in another Template, the order of the rendered elements will not be as
-expected:
-
-```js
-import { component, template } from 'paintor'
-
-const buttonTpl = template(($) => {
-  $.button('Button')
-})
-
-component(($) => {
-  $.div($.span('This span is actually rendered after the button'), buttonTpl($))
-}).paint('#container')
-```
-```html
-<div>
-   <button>Button</button>
-   <span>This span is actually rendered after the button</span>
-</div>
-```
-
-To overcome these quirks, use the Entangled Style, which is described below.
-
-## Entangled Style
-
-When using Template in another Template, or using the Template as a [Component](../components/components.md),
-it's necessary to entangle the elements into an Array:
-
-```js
-($) => [
-  $.h1('h1 element'),
-  $.h2('h2 element'),
-  $.h3('h3 element'),
-]
-```
-```html
-<h1>h1 element</h1>
-<h2>h2 element</h2>
-<h3>h3 element</h3>
-```
-
-or into a single element:
-
-```js
-($) => $.div(
-  $.h1('h1 element'),
-  $.h2('h2 element'),
-  $.h3('h3 element'),
-)
-```
-```html
-<div>
-	<h1>h1 element</h1>
-	<h2>h2 element</h2>
-	<h3>h3 element</h3>
-</div>
 ```

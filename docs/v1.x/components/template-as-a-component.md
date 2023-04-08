@@ -2,7 +2,7 @@
 
 ## Template as a Component
 
-[Templates](../templates/creating-templates.md) can also be used to make components.
+[Templates](../templates/what-are-templates.md) can also be used to make components.
 The example below shows a single Template with its own internal [State](../reactivity/states.md).
 Because this Template can be used as independent piece of UI multiple times, we can call it a
 Component.

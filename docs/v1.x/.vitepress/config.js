@@ -36,24 +36,33 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'What is Paintor?', link: '/introduction/what-is-paintor' },
-          { text: 'Getting Started', link: '/introduction/getting-started' },
-          { text: 'Basic Usage', link: '/introduction/basic-usage' },
+          { text: 'Getting Started', link: '/introduction/getting-started' }
         ]
       },
       {
         text: 'Templates',
-        collapsed: false,
+        collapsed: true,
         items: [
-          { text: 'Creating Templates', link: '/templates/creating-templates'},
-          { text: 'Painting Templates', link: '/templates/painting-templates'},
+          { text: 'What are Templates?', link: '/templates/what-are-templates'},
           { text: 'Template Tree', link: '/templates/template-tree'},
+          { text: 'Sub-Templates', link: '/templates/sub-templates'},
           { text: 'Properties Object', link: '/templates/properties-object'},
           { text: 'Statements', link: '/templates/statements'}
         ]
       },
       {
+        text: 'Components',
+        collapsed: true,
+        items: [
+          { text: 'What are Components?', link: '/components/what-are-components'},
+          { text: 'Painting Templates', link: '/components/painting-templates'},
+          { text: 'Components', link: '/components/components'},
+          { text: 'Template as a Component', link: '/components/template-as-a-component'}
+        ]
+      },
+      {
         text: 'Reactivity',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'States', link: '/reactivity/states'},
           { text: 'Add and Remove Elements', link: '/reactivity/add-remove-elements'}
@@ -61,7 +70,7 @@ export default defineConfig({
       },
       {
         text: 'Internationalization',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'Translations', link: '/internationalization/translations'},
           { text: 'Fetch Translations', link: '/internationalization/fetch-translations'}
@@ -69,17 +78,9 @@ export default defineConfig({
       },
       {
         text: 'HTML Syntax',
-        collapsed: false,
+        collapsed: true,
         items: [
           { text: 'HTML Syntax', link: '/html-syntax/html-syntax'}
-        ]
-      },
-      {
-        text: 'Components',
-        collapsed: false,
-        items: [
-          { text: 'Components', link: '/components/components'},
-          { text: 'Template as a Component', link: '/components/template-as-a-component'}
         ]
       }
     ]
