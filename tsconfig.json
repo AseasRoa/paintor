@@ -26,8 +26,9 @@
     "examples/**/*"
   ],
   "exclude" : [
-    "node_modules",
-    "dist",
-    "types"
+    "node_modules/**/*",
+    "dist/**/*",
+    "docs/**/*",
+    "types/**/*"
   ]
 }
