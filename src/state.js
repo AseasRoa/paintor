@@ -1,5 +1,5 @@
 import { StateSubscriptions } from './StateSubscriptions.js'
-import { symStateId } from './symbols.js'
+import { symStateId } from './constants.js'
 
 let stateIdCounter = 0
 

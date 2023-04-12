@@ -22,7 +22,7 @@ import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
 import { isState } from './state.js'
 import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
-import { symTemplateFunction } from './symbols.js'
+import { EnumStateAction, symTemplateFunction } from './constants.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol), elements: (Node)[]}>} RenderedElementsMap
@@ -259,7 +259,7 @@ class ElementsCreator {
                           addChildToStack(commentElementEnd, children)
                         }
                         else {
-                          children = [] // maybe not necessary
+                          children.length = 0 // maybe not necessary
                         }
                       }
                     }
@@ -319,7 +319,6 @@ class ElementsCreator {
     this.#collectedElements[level].removeTheseElements(children)
     this.#collectedElements[level].addElement(element)
 
-    //console.log('createElement', this.#collectedElements[level].getElements())
     return element
   }
 
@@ -684,9 +683,11 @@ class ElementsCreator {
         /**
          * @param {number | string} key
          */
-        const onIteration = (key) => {
+        function onIteration(key) {
           const elementsFromCollector = elementsCollector.getElements()
-          const elements = elementsFromCollector.slice(index)
+          const elements = (index === 0)
+            ? elementsFromCollector
+            : elementsFromCollector.slice(index)
 
           renderedElementsMap.push({ key, elements })
 
@@ -881,9 +882,8 @@ class ElementsCreator {
   /**
    * @param {HTMLElement | Text} element
    * @param {Object<string, string|number|Object<*,*>|function(*):*|BindFunction|HTMLElement>} properties
-   * @param {any[]} [childrenStack]
    */
-  #setPropertiesToElement(element, properties, childrenStack) {
+  #setPropertiesToElement(element, properties) {
     for (let propertyName in properties) {
       let property = properties[propertyName]
 
@@ -921,29 +921,7 @@ class ElementsCreator {
 
         let value = bindFunction(element)
 
-        if (value instanceof Component) {
-          const generatedChildren = (this.#isSr)
-            ? value.getElementsSr()
-            : value.getElements()
-
-          addChildrenToStack(generatedChildren[0], childrenStack ?? [])
-
-          propertyName = ''
-        }
-        else if (value instanceof Function && value[symTemplateFunction]) {
-          const { thisLevel, upperLevel } = this.#beforeStatement()
-
-          value(this)
-
-          const generatedElements = this.#collectedElements[thisLevel].getElements()
-
-          addChildrenToStack(generatedElements, childrenStack ?? [])
-
-          this.#afterStatement({ thisLevel, upperLevel })
-
-          propertyName = ''
-        }
-        else if (value instanceof Function) {
+        if (value instanceof Function) {
           /**
            * Remark "() => value"
            *
@@ -1090,7 +1068,7 @@ class ElementsCreator {
       }
 
       /**
-       * @type {StatementRepaintFunction}
+       * @type {StatementRepaintFunctionForFunction}
        */
       const statementRepaintFunction = (bindFunctionResult) => {
         if (this.#isSr) {
@@ -1163,7 +1141,7 @@ class ElementsCreator {
     /**
      * Use the 'end' comment element as a storage for the rendered elements.
      * It's easier this way, and if the element is being deleted along with
-     * the rendered elements, no references to these elements would remain.
+     * the rendered elements, no references to these elements remains.
      *
      * @type {Comment & {renderedElementsMap: RenderedElementsMap}}
      */
@@ -1175,10 +1153,10 @@ class ElementsCreator {
     /**
      * TODO Refactor this function, because it's too long
      *
-     * @type {StatementRepaintFunction} updatedState
+     * @type {StatementRepaintFunctionForState}
      */
-    const statementRepaintFunction = (updatedState) => {
-      if (!(updatedState instanceof Object)) {
+    const statementRepaintFunction = (action, updatedObject, updatedState, prop) => {
+      if (!(updatedObject instanceof Object)) {
         return
       }
 
@@ -1191,111 +1169,118 @@ class ElementsCreator {
        * - Remove the DOM elements not present in the updated state
        * - Remove these same elements from .renderedElementsMap
        */
-      let index = commentElementEnd.renderedElementsMap.length
+      if (action === EnumStateAction.DELETE) {
+        let index = commentElementEnd.renderedElementsMap.length
 
-      while (index--) {
-        const item = commentElementEnd.renderedElementsMap[index]
+        while (index--) {
+          const item = commentElementEnd.renderedElementsMap[index]
 
-        if (!(objectHasKey(updatedState, item.key))) {
-          item.elements.forEach((element) => {
-            // @ts-ignore
-            element.remove()
-          })
-
-          commentElementEnd.renderedElementsMap
-            = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
-        }
-      }
-
-      /**
-       * @type {Node}
-       */
-      let lastElement = commentElementBegin
-
-      // Add what is not in the updated state
-      const renderedElementsMapNew = []
-
-      const keys = (
-        updatedState instanceof Map
-        || updatedState instanceof Set
-        || updatedState instanceof Array
-      )
-        ? updatedState.keys()
-        : Object.keys(updatedState)
-
-      for (let i of keys) {
-        /**
-         * When Array, if an element is deleted, the key remains and the
-         * value is undefined. But also, the array iterates differently
-         * when 'of' or 'in' is used. With 'of', the deleted value is iterated,
-         * while with 'if' it's not. That's why this 'in' is here, to prevent
-         * iteration of deleted array elements.
-         */
-        if (!(i in updatedState)) {
-          continue
-        }
-
-        let isKeyInRenderedElementsMap = false
-
-        for (const item of commentElementEnd.renderedElementsMap) {
-          if (item.key === i) {
-            const { elements } = item
-
-            lastElement = (elements.length > 0)
-              ? elements[elements.length - 1]
-              : lastElement
-            renderedElementsMapNew.push(item)
-            isKeyInRenderedElementsMap = true
-
-            break
-          }
-        }
-
-        if (!isKeyInRenderedElementsMap) {
-          let isTemporaryLevel = false
-
-          if (commentElementBegin.parentElement) {
-            // When the loop is in inner level, make a new temporary collector,
-            // which will be deleted after that. Otherwise, the new elements are
-            // placed on level 0
-            this.#collectedElements.push(new ElementsCollector())
-            isTemporaryLevel = true
-          }
-
-          const level = this.#collectedElements.length - 1
-          const added = callback(updatedState, this.#collectedElements[level], i)
-
-          for (const item of added) {
-            renderedElementsMapNew.push(item)
-
-            // eslint-disable-next-line @typescript-eslint/no-loop-func
+          if (!(objectHasKey(updatedObject, item.key))) {
             item.elements.forEach((element) => {
-              if (level === 0) {
-                /**
-                 * Parent element is needed in order to apply 'after'.
-                 * But if for example there is a for loop (for a state) at top level and
-                 * immediately after that a new element is added to the state, that new
-                 * element can't be properly added after the previous one, because of the
-                 * lack of parent element.
-                 * Because of this, let's reorder the collected elements.
-                 */
-
-                this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
-              }
-
               // @ts-ignore
-              lastElement.after(element)
-              lastElement = element
+              element.remove()
             })
-          }
 
-          if (isTemporaryLevel) {
-            this.#collectedElements.pop()
+            commentElementEnd.renderedElementsMap
+              = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
           }
         }
       }
+      else {
+        /**
+         * @type {Node}
+         */
+        let lastElement = commentElementBegin
 
-      commentElementEnd.renderedElementsMap = renderedElementsMapNew
+        // Add what is not in the updated state
+        const renderedElementsMapNew = []
+
+        const keys = (
+          updatedObject instanceof Map
+          || updatedObject instanceof Set
+          || updatedObject instanceof Array
+        )
+          ? updatedObject.keys()
+          : Object.keys(updatedObject)
+
+        for (let i of keys) {
+        // for (let i = 0, len = updatedObject.length; i< len; i++) {
+        // console.log(typeof i)
+
+          /**
+           * When Array, if an element is deleted, the key remains and the
+           * value is undefined. But also, the array iterates differently
+           * when 'of' or 'in' is used. With 'of', the deleted value is iterated,
+           * while with 'if' it's not. That's why this 'in' is here, to prevent
+           * iteration of deleted array elements.
+           */
+          if (!(i in updatedObject)) {
+            continue
+          }
+
+          let isKeyInRenderedElementsMap = false
+
+          for (const item of commentElementEnd.renderedElementsMap) {
+            if (item.key === i) {
+              const { elements } = item
+
+              lastElement = (elements.length > 0)
+                ? elements[elements.length - 1]
+                : lastElement
+              renderedElementsMapNew.push(item)
+              isKeyInRenderedElementsMap = true
+
+              break
+            }
+          }
+
+          if (!isKeyInRenderedElementsMap) {
+            let isTemporaryLevel = false
+
+            if (commentElementBegin.parentElement) {
+              // When the loop is in inner level, make a new temporary collector,
+              // which will be deleted after that. Otherwise, the new elements are
+              // placed on level 0
+              this.#collectedElements.push(new ElementsCollector())
+              isTemporaryLevel = true
+            }
+
+            const level = this.#collectedElements.length - 1
+
+            const added = callback(updatedState, this.#collectedElements[level], i)
+
+            for (const item of added) {
+              renderedElementsMapNew.push(item)
+
+              // eslint-disable-next-line @typescript-eslint/no-loop-func
+              for (const element of item.elements) {
+                if (level === 0) {
+                  /**
+                   * Parent element is needed in order to apply 'after'.
+                   * But if for example there is a for loop (for a state) at top level and
+                   * immediately after that a new element is added to the state, that new
+                   * element can't be properly added after the previous one, because of the
+                   * lack of parent element.
+                   * Because of this, let's reorder the collected elements.
+                   */
+
+                  this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
+                }
+
+                // @ts-ignore
+                lastElement.after(element)
+                lastElement = element
+              }
+            }
+
+            if (isTemporaryLevel) {
+              this.#collectedElements.pop()
+            }
+          }
+        }
+
+        commentElementEnd.renderedElementsMap = renderedElementsMapNew
+      }
     }
 
     const propertyName = `-s-${type}` // --if or --for

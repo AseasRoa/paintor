@@ -86,7 +86,7 @@ class ElementsCollector {
    * Clears the array of collected elements
    */
   removeAllElements() {
-    this.elements = []
+    this.elements.length = 0
   }
 
   /**
@@ -95,11 +95,25 @@ class ElementsCollector {
    * @param {Node[]} elements
    */
   removeTheseElements(elements) {
-    if (elements.length > 0) {
-      this.elements = this.elements.filter(
-        (element) => !(elements.includes(element)),
-      )
+    let indexInput = elements.length
+
+    while (indexInput--) {
+      let indexOutput = this.elements.length
+
+      while (indexOutput--) {
+        if (elements[indexInput] === this.elements[indexOutput]) {
+          this.elements.splice(indexOutput, 1)
+
+          continue // remove only the first occurrence
+        }
+      }
     }
+
+    // if (elements.length > 0) {
+    //   this.elements = this.elements.filter(
+    //     (element) => !(elements.includes(element)),
+    //   )
+    // }
   }
 }
 

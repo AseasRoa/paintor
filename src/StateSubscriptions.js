@@ -1,5 +1,5 @@
 import { setElementAttrOrProp, modifyStyleRule } from './functions.js'
-import { symArrayAccess, symObjectAccess, symStateId } from './symbols.js'
+import { symArrayAccess, symObjectAccess, symStateId, EnumStateAction } from './constants.js'
 
 /** @typedef {Object<*,*>} StateProxy */
 
@@ -30,7 +30,7 @@ let suggestedItems = {
  * @param {string} propertyName
  * @param {string} subPropertyName
  * @param {BindFunction} bindFunction
- * @param {StatementRepaintFunction | null} statementRepaintFunction
+ * @param {null | StatementRepaintFunction} statementRepaintFunction
  */
 function setSuggestItems(
   element,
@@ -197,51 +197,57 @@ class StateSubscriptions {
    *
    * @param {any[]} updatedState
    */
-  #onArrayLengthChange(updatedState) {
+  // #onArrayLengthChange(updatedState) {
+  //   const subscription = this.#subscriptions.get('-s-forEach')
+  //
+  //   if (subscription) {
+  //     subscription.forEach((listItem) => {
+  //       const { statementRepaintFunction } = listItem
+  //
+  //       if (statementRepaintFunction instanceof Function) {
+  //         statementRepaintFunction(updatedState)
+  //       }
+  //     })
+  //   }
+  // }
+
+  /**
+   * @param {EnumStateAction} action
+   * @param {State} updatedObject
+   * @param {State} updatedState
+   * @param {string | symbol} prop
+   */
+  #onPropCreateOrDelete(action, updatedObject, updatedState, prop) {
     const subscription = this.#subscriptions.get('-s-forEach')
 
     if (subscription) {
-      subscription.forEach((listItem) => {
-        const { statementRepaintFunction } = listItem
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
 
-        if (statementRepaintFunction instanceof Function) {
-          statementRepaintFunction(updatedState)
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(action, updatedObject, updatedState, prop)
         }
-      })
+      }
     }
   }
 
   /**
+   * @param {State} updatedObject
    * @param {State} updatedState
    * @param {string | symbol} prop
    */
-  #onPropCreateOrDelete(updatedState, prop) {
-    const subscription = this.#subscriptions.get('-s-forEach')
-
-    if (subscription) {
-      subscription.forEach((listItem) => {
-        const { statementRepaintFunction } = listItem
-
-        if (statementRepaintFunction instanceof Function) {
-          statementRepaintFunction(updatedState)
-        }
-      })
-    }
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {string | symbol} prop
-   */
-  #onPropCreate(updatedState, prop) {
-    this.#onPropCreateOrDelete(updatedState, prop)
+  #onPropCreate(updatedObject, updatedState, prop) {
+    this.#onPropCreateOrDelete(EnumStateAction.CREATE, updatedObject, updatedState, prop)
   }
 
   /**
    * @param {State} target
+   * @param {State} receiver
    * @param {string | symbol} prop
+   * @param {any} value
    */
-  #onPropUpdate(target, prop) {
+  #onPropUpdate(target, receiver, prop, value) {
     if (this.#subscriptions.has(prop)) {
       const list = this.#subscriptions.get(prop) ?? []
 
@@ -272,7 +278,8 @@ class StateSubscriptions {
           || propertyName === '--for'
           || propertyName === '--nest'
         ) {
-          if (statementRepaintFunction instanceof Function) {
+          if (statementRepaintFunction) {
+            // @ts-ignore
             statementRepaintFunction(result)
           }
         }
@@ -292,11 +299,12 @@ class StateSubscriptions {
   }
 
   /**
+   * @param {State} updatedObject
    * @param {State} updatedState
    * @param {string | symbol} prop
    */
-  #onPropDelete(updatedState, prop) {
-    this.#onPropCreateOrDelete(updatedState, prop)
+  #onPropDelete(updatedObject, updatedState, prop) {
+    this.#onPropCreateOrDelete(EnumStateAction.DELETE, updatedObject, updatedState, prop)
   }
 
   /**
@@ -358,18 +366,18 @@ class StateSubscriptions {
 
           if (target instanceof Set) {
             if (prop === 'add') {
-              this.#onPropCreate(receiver, prop)
+              this.#onPropCreate(target, receiver, prop)
             }
             else if (prop === 'delete') {
-              this.#onPropDelete(receiver, prop)
+              this.#onPropDelete(target, receiver, prop)
             }
           }
           else if (target instanceof Map) {
             if (prop === 'set') {
-              this.#onPropCreate(receiver, prop)
+              this.#onPropCreate(target, receiver, prop)
             }
             else if (prop === 'delete') {
-              this.#onPropDelete(receiver, prop)
+              this.#onPropDelete(target, receiver, prop)
             }
           }
 
@@ -403,12 +411,12 @@ class StateSubscriptions {
       else if (Object.hasOwn(target, prop)) {
         target[prop] = value
 
-        this.#onPropUpdate(receiver, prop)
+        this.#onPropUpdate(target, receiver, prop, value)
       }
       else {
         target[prop] = value
 
-        this.#onPropCreate(receiver, prop)
+        this.#onPropCreate(target, receiver, prop)
       }
 
       return true
@@ -428,7 +436,7 @@ class StateSubscriptions {
     handler.deleteProperty = (target, prop) => {
       delete target[prop]
 
-      this.#onPropDelete(target, prop)
+      this.#onPropDelete(target, target, prop)
 
       return true
     }

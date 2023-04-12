@@ -19,7 +19,15 @@ type ForLoopType = 1 | 2
 
 type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefined
 
-type StatementRepaintFunction = (data: boolean | State) => void
+type StatementRepaintFunctionForFunction = (data: boolean | State) => void
+type StatementRepaintFunctionForState = (
+  action: number,
+  updatedObject: State,
+  updatedState: State,
+  prop: string | symbol,
+) => void
+
+type StatementRepaintFunction = StatementRepaintFunctionForFunction | StatementRepaintFunctionForState
 
 /**
  * A single subscriptions record
@@ -32,5 +40,5 @@ type Subscription = {
   /**
    * Only used in the if() function
    */
-  statementRepaintFunction: StatementRepaintFunction | null;
+  statementRepaintFunction: null | StatementRepaintFunctionForFunction | StatementRepaintFunctionForState;
 }

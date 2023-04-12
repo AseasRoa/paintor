@@ -1,7 +1,7 @@
 import { Component } from './Component.js'
 import { state } from './state.js'
 import { fetchTranslations } from './Translation.js'
-import { symTemplateFunction } from './symbols.js'
+import { symTemplateFunction } from './constants.js'
 
 /**
  * @param {...(Template | Template[] | Component | Component[])} from

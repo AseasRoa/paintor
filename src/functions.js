@@ -1,5 +1,5 @@
 import { isState } from './state.js'
-import { symArrayAccess, symObjectAccess } from './symbols.js'
+import { symArrayAccess, symObjectAccess } from './constants.js'
 
 /**
  * @see https://github.com/purposeindustries/window-or-global/blob/master/lib/index.js
@@ -286,15 +286,6 @@ export function forEachLoop(
   keyToRender,
   iterationCallback,
 ) {
-  if (
-    !(data instanceof Object)
-    && !(data instanceof Array)
-    && !(data instanceof Map)
-    && !(data instanceof Set)
-  ) {
-    throw new TypeError('"data" argument should be an Object or an Array')
-  }
-
   if (!(handler instanceof Function)) {
     throw new TypeError('"handler" argument should be a Function')
   }
@@ -340,7 +331,7 @@ export function forEachLoop(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const nothing = isProxy ? data[symArrayAccess] : undefined
 
-    for (let key = 0; key < data.length; key++) {
+    for (let key = 0, length = data.length; key < length; key++) {
       if (keyToRender !== undefined && keyToRender !== key) {
         continue
       }
@@ -384,6 +375,9 @@ export function forEachLoop(
 
       if (ret === false) break
     }
+  }
+  else {
+    throw new TypeError('"data" argument should be an Object or an Array')
   }
 
   return true
@@ -577,6 +571,24 @@ export function objectGetValue(object, key) {
   else {
     return object[key]
   }
+}
+
+/**
+ * @param {Map<any, any> | Set<any> | Object<any, any>} object
+ * @returns {number}
+ */
+export function objectLength(object) {
+  if (object instanceof Array) {
+    return object.length
+  }
+  else if (object instanceof Map || object instanceof Set) {
+    return object.size
+  }
+  else if (object instanceof Object) {
+    return object.keys().length
+  }
+
+  return 0
 }
 
 /**

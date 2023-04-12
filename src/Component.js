@@ -245,7 +245,7 @@ class Component {
    * @throws {Error}
    */
   #init(container, window, translations, templates) {
-    this.#finalElements = []
+    this.#finalElements.length = 0
     this.#finalHtmlCode = ''
 
     this.#initContainer(container, window)
