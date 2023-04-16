@@ -1,5 +1,5 @@
 import { setElementAttrOrProp, modifyStyleRule } from './functions.js'
-import { symArrayAccess, symObjectAccess, symStateId, EnumStateAction } from './constants.js'
+import { symState, EnumStateAction, symAccess, symSubscriptions } from './constants.js'
 
 /** @typedef {Object<*,*>} StateProxy */
 
@@ -26,7 +26,7 @@ let suggestedItems = {
  * here to the proxy handler. When the bindFunction is called, any state used in it
  * would trigger the proxy get event, which means that it will be added to the subscriptions.
  *
- * @param {Element | Comment} element
+ * @param {Element | Comment | Text} element
  * @param {string} propertyName
  * @param {string} subPropertyName
  * @param {BindFunction} bindFunction
@@ -52,13 +52,65 @@ function setSuggestItems(
  * @returns {void}
  */
 function unsetSuggestedItems() {
-  suggestedItems = {
-    element: null,
-    propertyName: '',
-    subPropertyName: '',
-    bindFunction: null,
-    statementRepaintFunction: null,
+  suggestedItems.element = null
+  suggestedItems.propertyName = ''
+  suggestedItems.subPropertyName = ''
+  suggestedItems.bindFunction = null
+  suggestedItems.statementRepaintFunction = null
+}
+
+/**
+ * Move subscription records from one DOM element into another DOM element.
+ * Subscription records are located in a special array in the DOM element.
+ *
+ * @param {Element | Comment | Text} fromElement
+ * @param {Element | Comment | Text} toElement
+ * @param {BindFunction} [bindFunction] Optionally filter by the bind function
+ * @param {Partial<Subscription>} [newSubscriptionProperties] Optionally set these parameters
+ */
+function moveSubscriptions(fromElement, toElement, bindFunction, newSubscriptionProperties) {
+  if (symSubscriptions in fromElement) {
+    // @ts-ignore
+    let index = fromElement[symSubscriptions].length
+
+    while (index--) {
+      /** @type {Subscription} */
+      // @ts-ignore
+      const subscription = fromElement[symSubscriptions][index]
+
+      if (
+        bindFunction === undefined
+        || bindFunction === subscription.bindFunction
+      ) {
+        // 1. Move the subscription record
+        subscription.element = toElement
+
+        if (newSubscriptionProperties) {
+          for (const prop in newSubscriptionProperties) {
+            // @ts-ignore
+            subscription[prop] = newSubscriptionProperties[prop]
+          }
+        }
+
+        // @ts-ignore
+        toElement[symSubscriptions] ??= []
+        // @ts-ignore
+        toElement[symSubscriptions].push(subscription)
+
+        // 2. Remove the subscription record from the origin element
+        // @ts-ignore
+        fromElement[symSubscriptions].splice(index, 1)
+      }
+    }
   }
+}
+
+/**
+ * @param {Node | Element | Comment | Text} element
+ * @returns {boolean}
+ */
+function elementHasSubscriptions(element) {
+  return Object.hasOwn(element, symSubscriptions)
 }
 
 class StateSubscriptions {
@@ -122,17 +174,23 @@ class StateSubscriptions {
       ) return
     }
 
-    subscriptions.push({
+    /**
+     * @type {Subscription}
+     */
+    const subscription = {
       element,
       propertyName,
       subPropertyName,
       bindFunction,
       statementRepaintFunction,
-    })
+    }
 
-    // Put a mark on the element itself, telling that it
-    // has a subscription
-    Object.assign(element, { '--subscribed': true })
+    subscriptions.push(subscription)
+
+    // @ts-ignore
+    element[symSubscriptions] ??= []
+    // @ts-ignore
+    element[symSubscriptions].push(subscription)
   }
 
   /**
@@ -141,6 +199,10 @@ class StateSubscriptions {
    * @param {Node} element
    */
   unsubscribe(element) {
+    if (symSubscriptions in element) {
+      delete element[symSubscriptions]
+    }
+
     this.#subscriptions.forEach((subscription, key) => {
       this.#subscriptions.set(key, subscription.filter((item) => (item.element !== element)))
     })
@@ -213,11 +275,10 @@ class StateSubscriptions {
 
   /**
    * @param {EnumStateAction} action
-   * @param {State} updatedObject
    * @param {State} updatedState
    * @param {string | symbol} prop
    */
-  #onPropCreateOrDelete(action, updatedObject, updatedState, prop) {
+  #onPropCreateOrDelete(action, updatedState, prop) {
     const subscription = this.#subscriptions.get('-s-forEach')
 
     if (subscription) {
@@ -226,32 +287,45 @@ class StateSubscriptions {
 
         if (statementRepaintFunction) {
           // @ts-ignore
-          statementRepaintFunction(action, updatedObject, updatedState, prop)
+          statementRepaintFunction(action, updatedState, prop)
         }
       }
     }
   }
 
   /**
-   * @param {State} updatedObject
    * @param {State} updatedState
    * @param {string | symbol} prop
    */
-  #onPropCreate(updatedObject, updatedState, prop) {
-    this.#onPropCreateOrDelete(EnumStateAction.CREATE, updatedObject, updatedState, prop)
+  #onPropCreate(updatedState, prop) {
+    this.#onPropCreateOrDelete(EnumStateAction.CREATE, updatedState, prop)
   }
 
   /**
-   * @param {State} target
-   * @param {State} receiver
+   * @param {State} updatedState
    * @param {string | symbol} prop
    * @param {any} value
    */
-  #onPropUpdate(target, receiver, prop, value) {
+  #onPropUpdate(updatedState, prop, value) {
+    // 1. When the repaint function is outside all elements
+    // const subscription = this.#subscriptions.get('-s-forEach')
+    //
+    // if (subscription) {
+    //   for (let index = 0, length = subscription.length; index < length; index++) {
+    //     const { statementRepaintFunction } = subscription[index]
+    //
+    //     if (statementRepaintFunction) {
+    //       // @ts-ignore
+    //       statementRepaintFunction(EnumStateAction.UPDATE, updatedState, prop)
+    //     }
+    //   }
+    // }
+
+    // 2. Individual elements
     if (this.#subscriptions.has(prop)) {
       const list = this.#subscriptions.get(prop) ?? []
 
-      list.forEach((listItem) => {
+      for (const listItem of list) {
         const {
           element,
           propertyName,
@@ -294,17 +368,54 @@ class StateSubscriptions {
           // @ts-ignore
           setElementAttrOrProp(element, propertyName, result)
         }
-      })
+      }
     }
   }
 
   /**
-   * @param {State} updatedObject
    * @param {State} updatedState
    * @param {string | symbol} prop
    */
-  #onPropDelete(updatedObject, updatedState, prop) {
-    this.#onPropCreateOrDelete(EnumStateAction.DELETE, updatedObject, updatedState, prop)
+  #onPropDelete(updatedState, prop) {
+    this.#onPropCreateOrDelete(EnumStateAction.DELETE, updatedState, prop)
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {any[]} args
+   */
+  #onSplice(updatedState, args) {
+    const subscription = this.#subscriptions.get('-s-forEach')
+
+    if (subscription) {
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
+
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(EnumStateAction.SPLICE, updatedState, '', args)
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {[number, number]} numKeys
+   */
+  #onSwap(updatedState, numKeys) {
+    const subscription = this.#subscriptions.get('-s-forEach')
+
+    if (subscription) {
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
+
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(EnumStateAction.SWAP, updatedState, '', numKeys)
+        }
+      }
+    }
   }
 
   /**
@@ -315,15 +426,17 @@ class StateSubscriptions {
     const handler = {}
 
     handler.get = (target, prop, receiver) => {
+      if (prop === symState) {
+        return target[prop]
+      }
       /**
        * Why is hasOwn() needed?
        * If the state is for example an array and its whole value is read,
        * then JS tries to read few extra properties first - map, length, constructor
        */
-      if (
+      else if (
         Object.hasOwn(target, prop)
-        || prop === symObjectAccess
-        || prop === symArrayAccess
+        || prop === symAccess
       ) {
         /**
          * In the if below it would be enough to check just one element,
@@ -366,18 +479,18 @@ class StateSubscriptions {
 
           if (target instanceof Set) {
             if (prop === 'add') {
-              this.#onPropCreate(target, receiver, prop)
+              this.#onPropCreate(receiver, prop)
             }
             else if (prop === 'delete') {
-              this.#onPropDelete(target, receiver, prop)
+              this.#onPropDelete(receiver, prop)
             }
           }
           else if (target instanceof Map) {
             if (prop === 'set') {
-              this.#onPropCreate(target, receiver, prop)
+              this.#onPropCreate(receiver, prop)
             }
             else if (prop === 'delete') {
-              this.#onPropDelete(target, receiver, prop)
+              this.#onPropDelete(receiver, prop)
             }
           }
 
@@ -386,19 +499,64 @@ class StateSubscriptions {
 
         return boundFunction
       }
+      else if (
+        target instanceof Array
+        // @ts-ignore
+        && target[prop] instanceof Function
+      ) {
+        if (prop === 'splice') {
+          // @ts-ignore
+          return (...args) => {
+            // @ts-ignore
+            const result = target[prop].apply(target, args)
+
+            this.#onSplice(receiver, args)
+
+            return result
+          }
+        }
+        else if (prop === 'unshift') {
+          // @ts-ignore
+          return (...args) => {
+            const result = target[prop].apply(target, args)
+
+            this.#onSplice(receiver, [0, 0, ...args])
+
+            return result
+          }
+        }
+        else if (prop === 'shift') {
+          return () => {
+            const result = target[prop].apply(target)
+
+            this.#onSplice(receiver, [0, 1])
+
+            return result
+          }
+        }
+        else if (prop === 'reverse') {
+          // @ts-ignore
+          return () => {
+            const result = target[prop].apply(target)
+
+            for (let i = 0, len = target.length; i < len; i++) {
+              const j = len - 1 - i
+
+              if (i >= j) break
+
+              this.#onSwap(receiver, [i, j])
+            }
+
+            return result
+          }
+        }
+      }
 
       return target[prop]
     }
 
     handler.set = (target, prop, value, receiver) => {
-      if (
-        typeof prop === 'symbol'
-        && (
-          prop === symArrayAccess
-          || prop === symObjectAccess
-          || prop === symStateId
-        )
-      ) {
+      if (prop === symState || prop === symAccess) {
         target[prop] = value
       }
       // Array's length is set every time after
@@ -411,12 +569,17 @@ class StateSubscriptions {
       else if (Object.hasOwn(target, prop)) {
         target[prop] = value
 
-        this.#onPropUpdate(target, receiver, prop, value)
+        this.#onPropUpdate(receiver, prop, value)
       }
       else {
-        target[prop] = value
+        if (value instanceof Object) {
+          target[prop] = this.createProxy(value)
+        }
+        else {
+          target[prop] = value
+        }
 
-        this.#onPropCreate(target, receiver, prop)
+        this.#onPropCreate(receiver, prop)
       }
 
       return true
@@ -436,7 +599,7 @@ class StateSubscriptions {
     handler.deleteProperty = (target, prop) => {
       delete target[prop]
 
-      this.#onPropDelete(target, target, prop)
+      this.#onPropDelete(target, prop)
 
       return true
     }
@@ -445,4 +608,10 @@ class StateSubscriptions {
   }
 }
 
-export { StateSubscriptions, setSuggestItems, unsetSuggestedItems }
+export {
+  StateSubscriptions,
+  elementHasSubscriptions,
+  moveSubscriptions,
+  setSuggestItems,
+  unsetSuggestedItems,
+}

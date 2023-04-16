@@ -22,9 +22,9 @@ type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefin
 type StatementRepaintFunctionForFunction = (data: boolean | State) => void
 type StatementRepaintFunctionForState = (
   action: number,
-  updatedObject: State,
   updatedState: State,
   prop: string | symbol,
+  arrayFunctionArgs?: any[],
 ) => void
 
 type StatementRepaintFunction = StatementRepaintFunctionForFunction | StatementRepaintFunctionForState
@@ -33,7 +33,7 @@ type StatementRepaintFunction = StatementRepaintFunctionForFunction | StatementR
  * A single subscriptions record
  */
 type Subscription = {
-  element: Element | Comment;
+  element: Element | Comment | Text;
   propertyName: string;
   subPropertyName: string;
   bindFunction: BindFunction;

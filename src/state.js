@@ -1,5 +1,5 @@
 import { StateSubscriptions } from './StateSubscriptions.js'
-import { symStateId } from './constants.js'
+import { symState } from './constants.js'
 
 let stateIdCounter = 0
 
@@ -19,8 +19,9 @@ const state = function state(object) {
   const proxy = stateSubscriptions.createProxy(object)
 
   stateIdCounter += 1
+
   // @ts-ignore
-  proxy[symStateId] = stateIdCounter
+  proxy[symState] = { id: stateIdCounter, target: object }
 
   return proxy
 }
@@ -30,7 +31,7 @@ const state = function state(object) {
  * @returns {boolean}
  */
 const isState = function (object) {
-  return (object instanceof Object) && (symStateId in object)
+  return (object instanceof Object) && (symState in object)
 }
 
 export { state, isState }

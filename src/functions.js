@@ -1,5 +1,5 @@
 import { isState } from './state.js'
-import { symArrayAccess, symObjectAccess } from './constants.js'
+import { symAccess, symState } from './constants.js'
 
 /**
  * @see https://github.com/purposeindustries/window-or-global/blob/master/lib/index.js
@@ -108,26 +108,20 @@ isBrowserEnvironment.isIt = undefined
  * @template T
  * @param {T} inputChild
  * @param {T[]} childrenStack
- * @returns {T[]}
  */
 export function addChildToStack(inputChild, childrenStack) {
   childrenStack.push(inputChild)
-
-  return childrenStack
 }
 
 /**
  * @template T
  * @param {T[]} inputChildren
  * @param {T[]} childrenStack
- * @returns {T[]}
  */
 export function addChildrenToStack(inputChildren, childrenStack) {
   for (const child of inputChildren) {
     childrenStack.push(child)
   }
-
-  return childrenStack
 }
 
 /**
@@ -270,7 +264,7 @@ export function appendChildrenToElement(element, children) {
  *
  * @template T
  * @param {1 | 2} forLoopType
- * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} data
+ * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} state
  * @param {ForLoopCallback<T>} handler
  * @param {(key: number | string) => void} [beforeIterationCallback]
  * @param {string | number | symbol} [keyToRender]
@@ -280,7 +274,7 @@ export function appendChildrenToElement(element, children) {
  */
 export function forEachLoop(
   forLoopType,
-  data,
+  state,
   handler,
   beforeIterationCallback,
   keyToRender,
@@ -290,53 +284,31 @@ export function forEachLoop(
     throw new TypeError('"handler" argument should be a Function')
   }
 
-  const isProxy = forLoopType === 2 && isState(data)
+  const object = isState(state) ? state[symState].target : state
+  const isProxy = forLoopType === 2 && isState(object)
 
-  if (
-    data instanceof Map
-    || data instanceof Set
-  ) {
-    // Force the proxy's "get" event by trying to access this dummy symbol key
-    // @ts-ignore
+  /**
+   * Dummy variable, used when the proxy needs to be
+   * forced to fire "get" event.
+   *
+   * @type {any}
+   */
+  let nothing = undefined
+
+  if (object instanceof Array) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const nothing = isProxy ? data[symObjectAccess] : undefined
+    nothing = isProxy ? state[symAccess] : undefined
 
-    for (const [key, value] of data.entries()) {
+    for (const key in object) {
       if (keyToRender !== undefined && keyToRender !== key) {
         continue
       }
 
-      let val = isProxy ? () => value : value
-
-      if (beforeIterationCallback) {
-        val = beforeIterationCallback?.(val)
-      }
-
-      const ret = handler(val, key)
-
-      iterationCallback?.(key)
-
-      if (ret === false) break
-    }
-  }
-  else if (data instanceof Array) {
-    /**
-     * for-in doesn't work properly in this case,
-     * because the numeric index turns into string.
-     * That's why use the classic for loop is used.
-     */
-
-    // Force the proxy's "get" event by trying to access this dummy symbol key
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const nothing = isProxy ? data[symArrayAccess] : undefined
-
-    for (let key = 0, length = data.length; key < length; key++) {
-      if (keyToRender !== undefined && keyToRender !== key) {
-        continue
-      }
-
-      let value = isProxy ? () => data[key] : data[key]
+      let value = isProxy
+        ? (state[key] instanceof Object)
+          ? state[key]
+          : () => state[key]
+        : object[key]
 
       if (beforeIterationCallback) {
         value = beforeIterationCallback?.(value)
@@ -349,21 +321,54 @@ export function forEachLoop(
       if (ret === false) break
     }
   }
-  else if (data instanceof Object) {
+  else if (
+    object instanceof Map
+    || object instanceof Set
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    nothing = (isProxy) ? state[symAccess] : undefined
+
+    for (const [key, value] of object.entries()) {
+      if (keyToRender !== undefined && keyToRender !== key) {
+        continue
+      }
+
+      let val = isProxy
+        ? (value instanceof Object)
+          ? value
+          : () => value
+        : value
+
+      if (beforeIterationCallback) {
+        val = beforeIterationCallback?.(val)
+      }
+
+      const ret = handler(val, key)
+
+      iterationCallback?.(key)
+
+      if (ret === false) break
+    }
+  }
+  else if (object instanceof Object) {
     /**
      * The Object loop must be at the end,
      * because Array, Set and Map are also Object.
      */
 
-    // Force the proxy's "get" event by trying to access this dummy symbol key
-    const nothing = isProxy ? data[symObjectAccess] : undefined
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    nothing = isProxy ? state[symAccess] : undefined
 
-    for (const key in data) {
+    for (const key in object) {
       if (keyToRender !== undefined && keyToRender !== key) {
         continue
       }
 
-      let value = isProxy ? () => data[key] : data[key]
+      let value = isProxy
+        ? (state[key] instanceof Object)
+          ? state[key]
+          : () => state[key]
+        : object[key]
 
       if (beforeIterationCallback) {
         value = beforeIterationCallback?.(value)
@@ -426,9 +431,9 @@ export function forLoop(start, end, handler) {
  * @returns {T[]}
  */
 export function arrayRemoveKey(arr, key) {
-  return arr.filter(function (el, index) {
-    return index !== key
-  })
+  arr.splice(key, 1)
+
+  return arr
 }
 
 /**
@@ -493,7 +498,7 @@ export function setElementAttrOrProp(element, attrOrPropName, value) {
     }
     else {
       // @ts-ignore
-      element[attrOrPropName] = value
+      element[attrOrPropName] = value ?? ''
     }
   }
   else {
@@ -612,4 +617,15 @@ export function arrayMoveIndex(array, oldIndex, newIndex) {
   array.splice(newIndex, 0, array.splice(oldIndex, 1)[0])
 
   return array
+}
+
+/**
+ * @param {...Element} elements
+ */
+export const chainElements = (...elements) => {
+  const length = elements.length
+
+  for (let i = 1; i < length; i++) {
+    elements[i-1].after(elements[i])
+  }
 }

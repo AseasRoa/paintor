@@ -191,7 +191,7 @@ describe('State: Array', () => {
     // Insert 'b' at index 1
     arrayState.splice(1, 0, 'b')
 
-    const elements = container.querySelectorAll('*')
+    let elements = container.querySelectorAll('*')
 
     expectTextContentsToBeLike(elements, ['a', 'b', 'c', 'd'])
     expectSpecialCommentElementsInStatement(elements)
@@ -199,7 +199,16 @@ describe('State: Array', () => {
     // Replace all elements with new elements
     arrayState.splice(0, 4, 'A', 'B', 'C', 'D')
 
+    elements = container.querySelectorAll('*')
+
     expectTextContentsToBeLike(elements, ['A', 'B', 'C', 'D'])
+    expectSpecialCommentElementsInStatement(elements)
+
+    // Remove half of the elements
+    arrayState.splice(1, 2)
+
+    elements = container.querySelectorAll('*')
+    expectTextContentsToBeLike(elements, ['A', 'D'])
     expectSpecialCommentElementsInStatement(elements)
   })
 

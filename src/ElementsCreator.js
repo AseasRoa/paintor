@@ -6,6 +6,7 @@ import {
   addEventListenerIfPossible,
   appendChildrenToElement,
   arrayRemoveKey,
+  chainElements,
   forEachLoop,
   forLoop,
   format,
@@ -13,7 +14,6 @@ import {
   insertAfter,
   isEventAttribute,
   modifyStyleRule,
-  objectHasKey,
   setDataSetAttributesToElement,
   setElementAttrOrProp,
   stringToHTML,
@@ -21,8 +21,13 @@ import {
 import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
 import { isState } from './state.js'
-import { setSuggestItems, unsetSuggestedItems } from './StateSubscriptions.js'
-import { EnumStateAction, symTemplateFunction } from './constants.js'
+import {
+  elementHasSubscriptions,
+  moveSubscriptions,
+  setSuggestItems,
+  unsetSuggestedItems,
+} from './StateSubscriptions.js'
+import { EnumStateAction, symState, symTemplateFunction } from './constants.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol), elements: (Node)[]}>} RenderedElementsMap
@@ -123,7 +128,7 @@ class ElementsCreator {
           this.#translate(argument),
         )
 
-        children = addChildToStack(textNode, children)
+        addChildToStack(textNode, children)
       }
       else if (typeof argument === 'number') {
         // The number is converted into a string
@@ -132,12 +137,12 @@ class ElementsCreator {
           argument.toString(),
         )
 
-        children = addChildToStack(textNode, children)
+        addChildToStack(textNode, children)
       }
       // @ts-ignore
       else if (argument instanceof this.#window.Node) {
         // This is a child, created by this function, to be appended to its parent
-        children = addChildToStack(argument, children)
+        addChildToStack(argument, children)
       }
       else if (argument instanceof Array) {
         if (argument.length === 0) {
@@ -161,7 +166,7 @@ class ElementsCreator {
         // In DOM, if some elements are not children, they are turned into strings,
         // but the same produces error in SSR
         if (isChildrenArray) {
-          children = addChildrenToStack(argument, children)
+          addChildrenToStack(argument, children)
         }
         // Case 2) Array, containing string to be formatted
         else {
@@ -169,7 +174,7 @@ class ElementsCreator {
             this.#arrayTranslateFormatTranslate(argument),
           )
 
-          children = addChildToStack(textNode, children)
+          addChildToStack(textNode, children)
         }
       }
       else if (argument instanceof Error) {
@@ -184,7 +189,7 @@ class ElementsCreator {
 
         for (const childrenGroup of generatedChildren) {
           for (const child of childrenGroup) {
-            children = addChildToStack(child, children)
+            addChildToStack(child, children)
           }
         }
       }
@@ -197,7 +202,7 @@ class ElementsCreator {
 
           const generatedElements = this.#collectedElements[thisLevel].getElements()
 
-          children = addChildrenToStack(generatedElements, children)
+          addChildrenToStack(generatedElements, children)
 
           this.#afterStatement({ thisLevel, upperLevel })
         }
@@ -219,57 +224,64 @@ class ElementsCreator {
                 this.#setPropertiesToElement(element, { value: argument })
               }
               else {
-                this.#statementHandlerForFunction(
-                  'nest',
-                  argument,
-                  false,
-                  // eslint-disable-next-line @typescript-eslint/no-loop-func
-                  (
-                    value,
-                    isInitialRun,
-                    commentElementBegin, // Should be Comment element on the first run only
-                    commentElementEnd, // Should be Comment element on the first run only
-                  ) => {
-                    if (value instanceof Function || value instanceof Component) {
-                      if (value instanceof Component) {
-                        const generatedChildren = (this.#isSr)
-                          ? value.getElementsSr()
-                          : value.getElements()
+                // eslint-disable-next-line @typescript-eslint/no-loop-func
+                const callbackOnTemplate = () => {
+                  this.#statementHandlerForFunction(
+                    'nest',
+                    argument,
+                    true,
+                    // eslint-disable-next-line @typescript-eslint/no-loop-func
+                    (
+                      value,
+                      isInitialRun,
+                      commentElementBegin, // Should be Comment element on the first run only
+                      commentElementEnd, // Should be Comment element on the first run only
+                    ) => {
+                      if (value instanceof Function || value instanceof Component) {
+                        if (value instanceof Component) {
+                          const generatedChildren = (this.#isSr)
+                            ? value.getElementsSr()
+                            : value.getElements()
 
-                        if (isInitialRun) {
-                          addChildToStack(commentElementBegin, children)
-                          children = addChildrenToStack(generatedChildren[0], children)
-                          addChildToStack(commentElementEnd, children)
+                          if (isInitialRun) {
+                            addChildToStack(commentElementBegin, children)
+                            addChildrenToStack(generatedChildren[0], children)
+                            addChildToStack(commentElementEnd, children)
+                          }
+                          else {
+                            this.#collectedElements[0].addElements(generatedChildren[0])
+                          }
                         }
-                        else {
-                          this.#collectedElements[0].addElements(generatedChildren[0])
+                        else if (symTemplateFunction in value) {
+                          // @ts-ignore
+                          value(this)
+
+                          if (isInitialRun) {
+                            const level = this.#collectedElements.length - 1
+
+                            const generatedElements = this.#collectedElements[level].getElements()
+
+                            addChildToStack(commentElementBegin, children)
+                            addChildrenToStack(generatedElements, children)
+                            addChildToStack(commentElementEnd, children)
+                          }
+                          else {
+                            children.length = 0 // maybe not necessary
+                          }
                         }
                       }
-                      else if (symTemplateFunction in value) {
-                        // @ts-ignore
-                        value(this)
-
-                        if (isInitialRun) {
-                          const level = this.#collectedElements.length - 1
-
-                          const generatedElements = this.#collectedElements[level].getElements()
-
-                          addChildToStack(commentElementBegin, children)
-                          addChildrenToStack(generatedElements, children)
-                          addChildToStack(commentElementEnd, children)
-                        }
-                        else {
-                          children.length = 0 // maybe not necessary
+                      else {
+                        if (isInitialRun && commentElementBegin) {
+                          this.#unsubscribeElementAndItsChildren(commentElementBegin)
+                          this.#setPropertiesToElement(element, { textContent: value })
                         }
                       }
-                    }
-                    else {
-                      if (isInitialRun && commentElementBegin) {
-                        this.#unsubscribeElementAndItsChildren(commentElementBegin)
-                        this.#setPropertiesToElement(element, { textContent: argument })
-                      }
-                    }
-                  })
+                    })
+                }
+
+                this.#setPropertiesToElement(
+                  element, { textNode: argument }, callbackOnTemplate,
+                )
               }
             }
           }
@@ -445,7 +457,7 @@ class ElementsCreator {
     /**
      * @param {any} data
      */
-    const callback = (data) => {
+    const callbackForFunction = (data) => {
       if (Boolean(data)) {
         if (handler instanceof Component) {
           const generatedChildren = (this.#isSr)
@@ -477,8 +489,12 @@ class ElementsCreator {
     }
 
     return (condition instanceof Function)
-      ? this.#statementHandlerForFunction('if', condition, true, callback)
-      : this.#statementHandler('if', condition, callback)
+      ? this.#statementHandlerForFunction(
+        'if', condition, true, callbackForFunction,
+      )
+      : this.#statementHandler(
+        'if', condition, callbackForFunction,
+      )
   }
 
   async render() {
@@ -665,12 +681,12 @@ class ElementsCreator {
 
     if (isState(input)) {
       /**
-       * @param {State} data
+       * @param {State} state
        * @param {ElementsCollector} elementsCollector
        * @param {string | number | symbol} [keyToRender]
        * @returns {RenderedElementsMap}
        */
-      const callbackForState = (data, elementsCollector, keyToRender) => {
+      const callbackForState = (state, elementsCollector, keyToRender) => {
         /** @type {RenderedElementsMap} */
         const renderedElementsMap = []
 
@@ -694,7 +710,7 @@ class ElementsCreator {
           index = elementsFromCollector.length
         }
 
-        forEachLoop(forLoopType, data, handler, beforeIterationCallback, keyToRender, onIteration)
+        forEachLoop(forLoopType, state, handler, beforeIterationCallback, keyToRender, onIteration)
 
         return renderedElementsMap
       }
@@ -705,16 +721,18 @@ class ElementsCreator {
     /**
      * @param {State} data
      */
-    const callback = (data) => {
+    const callbackForFunction = (data) => {
       forEachLoop(forLoopType, data, handler, beforeIterationCallback)
     }
 
     if (input instanceof Function) {
-      // @ts-ignore
-      return this.#statementHandlerForFunction('forEach', input, true, callback)
+      return this.#statementHandlerForFunction(
+        // @ts-ignore
+        'forEach', input, true, callbackForFunction,
+      )
     }
 
-    return this.#statementHandler('forEach', input, callback)
+    return this.#statementHandler('forEach', input, callbackForFunction)
   }
 
   /**
@@ -882,8 +900,9 @@ class ElementsCreator {
   /**
    * @param {HTMLElement | Text} element
    * @param {Object<string, string|number|Object<*,*>|function(*):*|BindFunction|HTMLElement>} properties
+   * @param {Function} [callbackOnTemplate]
    */
-  #setPropertiesToElement(element, properties) {
+  #setPropertiesToElement(element, properties, callbackOnTemplate) {
     for (let propertyName in properties) {
       let property = properties[propertyName]
 
@@ -921,7 +940,19 @@ class ElementsCreator {
 
         let value = bindFunction(element)
 
-        if (value instanceof Function) {
+        if (
+          (value instanceof Function && Object.hasOwn(value, symTemplateFunction))
+          || value instanceof Component
+        ) {
+          unsetSuggestedItems()
+
+          if (callbackOnTemplate) {
+            callbackOnTemplate()
+          }
+
+          continue
+        }
+        else if (value instanceof Function) {
           /**
            * Remark "() => value"
            *
@@ -932,8 +963,19 @@ class ElementsCreator {
           value = value()
         }
         else {
-          const textNode = this.#document.createTextNode((value ?? '').toString())
-          element.appendChild(textNode)
+          if (propertyName === 'textNode') {
+            unsetSuggestedItems()
+
+            const textNode = this.#document.createTextNode(value)
+
+            element.appendChild(textNode)
+
+            moveSubscriptions(
+              element, textNode, bindFunction, { propertyName: 'textContent' },
+            )
+
+            continue
+          }
         }
 
         unsetSuggestedItems()
@@ -1052,10 +1094,10 @@ class ElementsCreator {
    * @param {'if' | 'for' | 'forEach' | 'nest'} type
    * @param {function(): any} bindFunction
    * @param {boolean} autoAddCommentElements
-   * @param {function((boolean | State | Template | Component), boolean, Comment?, Comment?): void} callback
+   * @param {function((boolean | State | Template | Component), boolean, Comment?, Comment?): void} callbackForFunction
    * @returns {Node[]}
    */
-  #statementHandlerForFunction(type, bindFunction, autoAddCommentElements, callback) {
+  #statementHandlerForFunction(type, bindFunction, autoAddCommentElements, callbackForFunction) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
     const isFunction = bindFunction instanceof Function
 
@@ -1079,10 +1121,10 @@ class ElementsCreator {
 
         // Clean all contents.
         this.#collectedElements[level].removeAllElements()
-        this.#removeStatementElements(commentElementBegin)
+        //this.#removeStatementElements(commentElementBegin)
 
         // Create the new elements
-        callback(bindFunctionResult, false, null, null)
+        callbackForFunction(bindFunctionResult, false, null, null)
 
         const success = this.#insertStatementElements(
           commentElementBegin,
@@ -1105,12 +1147,12 @@ class ElementsCreator {
         statementRepaintFunction,
       )
 
-      const resolved = bindFunction()
+      const bindFunctionResult = bindFunction()
 
       unsetSuggestedItems()
 
       // Run the handler function
-      callback(resolved, true, commentElementBegin, commentElementEnd)
+      callbackForFunction(bindFunctionResult, true, commentElementBegin, commentElementEnd)
 
       if (autoAddCommentElements) {
         this.#collectedElements[thisLevel].addElement(commentElementEnd)
@@ -1120,7 +1162,7 @@ class ElementsCreator {
       const resolved = bindFunction
 
       // Run the handler function
-      callback(resolved, false, null, null)
+      callbackForFunction(resolved, false, null, null)
     }
 
     return this.#afterStatement({ thisLevel, upperLevel })
@@ -1131,10 +1173,10 @@ class ElementsCreator {
    * @param {any} state
    * @param {function(
    *   State, ElementsCollector, (string | number | symbol)=
-   * ): RenderedElementsMap} callback
+   * ): RenderedElementsMap} callbackForState
    * @returns {Node[]}
    */
-  #statementHandlerForState(type, state, callback) {
+  #statementHandlerForState(type, state, callbackForState) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
 
     const commentElementBegin = this.#document.createComment(`${type}-begin`)
@@ -1155,7 +1197,10 @@ class ElementsCreator {
      *
      * @type {StatementRepaintFunctionForState}
      */
-    const statementRepaintFunction = (action, updatedObject, updatedState, prop) => {
+    const statementRepaintFunction = (action, updatedState, prop, arrayFunctionArgs) => {
+      // @ts-ignore
+      const updatedObject = updatedState[symState].target
+
       if (!(updatedObject instanceof Object)) {
         return
       }
@@ -1165,8 +1210,8 @@ class ElementsCreator {
       }
 
       /**
-       * Elements have been deleted from the state?
-       * - Remove the DOM elements not present in the updated state
+       * Element has been deleted from the state?
+       * - Remove the DOM elements
        * - Remove these same elements from .renderedElementsMap
        */
       if (action === EnumStateAction.DELETE) {
@@ -1175,111 +1220,235 @@ class ElementsCreator {
         while (index--) {
           const item = commentElementEnd.renderedElementsMap[index]
 
-          if (!(objectHasKey(updatedObject, item.key))) {
-            item.elements.forEach((element) => {
+          if (!item) continue
+
+          const isArray = updatedObject instanceof Array
+
+          if (item.key === prop) {
+            for (const element of item.elements) {
               // @ts-ignore
               element.remove()
-            })
+            }
 
-            commentElementEnd.renderedElementsMap
-              = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
+            if (isArray) {
+              commentElementEnd.renderedElementsMap[index].elements.length = 0
+            }
+            else {
+              commentElementEnd.renderedElementsMap
+                = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
+            }
+
+            break
           }
         }
       }
-      else {
+      else if (action === EnumStateAction.CREATE) {
+        /** @type {null | string} */
+        let prevKey = null
+
+        const iterator = (
+          updatedObject instanceof Map
+          || updatedObject instanceof Set
+        )
+          ? updatedObject.keys()
+          : Object.keys(updatedObject)
+
+        for (let i of iterator) {
+          if (i === prop) {
+            break
+          }
+
+          prevKey = i
+        }
+
         /**
          * @type {Node}
          */
         let lastElement = commentElementBegin
 
-        // Add what is not in the updated state
-        const renderedElementsMapNew = []
-
-        const keys = (
-          updatedObject instanceof Map
-          || updatedObject instanceof Set
-          || updatedObject instanceof Array
-        )
-          ? updatedObject.keys()
-          : Object.keys(updatedObject)
-
-        for (let i of keys) {
-        // for (let i = 0, len = updatedObject.length; i< len; i++) {
-        // console.log(typeof i)
-
-          /**
-           * When Array, if an element is deleted, the key remains and the
-           * value is undefined. But also, the array iterates differently
-           * when 'of' or 'in' is used. With 'of', the deleted value is iterated,
-           * while with 'if' it's not. That's why this 'in' is here, to prevent
-           * iteration of deleted array elements.
-           */
-          if (!(i in updatedObject)) {
-            continue
-          }
-
+        if (prevKey !== null) {
           let isKeyInRenderedElementsMap = false
 
           for (const item of commentElementEnd.renderedElementsMap) {
-            if (item.key === i) {
+            if (!item) continue
+
+            if (item.key === prevKey) {
               const { elements } = item
 
               lastElement = (elements.length > 0)
                 ? elements[elements.length - 1]
                 : lastElement
-              renderedElementsMapNew.push(item)
+
               isKeyInRenderedElementsMap = true
 
               break
             }
           }
+        }
 
-          if (!isKeyInRenderedElementsMap) {
-            let isTemporaryLevel = false
+        let isTemporaryLevel = false
 
-            if (commentElementBegin.parentElement) {
-              // When the loop is in inner level, make a new temporary collector,
-              // which will be deleted after that. Otherwise, the new elements are
-              // placed on level 0
-              this.#collectedElements.push(new ElementsCollector())
-              isTemporaryLevel = true
+        if (commentElementBegin.parentElement) {
+          // When the loop is in inner level, make a new temporary collector,
+          // which will be deleted after that. Otherwise, the new elements are
+          // placed on level 0
+          this.#collectedElements.push(new ElementsCollector())
+          isTemporaryLevel = true
+        }
+
+        const level = this.#collectedElements.length - 1
+        const added = callbackForState(updatedState, this.#collectedElements[level], prop)
+        const isArray = updatedObject instanceof Array
+
+        for (const item of added) {
+          if (isArray) {
+            // @ts-ignore
+            commentElementEnd.renderedElementsMap[prop] = item
+          }
+          else {
+            commentElementEnd.renderedElementsMap.push(item)
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-loop-func
+          for (const element of item.elements) {
+            if (level === 0) {
+              /**
+               * Parent element is needed in order to apply 'after'.
+               * But if for example there is a for loop (for a state) at top level and
+               * immediately after that a new element is added to the state, that new
+               * element can't be properly added after the previous one, because of the
+               * lack of parent element.
+               * Because of this, let's reorder the collected elements.
+               */
+
+              this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
             }
 
-            const level = this.#collectedElements.length - 1
-
-            const added = callback(updatedState, this.#collectedElements[level], i)
-
-            for (const item of added) {
-              renderedElementsMapNew.push(item)
-
-              // eslint-disable-next-line @typescript-eslint/no-loop-func
-              for (const element of item.elements) {
-                if (level === 0) {
-                  /**
-                   * Parent element is needed in order to apply 'after'.
-                   * But if for example there is a for loop (for a state) at top level and
-                   * immediately after that a new element is added to the state, that new
-                   * element can't be properly added after the previous one, because of the
-                   * lack of parent element.
-                   * Because of this, let's reorder the collected elements.
-                   */
-
-                  this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
-                }
-
-                // @ts-ignore
-                lastElement.after(element)
-                lastElement = element
-              }
-            }
-
-            if (isTemporaryLevel) {
-              this.#collectedElements.pop()
-            }
+            // @ts-ignore
+            lastElement.after(element)
+            lastElement = element
           }
         }
 
-        commentElementEnd.renderedElementsMap = renderedElementsMapNew
+        if (isTemporaryLevel) {
+          this.#collectedElements.pop()
+        }
+      }
+      else if (action === EnumStateAction.SPLICE) {
+        if (updatedObject instanceof Array) {
+          /**
+           * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+           */
+          // @ts-ignore
+          let [start, deleteCount, ...newItems] = arrayFunctionArgs
+
+          if (deleteCount === Infinity) {
+            deleteCount = updatedObject.length - start
+          }
+          else if (deleteCount < 0) {
+            deleteCount = 0
+          }
+
+          if (deleteCount > 0) {
+            for (
+              let i = start, length = start + deleteCount;
+              i < length;
+              i++
+            ) {
+              statementRepaintFunction(
+                EnumStateAction.DELETE, updatedState, i.toString(), undefined,
+              )
+              delete commentElementEnd.renderedElementsMap[i]
+            }
+          }
+
+          const oldSize = commentElementEnd.renderedElementsMap.length
+          const newSize = updatedObject.length
+          const sizeDiff = newSize - oldSize
+
+          // The array needs to be enlarged?
+          if (sizeDiff > 0) {
+            commentElementEnd.renderedElementsMap.length = newSize
+
+            // Update keys in the map
+            for (
+              let index = newSize - 1;
+              index >= start + newItems.length;
+              index--
+            ) {
+              const oldIndex = index - sizeDiff
+
+              if (oldIndex < 0) break
+
+              commentElementEnd.renderedElementsMap[index] = commentElementEnd.renderedElementsMap[oldIndex]
+              commentElementEnd.renderedElementsMap[index].key = index.toString()
+              delete commentElementEnd.renderedElementsMap[oldIndex]
+            }
+          }
+          else if (sizeDiff < 0) {
+            commentElementEnd.renderedElementsMap.splice(start, deleteCount)
+
+            // Update keys in the map
+            for (
+              let index = newSize - 1;
+              index >= start + newItems.length;
+              index--
+            ) {
+              commentElementEnd.renderedElementsMap[index].key = index.toString()
+            }
+          }
+
+          if (newItems.length > 0) {
+            for (
+              let index = start;
+              index < start + newItems.length;
+              index++
+            ) {
+              statementRepaintFunction(
+                EnumStateAction.CREATE, updatedState, index.toString(), undefined,
+              )
+            }
+          }
+        }
+      }
+      else if (action === EnumStateAction.SWAP) {
+        const [key1, key2] = arrayFunctionArgs
+
+        // change siblings
+        // swap elements objects by reference
+        const tmp = commentElementEnd.renderedElementsMap[key2].elements
+        commentElementEnd.renderedElementsMap[key2].elements = commentElementEnd.renderedElementsMap[key1].elements
+        commentElementEnd.renderedElementsMap[key1].elements = tmp
+
+        for (let i = 1; i < commentElementEnd.renderedElementsMap.length; i++) {
+          chainElements(
+            // @ts-ignore
+            ...commentElementEnd.renderedElementsMap[i - 1].elements,
+            ...commentElementEnd.renderedElementsMap[i].elements,
+          )
+        }
+      }
+      else if (action === EnumStateAction.UPDATE) {
+        // if (updatedObject[prop] instanceof Object) {
+        //
+        //   const iterator = (
+        //     updatedObject instanceof Map
+        //     || updatedObject instanceof Set
+        //   )
+        //     ? updatedObject.keys()
+        //     : Object.keys(updatedObject)
+        //
+        //   for (let i of iterator) {
+        //     if (i !== prop && updatedObject[i] === updatedObject[prop]) {
+        //       console.log(prop, i)
+        //       break
+        //     }
+        //   }
+        // }
+        // else {
+        statementRepaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
+        statementRepaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
+        // }
       }
     }
 
@@ -1295,10 +1464,9 @@ class ElementsCreator {
     )
 
     // In this callback the 'for' loop is called
-    commentElementEnd.renderedElementsMap = callback(
-      state,
-      this.#collectedElements[thisLevel],
-    )
+    const added = callbackForState(state, this.#collectedElements[thisLevel])
+
+    commentElementEnd.renderedElementsMap = added
 
     unsetSuggestedItems()
 
@@ -1363,7 +1531,7 @@ class ElementsCreator {
    * @param {Node} element
    */
   #unsubscribeElementAndItsChildren(element) {
-    if (Object.hasOwn(element, '--subscribed')) {
+    if (elementHasSubscriptions(element)) {
       Object.assign(element, { '--deleted': true })
     }
 
