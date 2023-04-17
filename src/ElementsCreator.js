@@ -1428,6 +1428,36 @@ class ElementsCreator {
           )
         }
       }
+      else if (action === EnumStateAction.COPY_WIHTIN) {
+        let [target, start, end] = arrayFunctionArgs
+
+        for (
+          let fromIndex = start, toIndex = target;
+          fromIndex < end;
+          fromIndex++, toIndex++
+        ) {
+          statementRepaintFunction(
+            EnumStateAction.DELETE, updatedState, toIndex.toString(), undefined,
+          )
+          statementRepaintFunction(
+            EnumStateAction.CREATE, updatedState, toIndex.toString(), undefined,
+          )
+        }
+      }
+      else if (action === EnumStateAction.SORT) {
+        for (
+          let index = 0, length = updatedObject.length;
+          index < length;
+          index++
+        ) {
+          statementRepaintFunction(
+            EnumStateAction.DELETE, updatedState, index.toString(), undefined,
+          )
+          statementRepaintFunction(
+            EnumStateAction.CREATE, updatedState, index.toString(), undefined,
+          )
+        }
+      }
       else if (action === EnumStateAction.UPDATE) {
         // if (updatedObject[prop] instanceof Object) {
         //

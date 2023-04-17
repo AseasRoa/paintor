@@ -69,7 +69,7 @@ export interface Statements {
     Input extends Obj,
   >(
     input : Input,
-    handler : (value : () => VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any
+    handler : (value : VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any
   ) : HTMLElement[] | Error
 
   /**

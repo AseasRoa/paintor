@@ -66,14 +66,14 @@ describe('State', () => {
   test('(DOM) New DOM element, created from the State, is reactive', () => {
     const container = document.body
 
-    /** @type {Object<string, string>} */
+    /** @type {Object<string, {color: string}>} */
     const globalState = state({})
 
     component(($) => {
-      $.forState(globalState, (value, key) => {
+      $.forState(globalState, (item, key) => {
         $.div(
-          { style: { color: value } },
-          () => `${key}:${value()}`,
+          { style: { color: () => item.color } },
+          () => `${key}:${item.color}`,
         )
       })
     }).paint(container)
@@ -84,30 +84,31 @@ describe('State', () => {
     expect(div).toBe(undefined)
 
     // Create one <li> element
-    globalState.color = 'red'
+    globalState.item = { color: 'red' }
 
     div = container.getElementsByTagName('div')[0]
 
     expect(div instanceof HTMLDivElement).toBe(true)
-    expect(div.textContent).toBe('color:red')
+    expect(div.textContent).toBe('item:red')
     expect(div.style.color).toBe('red')
 
     // Change text content
-    globalState.color = 'blue'
-    expect(div.textContent).toBe('color:blue')
+    globalState.item.color = 'blue'
+    expect(div.textContent).toBe('item:blue')
     expect(div.style.color).toBe('blue')
   })
 
   test('(HTML-DOM) New DOM element, created from the State, is reactive', () => {
     const container = document.body
 
-    /** @type {Object<string, string>} */
+    /** @type {Object<string, {color: string}>} */
     const globalState = state({})
 
     component(($) => {
-      $.forState(globalState, (value, key) => {
+      $.forState(globalState, (item, key) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         $.html`
-<div style="color: ${value}">${() => `${key}:${value()}`}</div>
+<div style="color: ${() => item.color}">${() => `${key}:${item.color}`}</div>
 `
       })
     }).paint(container)
@@ -118,17 +119,17 @@ describe('State', () => {
     expect(div).toBe(undefined)
 
     // Create one <li> element
-    globalState.color = 'red'
+    globalState.item = { color: 'red' }
 
     div = container.getElementsByTagName('div')[0]
 
     expect(div instanceof HTMLDivElement).toBe(true)
-    expect(div.textContent).toBe('color:red')
+    expect(div.textContent).toBe('item:red')
     expect(div.style.color).toBe('red')
 
     // Change text content
-    globalState.color = 'blue'
-    expect(div.textContent).toBe('color:blue')
+    globalState.item.color = 'blue'
+    expect(div.textContent).toBe('item:blue')
     expect(div.style.color).toBe('blue')
   })
 })

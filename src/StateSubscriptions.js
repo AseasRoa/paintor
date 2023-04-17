@@ -423,6 +423,44 @@ class StateSubscriptions {
   }
 
   /**
+   * @param {State} updatedState
+   * @param {any[]} args
+   */
+  #onCopyWithin(updatedState, args) {
+    const subscription = this.#subscriptions.get('-s-forEach')
+
+    if (subscription) {
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
+
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(EnumStateAction.COPY_WIHTIN, updatedState, '', args)
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {any[]} args
+   */
+  #onSort(updatedState, args) {
+    const subscription = this.#subscriptions.get('-s-forEach')
+
+    if (subscription) {
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
+
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(EnumStateAction.SORT, updatedState, '', args)
+        }
+      }
+    }
+  }
+
+  /**
    * @returns {ProxyHandler<StateProxy>}
    */
   #createProxyHandler() {
@@ -549,6 +587,51 @@ class StateSubscriptions {
 
                 this.#onSwap(receiver, [i, j])
               }
+
+              return result
+            }
+          }
+          else if (prop === 'copyWithin') {
+            // @ts-ignore
+            return (...args) => {
+              // eslint-disable-next-line @typescript-eslint/no-shadow
+              let [targetIndex, start, end] = args
+              const length = target.length
+
+              /**
+               * Fix the arguments, according to the rules in the following link:
+               *
+               * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin
+               */
+              if (targetIndex < 0) targetIndex += length
+              else if (targetIndex < -length) targetIndex = 0
+              else if (targetIndex >= length) return
+              else if (targetIndex > start) end = length - 1
+
+              if (start < 0) start += length
+              else if (start < -length || start === undefined) start = 0
+              else if (start >= length) return
+
+              if (end < 0) end += length
+              else if (end < -length) end = 0
+              else if (end >= length || end === undefined) end = length
+              else if (end <= start) return
+
+              // Apply the function
+              const result = target[prop].apply(target, [targetIndex, start, end])
+
+              this.#onCopyWithin(receiver, [targetIndex, start, end])
+
+              return result
+            }
+          }
+          else if (prop === 'sort') {
+            // @ts-ignore
+            return (...args) => {
+              // @ts-ignore
+              const result = target[prop].apply(target, args)
+
+              this.#onSort(receiver, args)
 
               return result
             }

@@ -18,4 +18,6 @@ export const EnumStateAction = Object.freeze({
   DELETE: 4,
   SPLICE: 5,
   SWAP: 6,
+  COPY_WIHTIN: 7,
+  SORT: 8,
 })

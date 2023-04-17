@@ -307,7 +307,7 @@ export function forEachLoop(
       let value = isProxy
         ? (object[key] instanceof Object)
           ? state[key]
-          : () => state[key]
+          : object[key]
         : object[key]
 
       if (beforeIterationCallback) {
@@ -333,11 +333,7 @@ export function forEachLoop(
         continue
       }
 
-      let val = isProxy
-        ? (value instanceof Object)
-          ? value
-          : () => value
-        : value
+      let val = value
 
       if (beforeIterationCallback) {
         val = beforeIterationCallback?.(val)
@@ -367,7 +363,7 @@ export function forEachLoop(
       let value = isProxy
         ? (object[key] instanceof Object)
           ? state[key]
-          : () => state[key]
+          : object[key]
         : object[key]
 
       if (beforeIterationCallback) {
