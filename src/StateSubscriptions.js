@@ -407,7 +407,11 @@ class StateSubscriptions {
     const subscription = this.#subscriptions.get('-s-forEach')
 
     if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
+      for (
+        let index = 0, length = subscription.length;
+        index < length;
+        index++
+      ) {
         const { statementRepaintFunction } = subscription[index]
 
         if (statementRepaintFunction) {
@@ -423,185 +427,184 @@ class StateSubscriptions {
    */
   #createProxyHandler() {
     /** @type {ProxyHandler<StateProxy>} */
-    const handler = {}
-
-    handler.get = (target, prop, receiver) => {
-      if (prop === symState) {
-        return target[prop]
-      }
-      /**
-       * Why is hasOwn() needed?
-       * If the state is for example an array and its whole value is read,
-       * then JS tries to read few extra properties first - map, length, constructor
-       */
-      else if (
-        Object.hasOwn(target, prop)
-        || prop === symAccess
-      ) {
+    const handler = {
+      get: (target, prop, receiver) => {
+        if (prop === symState) {
+          return target[prop]
+        }
         /**
-         * In the if below it would be enough to check just one element,
-         * but because of TS more than one is checked
+         * Why is hasOwn() needed?
+         * If the state is for example an array and its whole value is read,
+         * then JS tries to read few extra properties first - map, length, constructor
          */
-        if (
-          suggestedItems.element
-          && suggestedItems.bindFunction
+        else if (
+          Object.hasOwn(target, prop)
+          || prop === symAccess
         ) {
-          this.subscribe(
-            target,
-            prop,
-            suggestedItems.element,
-            suggestedItems.propertyName,
-            suggestedItems.subPropertyName,
-            suggestedItems.bindFunction,
-            suggestedItems.statementRepaintFunction,
-          )
-        }
-      }
-      // Internal functions of Set() and Map()
-      else if (
-        (target instanceof Map || target instanceof Set)
-        // @ts-ignore
-        && target[prop] instanceof Function
-      ) {
-        /**
-         * @see https://stackoverflow.com/questions/48452885/observe-changes-to-a-map-using-a-proxy
-         */
-
-        // @ts-ignore
-        const fn = target[prop]
-
-        /**
-         * @param {any[]} args
-         * @returns {*}
-         */
-        const boundFunction = (...args) => {
-          const result = fn.apply(target, args)
-
-          if (target instanceof Set) {
-            if (prop === 'add') {
-              this.#onPropCreate(receiver, prop)
-            }
-            else if (prop === 'delete') {
-              this.#onPropDelete(receiver, prop)
-            }
+          /**
+           * In the if below it would be enough to check just one element,
+           * but because of TS more than one is checked
+           */
+          if (
+            suggestedItems.element
+            && suggestedItems.bindFunction
+          ) {
+            this.subscribe(
+              target,
+              prop,
+              suggestedItems.element,
+              suggestedItems.propertyName,
+              suggestedItems.subPropertyName,
+              suggestedItems.bindFunction,
+              suggestedItems.statementRepaintFunction,
+            )
           }
-          else if (target instanceof Map) {
-            if (prop === 'set') {
-              this.#onPropCreate(receiver, prop)
-            }
-            else if (prop === 'delete') {
-              this.#onPropDelete(receiver, prop)
-            }
-          }
-
-          return result
         }
-
-        return boundFunction
-      }
-      else if (
-        target instanceof Array
-        // @ts-ignore
-        && target[prop] instanceof Function
-      ) {
-        if (prop === 'splice') {
+        // Internal functions of Set() and Map()
+        else if (
+          (target instanceof Map || target instanceof Set)
           // @ts-ignore
-          return (...args) => {
+          && target[prop] instanceof Function
+        ) {
+          /**
+           * @see https://stackoverflow.com/questions/48452885/observe-changes-to-a-map-using-a-proxy
+           */
+
+          // @ts-ignore
+          const fn = target[prop]
+
+          /**
+           * @param {any[]} args
+           * @returns {*}
+           */
+          const boundFunction = (...args) => {
+            const result = fn.apply(target, args)
+
+            if (target instanceof Set) {
+              if (prop === 'add') {
+                this.#onPropCreate(receiver, prop)
+              }
+              else if (prop === 'delete') {
+                this.#onPropDelete(receiver, prop)
+              }
+            }
+            else if (target instanceof Map) {
+              if (prop === 'set') {
+                this.#onPropCreate(receiver, prop)
+              }
+              else if (prop === 'delete') {
+                this.#onPropDelete(receiver, prop)
+              }
+            }
+
+            return result
+          }
+
+          return boundFunction
+        }
+        else if (
+          target instanceof Array
+          // @ts-ignore
+          && target[prop] instanceof Function
+        ) {
+          if (prop === 'splice') {
             // @ts-ignore
-            const result = target[prop].apply(target, args)
+            return (...args) => {
+              // @ts-ignore
+              const result = target[prop].apply(target, args)
 
-            this.#onSplice(receiver, args)
+              this.#onSplice(receiver, args)
 
-            return result
-          }
-        }
-        else if (prop === 'unshift') {
-          // @ts-ignore
-          return (...args) => {
-            const result = target[prop].apply(target, args)
-
-            this.#onSplice(receiver, [0, 0, ...args])
-
-            return result
-          }
-        }
-        else if (prop === 'shift') {
-          return () => {
-            const result = target[prop].apply(target)
-
-            this.#onSplice(receiver, [0, 1])
-
-            return result
-          }
-        }
-        else if (prop === 'reverse') {
-          // @ts-ignore
-          return () => {
-            const result = target[prop].apply(target)
-
-            for (let i = 0, len = target.length; i < len; i++) {
-              const j = len - 1 - i
-
-              if (i >= j) break
-
-              this.#onSwap(receiver, [i, j])
+              return result
             }
+          }
+          else if (prop === 'unshift') {
+            // @ts-ignore
+            return (...args) => {
+              const result = target[prop].apply(target, args)
 
-            return result
+              this.#onSplice(receiver, [0, 0, ...args])
+
+              return result
+            }
+          }
+          else if (prop === 'shift') {
+            return () => {
+              const result = target[prop].apply(target)
+
+              this.#onSplice(receiver, [0, 1])
+
+              return result
+            }
+          }
+          else if (prop === 'reverse') {
+            // @ts-ignore
+            return () => {
+              const result = target[prop].apply(target)
+
+              for (let i = 0, len = target.length; i < len; i++) {
+                const j = len - 1 - i
+
+                if (i >= j) break
+
+                this.#onSwap(receiver, [i, j])
+              }
+
+              return result
+            }
           }
         }
-      }
 
-      return target[prop]
-    }
-
-    handler.set = (target, prop, value, receiver) => {
-      if (prop === symState || prop === symAccess) {
-        target[prop] = value
-      }
-      // Array's length is set every time after
-      // adding or removing elements
-      else if (target instanceof Array && prop === 'length') {
-        target[prop] = value
-
-        // this.#onArrayLengthChange(receiver)
-      }
-      else if (Object.hasOwn(target, prop)) {
-        target[prop] = value
-
-        this.#onPropUpdate(receiver, prop, value)
-      }
-      else {
-        if (value instanceof Object) {
-          target[prop] = this.createProxy(value)
-        }
-        else {
+        return target[prop]
+      },
+      set: (target, prop, value, receiver) => {
+        if (prop === symState || prop === symAccess) {
           target[prop] = value
         }
+        // Array's length is set every time after
+        // adding or removing elements
+        else if (target instanceof Array && prop === 'length') {
+          target[prop] = value
 
-        this.#onPropCreate(receiver, prop)
-      }
+          // this.#onArrayLengthChange(receiver)
+        }
+        else if (Object.hasOwn(target, prop)) {
+          target[prop] = value
 
-      return true
-    }
+          this.#onPropUpdate(receiver, prop, value)
+        }
+        else {
+          if (value instanceof Object) {
+            target[prop] = this.createProxy(value)
+          }
+          else {
+            target[prop] = value
+          }
 
-    /**
-     * Trap for the delete operator. This trap can intercept these operations:
-     *  - delete proxy[foo] and delete proxy.foo
-     *  - Reflect.deleteProperty()
-     *
-     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/deleteProperty
-     * @param {StateProxy} target
-     * @param {string | symbol} prop
-     * @returns {boolean}
-     * A Boolean indicating whether the property has been successfully deleted.
-     */
-    handler.deleteProperty = (target, prop) => {
-      delete target[prop]
+          this.#onPropCreate(receiver, prop)
+        }
 
-      this.#onPropDelete(target, prop)
+        return true
+      },
 
-      return true
+      /**
+       * Trap for the delete operator. This trap can intercept these operations:
+       *  - delete proxy[foo] and delete proxy.foo
+       *  - Reflect.deleteProperty()
+       *
+       * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/deleteProperty
+       * @param {StateProxy} target
+       * @param {string | symbol} prop
+       * @returns {boolean}
+       * A Boolean indicating whether the property has been successfully deleted.
+       */
+      deleteProperty: (target, prop) => {
+        delete target[prop]
+
+        this.#onPropDelete(target, prop)
+
+        return true
+      },
     }
 
     return handler

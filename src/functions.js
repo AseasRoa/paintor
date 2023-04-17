@@ -305,7 +305,7 @@ export function forEachLoop(
       }
 
       let value = isProxy
-        ? (state[key] instanceof Object)
+        ? (object[key] instanceof Object)
           ? state[key]
           : () => state[key]
         : object[key]
@@ -365,7 +365,7 @@ export function forEachLoop(
       }
 
       let value = isProxy
-        ? (state[key] instanceof Object)
+        ? (object[key] instanceof Object)
           ? state[key]
           : () => state[key]
         : object[key]
