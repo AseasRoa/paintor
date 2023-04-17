@@ -360,7 +360,12 @@ class HtmlTemplateParser {
       this.#setStage(this.#stageAttrName)
     }
     else {
-      this.#attrValue += this.#char
+      if (this.#char instanceof Object) {
+        this.#attrValue = this.#char
+      }
+      else {
+        this.#attrValue += this.#char
+      }
     }
   }
 
