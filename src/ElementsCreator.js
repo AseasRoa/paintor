@@ -27,7 +27,7 @@ import {
   setSuggestItems,
   unsetSuggestedItems,
 } from './StateSubscriptions.js'
-import { EnumStateAction, symState, symTemplateFunction } from './constants.js'
+import { EnumStateAction, symState, symSubscriptions, symTemplateFunction } from './constants.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol), elements: (Node)[]}>} RenderedElementsMap
@@ -1199,7 +1199,9 @@ class ElementsCreator {
      */
     const statementRepaintFunction = (action, updatedState, prop, arrayFunctionArgs) => {
       // @ts-ignore
-      const updatedObject = updatedState[symState].target
+      const stateParams = updatedState[symState]
+      const updatedObject = stateParams.target
+      const subs = stateParams.subs
 
       if (!(updatedObject instanceof Object)) {
         return
@@ -1218,20 +1220,40 @@ class ElementsCreator {
         let index = commentElementEnd.renderedElementsMap.length
 
         while (index--) {
-          const item = commentElementEnd.renderedElementsMap[index]
+          //const item = commentElementEnd.renderedElementsMap[index]
 
-          if (!item) continue
+          if (!commentElementEnd.renderedElementsMap[index]) continue
 
           const isArray = updatedObject instanceof Array
 
-          if (item.key === prop) {
-            for (const element of item.elements) {
+          if (commentElementEnd.renderedElementsMap[index].key === prop) {
+            for (const element of commentElementEnd.renderedElementsMap[index].elements) {
+              // Delete all subscriptions for this element
+              if (symSubscriptions in element) {
+                /** @type {Subscription[]} */
+                // @ts-ignore
+                const elementSubs = element[symSubscriptions]
+                let idx = elementSubs.length
+
+                while (idx--) {
+                  if (!elementSubs[idx]) continue
+
+                  elementSubs[idx].stateSubscription.unsubscribe(element)
+                }
+
+                // @ts-ignore
+                delete element[symSubscriptions]
+              }
+
+              // Delete the element itself
               // @ts-ignore
               element.remove()
             }
 
             if (isArray) {
               commentElementEnd.renderedElementsMap[index].elements.length = 0
+
+              delete commentElementEnd.renderedElementsMap[index]
             }
             else {
               commentElementEnd.renderedElementsMap
@@ -1410,6 +1432,8 @@ class ElementsCreator {
             }
           }
         }
+
+        commentElementEnd.renderedElementsMap.length = updatedObject.length
       }
       else if (action === EnumStateAction.SWAP) {
         const [key1, key2] = arrayFunctionArgs

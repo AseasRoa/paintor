@@ -114,11 +114,55 @@ function elementHasSubscriptions(element) {
 }
 
 class StateSubscriptions {
+  /** @type {State} */
+  #state = {}
+
   /** @type {Map<string | symbol, Subscription[]>} */
   #subscriptions = new Map()
 
-  /** @type {State} */
-  #state = {}
+  /**
+   * @template T
+   * @param {T} object
+   * The input object that will be used to create
+   * a proxy object with the same keys and values.
+   * @param {string} [statePath]
+   * The path to the state:
+   * <br>
+   * - If the state is the parent state, this is an empty string.
+   * <br>
+   * - If the state is a child state, this is the path to it (dot notated).
+   * @returns {T}
+   */
+  createProxy(object, statePath = '') {
+    const handler = this.#createProxyHandler()
+    const proxy = new Proxy(object, handler)
+
+    // Store the path to the state in a special value in the
+    // proxy object, but make that value invisible for "for"
+    // (and similar) statements.
+    // Object.defineProperty(proxy, '--state-path', {
+    //   enumerable: false,
+    //   configurable: false,
+    //   writable: false,
+    //   value: statePath,
+    // })
+
+    // Recursive proxy. To find all inner objects
+    // and turn them into child states.
+    for (const key in proxy) {
+      if (!(proxy[key] instanceof Object)) {
+        continue
+      }
+
+      const innerStatePath = (statePath === '') ? key : `${statePath}.${key}`
+
+      proxy[key] = this.createProxy(proxy[key], innerStatePath)
+    }
+
+    this.#state = proxy
+
+    return proxy
+  }
 
   /**
    * @param {State} state
@@ -183,6 +227,7 @@ class StateSubscriptions {
       subPropertyName,
       bindFunction,
       statementRepaintFunction,
+      stateSubscription: this,
     }
 
     subscriptions.push(subscription)
@@ -200,56 +245,21 @@ class StateSubscriptions {
    */
   unsubscribe(element) {
     if (symSubscriptions in element) {
-      delete element[symSubscriptions]
+      /** @type {Subscription[]} */
+      // @ts-ignore
+      const subs = element[symSubscriptions]
+      let index = subs.length
+
+      while (index--) {
+        if (subs[index].stateSubscription === this) {
+          subs.splice(index, 1)
+        }
+      }
     }
 
     this.#subscriptions.forEach((subscription, key) => {
       this.#subscriptions.set(key, subscription.filter((item) => (item.element !== element)))
     })
-  }
-
-  /**
-   * @template T
-   * @param {T} object
-   * The input object that will be used to create
-   * a proxy object with the same keys and values.
-   * @param {string} [statePath]
-   * The path to the state:
-   * <br>
-   * - If the state is the parent state, this is an empty string.
-   * <br>
-   * - If the state is a child state, this is the path to it (dot notated).
-   * @returns {T}
-   */
-  createProxy(object, statePath = '') {
-    const handler = this.#createProxyHandler()
-    const proxy = new Proxy(object, handler)
-
-    // Store the path to the state in a special value in the
-    // proxy object, but make that value invisible for "for"
-    // (and similar) statements.
-    // Object.defineProperty(proxy, '--state-path', {
-    //   enumerable: false,
-    //   configurable: false,
-    //   writable: false,
-    //   value: statePath,
-    // })
-
-    // Recursive proxy. To find all inner objects
-    // and turn them into child states.
-    for (const key in proxy) {
-      if (!(proxy[key] instanceof Object)) {
-        continue
-      }
-
-      const innerStatePath = (statePath === '') ? key : `${statePath}.${key}`
-
-      proxy[key] = this.createProxy(proxy[key], innerStatePath)
-    }
-
-    this.#state = proxy
-
-    return proxy
   }
 
   /**
@@ -272,193 +282,6 @@ class StateSubscriptions {
   //     })
   //   }
   // }
-
-  /**
-   * @param {EnumStateAction} action
-   * @param {State} updatedState
-   * @param {string | symbol} prop
-   */
-  #onPropCreateOrDelete(action, updatedState, prop) {
-    const subscription = this.#subscriptions.get('-s-forEach')
-
-    if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
-        const { statementRepaintFunction } = subscription[index]
-
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(action, updatedState, prop)
-        }
-      }
-    }
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {string | symbol} prop
-   */
-  #onPropCreate(updatedState, prop) {
-    this.#onPropCreateOrDelete(EnumStateAction.CREATE, updatedState, prop)
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {string | symbol} prop
-   * @param {any} value
-   */
-  #onPropUpdate(updatedState, prop, value) {
-    // 1. When the repaint function is outside all elements
-    // const subscription = this.#subscriptions.get('-s-forEach')
-    //
-    // if (subscription) {
-    //   for (let index = 0, length = subscription.length; index < length; index++) {
-    //     const { statementRepaintFunction } = subscription[index]
-    //
-    //     if (statementRepaintFunction) {
-    //       // @ts-ignore
-    //       statementRepaintFunction(EnumStateAction.UPDATE, updatedState, prop)
-    //     }
-    //   }
-    // }
-
-    // 2. Individual elements
-    if (this.#subscriptions.has(prop)) {
-      const list = this.#subscriptions.get(prop) ?? []
-
-      for (const listItem of list) {
-        const {
-          element,
-          propertyName,
-          subPropertyName,
-          bindFunction,
-          statementRepaintFunction,
-        } = listItem
-
-        if (Object.hasOwn(element, '--deleted')) {
-          this.unsubscribe(element)
-
-          return
-        }
-
-        let result = bindFunction.call(element, element)
-
-        if (propertyName === 'style' && subPropertyName) {
-          // @ts-ignore
-          element.style[subPropertyName]
-              = modifyStyleRule(subPropertyName, result)
-        }
-        else if (
-          propertyName === '--if'
-          || propertyName === '--for'
-          || propertyName === '--nest'
-        ) {
-          if (statementRepaintFunction) {
-            // @ts-ignore
-            statementRepaintFunction(result)
-          }
-        }
-        else {
-          /**
-           * @see Remark "() => value"
-           */
-          if (result instanceof Function) {
-            result = result()
-          }
-
-          // @ts-ignore
-          setElementAttrOrProp(element, propertyName, result)
-        }
-      }
-    }
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {string | symbol} prop
-   */
-  #onPropDelete(updatedState, prop) {
-    this.#onPropCreateOrDelete(EnumStateAction.DELETE, updatedState, prop)
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {any[]} args
-   */
-  #onSplice(updatedState, args) {
-    const subscription = this.#subscriptions.get('-s-forEach')
-
-    if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
-        const { statementRepaintFunction } = subscription[index]
-
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(EnumStateAction.SPLICE, updatedState, '', args)
-        }
-      }
-    }
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {[number, number]} numKeys
-   */
-  #onSwap(updatedState, numKeys) {
-    const subscription = this.#subscriptions.get('-s-forEach')
-
-    if (subscription) {
-      for (
-        let index = 0, length = subscription.length;
-        index < length;
-        index++
-      ) {
-        const { statementRepaintFunction } = subscription[index]
-
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(EnumStateAction.SWAP, updatedState, '', numKeys)
-        }
-      }
-    }
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {any[]} args
-   */
-  #onCopyWithin(updatedState, args) {
-    const subscription = this.#subscriptions.get('-s-forEach')
-
-    if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
-        const { statementRepaintFunction } = subscription[index]
-
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(EnumStateAction.COPY_WIHTIN, updatedState, '', args)
-        }
-      }
-    }
-  }
-
-  /**
-   * @param {State} updatedState
-   * @param {any[]} args
-   */
-  #onSort(updatedState, args) {
-    const subscription = this.#subscriptions.get('-s-forEach')
-
-    if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
-        const { statementRepaintFunction } = subscription[index]
-
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(EnumStateAction.SORT, updatedState, '', args)
-        }
-      }
-    }
-  }
 
   /**
    * @returns {ProxyHandler<StateProxy>}
@@ -544,98 +367,9 @@ class StateSubscriptions {
           target instanceof Array
           // @ts-ignore
           && target[prop] instanceof Function
+          && typeof prop === 'string'
         ) {
-          if (prop === 'splice') {
-            // @ts-ignore
-            return (...args) => {
-              // @ts-ignore
-              const result = target[prop].apply(target, args)
-
-              this.#onSplice(receiver, args)
-
-              return result
-            }
-          }
-          else if (prop === 'unshift') {
-            // @ts-ignore
-            return (...args) => {
-              const result = target[prop].apply(target, args)
-
-              this.#onSplice(receiver, [0, 0, ...args])
-
-              return result
-            }
-          }
-          else if (prop === 'shift') {
-            return () => {
-              const result = target[prop].apply(target)
-
-              this.#onSplice(receiver, [0, 1])
-
-              return result
-            }
-          }
-          else if (prop === 'reverse') {
-            // @ts-ignore
-            return () => {
-              const result = target[prop].apply(target)
-
-              for (let i = 0, len = target.length; i < len; i++) {
-                const j = len - 1 - i
-
-                if (i >= j) break
-
-                this.#onSwap(receiver, [i, j])
-              }
-
-              return result
-            }
-          }
-          else if (prop === 'copyWithin') {
-            // @ts-ignore
-            return (...args) => {
-              // eslint-disable-next-line @typescript-eslint/no-shadow
-              let [targetIndex, start, end] = args
-              const length = target.length
-
-              /**
-               * Fix the arguments, according to the rules in the following link:
-               *
-               * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin
-               */
-              if (targetIndex < 0) targetIndex += length
-              else if (targetIndex < -length) targetIndex = 0
-              else if (targetIndex >= length) return
-              else if (targetIndex > start) end = length - 1
-
-              if (start < 0) start += length
-              else if (start < -length || start === undefined) start = 0
-              else if (start >= length) return
-
-              if (end < 0) end += length
-              else if (end < -length) end = 0
-              else if (end >= length || end === undefined) end = length
-              else if (end <= start) return
-
-              // Apply the function
-              const result = target[prop].apply(target, [targetIndex, start, end])
-
-              this.#onCopyWithin(receiver, [targetIndex, start, end])
-
-              return result
-            }
-          }
-          else if (prop === 'sort') {
-            // @ts-ignore
-            return (...args) => {
-              // @ts-ignore
-              const result = target[prop].apply(target, args)
-
-              this.#onSort(receiver, args)
-
-              return result
-            }
-          }
+          return this.#onArrayFunction(target, receiver, prop)
         }
 
         return target[prop]
@@ -652,9 +386,17 @@ class StateSubscriptions {
           // this.#onArrayLengthChange(receiver)
         }
         else if (Object.hasOwn(target, prop)) {
-          target[prop] = value
+          if (value instanceof Object) {
+            target[prop] = this.createProxy(value)
 
-          this.#onPropUpdate(receiver, prop, value)
+            this.#onPropDelete(receiver, prop)
+            this.#onPropCreate(receiver, prop)
+          }
+          else {
+            target[prop] = value
+
+            this.#onPropUpdate(receiver, prop, value)
+          }
         }
         else {
           if (value instanceof Object) {
@@ -691,6 +433,260 @@ class StateSubscriptions {
     }
 
     return handler
+  }
+
+  /**
+   * @param {StateProxy} target
+   * @param {State} receiver
+   * @param {string} prop
+   * @returns {Function | void}
+   */
+  #onArrayFunction(target, receiver, prop) {
+    switch (prop) {
+      case 'copyWithin': {
+        // @ts-ignore
+        return (...args) => {
+          // eslint-disable-next-line @typescript-eslint/no-shadow
+          let [targetIndex, start, end] = args
+          const { length } = target
+
+          /**
+           * Fix the arguments, according to the rules in the following link:
+           *
+           * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin
+           */
+          if (targetIndex < 0) targetIndex += length
+          else if (targetIndex < -length) targetIndex = 0
+          else if (targetIndex >= length) return
+          else if (targetIndex > start) end = length - 1
+
+          if (start < 0) start += length
+          else if (start < -length || start === undefined) start = 0
+          else if (start >= length) return
+
+          if (end < 0) end += length
+          else if (end < -length) end = 0
+          else if (end >= length || end === undefined) end = length
+          else if (end <= start) return
+
+          // Apply the function
+          const result = target[prop].apply(target, [targetIndex, start, end])
+
+          this.#onArrayFunctionCallback(
+            EnumStateAction.COPY_WIHTIN,
+            receiver,
+            [targetIndex, start, end],
+          )
+
+          return result
+        }
+      }
+      case 'reverse': {
+        return () => {
+          const result = target[prop].apply(target)
+
+          for (let i = 0, len = target.length; i < len; i++) {
+            const j = len - 1 - i
+
+            if (i >= j) break
+
+            this.#onArrayFunctionCallback(
+              EnumStateAction.SWAP,
+              receiver,
+              [i, j],
+            )
+          }
+
+          return result
+        }
+      }
+      case 'shift': {
+        return () => {
+          const result = target[prop].apply(target)
+
+          this.#onArrayFunctionCallback(
+            EnumStateAction.SPLICE,
+            receiver,
+            [0, 1],
+          )
+
+          return result
+        }
+      }
+      case 'sort': {
+        // @ts-ignore
+        return (...args) => {
+          // @ts-ignore
+          const result = target[prop].apply(target, args)
+
+          this.#onArrayFunctionCallback(
+            EnumStateAction.SORT,
+            receiver,
+            args,
+          )
+
+          return result
+        }
+      }
+      case 'splice': {
+        // @ts-ignore
+        return (...args) => {
+          const result = target[prop].apply(target, args)
+
+          this.#onArrayFunctionCallback(
+            EnumStateAction.SPLICE,
+            receiver,
+            args,
+          )
+
+          return result
+        }
+      }
+      case 'unshift': {
+        // @ts-ignore
+        return (...args) => {
+          const result = target[prop].apply(target, args)
+
+          this.#onArrayFunctionCallback(
+            EnumStateAction.SPLICE,
+            receiver,
+            [0, 0, ...args],
+          )
+
+          return result
+        }
+      }
+      default: {
+        return target[prop]
+      }
+    }
+  }
+
+  /**
+   * @param {EnumStateAction} action
+   * @param {State} updatedState
+   * @param {any[]} args
+   */
+  #onArrayFunctionCallback(action, updatedState, args) {
+    const subscription = this.#subscriptions.get('-s-forEach')
+
+    if (subscription) {
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
+
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(action, updatedState, '', args)
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {string | symbol} prop
+   */
+  #onPropCreate(updatedState, prop) {
+    this.#onPropCreateOrDelete(EnumStateAction.CREATE, updatedState, prop)
+  }
+
+  /**
+   * @param {EnumStateAction} action
+   * @param {State} updatedState
+   * @param {string | symbol} prop
+   */
+  #onPropCreateOrDelete(action, updatedState, prop) {
+    const subscription = this.#subscriptions.get('-s-forEach')
+
+    if (subscription) {
+      for (let index = 0, length = subscription.length; index < length; index++) {
+        const { statementRepaintFunction } = subscription[index]
+
+        if (statementRepaintFunction) {
+          // @ts-ignore
+          statementRepaintFunction(action, updatedState, prop)
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {string | symbol} prop
+   */
+  #onPropDelete(updatedState, prop) {
+    this.#onPropCreateOrDelete(EnumStateAction.DELETE, updatedState, prop)
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {string | symbol} prop
+   * @param {any} value
+   */
+  #onPropUpdate(updatedState, prop, value) {
+    // 1. When the repaint function is outside all elements
+    // const subscription = this.#subscriptions.get('-s-forEach')
+    //
+    // if (subscription) {
+    //   for (let index = 0, length = subscription.length; index < length; index++) {
+    //     const { statementRepaintFunction } = subscription[index]
+    //
+    //     if (statementRepaintFunction) {
+    //       // @ts-ignore
+    //       statementRepaintFunction(EnumStateAction.UPDATE, updatedState, prop)
+    //     }
+    //   }
+    // }
+
+    // 2. Individual elements
+    if (this.#subscriptions.has(prop)) {
+      const list = this.#subscriptions.get(prop) ?? []
+
+      for (const listItem of list) {
+        const {
+          element,
+          propertyName,
+          subPropertyName,
+          bindFunction,
+          statementRepaintFunction,
+        } = listItem
+
+        if (Object.hasOwn(element, '--deleted')) {
+          this.unsubscribe(element)
+
+          return
+        }
+
+        let result = bindFunction.call(element, element)
+
+        if (propertyName === 'style' && subPropertyName) {
+          // @ts-ignore
+          element.style[subPropertyName]
+              = modifyStyleRule(subPropertyName, result)
+        }
+        else if (
+          propertyName === '--if'
+          || propertyName === '--for'
+          || propertyName === '--nest'
+        ) {
+          if (statementRepaintFunction) {
+            // @ts-ignore
+            statementRepaintFunction(result)
+          }
+        }
+        else {
+          /**
+           * @see Remark "() => value"
+           */
+          if (result instanceof Function) {
+            result = result()
+          }
+
+          // @ts-ignore
+          setElementAttrOrProp(element, propertyName, result)
+        }
+      }
+    }
   }
 }
 

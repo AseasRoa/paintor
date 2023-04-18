@@ -41,4 +41,9 @@ type Subscription = {
    * Only used in the if() function
    */
   statementRepaintFunction: null | StatementRepaintFunctionForFunction | StatementRepaintFunctionForState;
+  /**
+   * Used for cleaning up subscriptions from the DOM element itself,
+   * when the element is being removed
+   */
+  stateSubscription: import('../StateSubscriptions').StateSubscriptions;
 }
