@@ -1,4 +1,4 @@
-import { StateSubscriptions } from './StateSubscriptions.js'
+import { StateProxy } from './StateProxy.js'
 import { symState } from './constants.js'
 
 let stateIdCounter = 0
@@ -15,8 +15,8 @@ const state = function state(object) {
     throw new Error('state() only accepts Object, Array, Set or Map as input value.')
   }
 
-  const stateSubscriptions = new StateSubscriptions()
-  const proxy = stateSubscriptions.createProxy(object)
+  const stateProxy = new StateProxy()
+  const proxy = stateProxy.createProxy(object)
 
   stateIdCounter += 1
 

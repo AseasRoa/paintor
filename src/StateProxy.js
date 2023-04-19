@@ -1,124 +1,17 @@
-import { setElementAttrOrProp, modifyStyleRule } from './functions.js'
-import { symState, EnumStateAction, symAccess, symSubscriptions } from './constants.js'
+import { EnumStateAction, symAccess, symState } from './constants.js'
+import { suggestedItems } from './elementsSuggestor.js'
+import { modifyStyleRule, setElementAttrOrProp } from './functions.js'
+import { SubscriptionsManager } from './SubscriptionsManager.js'
 
-/** @typedef {Object<*,*>} StateProxy */
+/** @typedef {Object<*, *> | Array<*>} ProxyObject */
 
-/**
- * @type {{
- *   element: null | Element | Comment,
- *   propertyName: string,
- *   subPropertyName: string,
- *   bindFunction: null | BindFunction,
- *   statementRepaintFunction: null | StatementRepaintFunction
- * }}
- */
-let suggestedItems = {
-  element: null,
-  propertyName: '',
-  subPropertyName: '',
-  bindFunction: null,
-  statementRepaintFunction: null,
-}
+class StateProxy {
+  /** @type {SubscriptionsManager} */
+  #subsManager
 
-/**
- * This function should be called just before calling the bindFunction. The idea is
- * that the bindFunction, along with its html element and property name are suggested
- * here to the proxy handler. When the bindFunction is called, any state used in it
- * would trigger the proxy get event, which means that it will be added to the subscriptions.
- *
- * @param {Element | Comment | Text} element
- * @param {string} propertyName
- * @param {string} subPropertyName
- * @param {BindFunction} bindFunction
- * @param {null | StatementRepaintFunction} statementRepaintFunction
- */
-function setSuggestItems(
-  element,
-  propertyName,
-  subPropertyName,
-  bindFunction,
-  statementRepaintFunction,
-) {
-  suggestedItems.element = element
-  suggestedItems.propertyName = propertyName
-  suggestedItems.subPropertyName = subPropertyName
-  suggestedItems.bindFunction = bindFunction
-  suggestedItems.statementRepaintFunction = statementRepaintFunction
-}
-
-/**
- * Reset the suggested items
- *
- * @returns {void}
- */
-function unsetSuggestedItems() {
-  suggestedItems.element = null
-  suggestedItems.propertyName = ''
-  suggestedItems.subPropertyName = ''
-  suggestedItems.bindFunction = null
-  suggestedItems.statementRepaintFunction = null
-}
-
-/**
- * Move subscription records from one DOM element into another DOM element.
- * Subscription records are located in a special array in the DOM element.
- *
- * @param {Element | Comment | Text} fromElement
- * @param {Element | Comment | Text} toElement
- * @param {BindFunction} [bindFunction] Optionally filter by the bind function
- * @param {Partial<Subscription>} [newSubscriptionProperties] Optionally set these parameters
- */
-function moveSubscriptions(fromElement, toElement, bindFunction, newSubscriptionProperties) {
-  if (symSubscriptions in fromElement) {
-    // @ts-ignore
-    let index = fromElement[symSubscriptions].length
-
-    while (index--) {
-      /** @type {Subscription} */
-      // @ts-ignore
-      const subscription = fromElement[symSubscriptions][index]
-
-      if (
-        bindFunction === undefined
-        || bindFunction === subscription.bindFunction
-      ) {
-        // 1. Move the subscription record
-        subscription.element = toElement
-
-        if (newSubscriptionProperties) {
-          for (const prop in newSubscriptionProperties) {
-            // @ts-ignore
-            subscription[prop] = newSubscriptionProperties[prop]
-          }
-        }
-
-        // @ts-ignore
-        toElement[symSubscriptions] ??= []
-        // @ts-ignore
-        toElement[symSubscriptions].push(subscription)
-
-        // 2. Remove the subscription record from the origin element
-        // @ts-ignore
-        fromElement[symSubscriptions].splice(index, 1)
-      }
-    }
+  constructor() {
+    this.#subsManager = new SubscriptionsManager()
   }
-}
-
-/**
- * @param {Node | Element | Comment | Text} element
- * @returns {boolean}
- */
-function elementHasSubscriptions(element) {
-  return Object.hasOwn(element, symSubscriptions)
-}
-
-class StateSubscriptions {
-  /** @type {State} */
-  #state = {}
-
-  /** @type {Map<string | symbol, Subscription[]>} */
-  #subscriptions = new Map()
 
   /**
    * @template T
@@ -134,6 +27,10 @@ class StateSubscriptions {
    * @returns {T}
    */
   createProxy(object, statePath = '') {
+    if (!(object instanceof Object)) {
+      throw new Error('Cannot create a Proxy on non-object')
+    }
+
     const handler = this.#createProxyHandler()
     const proxy = new Proxy(object, handler)
 
@@ -159,107 +56,7 @@ class StateSubscriptions {
       proxy[key] = this.createProxy(proxy[key], innerStatePath)
     }
 
-    this.#state = proxy
-
     return proxy
-  }
-
-  /**
-   * @param {State} state
-   * @param {string | symbol} stateProp
-   * @param {Element | Comment} element
-   * The HTML element for which the other parameters apply.
-   * @param {string} propertyName
-   * The name of the property of the HTML element, for
-   * which the subscription is going to be created.
-   * For example: 'style', 'value', 'textContent', 'innerHTML'.
-   * Also, '--if' for IF statement.
-   * @param {string} subPropertyName
-   * If the property name is 'style', the sub-property could be
-   * any style property.
-   * For example: 'fontSize'
-   * @param {BindFunction} bindFunction
-   * The function that is used instead of a fixed value.
-   * For example: () => (state.clicks)
-   * @param {StatementRepaintFunction | null} statementRepaintFunction
-   * This is only used in the if() function. It's a function that
-   * is used to repaint the elements in case the condition is changed
-   * from false to true or vice versa.
-   */
-  subscribe(
-    state,
-    stateProp,
-    element,
-    propertyName,
-    subPropertyName,
-    bindFunction,
-    statementRepaintFunction,
-  ) {
-    if (propertyName === '-s-if' || propertyName === '-s-forEach') {
-      stateProp = propertyName
-    }
-
-    if (!this.#subscriptions.has(stateProp)) {
-      this.#subscriptions.set(stateProp, [])
-    }
-
-    const subscriptions
-            = this.#subscriptions.get(stateProp) ?? []
-
-    // Search for a subscription with the same parameters.
-    // If such already exists, just don't create a new one.
-    for (const item of subscriptions) {
-      if (
-        item.element === element
-        && item.propertyName === propertyName
-        && item.subPropertyName === subPropertyName
-        && item.bindFunction === bindFunction
-        && item.statementRepaintFunction === statementRepaintFunction
-      ) return
-    }
-
-    /**
-     * @type {Subscription}
-     */
-    const subscription = {
-      element,
-      propertyName,
-      subPropertyName,
-      bindFunction,
-      statementRepaintFunction,
-      stateSubscription: this,
-    }
-
-    subscriptions.push(subscription)
-
-    // @ts-ignore
-    element[symSubscriptions] ??= []
-    // @ts-ignore
-    element[symSubscriptions].push(subscription)
-  }
-
-  /**
-   * Remove any subscriptions that the element is subscribed to
-   *
-   * @param {Node} element
-   */
-  unsubscribe(element) {
-    if (symSubscriptions in element) {
-      /** @type {Subscription[]} */
-      // @ts-ignore
-      const subs = element[symSubscriptions]
-      let index = subs.length
-
-      while (index--) {
-        if (subs[index].stateSubscription === this) {
-          subs.splice(index, 1)
-        }
-      }
-    }
-
-    this.#subscriptions.forEach((subscription, key) => {
-      this.#subscriptions.set(key, subscription.filter((item) => (item.element !== element)))
-    })
   }
 
   /**
@@ -270,7 +67,7 @@ class StateSubscriptions {
    * @param {any[]} updatedState
    */
   // #onArrayLengthChange(updatedState) {
-  //   const subscription = this.#subscriptions.get('-s-forEach')
+  //   const subscription = this.#subscriptions.subscriptions.get('-s-forEach')
   //
   //   if (subscription) {
   //     subscription.forEach((listItem) => {
@@ -284,10 +81,10 @@ class StateSubscriptions {
   // }
 
   /**
-   * @returns {ProxyHandler<StateProxy>}
+   * @returns {ProxyHandler<ProxyObject>}
    */
   #createProxyHandler() {
-    /** @type {ProxyHandler<StateProxy>} */
+    /** @type {ProxyHandler<ProxyObject>} */
     const handler = {
       get: (target, prop, receiver) => {
         if (prop === symState) {
@@ -310,7 +107,7 @@ class StateSubscriptions {
             suggestedItems.element
             && suggestedItems.bindFunction
           ) {
-            this.subscribe(
+            this.#subsManager.subscribe(
               target,
               prop,
               suggestedItems.element,
@@ -418,7 +215,7 @@ class StateSubscriptions {
        *  - Reflect.deleteProperty()
        *
        * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy/deleteProperty
-       * @param {StateProxy} target
+       * @param {ProxyObject} target
        * @param {string | symbol} prop
        * @returns {boolean}
        * A Boolean indicating whether the property has been successfully deleted.
@@ -436,7 +233,7 @@ class StateSubscriptions {
   }
 
   /**
-   * @param {StateProxy} target
+   * @param {ProxyObject} target
    * @param {State} receiver
    * @param {string} prop
    * @returns {Function | void}
@@ -473,7 +270,7 @@ class StateSubscriptions {
           const result = target[prop].apply(target, [targetIndex, start, end])
 
           this.#onArrayFunctionCallback(
-            EnumStateAction.COPY_WIHTIN,
+            EnumStateAction.ARRAY_COPY_WITHIN,
             receiver,
             [targetIndex, start, end],
           )
@@ -491,7 +288,7 @@ class StateSubscriptions {
             if (i >= j) break
 
             this.#onArrayFunctionCallback(
-              EnumStateAction.SWAP,
+              EnumStateAction.ARRAY_SWAP,
               receiver,
               [i, j],
             )
@@ -505,7 +302,7 @@ class StateSubscriptions {
           const result = target[prop].apply(target)
 
           this.#onArrayFunctionCallback(
-            EnumStateAction.SPLICE,
+            EnumStateAction.ARRAY_SPLICE,
             receiver,
             [0, 1],
           )
@@ -520,7 +317,7 @@ class StateSubscriptions {
           const result = target[prop].apply(target, args)
 
           this.#onArrayFunctionCallback(
-            EnumStateAction.SORT,
+            EnumStateAction.ARRAY_SORT,
             receiver,
             args,
           )
@@ -534,7 +331,7 @@ class StateSubscriptions {
           const result = target[prop].apply(target, args)
 
           this.#onArrayFunctionCallback(
-            EnumStateAction.SPLICE,
+            EnumStateAction.ARRAY_SPLICE,
             receiver,
             args,
           )
@@ -548,7 +345,7 @@ class StateSubscriptions {
           const result = target[prop].apply(target, args)
 
           this.#onArrayFunctionCallback(
-            EnumStateAction.SPLICE,
+            EnumStateAction.ARRAY_SPLICE,
             receiver,
             [0, 0, ...args],
           )
@@ -568,7 +365,7 @@ class StateSubscriptions {
    * @param {any[]} args
    */
   #onArrayFunctionCallback(action, updatedState, args) {
-    const subscription = this.#subscriptions.get('-s-forEach')
+    const subscription = this.#subsManager.subscriptions.get('-s-forEach')
 
     if (subscription) {
       for (let index = 0, length = subscription.length; index < length; index++) {
@@ -596,7 +393,7 @@ class StateSubscriptions {
    * @param {string | symbol} prop
    */
   #onPropCreateOrDelete(action, updatedState, prop) {
-    const subscription = this.#subscriptions.get('-s-forEach')
+    const subscription = this.#subsManager.subscriptions.get('-s-forEach')
 
     if (subscription) {
       for (let index = 0, length = subscription.length; index < length; index++) {
@@ -625,7 +422,7 @@ class StateSubscriptions {
    */
   #onPropUpdate(updatedState, prop, value) {
     // 1. When the repaint function is outside all elements
-    // const subscription = this.#subscriptions.get('-s-forEach')
+    // const subscription = this.#subscriptions.subscriptions.get('-s-forEach')
     //
     // if (subscription) {
     //   for (let index = 0, length = subscription.length; index < length; index++) {
@@ -639,8 +436,8 @@ class StateSubscriptions {
     // }
 
     // 2. Individual elements
-    if (this.#subscriptions.has(prop)) {
-      const list = this.#subscriptions.get(prop) ?? []
+    if (this.#subsManager.subscriptions.has(prop)) {
+      const list = this.#subsManager.subscriptions.get(prop) ?? []
 
       for (const listItem of list) {
         const {
@@ -652,7 +449,7 @@ class StateSubscriptions {
         } = listItem
 
         if (Object.hasOwn(element, '--deleted')) {
-          this.unsubscribe(element)
+          this.#subsManager.unsubscribe(element)
 
           return
         }
@@ -662,7 +459,7 @@ class StateSubscriptions {
         if (propertyName === 'style' && subPropertyName) {
           // @ts-ignore
           element.style[subPropertyName]
-              = modifyStyleRule(subPropertyName, result)
+            = modifyStyleRule(subPropertyName, result)
         }
         else if (
           propertyName === '--if'
@@ -690,10 +487,4 @@ class StateSubscriptions {
   }
 }
 
-export {
-  StateSubscriptions,
-  elementHasSubscriptions,
-  moveSubscriptions,
-  setSuggestItems,
-  unsetSuggestedItems,
-}
+export { StateProxy }

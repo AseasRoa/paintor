@@ -45,5 +45,5 @@ type Subscription = {
    * Used for cleaning up subscriptions from the DOM element itself,
    * when the element is being removed
    */
-  stateSubscription: import('../StateSubscriptions').StateSubscriptions;
+  stateSubscription: import('../SubscriptionsManager').SubscriptionsManager;
 }

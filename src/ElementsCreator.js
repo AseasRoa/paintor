@@ -1,5 +1,7 @@
 import { Component } from './Component.js'
+import { EnumStateAction, HTML_TAGS, symState, symTemplateFunction } from './constants.js'
 import { ElementsCollector } from './ElementsCollector.js'
+import { setSuggestedItems, unsetSuggestedItems } from './elementsSuggestor.js'
 import {
   addChildrenToStack,
   addChildToStack,
@@ -18,16 +20,13 @@ import {
   setElementAttrOrProp,
   stringToHTML,
 } from './functions.js'
-import { htmlTags } from './htmlTags.js'
 import { HtmlTemplateParser } from './HtmlTemplateParser/HtmlTemplateParser.js'
 import { isState } from './state.js'
 import {
-  elementHasSubscriptions,
+  hasSubscriptions,
   moveSubscriptions,
-  setSuggestItems,
-  unsetSuggestedItems,
-} from './StateSubscriptions.js'
-import { EnumStateAction, symState, symSubscriptions, symTemplateFunction } from './constants.js'
+  removeAllSubscriptions,
+} from './SubscriptionsManager.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol), elements: (Node)[]}>} RenderedElementsMap
@@ -94,7 +93,7 @@ class ElementsCreator {
     this.#templates = templates
     this.#translations = translations
 
-    // htmlTags.forEach((tagName) => {
+    // HTML_TAGS.forEach((tagName) => {
     //   // @ts-ignore
     //   this[tagName] = this[tagName].bind(this)
     // })
@@ -930,7 +929,7 @@ class ElementsCreator {
         /** @type {BindFunction} */
         const bindFunction = property
 
-        setSuggestItems(
+        setSuggestedItems(
           element,
           propertyName,
           '',
@@ -1053,7 +1052,7 @@ class ElementsCreator {
         const propertyName = 'style'
         const bindFunction = ruleValue
 
-        setSuggestItems(
+        setSuggestedItems(
           element,
           propertyName,
           ruleName,
@@ -1139,7 +1138,7 @@ class ElementsCreator {
       const element = commentElementBegin
       const propertyName = `--${type}` // --if or --for
 
-      setSuggestItems(
+      setSuggestedItems(
         element,
         propertyName,
         '',
@@ -1201,7 +1200,6 @@ class ElementsCreator {
       // @ts-ignore
       const stateParams = updatedState[symState]
       const updatedObject = stateParams.target
-      const subs = stateParams.subs
 
       if (!(updatedObject instanceof Object)) {
         return
@@ -1211,60 +1209,7 @@ class ElementsCreator {
         return
       }
 
-      /**
-       * Element has been deleted from the state?
-       * - Remove the DOM elements
-       * - Remove these same elements from .renderedElementsMap
-       */
-      if (action === EnumStateAction.DELETE) {
-        let index = commentElementEnd.renderedElementsMap.length
-
-        while (index--) {
-          //const item = commentElementEnd.renderedElementsMap[index]
-
-          if (!commentElementEnd.renderedElementsMap[index]) continue
-
-          const isArray = updatedObject instanceof Array
-
-          if (commentElementEnd.renderedElementsMap[index].key === prop) {
-            for (const element of commentElementEnd.renderedElementsMap[index].elements) {
-              // Delete all subscriptions for this element
-              if (symSubscriptions in element) {
-                /** @type {Subscription[]} */
-                // @ts-ignore
-                const elementSubs = element[symSubscriptions]
-                let idx = elementSubs.length
-
-                while (idx--) {
-                  if (!elementSubs[idx]) continue
-
-                  elementSubs[idx].stateSubscription.unsubscribe(element)
-                }
-
-                // @ts-ignore
-                delete element[symSubscriptions]
-              }
-
-              // Delete the element itself
-              // @ts-ignore
-              element.remove()
-            }
-
-            if (isArray) {
-              commentElementEnd.renderedElementsMap[index].elements.length = 0
-
-              delete commentElementEnd.renderedElementsMap[index]
-            }
-            else {
-              commentElementEnd.renderedElementsMap
-                = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
-            }
-
-            break
-          }
-        }
-      }
-      else if (action === EnumStateAction.CREATE) {
+      if (action === EnumStateAction.CREATE) {
         /** @type {null | string} */
         let prevKey = null
 
@@ -1356,7 +1301,70 @@ class ElementsCreator {
           this.#collectedElements.pop()
         }
       }
-      else if (action === EnumStateAction.SPLICE) {
+      else if (action === EnumStateAction.UPDATE) {
+        // if (updatedObject[prop] instanceof Object) {
+        //
+        //   const iterator = (
+        //     updatedObject instanceof Map
+        //     || updatedObject instanceof Set
+        //   )
+        //     ? updatedObject.keys()
+        //     : Object.keys(updatedObject)
+        //
+        //   for (let i of iterator) {
+        //     if (i !== prop && updatedObject[i] === updatedObject[prop]) {
+        //       console.log(prop, i)
+        //       break
+        //     }
+        //   }
+        // }
+        // else {
+        statementRepaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
+        statementRepaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
+        // }
+      }
+      /**
+       * Element has been deleted from the state?
+       * - Remove the DOM elements
+       * - Remove these same elements from .renderedElementsMap
+       */
+      if (action === EnumStateAction.DELETE) {
+        let index = commentElementEnd.renderedElementsMap.length
+
+        while (index--) {
+          //const item = commentElementEnd.renderedElementsMap[index]
+
+          if (!commentElementEnd.renderedElementsMap[index]) continue
+
+          const isArray = updatedObject instanceof Array
+
+          if (commentElementEnd.renderedElementsMap[index].key === prop) {
+            for (const element of commentElementEnd.renderedElementsMap[index].elements) {
+              // Delete all subscriptions for this element
+              if (hasSubscriptions(element)) {
+                removeAllSubscriptions(element)
+              }
+
+              // Delete the element itself
+              // @ts-ignore
+              element.remove()
+            }
+
+            if (isArray) {
+              commentElementEnd.renderedElementsMap[index].elements.length = 0
+
+              delete commentElementEnd.renderedElementsMap[index]
+            }
+            else {
+              commentElementEnd.renderedElementsMap
+                = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
+            }
+
+            break
+          }
+        }
+      }
+      else if (action === EnumStateAction.ARRAY_SPLICE) {
         if (updatedObject instanceof Array) {
           /**
            * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
@@ -1435,7 +1443,7 @@ class ElementsCreator {
 
         commentElementEnd.renderedElementsMap.length = updatedObject.length
       }
-      else if (action === EnumStateAction.SWAP) {
+      else if (action === EnumStateAction.ARRAY_SWAP) {
         const [key1, key2] = arrayFunctionArgs
 
         // change siblings
@@ -1452,7 +1460,7 @@ class ElementsCreator {
           )
         }
       }
-      else if (action === EnumStateAction.COPY_WIHTIN) {
+      else if (action === EnumStateAction.ARRAY_COPY_WITHIN) {
         let [target, start, end] = arrayFunctionArgs
 
         for (
@@ -1468,7 +1476,7 @@ class ElementsCreator {
           )
         }
       }
-      else if (action === EnumStateAction.SORT) {
+      else if (action === EnumStateAction.ARRAY_SORT) {
         for (
           let index = 0, length = updatedObject.length;
           index < length;
@@ -1482,34 +1490,12 @@ class ElementsCreator {
           )
         }
       }
-      else if (action === EnumStateAction.UPDATE) {
-        // if (updatedObject[prop] instanceof Object) {
-        //
-        //   const iterator = (
-        //     updatedObject instanceof Map
-        //     || updatedObject instanceof Set
-        //   )
-        //     ? updatedObject.keys()
-        //     : Object.keys(updatedObject)
-        //
-        //   for (let i of iterator) {
-        //     if (i !== prop && updatedObject[i] === updatedObject[prop]) {
-        //       console.log(prop, i)
-        //       break
-        //     }
-        //   }
-        // }
-        // else {
-        statementRepaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
-        statementRepaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
-        // }
-      }
     }
 
     const propertyName = `-s-${type}` // --if or --for
     const bindFunction = () => state
 
-    setSuggestItems(
+    setSuggestedItems(
       commentElementEnd,
       propertyName,
       '',
@@ -1585,7 +1571,7 @@ class ElementsCreator {
    * @param {Node} element
    */
   #unsubscribeElementAndItsChildren(element) {
-    if (elementHasSubscriptions(element)) {
+    if (hasSubscriptions(element)) {
       Object.assign(element, { '--deleted': true })
     }
 
@@ -1631,7 +1617,7 @@ const { prototype } = ElementsCreator
 // prototype.createElement.bindArgs = bindArgs
 Object.assign(prototype.createElement, { bindArgs })
 
-htmlTags.forEach((tagName) => {
+HTML_TAGS.forEach((tagName) => {
   // @ts-ignore
   prototype[tagName] = prototype.createElement.bindArgs(tagName)
 })
