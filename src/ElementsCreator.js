@@ -1192,6 +1192,62 @@ class ElementsCreator {
     this.#collectedElements[thisLevel].addElement(commentElementBegin)
 
     /**
+     * @param {State} updatedState
+     * @param {State} updatedObject
+     * @param {Node} lastElement
+     * @param {string | symbol} prop
+     */
+    const createElements = (updatedState, updatedObject, lastElement, prop) => {
+      let isTemporaryLevel = false
+
+      if (commentElementBegin.parentElement) {
+        // When the loop is in inner level, make a new temporary collector,
+        // which will be deleted after that. Otherwise, the new elements are
+        // placed on level 0
+        this.#collectedElements.push(new ElementsCollector())
+        isTemporaryLevel = true
+      }
+
+      const level = this.#collectedElements.length - 1
+      const added = callbackForState(updatedState, this.#collectedElements[level], prop)
+      const isArray = updatedObject instanceof Array
+
+      for (const item of added) {
+        if (isArray) {
+          // @ts-ignore
+          commentElementEnd.renderedElementsMap[prop] = item
+        }
+        else {
+          commentElementEnd.renderedElementsMap.push(item)
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-loop-func
+        for (const element of item.elements) {
+          if (level === 0) {
+            /**
+             * Parent element is needed in order to apply 'after'.
+             * But if for example there is a for loop (for a state) at top level and
+             * immediately after that a new element is added to the state, that new
+             * element can't be properly added after the previous one, because of the
+             * lack of parent element.
+             * Because of this, let's reorder the collected elements.
+             */
+
+            this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
+          }
+
+          // @ts-ignore
+          lastElement.after(element)
+          lastElement = element
+        }
+      }
+
+      if (isTemporaryLevel) {
+        this.#collectedElements.pop()
+      }
+    }
+
+    /**
      * TODO Refactor this function, because it's too long
      *
      * @type {StatementRepaintFunctionForState}
@@ -1253,53 +1309,7 @@ class ElementsCreator {
           }
         }
 
-        let isTemporaryLevel = false
-
-        if (commentElementBegin.parentElement) {
-          // When the loop is in inner level, make a new temporary collector,
-          // which will be deleted after that. Otherwise, the new elements are
-          // placed on level 0
-          this.#collectedElements.push(new ElementsCollector())
-          isTemporaryLevel = true
-        }
-
-        const level = this.#collectedElements.length - 1
-        const added = callbackForState(updatedState, this.#collectedElements[level], prop)
-        const isArray = updatedObject instanceof Array
-
-        for (const item of added) {
-          if (isArray) {
-            // @ts-ignore
-            commentElementEnd.renderedElementsMap[prop] = item
-          }
-          else {
-            commentElementEnd.renderedElementsMap.push(item)
-          }
-
-          // eslint-disable-next-line @typescript-eslint/no-loop-func
-          for (const element of item.elements) {
-            if (level === 0) {
-              /**
-               * Parent element is needed in order to apply 'after'.
-               * But if for example there is a for loop (for a state) at top level and
-               * immediately after that a new element is added to the state, that new
-               * element can't be properly added after the previous one, because of the
-               * lack of parent element.
-               * Because of this, let's reorder the collected elements.
-               */
-
-              this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
-            }
-
-            // @ts-ignore
-            lastElement.after(element)
-            lastElement = element
-          }
-        }
-
-        if (isTemporaryLevel) {
-          this.#collectedElements.pop()
-        }
+        createElements(updatedObject, updatedObject, lastElement, prop)
       }
       else if (action === EnumStateAction.UPDATE) {
         // if (updatedObject[prop] instanceof Object) {
@@ -1489,6 +1499,31 @@ class ElementsCreator {
             EnumStateAction.CREATE, updatedState, index.toString(), undefined,
           )
         }
+      }
+      else if (action === EnumStateAction.ARRAY_PUSH) {
+        const length = updatedObject.length
+
+        let mapIndex = commentElementEnd.renderedElementsMap.length
+        let lastElement = commentElementBegin
+
+        while (mapIndex--) {
+          const item = commentElementEnd.renderedElementsMap[mapIndex]
+
+          if (!item) continue
+
+          const elementsLength = item.elements.length
+
+          if (elementsLength > 0) {
+            // @ts-ignore
+            lastElement = item.elements[elementsLength - 1]
+
+            break
+          }
+        }
+
+        prop = (length - 1).toString()
+
+        createElements(updatedObject, updatedObject, lastElement, prop)
       }
     }
 

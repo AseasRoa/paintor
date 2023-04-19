@@ -1,15 +1,20 @@
 import { EnumStateAction, symAccess, symState } from './constants.js'
 import { suggestedItems } from './elementsSuggestor.js'
 import { modifyStyleRule, setElementAttrOrProp } from './functions.js'
+import { StateProxyArrayFunctions } from './StateProxyArrayFunctions.js'
 import { SubscriptionsManager } from './SubscriptionsManager.js'
 
 /** @typedef {Object<*, *> | Array<*>} ProxyObject */
 
 class StateProxy {
+  /** @type {StateProxyArrayFunctions} */
+  #arrayFunctions
+
   /** @type {SubscriptionsManager} */
   #subsManager
 
   constructor() {
+    this.#arrayFunctions = new StateProxyArrayFunctions()
     this.#subsManager = new SubscriptionsManager()
   }
 
@@ -166,7 +171,9 @@ class StateProxy {
           && target[prop] instanceof Function
           && typeof prop === 'string'
         ) {
-          return this.#onArrayFunction(target, receiver, prop)
+          return this.#arrayFunctions.callArrayFn(
+            prop, target, receiver, this.#onArrayFunctionCallback,
+          )
         }
 
         return target[prop]
@@ -233,138 +240,11 @@ class StateProxy {
   }
 
   /**
-   * @param {ProxyObject} target
-   * @param {State} receiver
-   * @param {string} prop
-   * @returns {Function | void}
-   */
-  #onArrayFunction(target, receiver, prop) {
-    switch (prop) {
-      case 'copyWithin': {
-        // @ts-ignore
-        return (...args) => {
-          // eslint-disable-next-line @typescript-eslint/no-shadow
-          let [targetIndex, start, end] = args
-          const { length } = target
-
-          /**
-           * Fix the arguments, according to the rules in the following link:
-           *
-           * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin
-           */
-          if (targetIndex < 0) targetIndex += length
-          else if (targetIndex < -length) targetIndex = 0
-          else if (targetIndex >= length) return
-          else if (targetIndex > start) end = length - 1
-
-          if (start < 0) start += length
-          else if (start < -length || start === undefined) start = 0
-          else if (start >= length) return
-
-          if (end < 0) end += length
-          else if (end < -length) end = 0
-          else if (end >= length || end === undefined) end = length
-          else if (end <= start) return
-
-          // Apply the function
-          const result = target[prop].apply(target, [targetIndex, start, end])
-
-          this.#onArrayFunctionCallback(
-            EnumStateAction.ARRAY_COPY_WITHIN,
-            receiver,
-            [targetIndex, start, end],
-          )
-
-          return result
-        }
-      }
-      case 'reverse': {
-        return () => {
-          const result = target[prop].apply(target)
-
-          for (let i = 0, len = target.length; i < len; i++) {
-            const j = len - 1 - i
-
-            if (i >= j) break
-
-            this.#onArrayFunctionCallback(
-              EnumStateAction.ARRAY_SWAP,
-              receiver,
-              [i, j],
-            )
-          }
-
-          return result
-        }
-      }
-      case 'shift': {
-        return () => {
-          const result = target[prop].apply(target)
-
-          this.#onArrayFunctionCallback(
-            EnumStateAction.ARRAY_SPLICE,
-            receiver,
-            [0, 1],
-          )
-
-          return result
-        }
-      }
-      case 'sort': {
-        // @ts-ignore
-        return (...args) => {
-          // @ts-ignore
-          const result = target[prop].apply(target, args)
-
-          this.#onArrayFunctionCallback(
-            EnumStateAction.ARRAY_SORT,
-            receiver,
-            args,
-          )
-
-          return result
-        }
-      }
-      case 'splice': {
-        // @ts-ignore
-        return (...args) => {
-          const result = target[prop].apply(target, args)
-
-          this.#onArrayFunctionCallback(
-            EnumStateAction.ARRAY_SPLICE,
-            receiver,
-            args,
-          )
-
-          return result
-        }
-      }
-      case 'unshift': {
-        // @ts-ignore
-        return (...args) => {
-          const result = target[prop].apply(target, args)
-
-          this.#onArrayFunctionCallback(
-            EnumStateAction.ARRAY_SPLICE,
-            receiver,
-            [0, 0, ...args],
-          )
-
-          return result
-        }
-      }
-      default: {
-        return target[prop]
-      }
-    }
-  }
-
-  /**
    * @param {EnumStateAction} action
    * @param {State} updatedState
    * @param {any[]} args
    */
-  #onArrayFunctionCallback(action, updatedState, args) {
+  #onArrayFunctionCallback = (action, updatedState, args) => {
     const subscription = this.#subsManager.subscriptions.get('-s-forEach')
 
     if (subscription) {
