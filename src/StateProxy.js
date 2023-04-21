@@ -164,8 +164,6 @@ class StateProxy {
         // Array's length is set every time after
         // adding or removing elements
         else if (target instanceof Array && prop === 'length') {
-          const prevLength = target.length
-
           target[prop] = value
 
           this.#onArrayFunctionCallback(

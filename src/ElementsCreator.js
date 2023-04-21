@@ -1588,10 +1588,13 @@ class ElementsCreator {
         }
       }
 
-      if (hasHandlerOnEmpty) {
-        if (objectLength(updatedObject) === 0 && !prop) {
-          createElements(updatedState, updatedObject, commentElementBegin, undefined)
-        }
+      if (
+        hasHandlerOnEmpty
+        // it's empty string when array function callback event is fired
+        && (!(updatedObject instanceof Array) || prop === '')
+        && objectLength(updatedObject) === 0
+      ) {
+        createElements(updatedState, updatedObject, commentElementBegin, undefined)
       }
     }
 

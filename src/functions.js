@@ -367,7 +367,7 @@ export function forEachLoop(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nothing = isProxy ? state[symAccess] : undefined
 
-    if (keyToRender === undefined && object.length === 0 && handlerOnEmpty instanceof Function) {
+    if (keyToRender === undefined && Object.keys(object).length === 0 && handlerOnEmpty instanceof Function) {
       handlerOnEmpty()
       iterationCallback?.(undefined)
     }
@@ -603,7 +603,7 @@ export function objectLength(object) {
     return object.size
   }
   else if (object instanceof Object) {
-    return object.keys().length
+    return Object.keys(object).length
   }
 
   return 0
