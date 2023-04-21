@@ -49,6 +49,25 @@ describe('State: Array', () => {
     expectSpecialCommentElementsInStatement(allElements)
   })
 
+  test('length', () => {
+    const container = document.body
+
+    const arrayState = state([ 'a', 'b', 'c' ])
+
+    component(($) => {
+      $.forState(arrayState, (value) => {
+        $.div(value)
+      })
+    }).paint(container)
+
+    arrayState.length = 1
+
+    const allElements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(allElements, ['a'])
+    expectSpecialCommentElementsInStatement(allElements)
+  })
+
   test('copyWithin()', () => {
     const container = document.body
 

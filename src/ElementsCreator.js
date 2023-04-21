@@ -1574,9 +1574,22 @@ class ElementsCreator {
 
         createElements(updatedObject, updatedObject, lastElement, prop)
       }
+      else if (action === EnumStateAction.ARRAY_LENGTH) {
+        const newLength = arrayFunctionArgs?.[0] ?? 0
+
+        if (newLength < commentElementEnd.renderedElementsMap.length) {
+          let index = commentElementEnd.renderedElementsMap.length
+
+          while (index--) {
+            statementRepaintFunction(EnumStateAction.DELETE, updatedState, index.toString(), undefined)
+
+            if (index === newLength) break
+          }
+        }
+      }
 
       if (hasHandlerOnEmpty) {
-        if (objectLength(updatedObject) === 0) {
+        if (objectLength(updatedObject) === 0 && !prop) {
           createElements(updatedState, updatedObject, commentElementBegin, undefined)
         }
       }

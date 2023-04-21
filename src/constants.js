@@ -12,6 +12,7 @@ export const EnumStateAction = Object.freeze({
   ARRAY_COPY_WITHIN: 7,
   ARRAY_SORT: 8,
   ARRAY_PUSH: 9,
+  ARRAY_LENGTH: 10,
 })
 
 /**
