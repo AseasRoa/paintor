@@ -266,9 +266,10 @@ export function appendChildrenToElement(element, children) {
  * @param {1 | 2} forLoopType
  * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} state
  * @param {ForLoopCallback<T>} handler
+ * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
  * @param {(key: number | string) => void} [beforeIterationCallback]
  * @param {string | number | symbol} [keyToRender]
- * @param {(key: number | string) => void} [iterationCallback]
+ * @param {(key: number | string | undefined) => void} [iterationCallback]
  * @returns {boolean}
  * @throws {TypeError}
  */
@@ -276,6 +277,7 @@ export function forEachLoop(
   forLoopType,
   state,
   handler,
+  handlerOnEmpty,
   beforeIterationCallback,
   keyToRender,
   iterationCallback,
@@ -298,6 +300,11 @@ export function forEachLoop(
   if (object instanceof Array) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nothing = isProxy ? state[symAccess] : undefined
+
+    if (keyToRender === undefined && object.length === 0 && handlerOnEmpty instanceof Function) {
+      handlerOnEmpty()
+      iterationCallback?.(undefined)
+    }
 
     for (const key in object) {
       if (keyToRender !== undefined && keyToRender !== key) {
@@ -328,6 +335,11 @@ export function forEachLoop(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nothing = (isProxy) ? state[symAccess] : undefined
 
+    if (keyToRender === undefined && object.size === 0 && handlerOnEmpty instanceof Function) {
+      handlerOnEmpty()
+      iterationCallback?.(undefined)
+    }
+
     for (const [key, value] of object.entries()) {
       if (keyToRender !== undefined && keyToRender !== key) {
         continue
@@ -354,6 +366,11 @@ export function forEachLoop(
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nothing = isProxy ? state[symAccess] : undefined
+
+    if (keyToRender === undefined && object.length === 0 && handlerOnEmpty instanceof Function) {
+      handlerOnEmpty()
+      iterationCallback?.(undefined)
+    }
 
     for (const key in object) {
       if (keyToRender !== undefined && keyToRender !== key) {

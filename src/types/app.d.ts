@@ -10,6 +10,7 @@ type BindFunction = (element?: Node | undefined) => any
 type StatementBindFunction = (element?: HTMLElement | undefined) => boolean
 
 type ForLoopCallback<T> = (value?: T | undefined, key?: string | number | undefined) => boolean | undefined
+type ForLoopCallbackOnEmpty = () => undefined
 
 /**
  * 1 is for "for" loop accepting JS objects as input (Object, Array, Map, Set)

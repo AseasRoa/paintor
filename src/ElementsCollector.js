@@ -115,6 +115,13 @@ class ElementsCollector {
     //   )
     // }
   }
+
+  /**
+   * @param {Node[]} elements
+   */
+  replaceElements(elements) {
+    this.elements = elements
+  }
 }
 
 export { ElementsCollector }

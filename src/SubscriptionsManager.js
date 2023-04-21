@@ -39,7 +39,11 @@ export class SubscriptionsManager {
     bindFunction,
     statementRepaintFunction,
   ) {
-    if (propertyName === '-s-if' || propertyName === '-s-forEach') {
+    if (
+      propertyName === '-s-if'
+      || propertyName === '-s-forEach'
+      || propertyName === '-s-forState'
+    ) {
       stateProp = propertyName
     }
 
@@ -102,9 +106,20 @@ export class SubscriptionsManager {
       }
     }
 
-    this.#subscriptions.forEach((subscription, key) => {
-      this.#subscriptions.set(key, subscription.filter((item) => (item.element !== element)))
-    })
+    for (const [key, subscription] of this.#subscriptions) {
+      let index = subscription.length
+
+      while (index--) {
+        if (subscription[index].element === element) {
+          subscription.splice(index, 1)
+        }
+      }
+
+      this.#subscriptions.set(key, subscription)
+
+      // The variant below works, but slower
+      //this.#subscriptions.set(key, subscription.filter((item) => (item.element !== element)))
+    }
   }
 }
 

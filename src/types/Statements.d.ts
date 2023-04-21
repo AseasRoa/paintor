@@ -69,7 +69,8 @@ export interface Statements {
     Input extends Obj,
   >(
     input : Input,
-    handler : (value : VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any
+    handler : (value : VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -81,7 +82,8 @@ export interface Statements {
     Input extends Obj,
   >(
     array : Input,
-    handler : (value : () => VariantValuesType<Input>, key : number) => boolean | any
+    handler : (value : () => VariantValuesType<Input>, key : number) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   for(

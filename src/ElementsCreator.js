@@ -16,6 +16,7 @@ import {
   insertAfter,
   isEventAttribute,
   modifyStyleRule,
+  objectLength,
   setDataSetAttributesToElement,
   setElementAttrOrProp,
   stringToHTML,
@@ -29,7 +30,7 @@ import {
 } from './SubscriptionsManager.js'
 
 /**
- * @typedef {Array<{key: (string | number | symbol), elements: (Node)[]}>} RenderedElementsMap
+ * @typedef {Array<{key: (string | number | symbol | undefined), elements: (Node)[]}>} RenderedElementsMap
  */
 
 class ElementsCreator {
@@ -369,10 +370,11 @@ class ElementsCreator {
    * @template T
    * @param {State} input
    * @param {ForLoopCallback<T>} handler
+   * @param {ForLoopCallbackOnEmpty} handlerOnEmpty
    * @returns {Node[] | Error}
    */
-  forState(input, handler) {
-    return this.#forEachLoop(2, input, handler)
+  forState(input, handler, handlerOnEmpty) {
+    return this.#forEachLoop(2, input, handler, handlerOnEmpty)
   }
 
   /**
@@ -595,9 +597,9 @@ class ElementsCreator {
 
     // Move everything collected at this level to the upper level...
     this.#collectedElements[upperLevel].importElements(this.#collectedElements[thisLevel])
-    this.#collectedElements[thisLevel].removeAllElements()
 
     // ... and clean this level
+    this.#collectedElements[thisLevel].replaceElements([]) // to keep reference
     delete this.#collectedElements[thisLevel]
     this.#collectedElements.pop()
 
@@ -667,9 +669,13 @@ class ElementsCreator {
    * @param {ForLoopType} forLoopType
    * @param {(T | function() : T) | State} input
    * @param {ForLoopCallback<T>} handler
+   * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
    * @returns {Node[] | Error}
    */
-  #forEachLoop(forLoopType, input, handler) {
+  #forEachLoop(forLoopType, input, handler, handlerOnEmpty) {
+    /** @type {Node[] | null} */
+    let renderedElementsMapOnEmpty = null
+
     /**
      * @param {any} value
      * @returns {any}
@@ -696,42 +702,79 @@ class ElementsCreator {
         let index = elementsCollector.getElements().length
 
         /**
-         * @param {number | string} key
+         * @param {number | string} [key]
          */
-        function onIteration(key) {
+        const onIteration = (key) => {
           const elementsFromCollector = elementsCollector.getElements()
           const elements = (index === 0)
             ? elementsFromCollector
             : elementsFromCollector.slice(index)
+
+          if (key === undefined) {
+            // Save the elements, so then they can be removed
+            renderedElementsMapOnEmpty = elements
+          }
+          else {
+            if (renderedElementsMapOnEmpty) {
+              for (const element of renderedElementsMapOnEmpty) {
+                this.#unsubscribeElementAndItsChildren(element)
+                // @ts-ignore
+                element.remove()
+              }
+
+              renderedElementsMapOnEmpty = null
+            }
+          }
 
           renderedElementsMap.push({ key, elements })
 
           index = elementsFromCollector.length
         }
 
-        forEachLoop(forLoopType, state, handler, beforeIterationCallback, keyToRender, onIteration)
+        forEachLoop(
+          forLoopType,
+          state,
+          handler,
+          handlerOnEmpty,
+          beforeIterationCallback,
+          keyToRender,
+          onIteration,
+        )
 
         return renderedElementsMap
       }
 
-      return this.#statementHandlerForState('forEach', input, callbackForState)
+      return this.#statementHandlerForState(
+        'forState',
+        input,
+        callbackForState,
+        handlerOnEmpty instanceof Function,
+      )
     }
 
     /**
      * @param {State} data
      */
     const callbackForFunction = (data) => {
-      forEachLoop(forLoopType, data, handler, beforeIterationCallback)
+      forEachLoop(
+        forLoopType,
+        data,
+        handler,
+        handlerOnEmpty,
+        beforeIterationCallback,
+      )
     }
+
+    const type = (forLoopType === 1) ? 'forEach' : 'forState'
 
     if (input instanceof Function) {
       return this.#statementHandlerForFunction(
         // @ts-ignore
-        'forEach', input, true, callbackForFunction,
+        type, input, true, callbackForFunction,
       )
     }
 
-    return this.#statementHandler('forEach', input, callbackForFunction)
+    return this.#statementHandler(type, input, callbackForFunction)
   }
 
   /**
@@ -1076,7 +1119,7 @@ class ElementsCreator {
   }
 
   /**
-   * @param {'if' | 'for' | 'forEach'} type
+   * @param {'if' | 'for' | 'forEach' | 'forState'} type
    * @param {any} data
    * @param {function(any): void} callback
    * @returns {Node[]}
@@ -1090,7 +1133,7 @@ class ElementsCreator {
   }
 
   /**
-   * @param {'if' | 'for' | 'forEach' | 'nest'} type
+   * @param {'if' | 'for' | 'forEach' | 'forState' | 'nest'} type
    * @param {function(): any} bindFunction
    * @param {boolean} autoAddCommentElements
    * @param {function((boolean | State | Template | Component), boolean, Comment?, Comment?): void} callbackForFunction
@@ -1168,14 +1211,15 @@ class ElementsCreator {
   }
 
   /**
-   * @param {'forEach'} type
+   * @param {'forState'} type
    * @param {any} state
    * @param {function(
    *   State, ElementsCollector, (string | number | symbol)=
    * ): RenderedElementsMap} callbackForState
+   * @param {boolean} hasHandlerOnEmpty
    * @returns {Node[]}
    */
-  #statementHandlerForState(type, state, callbackForState) {
+  #statementHandlerForState(type, state, callbackForState, hasHandlerOnEmpty) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
 
     const commentElementBegin = this.#document.createComment(`${type}-begin`)
@@ -1195,7 +1239,7 @@ class ElementsCreator {
      * @param {State} updatedState
      * @param {State} updatedObject
      * @param {Node} lastElement
-     * @param {string | symbol} prop
+     * @param {string | symbol | undefined} prop
      */
     const createElements = (updatedState, updatedObject, lastElement, prop) => {
       let isTemporaryLevel = false
@@ -1213,12 +1257,15 @@ class ElementsCreator {
       const isArray = updatedObject instanceof Array
 
       for (const item of added) {
-        if (isArray) {
-          // @ts-ignore
-          commentElementEnd.renderedElementsMap[prop] = item
-        }
-        else {
-          commentElementEnd.renderedElementsMap.push(item)
+        // prop would be undefined when using the state is empty, so don't add this item in the map
+        if (prop !== undefined) {
+          if (isArray) {
+            // @ts-ignore
+            commentElementEnd.renderedElementsMap[prop] = item
+          }
+          else {
+            commentElementEnd.renderedElementsMap.push(item)
+          }
         }
 
         // eslint-disable-next-line @typescript-eslint/no-loop-func
@@ -1351,9 +1398,7 @@ class ElementsCreator {
           if (commentElementEnd.renderedElementsMap[index].key === prop) {
             for (const element of commentElementEnd.renderedElementsMap[index].elements) {
               // Delete all subscriptions for this element
-              if (hasSubscriptions(element)) {
-                removeAllSubscriptions(element)
-              }
+              this.#unsubscribeElementAndItsChildren(element)
 
               // Delete the element itself
               // @ts-ignore
@@ -1364,6 +1409,10 @@ class ElementsCreator {
               commentElementEnd.renderedElementsMap[index].elements.length = 0
 
               delete commentElementEnd.renderedElementsMap[index]
+
+              if (index === updatedObject.length - 1) {
+
+              }
             }
             else {
               commentElementEnd.renderedElementsMap
@@ -1525,6 +1574,12 @@ class ElementsCreator {
 
         createElements(updatedObject, updatedObject, lastElement, prop)
       }
+
+      if (hasHandlerOnEmpty) {
+        if (objectLength(updatedObject) === 0) {
+          createElements(updatedState, updatedObject, commentElementBegin, undefined)
+        }
+      }
     }
 
     const propertyName = `-s-${type}` // --if or --for
@@ -1540,6 +1595,12 @@ class ElementsCreator {
 
     // In this callback the 'for' loop is called
     const added = callbackForState(state, this.#collectedElements[thisLevel])
+
+    if (added.length === 1 && added[0].key === undefined) {
+      // Initial draw on empty state. We don't want the result from it,
+      // because then it interferes.
+      added.splice(0, 1)
+    }
 
     commentElementEnd.renderedElementsMap = added
 
@@ -1608,6 +1669,7 @@ class ElementsCreator {
   #unsubscribeElementAndItsChildren(element) {
     if (hasSubscriptions(element)) {
       Object.assign(element, { '--deleted': true })
+      removeAllSubscriptions(element)
     }
 
     /**

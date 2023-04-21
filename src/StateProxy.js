@@ -65,27 +65,6 @@ class StateProxy {
   }
 
   /**
-   * This is called when "length" of an array is changed, which
-   * happens when elements are being added or popped from the end
-   * of the array. Not when delete is being used!
-   *
-   * @param {any[]} updatedState
-   */
-  // #onArrayLengthChange(updatedState) {
-  //   const subscription = this.#subscriptions.subscriptions.get('-s-forEach')
-  //
-  //   if (subscription) {
-  //     subscription.forEach((listItem) => {
-  //       const { statementRepaintFunction } = listItem
-  //
-  //       if (statementRepaintFunction instanceof Function) {
-  //         statementRepaintFunction(updatedState)
-  //       }
-  //     })
-  //   }
-  // }
-
-  /**
    * @returns {ProxyHandler<ProxyObject>}
    */
   #createProxyHandler() {
@@ -187,6 +166,13 @@ class StateProxy {
         else if (target instanceof Array && prop === 'length') {
           target[prop] = value
 
+          if (value === 0) {
+            // When pop() is applied to an Array, deleteProperty() is called,
+            // but the length of the Array is set to the same length before
+            // and one empty element remains at the end. However, if there is
+            // only one empty element left, at the end 'length' is set to 0.
+            this.#onPropDelete(target, prop)
+          }
           // this.#onArrayLengthChange(receiver)
         }
         else if (Object.hasOwn(target, prop)) {
@@ -245,7 +231,7 @@ class StateProxy {
    * @param {any[]} args
    */
   #onArrayFunctionCallback = (action, updatedState, args) => {
-    const subscription = this.#subsManager.subscriptions.get('-s-forEach')
+    const subscription = this.#subsManager.subscriptions.get('-s-forState')
 
     if (subscription) {
       for (let index = 0, length = subscription.length; index < length; index++) {
@@ -258,6 +244,27 @@ class StateProxy {
       }
     }
   }
+
+  /**
+   * This is called when "length" of an array is changed, which
+   * happens when elements are being added or popped from the end
+   * of the array. Not when delete is being used!
+   *
+   * @param {any[]} updatedState
+   */
+  // #onArrayLengthChange(updatedState) {
+  //   const subscription = this.#subscriptions.subscriptions.get('-s-forState')
+  //
+  //   if (subscription) {
+  //     subscription.forEach((listItem) => {
+  //       const { statementRepaintFunction } = listItem
+  //
+  //       if (statementRepaintFunction instanceof Function) {
+  //         statementRepaintFunction(updatedState)
+  //       }
+  //     })
+  //   }
+  // }
 
   /**
    * @param {State} updatedState
@@ -273,7 +280,7 @@ class StateProxy {
    * @param {string | symbol} prop
    */
   #onPropCreateOrDelete(action, updatedState, prop) {
-    const subscription = this.#subsManager.subscriptions.get('-s-forEach')
+    const subscription = this.#subsManager.subscriptions.get('-s-forState')
 
     if (subscription) {
       for (let index = 0, length = subscription.length; index < length; index++) {
@@ -302,7 +309,7 @@ class StateProxy {
    */
   #onPropUpdate(updatedState, prop, value) {
     // 1. When the repaint function is outside all elements
-    // const subscription = this.#subscriptions.subscriptions.get('-s-forEach')
+    // const subscription = this.#subscriptions.subscriptions.get('-s-forState')
     //
     // if (subscription) {
     //   for (let index = 0, length = subscription.length; index < length; index++) {

@@ -1,4 +1,5 @@
 import { component, state } from '../src/paintor.js'
+import { expectTextContentsToBeLike } from './functions.js'
 
 describe('State', () => {
   const id = 'container'
@@ -131,5 +132,55 @@ describe('State', () => {
     globalState.item.color = 'blue'
     expect(div.textContent).toBe('item:blue')
     expect(div.style.color).toBe('blue')
+  })
+
+  test('(DOM) forState() with fallback handler', () => {
+    const container = document.body
+
+    /** @type {string[]} */
+    const globalState = state([])
+
+    component(($) => {
+      $.ul(
+        $.forState(
+          globalState,
+          (item, key) => {
+            $.li(item)
+          },
+          () => {
+            $.li('initial')
+          },
+        ),
+      )
+    }).paint(container)
+
+    // Initially we have no <li> elements
+    let ul = container.getElementsByTagName('ul')[0]
+
+    expectTextContentsToBeLike(ul.childNodes, [
+      'forState-begin',
+      'initial',
+      'forState-end',
+    ])
+
+    globalState.push('something')
+
+    ul = container.getElementsByTagName('ul')[0]
+
+    expectTextContentsToBeLike(ul.childNodes, [
+      'forState-begin',
+      'something',
+      'forState-end',
+    ])
+
+    globalState.pop()
+
+    ul = container.getElementsByTagName('ul')[0]
+
+    expectTextContentsToBeLike(ul.childNodes, [
+      'forState-begin',
+      'initial',
+      'forState-end',
+    ])
   })
 })
