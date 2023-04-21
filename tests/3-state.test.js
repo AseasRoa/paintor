@@ -182,5 +182,27 @@ describe('State', () => {
       'initial',
       'forState-end',
     ])
+
+    // Now try when .length is used to clear the array
+
+    globalState.push('something')
+
+    ul = container.getElementsByTagName('ul')[0]
+
+    expectTextContentsToBeLike(ul.childNodes, [
+      'forState-begin',
+      'something',
+      'forState-end',
+    ])
+
+    globalState.length = 0
+
+    ul = container.getElementsByTagName('ul')[0]
+
+    expectTextContentsToBeLike(ul.childNodes, [
+      'forState-begin',
+      'initial',
+      'forState-end',
+    ])
   })
 })
