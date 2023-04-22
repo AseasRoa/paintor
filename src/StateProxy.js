@@ -2,7 +2,7 @@ import { EnumStateAction, symAccess, symState } from './constants.js'
 import { suggestedItems } from './elementsSuggestor.js'
 import { modifyStyleRule, setElementAttrOrProp } from './functions.js'
 import { StateProxyArrayFunctions } from './StateProxyArrayFunctions.js'
-import { SubscriptionsManager } from './SubscriptionsManager.js'
+import { StateProxySubscriptions } from './StateProxySubscriptions.js'
 
 /** @typedef {Object<*, *> | Array<*>} ProxyObject */
 
@@ -10,12 +10,12 @@ class StateProxy {
   /** @type {StateProxyArrayFunctions} */
   #arrayFunctions
 
-  /** @type {SubscriptionsManager} */
-  #subsManager
+  /** @type {StateProxySubscriptions} */
+  #subs
 
   constructor() {
     this.#arrayFunctions = new StateProxyArrayFunctions()
-    this.#subsManager = new SubscriptionsManager()
+    this.#subs = new StateProxySubscriptions()
   }
 
   /**
@@ -91,7 +91,7 @@ class StateProxy {
             suggestedItems.element
             && suggestedItems.bindFunction
           ) {
-            this.#subsManager.subscribe(
+            this.#subs.subscribe(
               target,
               prop,
               suggestedItems.element,
@@ -226,15 +226,17 @@ class StateProxy {
    * @param {any[]} args
    */
   #onArrayFunctionCallback = (action, updatedState, args) => {
-    const subscription = this.#subsManager.subscriptions.get('-s-forState')
+    const subscriptions = this.#subs.subscriptions.get('-s-forState')
 
-    if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
-        const { statementRepaintFunction } = subscription[index]
+    if (subscriptions) {
+      for (const [element, elementSubscriptions] of subscriptions) {
+        for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
+          const { statementRepaintFunction } = elementSubscriptions[index]
 
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(action, updatedState, '', args)
+          if (statementRepaintFunction) {
+            // @ts-ignore
+            statementRepaintFunction(action, updatedState, '', args)
+          }
         }
       }
     }
@@ -254,15 +256,17 @@ class StateProxy {
    * @param {string | symbol} prop
    */
   #onPropCreateOrDelete(action, updatedState, prop) {
-    const subscription = this.#subsManager.subscriptions.get('-s-forState')
+    const subscriptions = this.#subs.subscriptions.get('-s-forState')
 
-    if (subscription) {
-      for (let index = 0, length = subscription.length; index < length; index++) {
-        const { statementRepaintFunction } = subscription[index]
+    if (subscriptions) {
+      for (const [element, elementSubscriptions] of subscriptions) {
+        for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
+          const { statementRepaintFunction } = elementSubscriptions[index]
 
-        if (statementRepaintFunction) {
-          // @ts-ignore
-          statementRepaintFunction(action, updatedState, prop)
+          if (statementRepaintFunction) {
+            // @ts-ignore
+            statementRepaintFunction(action, updatedState, prop)
+          }
         }
       }
     }
@@ -297,51 +301,54 @@ class StateProxy {
     // }
 
     // 2. Individual elements
-    if (this.#subsManager.subscriptions.has(prop)) {
-      const list = this.#subsManager.subscriptions.get(prop) ?? []
+    if (this.#subs.subscriptions.has(prop)) {
+      const subscriptions = this.#subs.subscriptions.get(prop)
 
-      for (const listItem of list) {
-        const {
-          element,
-          propertyName,
-          subPropertyName,
-          bindFunction,
-          statementRepaintFunction,
-        } = listItem
+      if (subscriptions) {
+        for (const [element, elementSubscriptions] of subscriptions) {
+          for (const subscription of elementSubscriptions) {
+            const {
+              propertyName,
+              subPropertyName,
+              bindFunction,
+              statementRepaintFunction,
+            } = subscription
 
-        if (Object.hasOwn(element, '--deleted')) {
-          this.#subsManager.unsubscribe(element)
+            if (Object.hasOwn(element, '--deleted')) {
+              this.#subs.unsubscribe(element)
 
-          return
-        }
+              return
+            }
 
-        let result = bindFunction.call(element, element)
+            let result = bindFunction.call(element, element)
 
-        if (propertyName === 'style' && subPropertyName) {
-          // @ts-ignore
-          element.style[subPropertyName]
-            = modifyStyleRule(subPropertyName, result)
-        }
-        else if (
-          propertyName === '--if'
-          || propertyName === '--for'
-          || propertyName === '--nest'
-        ) {
-          if (statementRepaintFunction) {
-            // @ts-ignore
-            statementRepaintFunction(result)
+            if (propertyName === 'style' && subPropertyName) {
+              // @ts-ignore
+              element.style[subPropertyName]
+                = modifyStyleRule(subPropertyName, result)
+            }
+            else if (
+              propertyName === '--if'
+              || propertyName === '--for'
+              || propertyName === '--nest'
+            ) {
+              if (statementRepaintFunction) {
+                // @ts-ignore
+                statementRepaintFunction(result)
+              }
+            }
+            else {
+              /**
+               * @see Remark "() => value"
+               */
+              if (result instanceof Function) {
+                result = result()
+              }
+
+              // @ts-ignore
+              setElementAttrOrProp(element, propertyName, result)
+            }
           }
-        }
-        else {
-          /**
-           * @see Remark "() => value"
-           */
-          if (result instanceof Function) {
-            result = result()
-          }
-
-          // @ts-ignore
-          setElementAttrOrProp(element, propertyName, result)
         }
       }
     }

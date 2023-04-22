@@ -27,7 +27,7 @@ import {
   hasSubscriptions,
   moveSubscriptions,
   removeAllSubscriptions,
-} from './SubscriptionsManager.js'
+} from './StateProxySubscriptions.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol | undefined), elements: (Node)[]}>} RenderedElementsMap

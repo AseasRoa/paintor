@@ -1,7 +1,7 @@
 import { symSubscriptions } from './constants.js'
 
-export class SubscriptionsManager {
-  /** @type {Map<string | symbol, Subscription[]>} */
+export class StateProxySubscriptions {
+  /** @type {Map<string | symbol, Map<Node | Element | Comment | Text, Subscription[]>>} */
   #subscriptions = new Map()
 
   get subscriptions() {
@@ -48,17 +48,22 @@ export class SubscriptionsManager {
     }
 
     if (!this.#subscriptions.has(stateProp)) {
-      this.#subscriptions.set(stateProp, [])
+      this.#subscriptions.set(stateProp, new Map())
     }
 
-    const subscriptions = this.#subscriptions.get(stateProp) ?? []
+    const subscriptions = this.#subscriptions.get(stateProp) ?? new Map()
+
+    if (!subscriptions.has(element)) {
+      subscriptions.set(element, [])
+    }
+
+    const elementSubscriptions = subscriptions.get(element)
 
     // Search for a subscription with the same parameters.
     // If such already exists, just don't create a new one.
-    for (const item of subscriptions) {
+    for (const item of elementSubscriptions) {
       if (
-        item.element === element
-        && item.propertyName === propertyName
+        item.propertyName === propertyName
         && item.subPropertyName === subPropertyName
         && item.bindFunction === bindFunction
         && item.statementRepaintFunction === statementRepaintFunction
@@ -69,7 +74,6 @@ export class SubscriptionsManager {
      * @type {Subscription}
      */
     const subscription = {
-      element,
       propertyName,
       subPropertyName,
       bindFunction,
@@ -77,7 +81,7 @@ export class SubscriptionsManager {
       stateSubscription: this,
     }
 
-    subscriptions.push(subscription)
+    elementSubscriptions.push(subscription)
 
     // @ts-ignore
     element[symSubscriptions] ??= []
@@ -106,19 +110,8 @@ export class SubscriptionsManager {
       }
     }
 
-    for (const [key, subscription] of this.#subscriptions) {
-      let index = subscription.length
-
-      while (index--) {
-        if (subscription[index].element === element) {
-          subscription.splice(index, 1)
-        }
-      }
-
-      this.#subscriptions.set(key, subscription)
-
-      // The variant below works, but slower
-      //this.#subscriptions.set(key, subscription.filter((item) => (item.element !== element)))
+    for (const [key, subscriptions] of this.#subscriptions) {
+      subscriptions.delete(element)
     }
   }
 }
@@ -158,7 +151,6 @@ export function moveSubscriptions(fromElement, toElement, bindFunction, newSubsc
         /**
          * 1. Move the subscription record
          */
-        subscription.element = toElement
 
         if (newSubscriptionProperties) {
           for (const prop in newSubscriptionProperties) {

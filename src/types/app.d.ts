@@ -34,7 +34,6 @@ type StatementRepaintFunction = StatementRepaintFunctionForFunction | StatementR
  * A single subscriptions record
  */
 type Subscription = {
-  element: Element | Comment | Text;
   propertyName: string;
   subPropertyName: string;
   bindFunction: BindFunction;
@@ -46,5 +45,5 @@ type Subscription = {
    * Used for cleaning up subscriptions from the DOM element itself,
    * when the element is being removed
    */
-  stateSubscription: import('../SubscriptionsManager').SubscriptionsManager;
+  stateSubscription: import('../StateProxySubscriptions').StateProxySubscriptions;
 }
