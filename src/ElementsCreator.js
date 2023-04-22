@@ -1410,9 +1410,9 @@ class ElementsCreator {
 
               delete commentElementEnd.renderedElementsMap[index]
 
-              if (index === updatedObject.length - 1) {
-
-              }
+              // if (index === updatedObject.length - 1) {
+              //   commentElementEnd.renderedElementsMap.length = updatedObject.length
+              // }
             }
             else {
               commentElementEnd.renderedElementsMap
@@ -1581,10 +1581,19 @@ class ElementsCreator {
           let index = commentElementEnd.renderedElementsMap.length
 
           while (index--) {
-            statementRepaintFunction(EnumStateAction.DELETE, updatedState, index.toString(), undefined)
+            if (index < newLength) break
 
-            if (index === newLength) break
+            // Skip if already deleted.
+            if (commentElementEnd.renderedElementsMap[index] === undefined) {
+              continue
+            }
+
+            statementRepaintFunction(EnumStateAction.DELETE, updatedState, index.toString(), undefined)
           }
+        }
+
+        if (updatedObject instanceof Array) {
+          commentElementEnd.renderedElementsMap.length = updatedObject.length
         }
       }
 
