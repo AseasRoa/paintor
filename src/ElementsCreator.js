@@ -711,6 +711,11 @@ class ElementsCreator {
             : elementsFromCollector.slice(index)
 
           if (key === undefined) {
+            if (renderedElementsMapOnEmpty) {
+              // Elements are rendered already, stop here
+              return
+            }
+
             // Save the elements, so then they can be removed
             renderedElementsMapOnEmpty = elements
           }

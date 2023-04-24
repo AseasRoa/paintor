@@ -23,6 +23,8 @@ interface Component {
   useTranslations : (...translations: Translation[]) => Component,
 }
 
+declare module 'src/Component.js'
+
 declare module 'paintor' {
   export { Component } from 'src/Component.js'
 
