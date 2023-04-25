@@ -28,7 +28,15 @@ function template(from) {
   return from
 }
 
-const paintor = { component, state, template, fetchTranslations, Component }
+/**
+ * @param {Function} func
+ * @returns {boolean}
+ */
+function isTemplate(func) {
+  return (func instanceof Function) && (symTemplateFunction in func)
+}
+
+const paintor = { component, state, isTemplate, template, fetchTranslations, Component }
 
 export default paintor
-export { paintor, component, state, template, fetchTranslations, Component }
+export { paintor, component, state, isTemplate, template, fetchTranslations, Component }
