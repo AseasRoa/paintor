@@ -184,8 +184,8 @@ class ElementsCreator {
       }
       else if (argument instanceof Component) {
         const generatedChildren = (this.#isSr)
-          ? argument.getElementsSr()
-          : argument.getElements()
+          ? argument.useTranslations(this.#translations).getElementsSr()
+          : argument.useTranslations(this.#translations).getElements()
 
         for (const childrenGroup of generatedChildren) {
           for (const child of childrenGroup) {
@@ -240,8 +240,8 @@ class ElementsCreator {
                       if (value instanceof Function || value instanceof Component) {
                         if (value instanceof Component) {
                           const generatedChildren = (this.#isSr)
-                            ? value.getElementsSr()
-                            : value.getElements()
+                            ? value.useTranslations(this.#translations).getElementsSr()
+                            : value.useTranslations(this.#translations).getElements()
 
                           if (isInitialRun) {
                             addChildToStack(commentElementBegin, children)
@@ -462,8 +462,8 @@ class ElementsCreator {
       if (Boolean(data)) {
         if (handler instanceof Component) {
           const generatedChildren = (this.#isSr)
-            ? handler.getElementsSr()
-            : handler.getElements()
+            ? handler.useTranslations(this.#translations).getElementsSr()
+            : handler.useTranslations(this.#translations).getElements()
 
           const level = this.#collectedElements.length - 1
 
@@ -476,8 +476,8 @@ class ElementsCreator {
       else {
         if (elseHandler instanceof Component) {
           const generatedChildren = (this.#isSr)
-            ? elseHandler.getElementsSr()
-            : elseHandler.getElements()
+            ? elseHandler.useTranslations(this.#translations).getElementsSr()
+            : elseHandler.useTranslations(this.#translations).getElements()
 
           const level = this.#collectedElements.length - 1
 
@@ -551,8 +551,10 @@ class ElementsCreator {
               if (!(value instanceof Component)) break
 
               const generatedChildren = (this.#isSr)
-                ? value.getElementsSr()
-                : value.getElements()
+                // @ts-ignore
+                ? value.useTranslations(this.#translations).getElementsSr()
+                // @ts-ignore
+                : value.useTranslations(this.#translations).getElements()
 
               for (const childrenGroup of generatedChildren) {
                 this.#collectedElements[0].addElements(childrenGroup)
