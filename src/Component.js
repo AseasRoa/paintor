@@ -42,6 +42,9 @@ class Component {
   /** @type {string} */
   #selectorNonId = ''
 
+  /** @type {Map<Translation | null, Node[][]>} */
+  #staticFinalElements = new Map()
+
   /** @type {Map<Translation | null, string>} */
   #staticHtmlCodes = new Map()
 
@@ -55,6 +58,10 @@ class Component {
    * @returns {Node[][]}
    */
   getElements() {
+    if (this.#isStatic) {
+      return this.#getElementsAsStatic(null)
+    }
+
     this.#render(null, window, true)
 
     return this.#finalElements
@@ -64,6 +71,10 @@ class Component {
    * @returns {Node[][]}
    */
   getElementsSr() {
+    if (this.#isStatic) {
+      return this.#getElementsAsStatic('')
+    }
+
     const window = this.#getSrWindow()
 
     this.#render('', window, true)
@@ -223,6 +234,26 @@ class Component {
         }
       }
     }
+  }
+
+  /**
+   * @param {string | null} container
+   * @returns {Node[][]}
+   */
+  #getElementsAsStatic(container) {
+    const key = this.#translations[0] ?? null
+
+    if (!this.#staticFinalElements.has(key)) {
+      const window = this.#getSrWindow()
+
+      this.#render(container, window, true)
+      this.#staticFinalElements.set(
+        key,
+        this.#finalElements,
+      )
+    }
+
+    return this.#staticFinalElements.get(key) ?? []
   }
 
   /**
