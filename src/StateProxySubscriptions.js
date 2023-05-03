@@ -180,6 +180,10 @@ export function removeAllSubscriptions(element) {
   /** @type {Subscription[]} */
   // @ts-ignore
   const elementSubs = element[symSubscriptions]
+
+  // No subscriptions to remove -> return
+  if (elementSubs === undefined) return
+
   let idx = elementSubs.length
 
   while (idx--) {
