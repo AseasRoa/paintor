@@ -187,8 +187,10 @@ class ElementsCreator {
           ? argument.useTranslations(this.#translations).getElementsSr()
           : argument.useTranslations(this.#translations).getElements()
 
-        for (const childrenGroup of generatedChildren) {
-          for (const child of childrenGroup) {
+        const { length } = generatedChildren
+
+        if (length > 0) {
+          for (const child of generatedChildren[length - 1]) {
             addChildToStack(child, children)
           }
         }
