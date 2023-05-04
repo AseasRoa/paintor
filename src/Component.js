@@ -18,7 +18,7 @@ class Component {
   /**
    * The main element in which to append all the contents
    *
-   * @type {HTMLElement[] | HTMLCollection}
+   * @type {(Node | Element | HTMLElement)[]}
    */
   #containerDOMElements = []
 
@@ -74,6 +74,45 @@ class Component {
     this.#finalHtmlCode = ''
 
     this.#staticFinalElements.clear()
+    this.#staticHtmlCodes.clear()
+  }
+
+  /**
+   * Clear the elements created by this Component, but only for particular container
+   *
+   * @param {Node} containerElement
+   */
+  #clearForContainer(containerElement) {
+    let indexFound = -1
+    let i = -1
+
+    for (const container of this.#containerDOMElements) {
+      i++
+
+      if (containerElement === container) {
+        indexFound = i
+      }
+    }
+
+    if (indexFound === -1) {
+      return
+    }
+
+    delete this.#containerDOMElements[indexFound]
+
+    for (const element of this.#finalElements[indexFound]) {
+      removeAllSubscriptions(element)
+      // @ts-ignore
+      element.remove()
+    }
+
+    delete this.#finalElements[indexFound]
+    this.#finalHtmlCode = ''
+
+    for (const [translation, elements] of this.#staticFinalElements) {
+      delete elements[indexFound]
+    }
+
     this.#staticHtmlCodes.clear()
   }
 
@@ -295,7 +334,6 @@ class Component {
    * @param {Window} window
    * @param {Translation[]} translations
    * @param {(Template | Component)[]} templates
-   * @returns {boolean}
    * @throws {Error}
    */
   #init(container, window, translations, templates) {
@@ -309,8 +347,6 @@ class Component {
     this.#initContainer(container, window)
     this.#initTranslations(translations)
     this.#initTemplates(templates)
-
-    return true
   }
 
   /**
@@ -333,10 +369,11 @@ class Component {
           this.#selectorNonId = container
         }
 
-        // @ts-ignore
-        this.#containerDOMElements = (isSr)
+        const nodeList = (isSr)
           ? [window.document.createElement('#container')]
           : window.document.querySelectorAll(container)
+
+        this.#containerDOMElements = Array.from(nodeList)
 
         if (!this.#containerDOMElements) {
           throw new Error(`Could not find an element by the following query: ${container}`)
@@ -350,7 +387,7 @@ class Component {
       container instanceof NodeList
       || container instanceof HTMLCollection
     ) {
-      this.#containerDOMElements = container
+      this.#containerDOMElements = Array.from(container)
     }
     else if (container instanceof Array) {
       for (const element of container) {
@@ -499,9 +536,8 @@ class Component {
 
             const removedNodes = mutation.removedNodes
 
-            // TODO Make this aware of different container elements
-            if (removedNodes.length > 0) {
-              this.clear()
+            for (let node of removedNodes) {
+              this.#clearForContainer(node)
             }
           }
         })
@@ -517,6 +553,7 @@ class Component {
       }
       else {
         for (const containerElement of this.#containerDOMElements) {
+          // @ts-ignore
           this.#renderElements(window, containerElement, templates, translations, htmlOptions)
         }
       }
