@@ -14,7 +14,8 @@ type Template = (tree : TemplateTree) => (
 type Translation = Record<string, any>
 
 interface Component {
-  component: (...from: (Template | Component)[]) => Component,
+  // component: (...from: (Template | Component)[]) => Component,
+  clear: () => void,
   html: (options?: { indent?:string }) => string,
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   static: (on?: boolean) => Component,

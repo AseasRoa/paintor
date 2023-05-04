@@ -6,6 +6,8 @@ import {
 } from './functions.js'
 import { Window as SrWindow } from './SrDOM/Window.js'
 import { state } from './state.js'
+import { removeAllSubscriptions } from './StateProxySubscriptions.js'
+
 
 const isBrowserEnv = isBrowserEnvironment()
 const srWindow = new SrWindow()
@@ -53,6 +55,27 @@ class Component {
 
   /** @type {Translation[]} */
   #translations = []
+
+  #initialized = false
+
+  /**
+   * Clear the elements created by this Component
+   */
+  clear() {
+    for (const elements of this.#finalElements) {
+      for (const element of elements) {
+        removeAllSubscriptions(element)
+        // @ts-ignore
+        element.remove()
+      }
+    }
+
+    this.#finalElements.length = 0
+    this.#finalHtmlCode = ''
+
+    this.#staticFinalElements.clear()
+    this.#staticHtmlCodes.clear()
+  }
 
   /**
    * @returns {Node[][]}
@@ -276,6 +299,10 @@ class Component {
    * @throws {Error}
    */
   #init(container, window, translations, templates) {
+    if (this.#initialized) return
+
+    this.#initialized = true
+
     this.#finalElements.length = 0
     this.#finalHtmlCode = ''
 
@@ -405,6 +432,18 @@ class Component {
     if (this.#renderCustomElements) {
       // Custom Elements
 
+      // Already defined?
+      if (customElements.get(this.#selector)) {
+        // Re-render all custom element
+        const customElements = document.getElementsByTagName(this.#selector)
+
+        for (const customElement of customElements) {
+          this.#renderElements(window, customElement.shadowRoot, templates, translations, htmlOptions)
+        }
+
+        return
+      }
+
       /**
        * @param {Component} component
        * @returns {CustomElementConstructor}
@@ -422,6 +461,10 @@ class Component {
             }
 
             component.#renderElements(window, this.shadowRoot, templates, translations, htmlOptions)
+          }
+
+          disconnectedCallback() {
+            component.clear()
           }
         }
       }
@@ -454,6 +497,12 @@ class Component {
               // }
             }
 
+            const removedNodes = mutation.removedNodes
+
+            // TODO Make this aware of different container elements
+            if (removedNodes.length > 0) {
+              this.clear()
+            }
           }
         })
 

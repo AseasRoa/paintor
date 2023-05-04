@@ -6,9 +6,9 @@
 type VariantKeysType<T> = T extends Map<infer K, any>
   ? K
   : T extends Set<any>
-    ? number
+    ? undefined
     : T extends Array<any>
-      ? number
+      ? string
       : T extends Record<infer K, any>
         ? K
         : T extends (...args: any[]) => infer F
@@ -55,7 +55,7 @@ export interface Statements {
     Input extends Obj | (() => (Obj)),
   >(
     array : Input,
-    handler : (value : VariantValuesType<Input>, key : number) => boolean | any
+    handler : (value : VariantValuesType<Input>, key : string) => boolean | any
   ) : HTMLElement[] | Error
 
   /**
