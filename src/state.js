@@ -21,7 +21,7 @@ const state = function state(object) {
   stateIdCounter += 1
 
   // @ts-ignore
-  proxy[symState] = { id: stateIdCounter, target: object }
+  // proxy[symState] = { id: stateIdCounter, target: object }
 
   return proxy
 }

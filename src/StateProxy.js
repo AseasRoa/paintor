@@ -61,6 +61,12 @@ class StateProxy {
       proxy[key] = this.createProxy(proxy[key], innerStatePath)
     }
 
+    if (object instanceof Object) {
+      if (!(symState in proxy)) {
+        proxy[symState] = { target: object }
+      }
+    }
+
     return proxy
   }
 
@@ -71,6 +77,11 @@ class StateProxy {
     /** @type {ProxyHandler<ProxyObject>} */
     const handler = {
       get: (target, prop, receiver) => {
+        // If the target is a Proxy, get the original target
+        if (symState in target) {
+          target = target[symState].target
+        }
+
         if (prop === symState) {
           return target[prop]
         }
