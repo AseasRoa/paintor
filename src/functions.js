@@ -21,6 +21,8 @@ export function getGlobalObject() {
 export function format(fmt, ...args) {
   const re = /(%?)(%([ojdsif]))/g
 
+  fmt = fmt ?? ''
+
   if (args.length > 0) {
     /**
      * @param {string} match
