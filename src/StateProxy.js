@@ -3,6 +3,7 @@ import { suggestedItems } from './elementsSuggestor.js'
 import { modifyStyleRule, setElementAttrOrProp } from './functions.js'
 import { StateProxyArrayFunctions } from './StateProxyArrayFunctions.js'
 import { StateProxySubscriptions } from './StateProxySubscriptions.js'
+import { isState } from './state.js'
 
 /** @typedef {Object<*, *> | Array<*>} ProxyObject */
 
@@ -53,6 +54,10 @@ class StateProxy {
     // and turn them into child states.
     for (const key in proxy) {
       if (!(proxy[key] instanceof Object)) {
+        continue
+      }
+
+      if (isState(proxy[key])) {
         continue
       }
 
@@ -182,7 +187,10 @@ class StateProxy {
           )
         }
         else if (Object.hasOwn(target, prop)) {
-          if (value instanceof Object) {
+          if (
+            value instanceof Object
+            && !(isState(value)) // prevents infinite loop
+          ) {
             target[prop] = this.createProxy(value)
 
             this.#onPropDelete(receiver, prop)
@@ -191,11 +199,15 @@ class StateProxy {
           else {
             target[prop] = value
 
+            this.#onPropUpdateInForState(receiver, prop, value)
             this.#onPropUpdate(receiver, prop, value)
           }
         }
         else {
-          if (value instanceof Object) {
+          if (
+            value instanceof Object
+            && !(isState(value))
+          ) {
             target[prop] = this.createProxy(value)
           }
           else {
@@ -297,21 +309,6 @@ class StateProxy {
    * @param {any} value
    */
   #onPropUpdate(updatedState, prop, value) {
-    // 1. When the repaint function is outside all elements
-    // const subscription = this.#subscriptions.subscriptions.get('-s-forState')
-    //
-    // if (subscription) {
-    //   for (let index = 0, length = subscription.length; index < length; index++) {
-    //     const { statementRepaintFunction } = subscription[index]
-    //
-    //     if (statementRepaintFunction) {
-    //       // @ts-ignore
-    //       statementRepaintFunction(EnumStateAction.UPDATE, updatedState, prop)
-    //     }
-    //   }
-    // }
-
-    // 2. Individual elements
     if (this.#subs.subscriptions.has(prop)) {
       const subscriptions = this.#subs.subscriptions.get(prop)
 
@@ -359,6 +356,28 @@ class StateProxy {
               // @ts-ignore
               setElementAttrOrProp(element, propertyName, result)
             }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @param {State} updatedState
+   * @param {string | symbol} prop
+   * @param {any} value
+   */
+  #onPropUpdateInForState(updatedState, prop, value) {
+    const subscriptions = this.#subs.subscriptions.get('-s-forState')
+
+    if (subscriptions) {
+      for (const [element, elementSubscriptions] of subscriptions) {
+        for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
+          const { statementRepaintFunction } = elementSubscriptions[index]
+
+          if (statementRepaintFunction) {
+            // @ts-ignore
+            statementRepaintFunction(EnumStateAction.UPDATE, updatedState, prop)
           }
         }
       }
