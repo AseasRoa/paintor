@@ -30,6 +30,25 @@ describe('State: Array', () => {
     document.body.innerHTML = ''
   })
 
+  test('update', () => {
+    const container = document.body
+
+    const arrayState = state([ 'a', 'b', 'c' ])
+
+    component(($) => {
+      $.forState(arrayState, (value) => {
+        $.div(value)
+      })
+    }).paint(container)
+
+    arrayState[1] = 'updated'
+
+    const allElements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(allElements, ['a', 'updated', 'c'])
+    expectSpecialCommentElementsInStatement(allElements)
+  })
+
   test('delete', () => {
     const container = document.body
 
