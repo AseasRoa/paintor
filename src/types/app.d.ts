@@ -46,4 +46,5 @@ type Subscription = {
    * when the element is being removed
    */
   stateSubscription: import('../StateProxySubscriptions').StateProxySubscriptions;
+  statePath: string;
 }

@@ -37,8 +37,15 @@ class StateProxy {
       throw new Error('Cannot create a Proxy on non-object')
     }
 
+    if (
+      isState(object)
+      || object instanceof Date
+    ) {
+      return object
+    }
+
     const handler = this.#createProxyHandler()
-    const proxy = new Proxy(object, handler)
+    const proxy   = new Proxy(object, handler)
 
     // Store the path to the state in a special value in the
     // proxy object, but make that value invisible for "for"
@@ -50,26 +57,31 @@ class StateProxy {
     //   value: statePath,
     // })
 
-    // Recursive proxy. To find all inner objects
-    // and turn them into child states.
-    for (const key in proxy) {
-      if (!(proxy[key] instanceof Object)) {
+    if (object instanceof Object) {
+      if (!(symState in proxy)) {
+        proxy[symState] = { target: object, path: statePath }
+      }
+    }
+
+    /**
+     * Recursive proxy. To find all inner objects and turn them into child states.
+     * Access to the original object instead of the proxy object whenever possible,
+     * because accessing a proxy has worse performance.
+     */
+    for (const key in object) {
+      // @ts-ignore
+      if (!(object[key] instanceof Object)) {
         continue
       }
 
-      if (isState(proxy[key])) {
+      if (symState in proxy[key]) {
         continue
       }
 
       const innerStatePath = (statePath === '') ? key : `${statePath}.${key}`
 
-      proxy[key] = this.createProxy(proxy[key], innerStatePath)
-    }
-
-    if (object instanceof Object) {
-      if (!(symState in proxy)) {
-        proxy[symState] = { target: object }
-      }
+      // @ts-ignore
+      proxy[key] = this.createProxy(object[key], innerStatePath)
     }
 
     return proxy
@@ -189,12 +201,47 @@ class StateProxy {
         else if (Object.hasOwn(target, prop)) {
           if (
             value instanceof Object
+            && !(value instanceof Date)
             && !(isState(value)) // prevents infinite loop
           ) {
-            target[prop] = this.createProxy(value)
+            let statePath = (typeof prop === 'string') ? prop : ''
 
-            this.#onPropDelete(receiver, prop)
-            this.#onPropCreate(receiver, prop)
+            // If the target is already a proxy state, prepend the path from it
+            if (symState in target && target[symState].path !== '') {
+              statePath = target[symState].path + '.' + statePath
+            }
+
+            if (target[prop] instanceof Object && value instanceof Object) {
+              for (const i in target[prop]) {
+                if (!(i in value)) {
+                  this.#onPropDelete(target[prop], i)
+                }
+              }
+
+              /**
+               * When in an Object a whole Array is set, its new values could be primitive
+               * and non-reactive. Loop through the array and for each primitive value that
+               * is changed, fire the update events.
+               */
+              for (const i in value) {
+                if (!(value[i] instanceof Object)) {
+                  if (value[i] !== target[prop][i]) {
+                    target[prop][symState] ??= { target: value, path: statePath }
+                    target[prop][i] = value[i]
+
+                    this.#onPropDelete(target[prop], i)
+                    this.#onPropCreate(target[prop], i)
+                  }
+                }
+              }
+            }
+
+            target[prop] = this.createProxy(value, statePath)
+
+            //this.#onPropDelete(receiver, prop)
+            //this.#onPropCreate(receiver, prop)
+            //this.#onPropUpdateInForState(receiver, prop, value)
+            //this.#onPropUpdate(receiver, prop, value)
           }
           else {
             target[prop] = value
@@ -373,7 +420,16 @@ class StateProxy {
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
-          const { statementRepaintFunction } = elementSubscriptions[index]
+          const { statementRepaintFunction, statePath } = elementSubscriptions[index]
+
+          if (!(symState in updatedState)) {
+            throw new Error('The state must have symState')
+          }
+
+          // @ts-ignore
+          if (updatedState?.[symState].path !== statePath) {
+            continue
+          }
 
           if (statementRepaintFunction) {
             // @ts-ignore

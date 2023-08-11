@@ -205,4 +205,26 @@ describe('State', () => {
       'forState-end',
     ])
   })
+
+  test('(DOM) Update inside the state, using forState', () => {
+    const container = document.body
+
+    const theState = state({ items: [ 'a', 'b'] })
+
+    component(($) => {
+      $.forState(theState.items, (value) => {
+        $.div(value)
+      })
+    }).paint(container)
+
+    let elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, ['a', 'b'])
+
+    theState.items = [ 'c', 'd' ]
+
+    elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, ['c', 'd'])
+  })
 })

@@ -1,4 +1,4 @@
-import { symSubscriptions } from './constants.js'
+import { symState, symSubscriptions } from './constants.js'
 
 export class StateProxySubscriptions {
   /** @type {Map<string | symbol, Map<Node | Element | Comment | Text, Subscription[]>>} */
@@ -79,6 +79,8 @@ export class StateProxySubscriptions {
       bindFunction,
       statementRepaintFunction,
       stateSubscription: this,
+      // @ts-ignore
+      statePath: (state?.[symState]?.path ?? ''),
     }
 
     elementSubscriptions.push(subscription)
