@@ -6,9 +6,9 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['**/*.{test,spec}.{js,mjs}'],
     coverage: {
-      provider: 'c8',
+      provider: 'v8',
       reporter: ['text', 'html'],
     },
-    globals: true
+    globals: true,
   },
 })

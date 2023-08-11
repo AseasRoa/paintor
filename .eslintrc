@@ -10,6 +10,7 @@
   "extends"        : [
     "airbnb-typescript",
     "plugin:jsdoc/recommended",
+    "plugin:vitest/recommended",
     "plugin:vitest-globals/recommended"
   ],
   "parser"         : "@typescript-eslint/parser",
