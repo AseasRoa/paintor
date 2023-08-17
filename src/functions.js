@@ -397,7 +397,7 @@ export function forEachLoop(
     }
   }
   else {
-    throw new TypeError('"data" argument should be an Object or an Array')
+    throw new TypeError(`The state argument should be an Object or an Array, but instead it is ${object}`)
   }
 
   return true

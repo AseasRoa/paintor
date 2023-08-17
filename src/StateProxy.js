@@ -70,18 +70,20 @@ class StateProxy {
      */
     for (const key in object) {
       // @ts-ignore
-      if (!(object[key] instanceof Object)) {
-        continue
+      if (object[key] instanceof Object) {
+        if (symState in proxy[key]) {
+          continue
+        }
+
+        const innerStatePath = (statePath === '') ? key : `${statePath}.${key}`
+
+        // @ts-ignore
+        proxy[key] = this.createProxy(object[key], innerStatePath)
       }
-
-      if (symState in proxy[key]) {
-        continue
+      else {
+        // @ts-ignore
+        proxy[key] = object[key]
       }
-
-      const innerStatePath = (statePath === '') ? key : `${statePath}.${key}`
-
-      // @ts-ignore
-      proxy[key] = this.createProxy(object[key], innerStatePath)
     }
 
     return proxy
@@ -112,7 +114,7 @@ class StateProxy {
           || prop === symAccess
         ) {
           /**
-           * In the if below it would be enough to check just one element,
+           * In the "if" below it would be enough to check just one element,
            * but because of TS more than one is checked
            */
           if (
@@ -212,6 +214,16 @@ class StateProxy {
             }
 
             if (target[prop] instanceof Object && value instanceof Object) {
+              /**
+               * Find inner Arrays and set the length. This will cause only previously
+               * created DOM elements to be deleted
+               */
+              for (const key in value) {
+                if (value[key] instanceof Array) {
+                  target[prop][key].length = value[key].length
+                }
+              }
+
               for (const i in target[prop]) {
                 if (!(i in value)) {
                   this.#onPropDelete(target[prop], i)
@@ -223,17 +235,17 @@ class StateProxy {
                * and non-reactive. Loop through the array and for each primitive value that
                * is changed, fire the update events.
                */
-              for (const i in value) {
-                if (!(value[i] instanceof Object)) {
-                  if (value[i] !== target[prop][i]) {
-                    target[prop][symState] ??= { target: value, path: statePath }
-                    target[prop][i] = value[i]
-
-                    this.#onPropDelete(target[prop], i)
-                    this.#onPropCreate(target[prop], i)
-                  }
-                }
-              }
+              // for (const i in value) {
+              //   if (!(value[i] instanceof Object)) {
+              //     if (value[i] !== target[prop][i]) {
+              //       target[prop][symState] ??= { target: value, path: statePath }
+              //       target[prop][i] = value[i]
+              //
+              //       this.#onPropDelete(target[prop], i)
+              //       this.#onPropCreate(target[prop], i)
+              //     }
+              //   }
+              // }
             }
 
             target[prop] = this.createProxy(value, statePath)
@@ -242,6 +254,15 @@ class StateProxy {
             //this.#onPropCreate(receiver, prop)
             //this.#onPropUpdateInForState(receiver, prop, value)
             //this.#onPropUpdate(receiver, prop, value)
+          }
+          else if (value instanceof Object
+            && !(value instanceof Date)
+            && (isState(value))
+          ) {
+            target[prop] = value
+
+            this.#onPropUpdateInForState(receiver, prop, value)
+            this.#onPropUpdate(receiver, prop, value)
           }
           else {
             target[prop] = value
@@ -330,8 +351,18 @@ class StateProxy {
 
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
+
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
-          const { statementRepaintFunction } = elementSubscriptions[index]
+          const { statementRepaintFunction, statePath } = elementSubscriptions[index]
+
+          if (!(symState in updatedState)) {
+            throw new Error('The state must have symState')
+          }
+
+          // @ts-ignore
+          if (updatedState?.[symState].path !== statePath) {
+            continue
+          }
 
           if (statementRepaintFunction) {
             // @ts-ignore
@@ -415,16 +446,20 @@ class StateProxy {
    * @param {any} value
    */
   #onPropUpdateInForState(updatedState, prop, value) {
+    if (!(symState in updatedState)) {
+      throw new Error('The state must have symState')
+    }
+
     const subscriptions = this.#subs.subscriptions.get('-s-forState')
 
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
-        for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
+        for (
+          let index = 0, length = elementSubscriptions.length;
+          index < length;
+          index++
+        ) {
           const { statementRepaintFunction, statePath } = elementSubscriptions[index]
-
-          if (!(symState in updatedState)) {
-            throw new Error('The state must have symState')
-          }
 
           // @ts-ignore
           if (updatedState?.[symState].path !== statePath) {

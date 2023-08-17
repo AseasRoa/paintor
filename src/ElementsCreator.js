@@ -688,7 +688,7 @@ class ElementsCreator {
       return this.#translate(value)
     }
 
-    if (isState(input)) {
+    if (forLoopType === 2 && isState(input)) {
       /**
        * @param {State} state
        * @param {ElementsCollector} elementsCollector
