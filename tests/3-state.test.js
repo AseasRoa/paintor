@@ -82,7 +82,7 @@ describe('State', () => {
     // Initially we have no <li> elements
     let div = container.getElementsByTagName('div')[0]
 
-    expect(div).toBe(undefined)
+    expect(div).toBeUndefined()
 
     // Create one <li> element
     globalState.item = { color: 'red' }
@@ -117,7 +117,7 @@ describe('State', () => {
     // Initially we have no <li> elements
     let div = container.getElementsByTagName('div')[0]
 
-    expect(div).toBe(undefined)
+    expect(div).toBeUndefined()
 
     // Create one <li> element
     globalState.item = { color: 'red' }
@@ -144,7 +144,7 @@ describe('State', () => {
       $.ul(
         $.forState(
           globalState,
-          (item, key) => {
+          (item) => {
             $.li(item)
           },
           () => {
@@ -209,7 +209,7 @@ describe('State', () => {
   test('(DOM) Update inside the state, using forState', () => {
     const container = document.body
 
-    const theState = state({ items: [ 'a', 'b'] })
+    const theState = state({ items: [ 'a', 'b', 'c'] })
 
     component(($) => {
       $.forState(theState.items, (value) => {
@@ -219,12 +219,12 @@ describe('State', () => {
 
     let elements = container.querySelectorAll('*')
 
-    expectTextContentsToBeLike(elements, ['a', 'b'])
+    expectTextContentsToBeLike(elements, ['a', 'b', 'c'])
 
-    theState.items = [ 'c', 'd' ]
+    theState.items = [ 'd', 'e' ]
 
     elements = container.querySelectorAll('*')
 
-    expectTextContentsToBeLike(elements, ['c', 'd'])
+    expectTextContentsToBeLike(elements, ['d', 'e'])
   })
 })

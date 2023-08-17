@@ -61,7 +61,7 @@
     "@typescript-eslint/semi"            : ["error", "never"],
     "@typescript-eslint/space-infix-ops" : "off",
     "@typescript-eslint/no-unused-vars"  : "warn",
-    //JsDoc
+    // JsDoc
     // "jsdoc/newline-after-description": ["error", "always"],
     "jsdoc/tag-lines" : ["off"],
     "jsdoc/check-types": ["off"],
@@ -72,6 +72,8 @@
     // TypeScript deals with this
     "jsdoc/no-undefined-types": "off",
     "jsdoc/require-returns": "error",
-    "jsdoc/require-returns-description": 0
+    "jsdoc/require-returns-description": 0,
+    // Vitest
+    "vitest/expect-expect": "warn"
   }
 }
