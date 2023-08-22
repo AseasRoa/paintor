@@ -294,7 +294,7 @@ describe('Elements Creation', () => {
         )
       }).html()
 
-      expect(html).toBe('<ul><!--forState-begin--><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li><!--forState-end--></ul>')
+      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
     })
 
     test('(DOM) Correct order of elements when using forEach()', () => {
@@ -314,6 +314,66 @@ describe('Elements Creation', () => {
       component(($) => {
         $.ul(
           $.forEach(globalState, (value) => {
+            $.li('li-' + value)
+            liFragments($)
+          }),
+        )
+      }).paint(container)
+
+      let ul = container.getElementsByTagName('ul')[0]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'li-1',
+        'li-fragment-1',
+        'li-fragment-2',
+        'li-2',
+        'li-fragment-1',
+        'li-fragment-2',
+      ])
+    })
+
+    test('(SSR) Correct order of elements when using forState()', () => {
+      const globalState = state(['1', '2'])
+
+      /**
+       * Template function, created without the wrapper
+       *
+       * @param {TemplateTree} $
+       */
+      const liFragments = ($) => {
+        $.li('li-fragment-1')
+        $.li('li-fragment-2')
+      }
+
+      const html = component(($) => {
+        $.ul(
+          $.forState(globalState, (value) => {
+            $.li('li-' + value)
+            liFragments($)
+          }),
+        )
+      }).html()
+
+      expect(html).toBe('<ul><!--forState-begin--><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li><!--forState-end--></ul>')
+    })
+
+    test('(DOM) Correct order of elements when using forState()', () => {
+      const container = document.body
+      const globalState = state(['1', '2'])
+
+      /**
+       * Template function, created without the wrapper
+       *
+       * @param {TemplateTree} $
+       */
+      const liFragments = ($) => {
+        $.li('li-fragment-1')
+        $.li('li-fragment-2')
+      }
+
+      component(($) => {
+        $.ul(
+          $.forState(globalState, (value) => {
             $.li('li-' + value)
             liFragments($)
           }),
