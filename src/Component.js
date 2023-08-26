@@ -87,7 +87,7 @@ class Component {
     let i = -1
 
     for (const container of this.#containerDOMElements) {
-      i++
+      i += 1
 
       if (containerElement === container) {
         indexFound = i

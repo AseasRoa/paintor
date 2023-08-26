@@ -105,7 +105,9 @@ export class StateProxySubscriptions {
       const subs = element[symSubscriptions]
       let index = subs.length
 
-      while (index--) {
+      while (index > 0) {
+        index -= 1
+
         if (subs[index].stateSubscription === this) {
           subs.splice(index, 1)
         }
@@ -142,7 +144,9 @@ export function moveSubscriptions(fromElement, toElement, bindFunction, newSubsc
   ) {
     let index = fromElement[symSubscriptions].length
 
-    while (index--) {
+    while (index > 0) {
+      index -= 1
+
       /** @type {Subscription} */
       const subscription = fromElement[symSubscriptions][index]
 
@@ -188,7 +192,9 @@ export function removeAllSubscriptions(element) {
 
   let idx = elementSubs.length
 
-  while (idx--) {
+  while (idx > 0) {
+    idx -= 1
+
     if (!elementSubs[idx]) continue
 
     elementSubs[idx].stateSubscription.unsubscribe(element)

@@ -623,7 +623,9 @@ export function arrayMoveIndex(array, oldIndex, newIndex) {
   if (newIndex >= array.length) {
     let k = newIndex - array.length + 1
 
-    while (k--) {
+    while (k > 0) {
+      k -= 1
+
       // @ts-ignore
       array.push(undefined)
     }

@@ -1,8 +1,6 @@
 import { StateProxy } from './StateProxy.js'
 import { symState } from './constants.js'
 
-let stateIdCounter = 0
-
 /**
  * @template T
  * @param {T} object
@@ -16,14 +14,8 @@ const state = function state(object) {
   }
 
   const stateProxy = new StateProxy()
-  const proxy = stateProxy.createProxy(object)
 
-  stateIdCounter += 1
-
-  // @ts-ignore
-  // proxy[symState] = { id: stateIdCounter, target: object }
-
-  return proxy
+  return stateProxy.createProxy(object, '')
 }
 
 /**

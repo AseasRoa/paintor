@@ -24,7 +24,7 @@ class StateProxy {
    * @param {T} object
    * The input object that will be used to create
    * a proxy object with the same keys and values.
-   * @param {string} [statePath]
+   * @param {string} statePath
    * The path to the state:
    * <br>
    * - If the state is the parent state, this is an empty string.
@@ -32,7 +32,12 @@ class StateProxy {
    * - If the state is a child state, this is the path to it (dot notated).
    * @returns {T}
    */
-  createProxy(object, statePath = '') {
+  createProxy(object, statePath) {
+    /**
+     * Performance hint: Access to the original object instead of the proxy object
+     * whenever possible, because accessing a proxy has worse performance.
+     */
+
     if (!(object instanceof Object)) {
       throw new Error('Cannot create a Proxy on non-object')
     }
@@ -63,12 +68,10 @@ class StateProxy {
       }
     }
 
-    /**
-     * Recursive proxy. To find all inner objects and turn them into child states.
-     * Access to the original object instead of the proxy object whenever possible,
-     * because accessing a proxy has worse performance.
-     */
     for (const key in object) {
+      /**
+       * Recursive proxy - find all inner objects and turn them into child states.
+       */
       // @ts-ignore
       if (object[key] instanceof Object) {
         if (symState in proxy[key]) {
@@ -81,6 +84,7 @@ class StateProxy {
         proxy[key] = this.createProxy(object[key], innerStatePath)
       }
       else {
+        // This is done only to ensure that "set" event is triggered on the proxy
         // @ts-ignore
         proxy[key] = object[key]
       }
@@ -276,7 +280,7 @@ class StateProxy {
             value instanceof Object
             && !(isState(value))
           ) {
-            target[prop] = this.createProxy(value)
+            target[prop] = this.createProxy(value, '')
           }
           else {
             target[prop] = value

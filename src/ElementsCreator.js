@@ -1397,7 +1397,9 @@ class ElementsCreator {
       if (action === EnumStateAction.DELETE) {
         let index = commentElementEnd.renderedElementsMap.length
 
-        while (index--) {
+        while (index > 0) {
+          index -= 1
+
           //const item = commentElementEnd.renderedElementsMap[index]
 
           if (!commentElementEnd.renderedElementsMap[index]) continue
@@ -1564,7 +1566,9 @@ class ElementsCreator {
         let mapIndex = commentElementEnd.renderedElementsMap.length
         let lastElement = commentElementBegin
 
-        while (mapIndex--) {
+        while (mapIndex > 0) {
+          mapIndex -= 1
+
           const item = commentElementEnd.renderedElementsMap[mapIndex]
 
           if (!item) continue
@@ -1589,7 +1593,9 @@ class ElementsCreator {
         if (newLength < commentElementEnd.renderedElementsMap.length) {
           let index = commentElementEnd.renderedElementsMap.length
 
-          while (index--) {
+          while (index > 0) {
+            index -= 1
+
             if (index < newLength) break
 
             // Skip if already deleted.
@@ -1716,7 +1722,9 @@ class ElementsCreator {
 
     let index = element.childNodes.length
 
-    while (index--) {
+    while (index > 0) {
+      index -= 1
+
       this.#unsubscribeElementAndItsChildren(element.childNodes[index])
     }
   }

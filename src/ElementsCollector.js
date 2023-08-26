@@ -97,10 +97,14 @@ class ElementsCollector {
   removeTheseElements(elements) {
     let indexInput = elements.length
 
-    while (indexInput--) {
+    while (indexInput > 0) {
+      indexInput -= 1
+
       let indexOutput = this.elements.length
 
-      while (indexOutput--) {
+      while (indexOutput > 0) {
+        indexOutput -= 1
+
         if (elements[indexInput] === this.elements[indexOutput]) {
           this.elements.splice(indexOutput, 1)
 
