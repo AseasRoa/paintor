@@ -227,4 +227,72 @@ describe('State', () => {
 
     expectTextContentsToBeLike(elements, ['d', 'e'])
   })
+
+  test('(DOM) Update the state (with object), using forState', () => {
+    const container = document.body
+
+    /** @type {{items: Object<string, string>}} */
+    const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
+
+    component(($) => {
+      $.forState(theState, (value) => {
+        for (const k in value) {
+          $.div(value[k])
+        }
+      })
+    }).paint(container)
+
+    let elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, { a: 'a', b: 'b', c: 'c' })
+
+    theState.items = { d: 'd', e: 'e' }
+
+    elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, { d: 'd', e: 'e' })
+  })
+
+  /**
+   * This test ensures that when an inner array state is changed by length
+   * (which happens internally), this doesn't interfere with the elements
+   * printed for the main state.
+   */
+  test('(DOM) Update the state (with inner array), using forState', () => {
+    const container = document.body
+
+    /** @type {{mainState: {innerArrayState: any[]}}} */
+    const theState = state({
+      mainState: { innerArrayState: [] },
+    })
+
+    component(($) => {
+      let counter = 0
+
+      $.forState(theState.mainState, (value, key) => {
+        if (key === 'innerArrayState') { // not necessary
+          counter += 1
+          $.div(`${key}-${counter}`)
+        }
+      })
+    }).paint(container)
+
+    let elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, { innerArrayState: 'innerArrayState-1' })
+
+    // Array length set to 2. Only one div should remain, but updated.
+    theState.mainState = { innerArrayState: [ 1, 2 ] }
+
+    elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, { innerArrayState: 'innerArrayState-2' })
+
+    // Array length set back to 0. Only one div should remain, but updated.
+    theState.mainState = { innerArrayState: [] }
+
+    elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, { innerArrayState: 'innerArrayState-3' })
+  })
 })
