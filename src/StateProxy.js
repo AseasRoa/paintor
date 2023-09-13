@@ -223,7 +223,11 @@ class StateProxy {
                * created DOM elements to be deleted
                */
               for (const key in value) {
-                if (value[key] instanceof Array) {
+                if (
+                  value[key] instanceof Array
+                  && target[prop][key] instanceof Array
+                  && target[prop][key].length !== value[key].length
+                ) {
                   target[prop][key].length = value[key].length
                 }
               }
@@ -256,8 +260,8 @@ class StateProxy {
 
             //this.#onPropDelete(receiver, prop)
             //this.#onPropCreate(receiver, prop)
-            //this.#onPropUpdateInForState(receiver, prop, value)
-            //this.#onPropUpdate(receiver, prop, value)
+            this.#onPropUpdateInForState(receiver, prop, value)
+            this.#onPropUpdate(receiver, prop, value)
           }
           else if (value instanceof Object
             && !(value instanceof Date)
@@ -316,6 +320,29 @@ class StateProxy {
   }
 
   /**
+   * @param {State} updatedState
+   * @param {Subscription} elementSubscription
+   * @returns {StatementRepaintFunction | null}
+   */
+  #getStatementRepaintFunction(updatedState, elementSubscription) {
+    if (!(symState in updatedState)) {
+      throw new Error('The state must have symState')
+    }
+
+    const { statementRepaintFunction, statePath } = elementSubscription
+
+    if (
+      // @ts-ignore
+      updatedState?.[symState].path !== statePath
+      || !statementRepaintFunction
+    ) {
+      return null
+    }
+
+    return statementRepaintFunction
+  }
+
+  /**
    * @param {EnumStateAction} action
    * @param {State} updatedState
    * @param {any[]} args
@@ -326,7 +353,10 @@ class StateProxy {
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
-          const { statementRepaintFunction } = elementSubscriptions[index]
+          const statementRepaintFunction = this.#getStatementRepaintFunction(
+            updatedState,
+            elementSubscriptions[index],
+          )
 
           if (statementRepaintFunction) {
             // @ts-ignore
@@ -355,18 +385,11 @@ class StateProxy {
 
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
-
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
-          const { statementRepaintFunction, statePath } = elementSubscriptions[index]
-
-          if (!(symState in updatedState)) {
-            throw new Error('The state must have symState')
-          }
-
-          // @ts-ignore
-          if (updatedState?.[symState].path !== statePath) {
-            continue
-          }
+          const statementRepaintFunction = this.#getStatementRepaintFunction(
+            updatedState,
+            elementSubscriptions[index],
+          )
 
           if (statementRepaintFunction) {
             // @ts-ignore
@@ -463,12 +486,10 @@ class StateProxy {
           index < length;
           index++
         ) {
-          const { statementRepaintFunction, statePath } = elementSubscriptions[index]
-
-          // @ts-ignore
-          if (updatedState?.[symState].path !== statePath) {
-            continue
-          }
+          const statementRepaintFunction = this.#getStatementRepaintFunction(
+            updatedState,
+            elementSubscriptions[index],
+          )
 
           if (statementRepaintFunction) {
             // @ts-ignore
