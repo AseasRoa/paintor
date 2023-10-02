@@ -71,6 +71,20 @@ class ElementsCreator {
    */
   #reusableTemplateElement = null
 
+  /**
+   * The type TemplateTree is the "face" of this class.
+   * Both have the same parts, but are made differently.
+   * Sometimes this class must be passed as an argument
+   * to a function for which the type of the argument is
+   * TemplateTree, and putting @ts-ignore is necessary.
+   * So, this "conversion" here is to prevent placing
+   * multiple @ts-ignore
+   *
+   * @type {TemplateTree}
+   */
+  // @ts-ignore
+  #templateTree = this
+
   /** @type {(Template | Component)[]} */
   #templates = []
 
@@ -84,15 +98,15 @@ class ElementsCreator {
    * @param {Window} window
    * @param {HTMLElement | Element | ShadowRoot | null} containerElement
    * @param {(Template | Component)[]} templates
-   * @param {Translation[]} [translations=[]]
+   * @param {Translation[]} [translations]
    */
   constructor(window, containerElement, templates, translations = []) {
-    this.#window = window
-    this.#document = window.document
-    this.#isSr = this.#document.baseURI === ''
+    this.#window           = window
+    this.#document         = window.document
+    this.#isSr             = this.#document.baseURI === ''
     this.#containerElement = containerElement
-    this.#templates = templates
-    this.#translations = translations
+    this.#templates        = templates
+    this.#translations     = translations
 
     // HTML_TAGS.forEach((tagName) => {
     //   // @ts-ignore
@@ -113,7 +127,7 @@ class ElementsCreator {
       : this.#document.createTextNode('')
 
     /** @type {any[]} */
-    let children = []
+    let children   = []
     let argumentID = 0
 
     for (const argument of args) {
@@ -200,7 +214,7 @@ class ElementsCreator {
         if (argument[symTemplateFunction]) {
           const { thisLevel, upperLevel } = this.#beforeStatement()
 
-          argument(this)
+          argument(this.#templateTree)
 
           const generatedElements = this.#collectedElements[thisLevel].getElements()
 
@@ -255,8 +269,7 @@ class ElementsCreator {
                           }
                         }
                         else if (symTemplateFunction in value) {
-                          // @ts-ignore
-                          value(this)
+                          value(this.#templateTree)
 
                           if (isInitialRun) {
                             const level = this.#collectedElements.length - 1
@@ -317,7 +330,7 @@ class ElementsCreator {
      * $.div(templateCall($), $.span())
      */
     if (children.length > 0) {
-      const collectedElements = this.#collectedElements[level].getElements()
+      const collectedElements      = this.#collectedElements[level].getElements()
       const indexOfFirstKnownChild = collectedElements.indexOf(children[0])
 
       if (indexOfFirstKnownChild > -1) {
@@ -391,7 +404,7 @@ class ElementsCreator {
    * - Server mode: Generate HTML code of the elements at level 0
    *
    * @param {object} htmlOptions
-   * @param {string} [htmlOptions.indent='']
+   * @param {string} [htmlOptions.indent]
    * @returns {string}
    * - Browser mode: Empty string
    * - Server mode: The final HTML code
@@ -443,8 +456,8 @@ class ElementsCreator {
    * "IF" condition
    *
    * @param {boolean | StatementBindFunction} condition
-   * @param {function():void} handler
-   * @param {function():void} [elseHandler]
+   * @param {(function():(void | Template)) | Template} handler
+   * @param {(function():(void | Template)) | Template} [elseHandler]
    * @returns {Node[]}
    */
   if(condition, handler, elseHandler) {
@@ -461,32 +474,16 @@ class ElementsCreator {
      * @param {any} data
      */
     const callbackForFunction = (data) => {
-      if (Boolean(data)) {
-        if (handler instanceof Component) {
-          const generatedChildren = (this.#isSr)
-            ? handler.useTranslations(this.#translations).getElementsSr()
-            : handler.useTranslations(this.#translations).getElements()
+      const isTruthy = Boolean(data)
 
-          const level = this.#collectedElements.length - 1
-
-          this.#collectedElements[level].addElements(generatedChildren[0])
-        }
-        else if (handler instanceof Function) {
-          handler()
+      if (isTruthy) {
+        if (handler) {
+          this.#statementHandlerResolver(handler)
         }
       }
       else {
-        if (elseHandler instanceof Component) {
-          const generatedChildren = (this.#isSr)
-            ? elseHandler.useTranslations(this.#translations).getElementsSr()
-            : elseHandler.useTranslations(this.#translations).getElements()
-
-          const level = this.#collectedElements.length - 1
-
-          this.#collectedElements[level].addElements(generatedChildren[0])
-        }
-        else if (elseHandler instanceof Function) {
-          elseHandler()
+        if (elseHandler) {
+          this.#statementHandlerResolver(elseHandler)
         }
       }
     }
@@ -505,8 +502,7 @@ class ElementsCreator {
 
     for (const template of this.#templates) {
       if (template instanceof Function) {
-        // @ts-ignore
-        let returnedValue = template(this)
+        let returnedValue = template(this.#templateTree)
 
         if (returnedValue instanceof Promise) {
           returnedValue = await returnedValue
@@ -516,23 +512,14 @@ class ElementsCreator {
           this.html(returnedValue)
         }
         else if (returnedValue instanceof Component) {
-          const generatedChildren = (this.#isSr)
-            // @ts-ignore
-            ? returnedValue.useTranslations(this.#translations).getElementsSr()
-            // @ts-ignore
-            : returnedValue.useTranslations(this.#translations).getElements()
-
-          for (const childrenGroup of generatedChildren) {
-            this.#collectedElements[0].addElements(childrenGroup)
-          }
+          this.#applyComponent(returnedValue, 0)
         }
         else if (returnedValue instanceof Function) {
-          // @ts-ignore
-          returnedValue(this)
+          returnedValue(this.#templateTree)
         }
         else if (returnedValue instanceof Array) {
-          let allComponents   = true
-          let allFunctions = true
+          let allComponents = true
+          let allFunctions  = true
 
           for (const value of returnedValue) {
             if (!(value instanceof Component)) {
@@ -552,35 +539,20 @@ class ElementsCreator {
             for (const value of returnedValue) {
               if (!(value instanceof Component)) break
 
-              const generatedChildren = (this.#isSr)
-                // @ts-ignore
-                ? value.useTranslations(this.#translations).getElementsSr()
-                // @ts-ignore
-                : value.useTranslations(this.#translations).getElements()
-
-              for (const childrenGroup of generatedChildren) {
-                this.#collectedElements[0].addElements(childrenGroup)
-              }
+              this.#applyComponent(value, 0)
             }
           }
           else if (allFunctions) {
             for (const value of returnedValue) {
               if (!(value instanceof Function)) break
 
-              // @ts-ignore
-              value(this)
+              value(this.#templateTree)
             }
           }
         }
       }
       else if (template instanceof Component) {
-        const generatedChildren = (this.#isSr)
-          ? template.useTranslations(this.#translations).getElementsSr()
-          : template.useTranslations(this.#translations).getElements()
-
-        for (const childrenGroup of generatedChildren) {
-          this.#collectedElements[0].addElements(childrenGroup)
-        }
+        this.#applyComponent(template, 0)
       }
     }
 
@@ -615,6 +587,24 @@ class ElementsCreator {
 
     if (containerElement) {
       appendChildrenToElement(containerElement, this.getCreatedElements())
+    }
+  }
+
+  /**
+   * @param {Component} component
+   * @param {number} [collectAtLevel]
+   */
+  #applyComponent(component, collectAtLevel = -1) {
+    const generatedChildren = (this.#isSr)
+      ? component.useTranslations(this.#translations).getElementsSr()
+      : component.useTranslations(this.#translations).getElements()
+
+    const level = (collectAtLevel < 0)
+      ? this.#collectedElements.length - 1
+      : collectAtLevel
+
+    for (const childrenGroup of generatedChildren) {
+      this.#collectedElements[level].addElements(childrenGroup)
     }
   }
 
@@ -662,7 +652,7 @@ class ElementsCreator {
     // Create a new level for collecting
     this.#collectedElements.push(new ElementsCollector())
 
-    const thisLevel = this.#collectedElements.length - 1
+    const thisLevel  = this.#collectedElements.length - 1
     const upperLevel = thisLevel - 1
 
     return { thisLevel, upperLevel }
@@ -707,9 +697,19 @@ class ElementsCreator {
 
         /**
          * @param {number | string} [key]
+         * @param {Component | null} [component]
          */
-        const onIteration = (key) => {
+        const onIteration = (key, component = null) => {
+          /**
+           * When the handler of the loop is a Component,
+           * the component arg is that Component.
+           */
+          if (component) {
+            this.#statementHandlerResolver(component)
+          }
+
           const elementsFromCollector = elementsCollector.getElements()
+
           const elements = (index === 0)
             ? elementsFromCollector
             : elementsFromCollector.slice(index)
@@ -741,6 +741,7 @@ class ElementsCreator {
         }
 
         forEachLoop(
+          this.#templateTree,
           forLoopType,
           state,
           handler,
@@ -766,6 +767,7 @@ class ElementsCreator {
      */
     const callbackForFunction = (data) => {
       forEachLoop(
+        this.#templateTree,
         forLoopType,
         data,
         handler,
@@ -778,8 +780,11 @@ class ElementsCreator {
 
     if (input instanceof Function) {
       return this.#statementHandlerForFunction(
+        type,
+        input,
+        true,
         // @ts-ignore
-        type, input, true, callbackForFunction,
+        callbackForFunction,
       )
     }
 
@@ -898,7 +903,7 @@ class ElementsCreator {
 
     // Decide what will be the text content of the end element
     const beginCommentElementText = beginCommentElement.textContent
-    let endElementText = ''
+    let endElementText            = ''
 
     if (beginCommentElementText) {
       endElementText = beginCommentElementText.slice(0, -6) + '-end'
@@ -912,8 +917,8 @@ class ElementsCreator {
      * including inner 'begin' and 'end' elements
      */
 
-    let currentElement = beginCommentElement.nextSibling
-    let statementsCounter = 0
+    let currentElement       = beginCommentElement.nextSibling
+    let statementsCounter    = 0
     let deletedElementsCount = 0
 
     while (true) {
@@ -1150,7 +1155,7 @@ class ElementsCreator {
    */
   #statementHandlerForFunction(type, bindFunction, autoAddCommentElements, callbackForFunction) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
-    const isFunction = bindFunction instanceof Function
+    const isFunction                = bindFunction instanceof Function
 
     if (isFunction) {
       const commentElementBegin = this.#document.createComment(`${type}-begin`)
@@ -1187,7 +1192,7 @@ class ElementsCreator {
         }
       }
 
-      const element = commentElementBegin
+      const element      = commentElementBegin
       const propertyName = `--${type}` // --if or --for
 
       setSuggestedItems(
@@ -1261,8 +1266,8 @@ class ElementsCreator {
         isTemporaryLevel = true
       }
 
-      const level = this.#collectedElements.length - 1
-      const added = callbackForState(updatedState, this.#collectedElements[level], prop)
+      const level   = this.#collectedElements.length - 1
+      const added   = callbackForState(updatedState, this.#collectedElements[level], prop)
       const isArray = updatedObject instanceof Array
 
       for (const item of added) {
@@ -1310,7 +1315,7 @@ class ElementsCreator {
      */
     const statementRepaintFunction = (action, updatedState, prop, arrayFunctionArgs) => {
       // @ts-ignore
-      const stateParams = updatedState[symState]
+      const stateParams   = updatedState[symState]
       const updatedObject = stateParams.target
 
       if (!(updatedObject instanceof Object)) {
@@ -1451,7 +1456,8 @@ class ElementsCreator {
 
           if (deleteCount > 0) {
             for (
-              let i = start, length = start + deleteCount;
+              let i = start,
+                length = start + deleteCount;
               i < length;
               i++
             ) {
@@ -1462,8 +1468,8 @@ class ElementsCreator {
             }
           }
 
-          const oldSize = commentElementEnd.renderedElementsMap.length
-          const newSize = updatedObject.length
+          const oldSize  = commentElementEnd.renderedElementsMap.length
+          const newSize  = updatedObject.length
           const sizeDiff = newSize - oldSize
 
           // The array needs to be enlarged?
@@ -1480,7 +1486,7 @@ class ElementsCreator {
 
               if (oldIndex < 0) break
 
-              commentElementEnd.renderedElementsMap[index] = commentElementEnd.renderedElementsMap[oldIndex]
+              commentElementEnd.renderedElementsMap[index]     = commentElementEnd.renderedElementsMap[oldIndex]
               commentElementEnd.renderedElementsMap[index].key = index.toString()
               delete commentElementEnd.renderedElementsMap[oldIndex]
             }
@@ -1518,7 +1524,7 @@ class ElementsCreator {
 
         // change siblings
         // swap elements objects by reference
-        const tmp = commentElementEnd.renderedElementsMap[key2].elements
+        const tmp                                            = commentElementEnd.renderedElementsMap[key2].elements
         commentElementEnd.renderedElementsMap[key2].elements = commentElementEnd.renderedElementsMap[key1].elements
         commentElementEnd.renderedElementsMap[key1].elements = tmp
 
@@ -1534,7 +1540,8 @@ class ElementsCreator {
         let [target, start, end] = arrayFunctionArgs
 
         for (
-          let fromIndex = start, toIndex = target;
+          let fromIndex = start,
+            toIndex = target;
           fromIndex < end;
           fromIndex++, toIndex++
         ) {
@@ -1548,7 +1555,8 @@ class ElementsCreator {
       }
       else if (action === EnumStateAction.ARRAY_SORT) {
         for (
-          let index = 0, length = updatedObject.length;
+          let index = 0,
+            length = updatedObject.length;
           index < length;
           index++
         ) {
@@ -1563,7 +1571,7 @@ class ElementsCreator {
       else if (action === EnumStateAction.ARRAY_PUSH) {
         const length = updatedObject.length
 
-        let mapIndex = commentElementEnd.renderedElementsMap.length
+        let mapIndex    = commentElementEnd.renderedElementsMap.length
         let lastElement = commentElementBegin
 
         while (mapIndex > 0) {
@@ -1649,6 +1657,42 @@ class ElementsCreator {
     this.#collectedElements[thisLevel].addElement(commentElementEnd)
 
     return this.#afterStatement({ thisLevel, upperLevel })
+  }
+
+  /**
+   * @param {(function():(void | Template)) | Template | Component} handler
+   */
+  #statementHandlerResolver(handler) {
+    // 1) Component
+    if (handler instanceof Component) {
+      this.#applyComponent(handler)
+
+      return
+    }
+
+    // 2) Template Function
+    if (
+      handler instanceof Function
+      // @ts-ignore
+      && handler[symTemplateFunction]
+    ) {
+      handler(this.#templateTree)
+
+      return
+    }
+
+    // 3) Normal Function
+    if (handler instanceof Function) {
+      // @ts-ignore
+      let ret = handler()
+
+      // 3.1) Normal Function returns Component or Template
+      if (ret instanceof Component || ret instanceof Function) {
+        this.#statementHandlerResolver(ret)
+      }
+
+      return
+    }
   }
 
   /**

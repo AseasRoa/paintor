@@ -413,7 +413,6 @@ class Component {
         ? state(this.state)
         : this.state
 
-      // @ts-ignore
       this.#templates.push(this.template.bind(this))
     }
 

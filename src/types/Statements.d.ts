@@ -30,8 +30,8 @@ type VariantValuesType<T> = T extends Map<any, infer V>
 export interface Statements {
   if (
     condition : boolean|{ (element?: HTMLElement):boolean },
-    handler: { (): void },
-    elseHandler?: { (): void }
+    handler: (() => void | Template) | Template,
+    elseHandler?: (() => void | Template) | Template,
   ) : HTMLElement[]
 
   /**

@@ -130,7 +130,9 @@ class HtmlTemplateParser {
       if (child.tagName === 'if') {
         el = elementsCreator.if(
           stringToBoolean(child.attributes?.condition ?? ''),
-          () => this.#generateChildren(elementsCreator, child),
+          () => {
+            this.#generateChildren(elementsCreator, child)
+          },
         )
       }
       else if (child.tagName === 'for') {
@@ -138,9 +140,10 @@ class HtmlTemplateParser {
           el = elementsCreator.for(
             0,
             parseInt(child.attributes?.iterations ?? 0) - 1,
-            // @ts-ignore
-            (value, key) => {
+            () => {
               this.#generateChildren(elementsCreator, child)
+
+              return undefined
             },
           )
         }
@@ -148,9 +151,10 @@ class HtmlTemplateParser {
           el = elementsCreator.for(
             parseInt(child.attributes?.from ?? 0),
             parseInt(child.attributes?.to ?? 0),
-            // @ts-ignore
-            (value, key) => {
+            () => {
               this.#generateChildren(elementsCreator, child)
+
+              return undefined
             },
           )
         }
@@ -159,9 +163,10 @@ class HtmlTemplateParser {
         if ('object' in child.attributes) {
           el = elementsCreator.forEach(
             child.attributes?.object ?? {},
-            // @ts-ignore
-            (value, key) => {
+            () => {
               this.#generateChildren(elementsCreator, child)
+
+              return undefined
             },
           )
         }
@@ -200,7 +205,7 @@ class HtmlTemplateParser {
    * This function is designed to merge these two into a single array.
    *
    * @param {string[]} strings
-   * @param {any[]} [keys=[]]
+   * @param {any[]} [keys]
    * @returns {any[]}
    */
   #mergeStringsAndKeys(strings, keys=[]) {

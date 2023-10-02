@@ -393,5 +393,176 @@ describe('Elements Creation', () => {
         'forState-end',
       ])
     })
+
+    test('(SSR) if() with a callback, returning a Template', () => {
+      const ifCallback = template(($) => {
+        $.li('if')
+      })
+      const elseCallback = template(($) => {
+        $.li('else')
+      })
+
+      const html = component(($) => {
+        $.ul(
+          $.if(true, ifCallback, elseCallback),
+        )
+
+        $.ul(
+          $.if(false, ifCallback, elseCallback),
+        )
+      }).html()
+
+      expect(html).toBe(
+        '<ul><li>if</li></ul>'
+        + '<ul><li>else</li></ul>',
+      )
+    })
+
+    test('(DOM) if() with a callback, returning a Template', () => {
+      const container = document.body
+
+      const ifCallback = template(($) => {
+        $.li('if')
+      })
+      const elseCallback = template(($) => {
+        $.li('else')
+      })
+
+      component(($) => {
+        $.ul(
+          $.if(true, ifCallback, elseCallback),
+        )
+
+        $.ul(
+          $.if(false, ifCallback, elseCallback),
+        )
+      }).paint(container)
+
+      let ul = container.getElementsByTagName('ul')[0]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'if',
+      ])
+
+      ul = container.getElementsByTagName('ul')[1]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'else',
+      ])
+    })
+
+    test('(SSR) forEach() and forState() with a callback, returning a Template', () => {
+      const globalState = state(['1', '2'])
+
+      /**
+       * @param {string} value
+       * @returns {Template}
+       */
+      const callback = (value) => template(($) => {
+        $.li('li-' + value)
+      })
+
+      const html = component(($) => {
+        $.ul(
+          $.forEach(globalState, callback),
+        )
+
+        $.ul(
+          $.forState(globalState, callback),
+        )
+      }).html()
+
+      expect(html).toBe(
+        '<ul><li>li-1</li><li>li-2</li></ul>'
+        + '<ul><!--forState-begin--><li>li-1</li><li>li-2</li><!--forState-end--></ul>'
+      )
+    })
+
+    test('(DOM) forEach() and forState() with a callback, returning a Template', () => {
+      const container = document.body
+      const globalState = state(['1', '2'])
+
+      /**
+       * @param {string} value
+       * @returns {Template}
+       */
+      const callback = (value) => template(($) => {
+        $.li('li-' + value)
+      })
+
+      component(($) => {
+        $.ul(
+          $.forEach(globalState, callback),
+        )
+
+        $.ul(
+          $.forState(globalState, callback),
+        )
+      }).paint(container)
+
+      let ul = container.getElementsByTagName('ul')[0]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'li-1',
+        'li-2',
+      ])
+
+      ul = container.getElementsByTagName('ul')[1]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'forState-begin',
+        'li-1',
+        'li-2',
+        'forState-end',
+      ])
+    })
+
+    test('(SSR) forState() with a callback, returning a Component', () => {
+      const globalState = state(['1', '2'])
+
+      /**
+       * @param {string} value
+       * @returns {Component}
+       */
+      const callback = (value) => component(($) => {
+        $.li('li-' + value)
+      })
+
+      const html = component(($) => {
+        $.ul(
+          $.forState(globalState, callback),
+        )
+      }).html()
+
+      expect(html).toBe('<ul><!--forState-begin--><li>li-1</li><li>li-2</li><!--forState-end--></ul>')
+    })
+
+    test('(DOM) forState() with a callback, returning a Component', () => {
+      const container = document.body
+      const globalState = state(['1', '2'])
+
+      /**
+       * @param {string} value
+       * @returns {Component}
+       */
+      const callback = (value) => component(($) => {
+        $.li('li-' + value)
+      })
+
+      component(($) => {
+        $.ul(
+          $.forState(globalState, callback),
+        )
+      }).paint(container)
+
+      let ul = container.getElementsByTagName('ul')[0]
+
+      expectTextContentsToBeLike(ul.childNodes, [
+        'forState-begin',
+        'li-1',
+        'li-2',
+        'forState-end',
+      ])
+    })
   })
 })

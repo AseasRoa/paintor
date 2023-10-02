@@ -1,5 +1,7 @@
 import { isState } from './state.js'
-import { symAccess, symState } from './constants.js'
+import { symAccess, symState, symTemplateFunction } from './constants.js'
+import { ElementsCreator } from './ElementsCreator.js'
+import { Component } from './Component.js'
 
 /**
  * @see https://github.com/purposeindustries/window-or-global/blob/master/lib/index.js
@@ -265,17 +267,19 @@ export function appendChildrenToElement(element, children) {
  * function.
  *
  * @template T
+ * @param {TemplateTree} templateTree
  * @param {1 | 2} forLoopType
  * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} state
  * @param {ForLoopCallback<T>} handler
  * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
  * @param {(key: number | string) => void} [beforeIterationCallback]
  * @param {string | number | symbol} [keyToRender]
- * @param {(key: number | string | undefined) => void} [iterationCallback]
+ * @param {(key: number | string | undefined, component?: Component | null) => void} [iterationCallback]
  * @returns {boolean}
  * @throws {TypeError}
  */
 export function forEachLoop(
+  templateTree,
   forLoopType,
   state,
   handler,
@@ -323,9 +327,20 @@ export function forEachLoop(
         value = beforeIterationCallback?.(value)
       }
 
-      const ret = handler(value, key)
+      let ret = handler(value, key)
+      /** @type {Component | null} */
+      let component = null
 
-      iterationCallback?.(key)
+      if (ret instanceof Component) {
+        component = ret
+      }
+      // @ts-ignore
+      if (ret instanceof Function && ret[symTemplateFunction]) {
+        // @ts-ignore
+        ret = ret(templateTree)
+      }
+
+      iterationCallback?.(key, component)
 
       if (ret === false) break
     }
@@ -353,9 +368,20 @@ export function forEachLoop(
         val = beforeIterationCallback?.(val)
       }
 
-      const ret = handler(val, key)
+      let ret = handler(val, key)
+      /** @type {Component | null} */
+      let component = null
 
-      iterationCallback?.(key)
+      if (ret instanceof Component) {
+        component = ret
+      }
+      // @ts-ignore
+      else if (ret instanceof Function && ret[symTemplateFunction]) {
+        // @ts-ignore
+        ret = ret(templateTree)
+      }
+
+      iterationCallback?.(key, component)
 
       if (ret === false) break
     }
@@ -389,9 +415,20 @@ export function forEachLoop(
         value = beforeIterationCallback?.(value)
       }
 
-      const ret = handler(value, key)
+      let ret = handler(value, key)
+      /** @type {Component | null} */
+      let component = null
 
-      iterationCallback?.(key)
+      if (ret instanceof Component) {
+        component = ret
+      }
+      // @ts-ignore
+      else if (ret instanceof Function && ret[symTemplateFunction]) {
+        // @ts-ignore
+        ret = ret(templateTree)
+      }
+
+      iterationCallback?.(key, component)
 
       if (ret === false) break
     }
