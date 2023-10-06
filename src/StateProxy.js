@@ -219,8 +219,9 @@ class StateProxy {
 
             if (target[prop] instanceof Object && value instanceof Object) {
               /**
-               * Find inner Arrays and set the length. This will cause only previously
+               * - Find inner Arrays and set the length. This will cause only previously
                * created DOM elements to be deleted
+               * - Find inner Objects and delete their elements.
                */
               for (const key in value) {
                 if (
@@ -229,6 +230,11 @@ class StateProxy {
                   && target[prop][key].length !== value[key].length
                 ) {
                   target[prop][key].length = value[key].length
+                }
+                else if (
+                  value[key] instanceof Object
+                ) {
+                  this.#onPropDelete(target, prop)
                 }
               }
 
@@ -258,9 +264,9 @@ class StateProxy {
 
             target[prop] = this.createProxy(value, statePath)
 
+            this.#onPropUpdateInForState(receiver, prop, value)
             //this.#onPropDelete(receiver, prop)
             //this.#onPropCreate(receiver, prop)
-            this.#onPropUpdateInForState(receiver, prop, value)
             this.#onPropUpdate(receiver, prop, value)
           }
           else if (value instanceof Object

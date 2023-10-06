@@ -33,6 +33,10 @@ import {
  * @typedef {Array<{key: (string | number | symbol | undefined), elements: (Node)[]}>} RenderedElementsMap
  */
 
+/**
+ * @typedef {Comment & {renderedElementsMap: RenderedElementsMap}} RenderedElementsCollectorElement
+ */
+
 class ElementsCreator {
   /**
    * Each element of this array represents a Level of HTML elements.
@@ -880,77 +884,50 @@ class ElementsCreator {
   }
 
   /**
-   * Remove all DOM elements, starting after BEGIN element and ending before END element.
-   * BEGIN and END are a pair of two comment elements, one of the following pairs:
-   * <!--IF BEGIN--> and <!--IF END-->
-   * <!--FOR BEGIN--> and <!--FOR END-->
-   *
-   * @param {Comment} beginCommentElement
-   * - The 'begin' Comment element
-   * @returns {number}
-   * - The number of deleted elements or -1 on failure
+   * @param {RenderedElementsCollectorElement} commentElementEnd
+   * @param {string} prop
+   * @param {boolean} isArray
    */
-  #removeStatementElements(beginCommentElement) {
-    /**
-     * @type {number}
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-     */
-    const COMMENT_NODE = 8 // Node.COMMENT_NODE
+  #removeRenderedElements(commentElementEnd, prop, isArray) {
+    let index = commentElementEnd.renderedElementsMap.length
 
-    if (beginCommentElement.nodeType !== COMMENT_NODE) {
-      return -1
-    }
+    while (index > 0) {
+      index -= 1
 
-    // Decide what will be the text content of the end element
-    const beginCommentElementText = beginCommentElement.textContent
-    let endElementText            = ''
+      if (!commentElementEnd.renderedElementsMap[index]) continue
 
-    if (beginCommentElementText) {
-      endElementText = beginCommentElementText.slice(0, -6) + '-end'
-    }
-    else {
-      return -1
-    }
+      if (!prop || commentElementEnd.renderedElementsMap[index].key === prop) {
+        for (const element of commentElementEnd.renderedElementsMap[index].elements) {
+          if ('renderedElementsMap' in element) { // inner end element
+            // @ts-ignore
+            this.#removeRenderedElements(element, '', true)
+          }
 
-    /**
-     * Delete elements between the 'begin' and 'end' element,
-     * including inner 'begin' and 'end' elements
-     */
+          // Delete all subscriptions for this element
+          this.#unsubscribeElementAndItsChildren(element)
 
-    let currentElement       = beginCommentElement.nextSibling
-    let statementsCounter    = 0
-    let deletedElementsCount = 0
+          // Delete the element itself
+          // @ts-ignore
+          element.remove()
+        }
 
-    while (true) {
-      if (currentElement === null) {
+        if (isArray) {
+          commentElementEnd.renderedElementsMap[index].elements.length = 0
+
+          delete commentElementEnd.renderedElementsMap[index]
+
+          // if (index === updatedObject.length - 1) {
+          //   commentElementEnd.renderedElementsMap.length = updatedObject.length
+          // }
+        }
+        else {
+          commentElementEnd.renderedElementsMap
+            = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
+        }
+
         break
       }
-
-      if (currentElement.nodeType === COMMENT_NODE) {
-        const text = currentElement.textContent
-
-        if (text === beginCommentElementText) { // inner 'begin' element
-          statementsCounter += 1
-        }
-        else if (text === endElementText) {
-          statementsCounter -= 1
-
-          if (statementsCounter < 0) {
-            break
-          }
-        }
-      }
-
-      const { nextSibling } = currentElement
-
-      this.#unsubscribeElementAndItsChildren(currentElement)
-
-      currentElement.remove()
-      deletedElementsCount += 1
-      currentElement = nextSibling
     }
-
-    return deletedElementsCount
   }
 
   /**
@@ -1242,7 +1219,7 @@ class ElementsCreator {
      * It's easier this way, and if the element is being deleted along with
      * the rendered elements, no references to these elements remains.
      *
-     * @type {Comment & {renderedElementsMap: RenderedElementsMap}}
+     * @type {RenderedElementsCollectorElement}
      */
     // @ts-ignore
     const commentElementEnd = this.#document.createComment(`${type}-end`)
@@ -1351,8 +1328,6 @@ class ElementsCreator {
         let lastElement = commentElementBegin
 
         if (prevKey !== null) {
-          let isKeyInRenderedElementsMap = false
-
           for (const item of commentElementEnd.renderedElementsMap) {
             if (!item) continue
 
@@ -1363,8 +1338,6 @@ class ElementsCreator {
                 ? elements[elements.length - 1]
                 : lastElement
 
-              isKeyInRenderedElementsMap = true
-
               break
             }
           }
@@ -1372,72 +1345,19 @@ class ElementsCreator {
 
         createElements(updatedObject, updatedObject, lastElement, prop)
       }
-      else if (action === EnumStateAction.UPDATE) {
-        // if (updatedObject[prop] instanceof Object) {
-        //
-        //   const iterator = (
-        //     updatedObject instanceof Map
-        //     || updatedObject instanceof Set
-        //   )
-        //     ? updatedObject.keys()
-        //     : Object.keys(updatedObject)
-        //
-        //   for (let i of iterator) {
-        //     if (i !== prop && updatedObject[i] === updatedObject[prop]) {
-        //       console.log(prop, i)
-        //       break
-        //     }
-        //   }
-        // }
-        // else {
-        statementRepaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
-        statementRepaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
-        // }
-      }
       /**
        * Element has been deleted from the state?
        * - Remove the DOM elements
        * - Remove these same elements from .renderedElementsMap
        */
       if (action === EnumStateAction.DELETE) {
-        let index = commentElementEnd.renderedElementsMap.length
+        const isArray = updatedObject instanceof Array
 
-        while (index > 0) {
-          index -= 1
-
-          //const item = commentElementEnd.renderedElementsMap[index]
-
-          if (!commentElementEnd.renderedElementsMap[index]) continue
-
-          const isArray = updatedObject instanceof Array
-
-          if (commentElementEnd.renderedElementsMap[index].key === prop) {
-            for (const element of commentElementEnd.renderedElementsMap[index].elements) {
-              // Delete all subscriptions for this element
-              this.#unsubscribeElementAndItsChildren(element)
-
-              // Delete the element itself
-              // @ts-ignore
-              element.remove()
-            }
-
-            if (isArray) {
-              commentElementEnd.renderedElementsMap[index].elements.length = 0
-
-              delete commentElementEnd.renderedElementsMap[index]
-
-              // if (index === updatedObject.length - 1) {
-              //   commentElementEnd.renderedElementsMap.length = updatedObject.length
-              // }
-            }
-            else {
-              commentElementEnd.renderedElementsMap
-                = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
-            }
-
-            break
-          }
-        }
+        this.#removeRenderedElements(commentElementEnd, prop, isArray)
+      }
+      else if (action === EnumStateAction.UPDATE) {
+        statementRepaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
+        statementRepaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
       }
       else if (action === EnumStateAction.ARRAY_SPLICE) {
         if (updatedObject instanceof Array) {

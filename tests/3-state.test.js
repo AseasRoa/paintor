@@ -295,4 +295,67 @@ describe('State', () => {
 
     expectTextContentsToBeLike(elements, { innerArrayState: 'innerArrayState-3' })
   })
+
+  test('(DOM) forState in forState', () => {
+    const container = document.body
+
+    /** @type {{a: {b: Object<string, string>}}} */
+    const theState = state({a: {b: {c: 'C'}}})
+
+    component(($) => {
+      $.div(
+        $.forState(theState, (a) => {
+          $.forState(a.b, (value, key) => {
+            $.button(key + '-' + value)
+          })
+        })
+      )
+    }).paint(container)
+
+    let elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'c-C',
+      'forState-end',
+      'forState-end',
+    ])
+
+    theState.a = {b: {d: 'D'}}
+
+    elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'd-D',
+      'forState-end',
+      'forState-end',
+    ])
+
+    theState.a.b = {e: 'E'}
+
+    elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'e-E',
+      'forState-end',
+      'forState-end',
+    ])
+
+    theState.a = {b: {f: 'F'}}
+
+    elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'f-F',
+      'forState-end',
+      'forState-end',
+    ])
+  })
 })
