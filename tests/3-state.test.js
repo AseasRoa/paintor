@@ -300,7 +300,7 @@ describe('State', () => {
     const container = document.body
 
     /** @type {{a: {b: Object<string, string>}}} */
-    const theState = state({a: {b: {c: 'C'}}})
+    const theState = state({ a: { b: { c: 'C' } } })
 
     component(($) => {
       $.div(
@@ -308,7 +308,7 @@ describe('State', () => {
           $.forState(a.b, (value, key) => {
             $.button(key + '-' + value)
           })
-        })
+        }),
       )
     }).paint(container)
 
@@ -322,7 +322,7 @@ describe('State', () => {
       'forState-end',
     ])
 
-    theState.a = {b: {d: 'D'}}
+    theState.a = { b: { d: 'D' } }
 
     elements = container.getElementsByTagName('div')[0]
 
@@ -334,7 +334,7 @@ describe('State', () => {
       'forState-end',
     ])
 
-    theState.a.b = {e: 'E'}
+    theState.a.b = { e: 'E' }
 
     elements = container.getElementsByTagName('div')[0]
 
@@ -346,7 +346,7 @@ describe('State', () => {
       'forState-end',
     ])
 
-    theState.a = {b: {f: 'F'}}
+    theState.a = { b: { f: 'F' } }
 
     elements = container.getElementsByTagName('div')[0]
 
@@ -354,6 +354,59 @@ describe('State', () => {
       'forState-begin',
       'forState-begin',
       'f-F',
+      'forState-end',
+      'forState-end',
+    ])
+  })
+
+  test('(DOM) forState in forState, testing the deletion of inner elements', () => {
+    const container = document.body
+
+    /** @type {{a: {b: Object<string, string>}}} */
+    const theState = state({ a: { b: { c: 'C' } } })
+
+    component(($) => {
+      $.div(
+        $.forState(theState, (a) => {
+          $.forState(a.b, (value, key) => {
+            $.button(key + '-' + value)
+          })
+        }),
+      )
+    }).paint(container)
+
+    let elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'c-C',
+      'forState-end',
+      'forState-end',
+    ])
+
+    theState.a.b = { c1: 'C1', c2: 'C2', c3: 'C3' }
+
+    elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'c1-C1',
+      'c2-C2',
+      'c3-C3',
+      'forState-end',
+      'forState-end',
+    ])
+
+    theState.a = { b: { d: 'D' } }
+
+    elements = container.getElementsByTagName('div')[0]
+
+    expectTextContentsToBeLike(elements.childNodes, [
+      'forState-begin',
+      'forState-begin',
+      'd-D',
       'forState-end',
       'forState-end',
     ])

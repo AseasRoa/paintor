@@ -233,14 +233,15 @@ class StateProxy {
                 }
                 else if (
                   value[key] instanceof Object
+                  && target[prop][key] instanceof Object
                 ) {
                   this.#onPropDelete(target, prop)
                 }
               }
 
-              for (const i in target[prop]) {
-                if (!(i in value)) {
-                  this.#onPropDelete(target[prop], i)
+              for (const key in target[prop]) {
+                if (!(key in value)) {
+                  this.#onPropDelete(target[prop], key)
                 }
               }
 
@@ -267,7 +268,7 @@ class StateProxy {
             this.#onPropUpdateInForState(receiver, prop, value)
             //this.#onPropDelete(receiver, prop)
             //this.#onPropCreate(receiver, prop)
-            this.#onPropUpdate(receiver, prop, value)
+            //this.#onPropUpdate(receiver, prop, value)
           }
           else if (value instanceof Object
             && !(value instanceof Date)

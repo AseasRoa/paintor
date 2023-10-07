@@ -885,7 +885,7 @@ class ElementsCreator {
 
   /**
    * @param {RenderedElementsCollectorElement} commentElementEnd
-   * @param {string} prop
+   * @param {string | Symbol} prop
    * @param {boolean} isArray
    */
   #removeRenderedElements(commentElementEnd, prop, isArray) {
@@ -896,11 +896,12 @@ class ElementsCreator {
 
       if (!commentElementEnd.renderedElementsMap[index]) continue
 
-      if (!prop || commentElementEnd.renderedElementsMap[index].key === prop) {
+      if (prop === '*' || commentElementEnd.renderedElementsMap[index].key === prop) {
         for (const element of commentElementEnd.renderedElementsMap[index].elements) {
-          if ('renderedElementsMap' in element) { // inner end element
+          // @ts-ignore
+          if (element.renderedElementsMap) { // inner end element
             // @ts-ignore
-            this.#removeRenderedElements(element, '', true)
+            this.#removeRenderedElements(element, '*', true)
           }
 
           // Delete all subscriptions for this element
@@ -924,8 +925,6 @@ class ElementsCreator {
           commentElementEnd.renderedElementsMap
             = arrayRemoveKey(commentElementEnd.renderedElementsMap, index)
         }
-
-        break
       }
     }
   }
