@@ -16,10 +16,10 @@ component(($) => {
       number = 1
     }
 
-    localState.push(`<${number++}>`)
+    localState.push(number++)
   }, 1000)
 
-  $.forState(localState, (value, key) => {
-    $.span(value())
+  $.forState(localState, (number, key) => {
+    $.span('<' + number + '>')
   })
 }).paint('add-remove-elements-example-1')

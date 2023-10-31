@@ -8,7 +8,7 @@ and vice versa. This Object is then called a State.
 
 ## Object <--> State
 
-To create a State, use the function `state()`. It takes a regular Object and returns a
+To create a State, use the function `state()`. It takes an Array or an Object and returns a
 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 of it. This makes both, the original Object and the State bound together. When the values of one
 change, the values of the other also change.
@@ -29,7 +29,7 @@ reactive.
    
   /* Increment myState.count on every second */
   setInterval(() => {
-	  myState.count++
+    myState.count++
     console.log(`object.count: ${object.count} | myState.count: ${myState.count}`)
   }, 1000)
 </script>
@@ -44,7 +44,7 @@ reactive.
 
   /* Increment object.count on every second */
   setInterval(() => {
-	object.count++
+    object.count++
     console.log(`object.count: ${object.count} | myState.count: ${myState.count}`)
   }, 1000)
 </script>
@@ -59,9 +59,8 @@ object.count: 2 | myState.count: 2
 object.count: 3 | myState.count: 3
 ```
 
-When `myState.count` is incremented, `object.count` is also incremented.
-
 When `object.count` is incremented,`myState.count` is also incremented.
+But also, when `myState.count` is incremented, `object.count` is also incremented.
 
 ## State <--> DOM
 

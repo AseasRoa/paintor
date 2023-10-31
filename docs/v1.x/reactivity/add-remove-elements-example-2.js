@@ -1,73 +1,25 @@
 import { component, state } from '/assets/paintor.js'
 
 component(($) => {
-  const localState = state({ number: 0 })
+  // Create the states
+  const stateA = state([0])
+  const stateB = state([{ number: 0 }])
 
+  // And try to change them
   setInterval(() => {
-    localState.number++
+    stateA[0] = 1
+    stateB[0].number = 1
   }, 1000)
 
-  $.style(`
-    td {
-      padding: 0.2rem 1rem;
-      border-bottom: 0.1rem solid darkslategray;
-    }
-  `)
+  // Variant A: The passed value is a primitive number
+  $.forState(stateA, (number) => {
+    // Not reactive, the value will remain 0
+    $.div(() => number)
+  })
 
-  $.forState(localState, (value, key) => {
-    $.table(
-      $.thead(
-        $.tr(
-          $.td('Variant'),
-          $.td('Result')
-        )
-      ),
-      $.tbody(
-        $.tr(
-          $.td('value'),
-          $.td(value),
-        ),
-        $.tr(
-          $.td(`'<' + value + '>'`),
-          $.td('<' + value + '>'),
-        ),
-        $.tr(
-          $.td('() => value()'),
-          $.td(() => value())
-        ),
-        $.tr(
-          $.td(`() => '<' + value() + '>'`),
-          $.td(() => '<' + value() + '>')
-        ),
-        $.tr(
-          $.td('() => localState[key]'),
-          $.td(() => localState[key])
-        ),
-        $.tr(
-          $.td(`() => '<' + localState[key] + '>'`),
-          $.td(() => '<' + localState[key] + '>')
-        ),
-        $.tr(
-          $.td('value()'),
-          $.td(value())
-        ),
-        $.tr(
-          $.td(`'<' + value() + '>'`),
-          $.td('<' + value() + '>')
-        ),
-        $.tr(
-          $.td('() => value'),
-          $.td(() => value)
-        ),
-        $.tr(
-          $.td(`() => '<' + value + '>'`),
-          $.td(() => '<' + value + '>')
-        ),
-        $.tr(
-          $.td(`'<' + localState[key] + '>'`),
-          $.td('<' + localState[key] + '>')
-        )
-      )
-    )
+  // Variant B: The passed value is a State
+  $.forState(stateB, (item) => {
+    // Reactive, the value will change to 1
+    $.div(() => item.number)
   })
 }).paint('add-remove-elements-example-2')

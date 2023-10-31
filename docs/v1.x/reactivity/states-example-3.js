@@ -1,18 +1,19 @@
 import { component, state } from '/assets/paintor.js'
 
-const object = { tick: 0 }
-const globalState = state(object)
+const globalState = state({ tick: 0 })
 
 setInterval(() => { globalState.tick++ }, 1000)
 
+const tick = () => globalState.tick
+
 component(($) => {
-  $.button({ textContent : () => globalState.tick })
+  $.button({ textContent : tick })
 }).paint('states-example-3-button')
 
 component(($) => {
-  $.p(() => globalState.tick)
+  $.p(tick)
 }).paint('states-example-3-paragraph')
 
 component(($) => {
-  $.textarea({ value : () => globalState.tick })
+  $.textarea({ value : tick })
 }).paint('states-example-3-textarea')

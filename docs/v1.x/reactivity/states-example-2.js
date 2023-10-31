@@ -1,16 +1,17 @@
 import { component, state } from '/assets/paintor.js'
 
 component(($) => {
-  const object = { text: '' }
-  const localState = state(object)
+  const localState = state({ text: '' })
+
+  const setText = (event) => {
+    localState.text = event.target.value
+  }
 
   $.div(
     $.input({
       type: 'text',
       placeholder: 'Type something here',
-      onKeyDown: (event) => {
-        localState.text = event.target.value
-      }
+      onKeyDown: setText
     }),
     $.span(() => localState.text), // The callback here is needed for reactivity
   )
