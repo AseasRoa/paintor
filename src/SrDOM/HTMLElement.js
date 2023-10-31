@@ -8,9 +8,6 @@ import { Element } from './Element.js'
 function escapeHTML(html) {
   let text = html
 
-  // Remove white space between tags
-  // text = text.replace(/>\s+</, '><')
-
   /** @type {Object<string, string>} */
   const charsToReplace = {
     '&': '&amp;',
@@ -18,7 +15,7 @@ function escapeHTML(html) {
     '>': '&gt;',
   }
 
-  text = text.replace(/[&<>"]/g, (tag) => {
+  text = text.replace(/[&<>"]/ug, (tag) => {
     let output = tag
 
     if (tag in charsToReplace) {
@@ -42,12 +39,11 @@ function formatStringToCamelCase(str) {
 
   if (split.length === 1) return split[0]
 
-  return (
-    split[0]
-    + split.slice(1)
-        .map((word) => word[0].toUpperCase() + word.slice(1))
-        .join('')
-  )
+  const appdx = split.slice(1).map(
+    (word) => word[0].toUpperCase() + word.slice(1)
+  ).join('')
+
+  return (split[0] + appdx)
 }
 
 /**
@@ -112,10 +108,12 @@ class HTMLElement extends Element {
    * @param {string | StylesObject} input
    */
   set style(input) {
-    // In the browser there are few ways to set the style:
-    // - By setting each individual property (.style.color = red)
-    // - By setting '.style.cssText' to a string (.style.cssText = 'color:red')
-    // - By setting '.style' itself to a string (.style = 'color:red')
+    /*
+     * In the browser there are few ways to set the style:
+     * - By setting each individual property (.style.color = red)
+     * - By setting '.style.cssText' to a string (.style.cssText = 'color:red')
+     * - By setting '.style' itself to a string (.style = 'color:red')
+     */
 
     if (typeof input === 'string') {
       const style = getStyleObjectFromString(input)

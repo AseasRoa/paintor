@@ -112,10 +112,12 @@ class ElementsCreator {
     this.#templates        = templates
     this.#translations     = translations
 
-    // HTML_TAGS.forEach((tagName) => {
-    //   // @ts-ignore
-    //   this[tagName] = this[tagName].bind(this)
-    // })
+    /*
+     * HTML_TAGS.forEach((tagName) => {
+     *   // @ts-ignore
+     *   this[tagName] = this[tagName].bind(this)
+     * })
+     */
   }
 
   /**
@@ -138,9 +140,11 @@ class ElementsCreator {
       argumentID += 1
 
       if (typeof argument === 'string') {
-        // In case of a string, create a new text node.
-        // This way, multiple text nodes can be put into the element,
-        // mixed with http elements.
+        /*
+         * In case of a string, create a new text node.
+         * This way, multiple text nodes can be put into the element,
+         * mixed with http elements.
+         */
 
         const textNode = this.#document.createTextNode(
           this.#translate(argument),
@@ -180,13 +184,18 @@ class ElementsCreator {
           }
         }
 
-        // Case 1) Array, containing at least one child to be added to their parent
-        // In DOM, if some elements are not children, they are turned into strings,
-        // but the same produces error in SSR
+        /*
+         * Case 1) Array, containing at least one child to be added to their parent.
+         *
+         * In DOM, if some elements are not children, they are turned into strings,
+         * but the same produces error in SSR
+         */
         if (isChildrenArray) {
           addChildrenToStack(argument, children)
         }
-        // Case 2) Array, containing string to be formatted
+        /*
+         * Case 2) Array, containing string to be formatted.
+         */
         else {
           const textNode = this.#document.createTextNode(
             this.#arrayTranslateFormatTranslate(argument),
@@ -244,13 +253,12 @@ class ElementsCreator {
                 this.#setPropertiesToElement(element, { value: argument })
               }
               else {
-                // eslint-disable-next-line @typescript-eslint/no-loop-func
+                // eslint-disable-next-line no-loop-func
                 const callbackOnTemplate = () => {
                   this.#statementHandlerForFunction(
                     'nest',
                     argument,
                     true,
-                    // eslint-disable-next-line @typescript-eslint/no-loop-func
                     (
                       value,
                       isInitialRun,
@@ -311,8 +319,10 @@ class ElementsCreator {
         && !(argument instanceof Function)
         && argumentID === 1
       ) {
-        // If Object, and the first argument, this is a property.
-        // This condition needs to be at the end of the 'if' chain.
+        /*
+         * If Object, and if it's the first argument, this is a property.
+         * This condition needs to be at the end of the 'if' chain.
+         */
 
         this.#setPropertiesToElement(element, argument)
       }
@@ -444,8 +454,10 @@ class ElementsCreator {
 
     for (const element of elements) {
       if (
-        // Dummy tag (virtual mode) when simple string, or text node when template literal
-        // In both cases the tag name is an empty string
+        /*
+         * Dummy tag (virtual mode) when simple string, or text node when template literal.
+         * In both cases the tag name is an empty string
+         */
         // @ts-ignore
         element.tagName === ''
       ) {
@@ -807,8 +819,10 @@ class ElementsCreator {
     let elements = []
 
     if (this.#isSr) {
-      // We create a new dummy element every time.
-      // An element with no tag name is skipped in the render stage.
+      /*
+       * We create a new dummy element every time.
+       * An element with no tag name is skipped in the render stage.
+       */
       const element = this.#document.createElement('')
 
       element.innerHTML = string ?? ''
@@ -830,7 +844,7 @@ class ElementsCreator {
         // In DOM, we can reuse the same element
         const template = this.#reusableTemplateElement
 
-        //element.setHTML(string.trim() ?? '')
+        // element.setHTML(string.trim() ?? '')
         template.innerHTML = string.trim() ?? ''
 
         // childNodes also contains the text nodes
@@ -907,19 +921,14 @@ class ElementsCreator {
           // Delete all subscriptions for this element
           this.#unsubscribeElementAndItsChildren(element)
 
-          // Delete the element itself
           // @ts-ignore
-          element.remove()
+          element.remove() // Delete the element itself
         }
 
         if (isArray) {
           commentElementEnd.renderedElementsMap[index].elements.length = 0
 
           delete commentElementEnd.renderedElementsMap[index]
-
-          // if (index === updatedObject.length - 1) {
-          //   commentElementEnd.renderedElementsMap.length = updatedObject.length
-          // }
         }
         else {
           commentElementEnd.renderedElementsMap
@@ -935,7 +944,7 @@ class ElementsCreator {
    * @param {Function} [callbackOnTemplate]
    */
   #setPropertiesToElement(element, properties, callbackOnTemplate) {
-    for (let propertyName in properties) {
+    for (const propertyName in properties) {
       let property = properties[propertyName]
 
       if (this.#isSr) {
@@ -947,10 +956,12 @@ class ElementsCreator {
         }
       }
       else if (property instanceof Function) {
-        // If the property name is an event (for example onClick),
-        // then the property is a function. This function should not
-        // be immediately called to get a value from it. Instead, it
-        // should be added as a listener.
+        /*
+         * If the property name is an event (for example onClick),
+         * then the property is a function. This function should not
+         * be immediately called to get a value from it. Instead, it
+         * should be added as a listener.
+         */
         if (addEventListenerIfPossible(element, propertyName, property)) {
           continue
         }
@@ -1056,7 +1067,9 @@ class ElementsCreator {
           || (
             propertyName === 'value'
             && (
-              // Can't use HTMLInputElement here, because it does not exist in SrDOM
+              /*
+               * Can't use HTMLInputElement here, because it does not exist in SrDOM
+               */
               // @ts-ignore
               element.tagName === 'INPUT'
               // @ts-ignore
@@ -1153,7 +1166,6 @@ class ElementsCreator {
 
         // Clean all contents.
         this.#collectedElements[level].removeAllElements()
-        //this.#removeStatementElements(commentElementBegin)
 
         // Create the new elements
         callbackForFunction(bindFunctionResult, false, null, null)
@@ -1235,9 +1247,11 @@ class ElementsCreator {
       let isTemporaryLevel = false
 
       if (commentElementBegin.parentElement) {
-        // When the loop is in inner level, make a new temporary collector,
-        // which will be deleted after that. Otherwise, the new elements are
-        // placed on level 0
+        /*
+         * When the loop is in inner level, make a new temporary collector,
+         * which will be deleted after that. Otherwise, the new elements are
+         * placed on level 0
+         */
         this.#collectedElements.push(new ElementsCollector())
         isTemporaryLevel = true
       }
@@ -1258,7 +1272,6 @@ class ElementsCreator {
           }
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-loop-func
         for (const element of item.elements) {
           if (level === 0) {
             /**
@@ -1313,7 +1326,7 @@ class ElementsCreator {
           ? updatedObject.keys()
           : Object.keys(updatedObject)
 
-        for (let i of iterator) {
+        for (const i of iterator) {
           if (i === prop) {
             break
           }
@@ -1364,6 +1377,7 @@ class ElementsCreator {
            * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
            */
           // @ts-ignore
+          // eslint-disable-next-line prefer-const
           let [start, deleteCount, ...newItems] = arrayFunctionArgs
 
           if (deleteCount === Infinity) {
@@ -1376,7 +1390,7 @@ class ElementsCreator {
           if (deleteCount > 0) {
             for (
               let i = start,
-                length = start + deleteCount;
+                  length = start + deleteCount;
               i < length;
               i++
             ) {
@@ -1405,8 +1419,12 @@ class ElementsCreator {
 
               if (oldIndex < 0) break
 
-              commentElementEnd.renderedElementsMap[index]     = commentElementEnd.renderedElementsMap[oldIndex]
-              commentElementEnd.renderedElementsMap[index].key = index.toString()
+              commentElementEnd.renderedElementsMap[index]
+                = commentElementEnd.renderedElementsMap[oldIndex]
+
+              commentElementEnd.renderedElementsMap[index].key
+                = index.toString()
+
               delete commentElementEnd.renderedElementsMap[oldIndex]
             }
           }
@@ -1441,8 +1459,7 @@ class ElementsCreator {
       else if (action === EnumStateAction.ARRAY_SWAP) {
         const [key1, key2] = arrayFunctionArgs
 
-        // change siblings
-        // swap elements objects by reference
+        // Change siblings (swap elements objects by reference)
         const tmp                                            = commentElementEnd.renderedElementsMap[key2].elements
         commentElementEnd.renderedElementsMap[key2].elements = commentElementEnd.renderedElementsMap[key1].elements
         commentElementEnd.renderedElementsMap[key1].elements = tmp
@@ -1456,11 +1473,11 @@ class ElementsCreator {
         }
       }
       else if (action === EnumStateAction.ARRAY_COPY_WITHIN) {
-        let [target, start, end] = arrayFunctionArgs
+        const [target, start, end] = arrayFunctionArgs
 
         for (
           let fromIndex = start,
-            toIndex = target;
+              toIndex = target;
           fromIndex < end;
           fromIndex++, toIndex++
         ) {
@@ -1475,7 +1492,7 @@ class ElementsCreator {
       else if (action === EnumStateAction.ARRAY_SORT) {
         for (
           let index = 0,
-            length = updatedObject.length;
+              length = updatedObject.length;
           index < length;
           index++
         ) {
@@ -1564,8 +1581,7 @@ class ElementsCreator {
     const added = callbackForState(state, this.#collectedElements[thisLevel])
 
     if (added.length === 1 && added[0].key === undefined) {
-      // Initial draw on empty state. We don't want the result from it,
-      // because then it interferes.
+      // Initial draw on empty state. We don't want the result from it, because then it interferes.
       added.splice(0, 1)
     }
 
@@ -1603,14 +1619,12 @@ class ElementsCreator {
     // 3) Normal Function
     if (handler instanceof Function) {
       // @ts-ignore
-      let ret = handler()
+      const ret = handler()
 
       // 3.1) Normal Function returns Component or Template
       if (ret instanceof Component || ret instanceof Function) {
         this.#statementHandlerResolver(ret)
       }
-
-      return
     }
   }
 

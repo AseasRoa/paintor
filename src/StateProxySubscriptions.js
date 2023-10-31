@@ -26,7 +26,7 @@ export class StateProxySubscriptions {
    * The function that is used instead of a fixed value.
    * For example: () => (state.clicks)
    * @param {StatementRepaintFunction | null} statementRepaintFunction
-   * This is only used in the if() function. It's a function that
+   * This is only used in the 'if()' function. It's a function that
    * is used to repaint the elements in case the condition is changed
    * from false to true or vice versa.
    */
@@ -59,8 +59,10 @@ export class StateProxySubscriptions {
 
     const elementSubscriptions = subscriptions.get(element)
 
-    // Search for a subscription with the same parameters.
-    // If such already exists, just don't create a new one.
+    /*
+     * Search for a subscription with the same parameters.
+     * If such already exists, just don't create a new one.
+     */
     for (const item of elementSubscriptions) {
       if (
         item.propertyName === propertyName
@@ -70,6 +72,10 @@ export class StateProxySubscriptions {
       ) return
     }
 
+    const stateSubscription = this
+    // @ts-ignore
+    const statePath = (state[symState]?.path ?? '')
+
     /**
      * @type {Subscription}
      */
@@ -78,9 +84,8 @@ export class StateProxySubscriptions {
       subPropertyName,
       bindFunction,
       statementRepaintFunction,
-      stateSubscription: this,
-      // @ts-ignore
-      statePath: (state?.[symState]?.path ?? ''),
+      stateSubscription,
+      statePath,
     }
 
     elementSubscriptions.push(subscription)

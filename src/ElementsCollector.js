@@ -23,7 +23,7 @@ class ElementsCollector {
    * @param {Node[]} elements
    */
   addElements(elements) {
-    for (let element of elements) {
+    for (const element of elements) {
       this.elements.push(element)
     }
   }
@@ -112,12 +112,6 @@ class ElementsCollector {
         }
       }
     }
-
-    // if (elements.length > 0) {
-    //   this.elements = this.elements.filter(
-    //     (element) => !(elements.includes(element)),
-    //   )
-    // }
   }
 
   /**

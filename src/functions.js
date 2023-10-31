@@ -1,6 +1,5 @@
 import { isState } from './state.js'
 import { symAccess, symState, symTemplateFunction } from './constants.js'
-import { ElementsCreator } from './ElementsCreator.js'
 import { Component } from './Component.js'
 
 /**
@@ -21,7 +20,7 @@ export function getGlobalObject() {
  * @returns {string}
  */
 export function format(fmt, ...args) {
-  const re = /(%?)(%([ojdsif]))/g
+  const re = /(%?)(%([ojdsif]))/ug
 
   fmt = fmt ?? ''
 
@@ -34,7 +33,7 @@ export function format(fmt, ...args) {
      * @returns {string}
      */
     const replacer = (match, escaped, ptn, flag) => {
-      let arg = args.shift()
+      const arg = args.shift()
       let out = ''
 
       switch (flag) {
@@ -44,19 +43,19 @@ export function format(fmt, ...args) {
           }
           break
         case 's':
-          out = '' + arg
+          out = String(arg)
           break
         case 'd':
-          out = '' + Number(arg)
+          out = String(Number(arg))
           break
         case 'j':
           out = JSON.stringify(arg)
           break
         case 'i':
-          out = '' + parseInt('' + arg, 10)
+          out = String(parseInt(String(arg), 10))
           break
         case 'f':
-          out = '' + parseFloat('' + arg)
+          out = String(parseFloat(String(arg)))
           break
       }
 
@@ -75,13 +74,13 @@ export function format(fmt, ...args) {
 
   // arguments, remained after the formatting
   if (args.length > 0) {
-    fmt += ' ' + args.join(' ')
+    fmt += ` ${  args.join(' ')}`
   }
 
   // update escaped %% values
-  fmt = fmt.replace(/%{2,2}/g, '%')
+  fmt = fmt.replace(/%{2,2}/ug, '%')
 
-  return '' + fmt
+  return String(fmt)
 }
 
 /**
@@ -90,7 +89,6 @@ export function format(fmt, ...args) {
  */
 export function isBrowserEnvironment() {
   if (isBrowserEnvironment.isIt === undefined) {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
     const isBrowser = new Function('try {return this===window;}catch(e){ return false;}')
 
     isBrowserEnvironment.isIt = isBrowser()
@@ -156,7 +154,7 @@ export function isWhitespace(char) {
  * @returns {boolean}
  */
 export function isValidCustomElementName(name) {
-  return /^[a-z][a-z0-9-]+$/.test(name) && name.includes('-')
+  return /^[a-z][a-z0-9-]+$/u.test(name) && name.includes('-')
 }
 
 /**
@@ -164,7 +162,7 @@ export function isValidCustomElementName(name) {
  * @returns {boolean}
  */
 export function selectorEndsWithId(selector) {
-  return /#[a-z0-9-]+\s*$/.test(selector)
+  return /#[a-z0-9-]+\s*$/u.test(selector)
 }
 
 /**
@@ -193,8 +191,8 @@ export function stringToBoolean(string) {
 export function addEventListenerIfPossible(element, attributeName, callback) {
   if (
     !(element instanceof window.Node)
-		|| (typeof attributeName !== 'string')
-		|| (typeof callback !== 'function')
+    || (typeof attributeName !== 'string')
+    || (typeof callback !== 'function')
     || (isEventAttribute(attributeName) === false)
   ) return false
 
@@ -292,7 +290,7 @@ export function forEachLoop(
     throw new TypeError('"handler" argument should be a Function')
   }
 
-  const object = isState(state) ? state[symState].target : state
+  const object = (isState(state)) ? state[symState].target : state
   const isProxy = forLoopType === 2 && isState(object)
 
   /**
@@ -304,8 +302,7 @@ export function forEachLoop(
   let nothing = undefined
 
   if (object instanceof Array) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    nothing = isProxy ? state[symAccess] : undefined
+    nothing = (isProxy) ? state[symAccess] : undefined
 
     if (keyToRender === undefined && object.length === 0 && handlerOnEmpty instanceof Function) {
       handlerOnEmpty()
@@ -317,7 +314,7 @@ export function forEachLoop(
         continue
       }
 
-      let value = isProxy
+      let value = (isProxy)
         ? (object[key] instanceof Object)
           ? state[key]
           : object[key]
@@ -349,7 +346,6 @@ export function forEachLoop(
     object instanceof Map
     || object instanceof Set
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nothing = (isProxy) ? state[symAccess] : undefined
 
     if (keyToRender === undefined && object.size === 0 && handlerOnEmpty instanceof Function) {
@@ -387,13 +383,12 @@ export function forEachLoop(
     }
   }
   else if (object instanceof Object) {
-    /**
+    /*
      * The Object loop must be at the end,
      * because Array, Set and Map are also Object.
      */
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    nothing = isProxy ? state[symAccess] : undefined
+    nothing = (isProxy) ? state[symAccess] : undefined
 
     if (keyToRender === undefined && Object.keys(object).length === 0 && handlerOnEmpty instanceof Function) {
       handlerOnEmpty()
@@ -405,7 +400,7 @@ export function forEachLoop(
         continue
       }
 
-      let value = isProxy
+      let value = (isProxy)
         ? (object[key] instanceof Object)
           ? state[key]
           : object[key]
@@ -495,7 +490,7 @@ export function arrayRemoveKey(arr, key) {
  * @returns {T[]}
  */
 export function arrayRemoveValue(arr, value) {
-  return arr.filter(function (el) {
+  return arr.filter((el) => {
     return el !== value
   })
 }
@@ -608,9 +603,8 @@ export function objectHasKey(object, key) {
   if (object instanceof Map || object instanceof Set) {
     return object.has(key)
   }
-  else {
-    return (key in object)
-  }
+
+  return (key in object)
 }
 
 /**
@@ -623,11 +617,10 @@ export function objectGetValue(object, key) {
     return object.get(key)
   }
   else if (object instanceof Set) {
-    return object.has(key) ? key : undefined
+    return (object.has(key)) ? key : undefined
   }
-  else {
-    return object[key]
-  }
+
+  return object[key]
 }
 
 /**
@@ -677,9 +670,7 @@ export function arrayMoveIndex(array, oldIndex, newIndex) {
  * @param {...Element} elements
  */
 export const chainElements = (...elements) => {
-  const length = elements.length
-
-  for (let i = 1; i < length; i++) {
+  for (let i = 1; i < elements.length; i++) {
     elements[i-1].after(elements[i])
   }
 }

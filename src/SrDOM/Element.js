@@ -116,9 +116,8 @@ export class Element extends Node {
     if (index === -1) {
       return null
     }
-    else {
-      return this.#attributes[index].value
-    }
+
+    return this.#attributes[index].value
   }
 
   /**
@@ -157,10 +156,13 @@ export class Element extends Node {
       return
     }
 
-    // Fix the value
-    // Nope, the value is not fixed here. Instead, the actual value is preserved here.
-    // It's fixed later on the paining stage, because a special care is needed
-    // for Boolean Attributes
+    /*
+     * Fix the value
+     *
+     * Nope, the value is not fixed here. Instead, the actual value is preserved here.
+     * It's fixed later on the paining stage, because a special care is needed
+     * for Boolean Attributes
+     */
 
     // Set
     const value = attributeValue

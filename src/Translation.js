@@ -38,7 +38,7 @@ const createSingleTranslation = async function (defaultPath, locale) {
    *
    * @type {RegExpMatchArray | null}
    */
-  const match = defaultPath.match(/^(.*?)([^.\/\\]+)(.\w+)$/m)
+  const match = defaultPath.match(/^(.*?)([^.\/\\]+)(.\w+)$/um)
 
   if (match === null) {
     throw new TypeError(`Incorrect path: ${defaultPath}`)
@@ -47,11 +47,11 @@ const createSingleTranslation = async function (defaultPath, locale) {
   const filePath = match[1] + locale + match[3]
 
   try {
-    translation = (await import(/* @vite-ignore */ filePath)).default
+    translation = (await import(filePath)).default
   }
   catch (e) {
     if (filePath !== defaultPath) {
-      translation = (await import(/* @vite-ignore */ defaultPath)).default
+      translation = (await import(defaultPath)).default
     }
   }
 
@@ -67,12 +67,13 @@ const createSingleTranslation = async function (defaultPath, locale) {
  * @returns {Promise<Translation[]>}
  * @throws
  */
+// eslint-disable-next-line require-await
 const fetchTranslations = async function (...defaultPaths) {
   const locale = getLocale()
 
   const promises = []
 
-  for (let path of defaultPaths) {
+  for (const path of defaultPaths) {
     promises.push(createSingleTranslation(path, locale))
   }
 

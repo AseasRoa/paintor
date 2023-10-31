@@ -7,7 +7,7 @@
  *   statementRepaintFunction: null | StatementRepaintFunction
  * }}
  */
-let suggestedItems = {
+const suggestedItems = {
   element                 : null,
   propertyName            : '',
   subPropertyName         : '',

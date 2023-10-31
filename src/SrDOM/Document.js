@@ -1,5 +1,5 @@
 import { EnumNodeTypes } from './constants.js'
-import { Comment, DocumentFragment, HTMLElement, Element, Node, Text } from './orderedExports.js'
+import { Comment, DocumentFragment, Element, HTMLElement, Node, Text } from './orderedExports.js'
 
 /**
  * Similar to 'document' in the browser, but used to create virtual elements
@@ -71,7 +71,7 @@ class Document extends Node {
   #children = []
 
   constructor() {
-    super(/* DOCUMENT_NODE */ 9, '#document')
+    super(EnumNodeTypes.DOCUMENT_NODE, '#document')
 
     const html = new HTMLElement('html')
     const head = new HTMLElement('head')
@@ -147,16 +147,6 @@ class Document extends Node {
 
     return element
   }
-
-  // /**
-  //  * @param {boolean} [prettyPrint]
-  //  * @returns {string}
-  //  */
-  // paint(prettyPrint = true) {
-  //   const tabsCount = (prettyPrint) ? 0 : -1
-  //
-  //   return this.body.paint(tabsCount)
-  // }
 }
 
 export { Document, HTMLElement }

@@ -39,7 +39,6 @@ export class StateProxyArrayFunctions {
   #arrayFnCopyWithin = (...args) => {
     const { target, receiver } = this.#arrayFnObjects
 
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     let [targetIndex, start, end] = args
     const { length } = target
 
@@ -81,8 +80,6 @@ export class StateProxyArrayFunctions {
   #arrayFnPush = (...args) => {
     const { target, receiver } = this.#arrayFnObjects
     const result = target.push.apply(target, args)
-
-    //this.#onPropCreate(receiver, (target.length - 1).toString())
 
     this.#arrayFnObjects.callback(EnumStateAction.ARRAY_PUSH, receiver, args)
 

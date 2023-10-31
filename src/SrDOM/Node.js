@@ -104,11 +104,8 @@ class Node {
       throw new DOMException('This node type does not support this method.')
     }
 
-    // If the insertion of aChild would lead to Document with more than one Element as child.
-    // (document should contain body here, which is an Element)
-    if (
-      this.nodeType === EnumNodeTypes.DOCUMENT_NODE
-    ) {
+    // If the current node is the Document, it already has body in it and nothing more can be added.
+    if (this.nodeType === EnumNodeTypes.DOCUMENT_NODE) {
       throw new DOMException('Failed to execute \'appendChild\' on \'Node\': Only one element on document allowed.')
     }
 
@@ -184,15 +181,15 @@ class Node {
   removeChild(childNode) {
     if (!childNode) {
       throw new Error(
-        'Failed to execute \'removeChild\' on \'HTMLElement\': ' +
-        'parameter 1 is not of type \'HTMLElement\'.',
+        'Failed to execute \'removeChild\' on \'HTMLElement\': '
+        + 'parameter 1 is not of type \'HTMLElement\'.',
       )
     }
 
     if (!this.#childNodes.includes(childNode)) {
       throw new Error(
-        'Failed to execute \'removeChild\' on \'HTMLElement\': ' +
-        'The node to be removed is not a child of this node.',
+        'Failed to execute \'removeChild\' on \'HTMLElement\': '
+        + 'The node to be removed is not a child of this node.',
       )
     }
 
@@ -203,7 +200,7 @@ class Node {
 
   /**
    * @param {object} htmlOptions
-   * @param {string} [htmlOptions.indent='']
+   * @param {string} [htmlOptions.indent]
    * @returns {string}
    */
   paintChildren({ indent = '' }) {

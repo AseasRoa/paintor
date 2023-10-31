@@ -52,16 +52,6 @@ class StateProxy {
     const handler = this.#createProxyHandler()
     const proxy   = new Proxy(object, handler)
 
-    // Store the path to the state in a special value in the
-    // proxy object, but make that value invisible for "for"
-    // (and similar) statements.
-    // Object.defineProperty(proxy, '--state-path', {
-    //   enumerable: false,
-    //   configurable: false,
-    //   writable: false,
-    //   value: statePath,
-    // })
-
     if (object instanceof Object) {
       if (!(symState in proxy)) {
         proxy[symState] = { target: object, path: statePath }
@@ -84,7 +74,9 @@ class StateProxy {
         proxy[key] = this.createProxy(object[key], innerStatePath)
       }
       else {
-        // This is done only to ensure that "set" event is triggered on the proxy
+        /*
+         * This is done only to ensure that "set" event is triggered on the proxy
+         */
         // @ts-ignore
         proxy[key] = object[key]
       }
@@ -100,7 +92,9 @@ class StateProxy {
     /** @type {ProxyHandler<ProxyObject>} */
     const handler = {
       get: (target, prop, receiver) => {
-        // If the target is a Proxy, get the original target
+        /*
+         * If the target is a Proxy, get the original target
+         */
         if (symState in target) {
           target = target[symState].target
         }
@@ -136,7 +130,9 @@ class StateProxy {
             )
           }
         }
-        // Internal functions of Set() and Map()
+        /*
+         * Internal functions of Set() and Map()
+         */
         else if (
           (target instanceof Map || target instanceof Set)
           // @ts-ignore
@@ -195,8 +191,10 @@ class StateProxy {
         if (prop === symState || prop === symAccess) {
           target[prop] = value
         }
-        // Array's length is set every time after
-        // adding or removing elements
+        /*
+         * Array's length is set every time after
+         * adding or removing elements
+         */
         else if (target instanceof Array && prop === 'length') {
           target[prop] = value
 
@@ -250,25 +248,30 @@ class StateProxy {
                * and non-reactive. Loop through the array and for each primitive value that
                * is changed, fire the update events.
                */
-              // for (const i in value) {
-              //   if (!(value[i] instanceof Object)) {
-              //     if (value[i] !== target[prop][i]) {
-              //       target[prop][symState] ??= { target: value, path: statePath }
-              //       target[prop][i] = value[i]
-              //
-              //       this.#onPropDelete(target[prop], i)
-              //       this.#onPropCreate(target[prop], i)
-              //     }
-              //   }
-              // }
+              if (false) {
+                for (const i in value) {
+                  if (!(value[i] instanceof Object)) {
+                    if (value[i] !== target[prop][i]) {
+                      target[prop][symState] ??= { target: value, path: statePath }
+                      target[prop][i] = value[i]
+
+                      this.#onPropDelete(target[prop], i)
+                      this.#onPropCreate(target[prop], i)
+                    }
+                  }
+                }
+              }
             }
 
             target[prop] = this.createProxy(value, statePath)
 
             this.#onPropUpdateInForState(receiver, prop, value)
-            //this.#onPropDelete(receiver, prop)
-            //this.#onPropCreate(receiver, prop)
-            //this.#onPropUpdate(receiver, prop, value)
+
+            // this.#onPropDelete(receiver, prop)
+
+            // this.#onPropCreate(receiver, prop)
+
+            // this.#onPropUpdate(receiver, prop, value)
           }
           else if (value instanceof Object
             && !(value instanceof Date)
@@ -340,7 +343,7 @@ class StateProxy {
 
     if (
       // @ts-ignore
-      updatedState?.[symState].path !== statePath
+      updatedState[symState]?.path !== statePath
       || !statementRepaintFunction
     ) {
       return null

@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import { ElementsCreator } from './ElementsCreator.js'
 import {
   isBrowserEnvironment,
@@ -262,25 +264,27 @@ class Component {
    * @returns {Component}
    */
   useTranslations(...translations) {
-    // Reset translations here, because the whole api chain (containing this function)
-    // can be executed multiple times, but with different translations every time.
-    // EDIT: Commented out, so that translations can be used in Components
-    // this.#translations = []
+    /*
+     * Reset translations here, because the whole api chain (containing this function)
+     * can be executed multiple times, but with different translations every time.
+     * EDIT: Commented out, so that translations can be used in Components
+     * this.#translations = []
+     */
 
-    translations.map((item) => {
+    for (const item of translations) {
       if (item instanceof Array) {
-        item.forEach((subItem) => {
+        for (const subItem of item) {
           if (!this.#translations.includes(subItem)) {
             this.#translations = [...this.#translations, subItem]
           }
-        })
+        }
       }
       else if (item instanceof Object) {
         if (!this.#translations.includes(item)) {
           this.#translations = [...this.#translations, item]
         }
       }
-    })
+    }
 
     return this
   }
@@ -309,10 +313,7 @@ class Component {
       const window = this.#getSrWindow()
 
       this.#render(container, window, true)
-      this.#staticFinalElements.set(
-        key,
-        this.#finalElements,
-      )
+      this.#staticFinalElements.set(key, this.#finalElements,)
     }
 
     return this.#staticFinalElements.get(key) ?? []
@@ -416,7 +417,7 @@ class Component {
       this.#templates.push(this.template.bind(this))
     }
 
-    for (let template of templates) {
+    for (const template of templates) {
       if (
         !(template instanceof Function)
         && !(template instanceof Component)
@@ -516,9 +517,9 @@ class Component {
       if (this.#selectorNonId) {
         const domObserver = new MutationObserver((mutationList) => {
           for (const mutation of mutationList) {
-            const addedNodes = mutation.addedNodes
+            const { addedNodes, removedNodes } = mutation
 
-            for (let node of addedNodes) {
+            for (const node of addedNodes) {
               // we track only elements, skip other nodes (e.g. text nodes)
               if (!(node instanceof HTMLElement)) continue
 
@@ -526,16 +527,9 @@ class Component {
               if (node.matches(this.#selectorNonId)) {
                 this.#renderElements(window, node, templates, translations, htmlOptions)
               }
-
-              // or maybe there's a code snippet somewhere in its subtree?
-              // for (let containerElement of node.querySelectorAll(this.#selectorNonId)) {
-              //   this.#renderElements(window, containerElement, templates, translations, htmlOptions)
-              // }
             }
 
-            const removedNodes = mutation.removedNodes
-
-            for (let node of removedNodes) {
+            for (const node of removedNodes) {
               this.#clearForContainer(node)
             }
           }

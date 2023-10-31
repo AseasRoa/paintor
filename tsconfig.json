@@ -12,16 +12,20 @@
     "sourceMap" : true,
     "baseUrl"   : ".",
     "declaration": true,
-    "declarationDir": "./types",
+    "declarationDir": "./dist/types",
+    "declarationMap": true,
+    "outDir": "./lib",
     "types": ["node", "vitest/globals"],
     "paths": {
-      //"*": ["./src/types/*.d.ts", "./types/*.d.ts"]
+      "*": ["./src/types/*.d.ts", "./types/*.d.ts"]
     },
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports" : true
   },
   "include" : [
     "*.js",
     "src/**/*",
+    "dev/**/*",
     "tests/**/*",
     "examples/**/*"
   ],

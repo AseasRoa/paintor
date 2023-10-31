@@ -26,9 +26,6 @@ function generateIndents(count, chars = '\t') {
 function escapeHTML(html) {
   let text = html
 
-  // Remove white space between tags
-  // text = text.replace(/>\s+</, '><')
-
   /** @type {Object<string, string>} */
   const charsToReplace = {
     '&': '&amp;',
@@ -36,7 +33,7 @@ function escapeHTML(html) {
     '>': '&gt;',
   }
 
-  text = text.replace(/[&<>"]/g, (tag) => {
+  text = text.replace(/[&<>"]/ug, (tag) => {
     let output = tag
 
     if (tag in charsToReplace) {
@@ -61,8 +58,10 @@ function generateAttributesString(attributes) {
     let { value } = attribute
 
     if (BOOLEAN_ATTRIBUTES.includes(name)) {
-      // Boolean Attributes in the browser are only false when they don't exist as attributes
-      // Only few values can cause this to happen in the browser, like 0, false, undefined or null.
+      /*
+       * Boolean Attributes in the browser are only false when they don't exist as attributes.
+       * Only few values can cause this to happen in the browser, like 0, false, undefined or null.
+       */
       if (
         value !== false
         && value !== 0
@@ -82,7 +81,7 @@ function generateAttributesString(attributes) {
       else if (value instanceof Function) value = `return(${value.toString()}).call(this,window.event)`
       else value = value.toString()
 
-      value = value.replace(/\"/g, '\\"')
+      value = value.replace(/"/ug, '\\"')
       value = escapeHTML(value)
 
       output += ` ${name}="${value}"`
@@ -99,7 +98,7 @@ function generateAttributesString(attributes) {
 function formatStringFromCamelCase(str) {
   let output = ''
 
-  output = str.replace(/([A-Z])/g, (all, char) => `-${char.toLowerCase()}`)
+  output = str.replace(/([A-Z])/ug, (all, char) => `-${char.toLowerCase()}`)
 
   return output
 }

@@ -66,7 +66,7 @@ class HtmlTemplateParser {
 
   /**
    * @param {string[]} strings
-   * @param {any[]} [keys=[]]
+   * @param {any[]} keys
    */
   constructor(strings, keys) {
     this.#data = this.#mergeStringsAndKeys(strings, keys)
@@ -95,9 +95,13 @@ class HtmlTemplateParser {
    */
   #appendData(to, data) {
     if (typeof to === 'function') {
-      // The input is a function. In this case:
-      // If the data to append is also a function, return that function
-      // If the data to append is not a function, return the input
+      /*
+       * The input is a function. In this case:
+       *
+       * - If the data to append is also a function, return that function.
+       * - If the data to append is not a function, return the input.
+       */
+
       return (typeof data === 'function')
         ? data
         : to
@@ -328,9 +332,12 @@ class HtmlTemplateParser {
       )
     }
     else {
-      // Value without quotes.
-      // Whitespaces are allowed before the value, but not after.
-      // For that reason, the quote would be a whitespace here
+      /*
+       * Value without quotes.
+       *
+       * Whitespaces are allowed before the value, but not after.
+       * For that reason, the quote would be a whitespace here.
+       */
 
       this.#attrQuote = ' '
       this.#attrValue = this.#appendData(this.#attrValue, this.#char)
@@ -341,9 +348,12 @@ class HtmlTemplateParser {
 
   #stageAttrValue() {
     if (this.#char === '>' && this.#charPrevious !== '/') {
-      // When > is found, but the attribute wasn't closed properly.
-      // Could happen if the quote is an empty space, for example: <...attr=true>
-      // Or even unclosed quote, for example: <...attr="value>
+      /*
+       * When '>' is found, but the attribute wasn't closed properly.
+       *
+       * This could happen if the quote is an empty space, for example: <...attr=true>
+       * Or even unclosed quote, for example: <...attr="value>
+       */
       if (this.#attrQuote && this.#attrName && this.#attrValue) {
         this.#setAttribute(this.#attrName, this.#attrValue)
       }
@@ -385,8 +395,10 @@ class HtmlTemplateParser {
       this.#setStage(this.#stageTag)
     }
     else {
-      // In HTML when there are multiple spaces before or after a text,
-      // only one could be visualized. So if
+      /*
+       * In HTML, when there are multiple spaces before or after a text,
+       * only one can be visualized.
+       */
       if (this.#charPrevious === ' ') {
         this.#textContents = this.#charPrevious + this.#char
       }
@@ -462,8 +474,10 @@ class HtmlTemplateParser {
       }
     }
     else if (this.#char === '/' && SELF_CLOSING_TAGS.includes(this.#tagName)) {
-      // If there was a text node just before the tag, it would be the current element
-      // But the text node is at the same leve. So, change the current element to the parent
+      /*
+       * If there was a text node just before the tag, it would be the current element
+       * But the text node is at the same leve. So, change the current element to the parent
+       */
       if (!this.#currentElement.tagName) {
         this.#currentElement = this.#currentElement.parent
       }
@@ -477,8 +491,10 @@ class HtmlTemplateParser {
         throw new Error('Expected tag name, found >')
       }
 
-      // If there was a text node just before the tag, it would be the current element
-      // But the text node is at the same leve. So, change the current element to the parent
+      /*
+       * If there was a text node just before the tag, it would be the current element
+       * But the text node is at the same leve. So, change the current element to the parent
+       */
       if (!this.#currentElement.tagName) {
         this.#currentElement = this.#currentElement.parent
       }
@@ -489,7 +505,7 @@ class HtmlTemplateParser {
     }
     else if (this.#charPrevious === '<' && this.#char === '/') {
       if (!this.#tagName) {
-        //throw new Error('no tag name')
+        // throw new Error('no tag name')
       }
 
       this.#tagNameClosing = ''
