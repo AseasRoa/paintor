@@ -37,7 +37,7 @@ function escapeHTML(html) {
     let output = tag
 
     if (tag in charsToReplace) {
-      output = charsToReplace[tag]
+      output = charsToReplace[tag] ?? ''
     }
 
     return output

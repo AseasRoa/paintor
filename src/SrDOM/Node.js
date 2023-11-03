@@ -133,6 +133,7 @@ class Node {
     const prevKey = this.#childNodes.length - 2
 
     if (prevKey >= 0) {
+      // @ts-ignore
       this.#childNodes[prevKey].nextSibling = aChild
       aChild.previousSibling = this.#childNodes[prevKey] ?? null
     }

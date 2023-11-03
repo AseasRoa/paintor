@@ -133,7 +133,7 @@ class HtmlTemplateParser {
 
       if (child.tagName === 'if') {
         el = elementsCreator.if(
-          stringToBoolean(child.attributes?.condition ?? ''),
+          stringToBoolean(child.attributes['condition'] ?? ''),
           () => {
             this.#generateChildren(elementsCreator, child)
           },
@@ -143,7 +143,7 @@ class HtmlTemplateParser {
         if ('iterations' in child.attributes) {
           el = elementsCreator.for(
             0,
-            parseInt(child.attributes?.iterations ?? 0) - 1,
+            parseInt(child.attributes['iterations'] ?? 0) - 1,
             () => {
               this.#generateChildren(elementsCreator, child)
 
@@ -153,8 +153,8 @@ class HtmlTemplateParser {
         }
         else if ('from' in child.attributes || 'to' in child.attributes) {
           el = elementsCreator.for(
-            parseInt(child.attributes?.from ?? 0),
-            parseInt(child.attributes?.to ?? 0),
+            parseInt(child.attributes['from'] ?? 0),
+            parseInt(child.attributes['to'] ?? 0),
             () => {
               this.#generateChildren(elementsCreator, child)
 
@@ -166,7 +166,7 @@ class HtmlTemplateParser {
       else if (child.tagName === 'forEach') {
         if ('object' in child.attributes) {
           el = elementsCreator.forEach(
-            child.attributes?.object ?? {},
+            child.attributes['object'] ?? {},
             () => {
               this.#generateChildren(elementsCreator, child)
 
@@ -194,7 +194,7 @@ class HtmlTemplateParser {
     const attributes = this.#attributes
 
     if (Object.keys(this.#styles).length > 0) {
-      attributes.style = this.#styles
+      attributes['style'] = this.#styles
     }
 
     const child = this.#currentElement.newChild(parent, attributes)
@@ -554,7 +554,7 @@ class HtmlTemplateParser {
     if (this.#char === '<') {
       // Reset what was possibly used for text node
       this.#attributes = {}
-      this.#currentElement.attributes.textContent = this.#textContents
+      this.#currentElement.attributes['textContent'] = this.#textContents
 
       this.#setStage(this.#stageTag)
     }
@@ -562,7 +562,7 @@ class HtmlTemplateParser {
       this.#textContents = this.#appendData(this.#textContents, this.#char)
 
       if (!this.#currentElement.tagName) {
-        this.#currentElement.attributes.textContent = this.#textContents
+        this.#currentElement.attributes['textContent'] = this.#textContents
       }
     }
   }

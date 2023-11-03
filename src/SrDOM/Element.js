@@ -117,7 +117,7 @@ export class Element extends Node {
       return null
     }
 
-    return this.#attributes[index].value
+    return this.#attributes[index]?.value ?? null
   }
 
   /**

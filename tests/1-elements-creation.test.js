@@ -1,4 +1,6 @@
-import { component, state, template } from '../src/paintor.js'
+/* eslint-disable vitest/expect-expect */
+
+import { component, state, template } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
 
 describe('Elements Creation', () => {
@@ -98,27 +100,27 @@ describe('Elements Creation', () => {
       const table = container.children[0]
 
       expect(container.children.length).toBe(1)
-      expect(table.tagName).toBe('TABLE')
+      expect(table?.tagName).toBe('TABLE')
 
-      expect(table.children.length).toBe(2)
-      expect(table.children[0].tagName).toBe('TR')
-      expect(table.children[1].tagName).toBe('TR')
+      expect(table?.children.length).toBe(2)
+      expect(table?.children[0]?.tagName).toBe('TR')
+      expect(table?.children[1]?.tagName).toBe('TR')
 
-      expect(table.children[0].children.length).toBe(2)
-      expect(table.children[0].children[0].tagName).toBe('TD')
-      expect(table.children[0].children[0].children.length).toBe(0)
-      expect(table.children[0].children[0].textContent).toBe('Row 1, Column 1')
-      expect(table.children[0].children[1].tagName).toBe('TD')
-      expect(table.children[0].children[1].children.length).toBe(0)
-      expect(table.children[0].children[1].textContent).toBe('Row 1, Column 2')
+      expect(table?.children[0]?.children.length).toBe(2)
+      expect(table?.children[0]?.children[0]?.tagName).toBe('TD')
+      expect(table?.children[0]?.children[0]?.children.length).toBe(0)
+      expect(table?.children[0]?.children[0]?.textContent).toBe('Row 1, Column 1')
+      expect(table?.children[0]?.children[1]?.tagName).toBe('TD')
+      expect(table?.children[0]?.children[1]?.children.length).toBe(0)
+      expect(table?.children[0]?.children[1]?.textContent).toBe('Row 1, Column 2')
 
-      expect(table.children[1].children.length).toBe(2)
-      expect(table.children[1].children[0].tagName).toBe('TD')
-      expect(table.children[1].children[0].children.length).toBe(0)
-      expect(table.children[1].children[0].textContent).toBe('Row 2, Column 1')
-      expect(table.children[1].children[1].tagName).toBe('TD')
-      expect(table.children[1].children[1].children.length).toBe(0)
-      expect(table.children[1].children[1].textContent).toBe('Row 2, Column 2')
+      expect(table?.children[1]?.children.length).toBe(2)
+      expect(table?.children[1]?.children[0]?.tagName).toBe('TD')
+      expect(table?.children[1]?.children[0]?.children.length).toBe(0)
+      expect(table?.children[1]?.children[0]?.textContent).toBe('Row 2, Column 1')
+      expect(table?.children[1]?.children[1]?.tagName).toBe('TD')
+      expect(table?.children[1]?.children[1]?.children.length).toBe(0)
+      expect(table?.children[1]?.children[1]?.textContent).toBe('Row 2, Column 2')
     })
 
     test('(SSR) Correct order of elements when automatically calling a Component', () => {
@@ -156,9 +158,9 @@ describe('Elements Creation', () => {
         )
       }).paint(container)
 
-      let ul = container.getElementsByTagName('ul')[0]
+      const ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'li-1',
         'li-fragment-1',
         'li-fragment-2',
@@ -203,9 +205,9 @@ describe('Elements Creation', () => {
         )
       }).paint(container)
 
-      let ul = container.getElementsByTagName('ul')[0]
+      const ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'li-1',
         'li-fragment-1',
         'li-fragment-2',
@@ -260,9 +262,9 @@ describe('Elements Creation', () => {
         )
       }).paint(container)
 
-      let ul = container.getElementsByTagName('ul')[0]
+      const ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'li-1',
         'li-fragment-1',
         'li-fragment-2',
@@ -320,9 +322,9 @@ describe('Elements Creation', () => {
         )
       }).paint(container)
 
-      let ul = container.getElementsByTagName('ul')[0]
+      const ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'li-1',
         'li-fragment-1',
         'li-fragment-2',
@@ -380,9 +382,9 @@ describe('Elements Creation', () => {
         )
       }).paint(container)
 
-      let ul = container.getElementsByTagName('ul')[0]
+      const ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'forState-begin',
         'li-1',
         'li-fragment-1',
@@ -440,13 +442,13 @@ describe('Elements Creation', () => {
 
       let ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'if',
       ])
 
       ul = container.getElementsByTagName('ul')[1]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'else',
       ])
     })
@@ -502,14 +504,14 @@ describe('Elements Creation', () => {
 
       let ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'li-1',
         'li-2',
       ])
 
       ul = container.getElementsByTagName('ul')[1]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'forState-begin',
         'li-1',
         'li-2',
@@ -555,9 +557,9 @@ describe('Elements Creation', () => {
         )
       }).paint(container)
 
-      let ul = container.getElementsByTagName('ul')[0]
+      const ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul.childNodes, [
+      expectTextContentsToBeLike(ul?.childNodes, [
         'forState-begin',
         'li-1',
         'li-2',

@@ -102,7 +102,7 @@ class Component {
 
     delete this.#containerDOMElements[indexFound]
 
-    for (const element of this.#finalElements[indexFound]) {
+    for (const element of this.#finalElements[indexFound] ?? []) {
       removeAllSubscriptions(element)
       // @ts-ignore
       element.remove()

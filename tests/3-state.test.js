@@ -1,4 +1,6 @@
-import { component, state } from '../src/paintor.js'
+/* eslint-disable vitest/expect-expect */
+
+import { component, state } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
 
 describe('State', () => {
@@ -28,13 +30,13 @@ describe('State', () => {
 
     expect(button instanceof HTMLButtonElement).toBe(true)
     expect(p instanceof HTMLParagraphElement).toBe(true)
-    expect(p.textContent).toBe('0')
+    expect(p?.textContent).toBe('0')
 
     for (let i = 0; i < 10; i++) {
-      button.click()
+      button?.click()
     }
 
-    expect(p.textContent).toBe('10')
+    expect(p?.textContent).toBe('10')
   })
 
   test('(HTML-DOM) Simple Counter', () => {
@@ -43,7 +45,6 @@ describe('State', () => {
     const globalState = state({ clicks: 0 })
 
     component(($) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       $.html`
 <button onclick="${() => globalState.clicks += 1}">Click me</button>
 <p>${() => (globalState.clicks)}</p>
@@ -55,13 +56,13 @@ describe('State', () => {
 
     expect(button instanceof HTMLButtonElement).toBe(true)
     expect(p instanceof HTMLParagraphElement).toBe(true)
-    expect(p.textContent).toBe('0')
+    expect(p?.textContent).toBe('0')
 
     for (let i = 0; i < 10; i++) {
-      button.click()
+      button?.click()
     }
 
-    expect(p.textContent).toBe('10')
+    expect(p?.textContent).toBe('10')
   })
 
   test('(DOM) New DOM element, created from the State, is reactive', () => {
@@ -71,7 +72,7 @@ describe('State', () => {
     const globalState = state({})
 
     component(($) => {
-      $.forState(globalState, (item, key) => {
+      $.forState(globalState,(item, key) => {
         $.div(
           { style: { color: () => item.color } },
           () => `${key}:${item.color}`,
@@ -85,18 +86,18 @@ describe('State', () => {
     expect(div).toBeUndefined()
 
     // Create one <li> element
-    globalState.item = { color: 'red' }
+    globalState['item'] = { color: 'red' }
 
     div = container.getElementsByTagName('div')[0]
 
     expect(div instanceof HTMLDivElement).toBe(true)
-    expect(div.textContent).toBe('item:red')
-    expect(div.style.color).toBe('red')
+    expect(div?.textContent).toBe('item:red')
+    expect(div?.style.color).toBe('red')
 
     // Change text content
-    globalState.item.color = 'blue'
-    expect(div.textContent).toBe('item:blue')
-    expect(div.style.color).toBe('blue')
+    globalState['item'].color = 'blue'
+    expect(div?.textContent).toBe('item:blue')
+    expect(div?.style.color).toBe('blue')
   })
 
   test('(HTML-DOM) New DOM element, created from the State, is reactive', () => {
@@ -107,7 +108,6 @@ describe('State', () => {
 
     component(($) => {
       $.forState(globalState, (item, key) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         $.html`
 <div style="color: ${() => item.color}">${() => `${key}:${item.color}`}</div>
 `
@@ -120,18 +120,18 @@ describe('State', () => {
     expect(div).toBeUndefined()
 
     // Create one <li> element
-    globalState.item = { color: 'red' }
+    globalState['item'] = { color: 'red' }
 
     div = container.getElementsByTagName('div')[0]
 
     expect(div instanceof HTMLDivElement).toBe(true)
-    expect(div.textContent).toBe('item:red')
-    expect(div.style.color).toBe('red')
+    expect(div?.textContent).toBe('item:red')
+    expect(div?.style.color).toBe('red')
 
     // Change text content
-    globalState.item.color = 'blue'
-    expect(div.textContent).toBe('item:blue')
-    expect(div.style.color).toBe('blue')
+    globalState['item'].color = 'blue'
+    expect(div?.textContent).toBe('item:blue')
+    expect(div?.style.color).toBe('blue')
   })
 
   test('(DOM) forState() with fallback handler', () => {
@@ -157,7 +157,7 @@ describe('State', () => {
     // Initially we have no <li> elements
     let ul = container.getElementsByTagName('ul')[0]
 
-    expectTextContentsToBeLike(ul.childNodes, [
+    expectTextContentsToBeLike(ul?.childNodes, [
       'forState-begin',
       'initial',
       'forState-end',
@@ -167,7 +167,7 @@ describe('State', () => {
 
     ul = container.getElementsByTagName('ul')[0]
 
-    expectTextContentsToBeLike(ul.childNodes, [
+    expectTextContentsToBeLike(ul?.childNodes, [
       'forState-begin',
       'something',
       'forState-end',
@@ -177,7 +177,7 @@ describe('State', () => {
 
     ul = container.getElementsByTagName('ul')[0]
 
-    expectTextContentsToBeLike(ul.childNodes, [
+    expectTextContentsToBeLike(ul?.childNodes, [
       'forState-begin',
       'initial',
       'forState-end',
@@ -189,7 +189,7 @@ describe('State', () => {
 
     ul = container.getElementsByTagName('ul')[0]
 
-    expectTextContentsToBeLike(ul.childNodes, [
+    expectTextContentsToBeLike(ul?.childNodes, [
       'forState-begin',
       'something',
       'forState-end',
@@ -199,7 +199,7 @@ describe('State', () => {
 
     ul = container.getElementsByTagName('ul')[0]
 
-    expectTextContentsToBeLike(ul.childNodes, [
+    expectTextContentsToBeLike(ul?.childNodes, [
       'forState-begin',
       'initial',
       'forState-end',
@@ -236,8 +236,10 @@ describe('State', () => {
 
     component(($) => {
       $.forState(theState, (value) => {
-        for (const k in value) {
-          $.div(value[k])
+        if (value instanceof Object) {
+          for (const k in value) {
+            $.div(value[k])
+          }
         }
       })
     }).paint(container)
@@ -270,6 +272,7 @@ describe('State', () => {
       let counter = 0
 
       $.forState(theState.mainState, (value, key) => {
+        // @ts-ignore
         if (key === 'innerArrayState') { // not necessary
           counter += 1
           $.div(`${key}-${counter}`)
@@ -305,6 +308,7 @@ describe('State', () => {
     component(($) => {
       $.div(
         $.forState(theState, (a) => {
+          // @ts-ignore
           $.forState(a.b, (value, key) => {
             $.button(key + '-' + value)
           })
@@ -314,7 +318,7 @@ describe('State', () => {
 
     let elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'c-C',
@@ -326,7 +330,7 @@ describe('State', () => {
 
     elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'd-D',
@@ -338,7 +342,7 @@ describe('State', () => {
 
     elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'e-E',
@@ -350,7 +354,7 @@ describe('State', () => {
 
     elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'f-F',
@@ -368,6 +372,7 @@ describe('State', () => {
     component(($) => {
       $.div(
         $.forState(theState, (a) => {
+          // @ts-ignore
           $.forState(a.b, (value, key) => {
             $.button(key + '-' + value)
           })
@@ -377,7 +382,7 @@ describe('State', () => {
 
     let elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'c-C',
@@ -389,7 +394,7 @@ describe('State', () => {
 
     elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'c1-C1',
@@ -403,7 +408,7 @@ describe('State', () => {
 
     elements = container.getElementsByTagName('div')[0]
 
-    expectTextContentsToBeLike(elements.childNodes, [
+    expectTextContentsToBeLike(elements?.childNodes, [
       'forState-begin',
       'forState-begin',
       'd-D',

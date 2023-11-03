@@ -3,30 +3,6 @@
  * @see https://www.typescriptlang.org/docs/handbook/utility-types.html
  */
 
-type VariantKeysType<T> = T extends Map<infer K, any>
-  ? K
-  : T extends Set<any>
-    ? undefined
-    : T extends Array<any>
-      ? string
-      : T extends Record<infer K, any>
-        ? K
-        : T extends (...args: any[]) => infer F
-          ? VariantKeysType<F>
-          : never
-
-type VariantValuesType<T> = T extends Map<any, infer V>
-  ? V
-  : T extends Set<infer V>
-    ? V
-    : T extends Array<infer V>
-      ? V
-      : T extends Record<any, infer V>
-        ? V
-        : T extends (...args: any[]) => infer F
-          ? VariantValuesType<F>
-          : never
-
 export interface Statements {
   if (
     condition : boolean|{ (element?: HTMLElement):boolean },
@@ -38,51 +14,161 @@ export interface Statements {
    * Calls a callback function for each element in the input Object or Map.
    */
   forEach<
-    Keys extends string | number,
-    Values,
-    Obj extends (Record<Keys, Values> | Map<Keys, Values>),
-    Input extends Obj | (() => (Obj)),
+    Input extends (...args: any) => Array<>
   >(
-    input : Input,
-    handler : (value : VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any
+    func : Input,
+    handler : (
+      value : ReturnType<Input>[number],
+      key : number
+    ) => boolean | any
   ) : HTMLElement[] | Error
 
   /**
-   * Calls a callback function for each element in the input Array or Set.
+   * Calls a callback function for each element in the input Object or Map.
    */
   forEach<
-    Obj extends (Array<any> | Set<any>),
-    Input extends Obj | (() => (Obj)),
+    Input extends (...args: any) => Set<>
+  >(
+    func : Input,
+    handler : (
+      value : ReturnType<Input> extends Set<infer V> ? V : never,
+      key : number
+    ) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the input Object or Map.
+   */
+  forEach<
+    Input extends (...args: any) => Map<>
+  >(
+    func : Input,
+    handler : (
+      value : ReturnType<Input> extends Map<any, infer V> ? V : never,
+      key : ReturnType<Input> extends Map<infer K, any> ? K : never
+    ) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the input Object or Map.
+   */
+  forEach<
+    Input extends (...args: any) => Object<>
+  >(
+    func : Input,
+    handler : (
+      value : ReturnType<Input> extends Object<PropertyKey, infer V> ? V : never,
+      key : ReturnType<Input> extends Object<infer K, infer V> ? K : never
+    ) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the input Array.
+   */
+  forEach<
+    Input extends Array<>
   >(
     array : Input,
-    handler : (value : VariantValuesType<Input>, key : string) => boolean | any
+    handler : (
+      value : Input[number],
+      key : number
+    ) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the input Set.
+   */
+  forEach<
+    Input extends Set<>
+  >(
+    set : Input,
+    handler : (value : Input extends Set<infer V> ? V : never, key : number) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the input Map.
+   */
+  forEach<
+    Input extends Map<>,
+    Key extends keyof Input
+  >(
+    map : Input,
+    handler : (
+      value : Input extends Map<any, infer V> ? V : never,
+      key : Input extends Map<infer K, any> ? K : never
+    ) => boolean | any
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the input Object.
+   */
+  forEach<
+    Input extends Object<>,
+    Key extends keyof Input
+  >(
+    object : Input,
+    handler : (
+      value : Input[Key],
+      key : Key
+    ) => boolean | any
   ) : HTMLElement[] | Error
 
   /**
    * Calls a callback function for each element in the state,
-   * when the state is either Object or Map type.
+   * when the state is an Array.
    */
   forState<
-    Keys extends string | number,
-    Values,
-    Obj extends Record<Keys, Values>,
-    Input extends Obj,
+    Input extends Array<>
   >(
-    input : Input,
-    handler : (value : VariantValuesType<Input>, key : VariantKeysType<Obj>) => boolean | any,
+    array : Input,
+    handler : (
+      value : Input[number],
+      key : number
+    ) => boolean | any,
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
    * Calls a callback function for each element in the state,
-   * when the state is either Array or Set type.
+   * when the state is a Set.
    */
   forState<
-    Obj extends Array<any>,
-    Input extends Obj,
+    Input extends Set<>
   >(
-    array : Input,
-    handler : (value : () => VariantValuesType<Input>, key : number) => boolean | any,
+    set : Input,
+    handler : (value : Input extends Set<infer V> ? V : never, key : number) => boolean | any,
+    handlerOnEmpty?: () => void
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the state,
+   * when the state is a Map.
+   */
+  forState<
+    Input extends Map<>,
+    Key extends keyof Input
+  >(
+    map : Input,
+    handler : (
+      value : Input extends Map<any, infer V> ? V : never,
+      key : Input extends Map<infer K, any> ? K : never
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
+  ) : HTMLElement[] | Error
+
+  /**
+   * Calls a callback function for each element in the state,
+   * when the state is an Object.
+   */
+  forState<
+    Input extends Object<>,
+    Key extends keyof Input
+  >(
+    object : Input,
+    handler : (
+      value : Input[Key],
+      key : Key
+    ) => boolean | any,
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 

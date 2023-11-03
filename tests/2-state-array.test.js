@@ -1,4 +1,6 @@
-import { component, state } from '../src/paintor.js'
+/* eslint-disable vitest/expect-expect */
+
+import { component, state } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
 
 /**
@@ -11,15 +13,22 @@ function expectSpecialCommentElementsInStatement(elements) {
   const length = elements.length
 
   if (length > 0) {
+    // @ts-ignore
     expect(elements[0].previousSibling instanceof Comment).toBe(true)
 
     let i = 0
 
     for (i = 0; i < length - 1; i++) {
-      expect(elements[i].nextSibling).toBe(elements[i + 1])
+      expect(
+        // @ts-ignore
+        elements[i].nextSibling
+      ).toBe(elements[i + 1])
     }
 
-    expect(elements[i].nextSibling instanceof Comment).toBe(true)
+    expect(
+      // @ts-ignore
+      elements[i].nextSibling instanceof Comment
+    ).toBe(true)
   }
 }
 

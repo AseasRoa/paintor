@@ -212,6 +212,8 @@ export function addEventListenerIfPossible(element, attributeName, callback) {
 function appendDOMChildrenToElement(element, children) {
   if (children.length === 1) {
     // It's faster to append single element like this
+
+    // @ts-ignore
     element.appendChild(children[0])
   }
   else if (children.length > 1) {
@@ -515,12 +517,12 @@ export function insertAfter(newNode, existingNode) {
 /**
  *
  * @param {HTMLElement} element
- * @param {Object<string, (string | number | boolean)>}dataSet
+ * @param {Object<string, (string | number | boolean)>} dataSet
  */
 export function setDataSetAttributesToElement(element, dataSet) {
   if (dataSet instanceof Object) {
     for (const key in dataSet) {
-      const value = dataSet[key].toString()
+      const value = (dataSet[key] ?? '').toString()
 
       element.setAttribute(`data-${key}`, value)
     }
@@ -661,6 +663,7 @@ export function arrayMoveIndex(array, oldIndex, newIndex) {
     }
   }
 
+  // @ts-ignore
   array.splice(newIndex, 0, array.splice(oldIndex, 1)[0])
 
   return array
@@ -671,6 +674,7 @@ export function arrayMoveIndex(array, oldIndex, newIndex) {
  */
 export const chainElements = (...elements) => {
   for (let i = 1; i < elements.length; i++) {
+    // @ts-ignore
     elements[i-1].after(elements[i])
   }
 }

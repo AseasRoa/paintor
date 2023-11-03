@@ -217,7 +217,7 @@ class ElementsCreator {
         const { length } = generatedChildren
 
         if (length > 0) {
-          for (const child of generatedChildren[length - 1]) {
+          for (const child of generatedChildren[length - 1] ?? []) {
             addChildToStack(child, children)
           }
         }
@@ -229,7 +229,8 @@ class ElementsCreator {
 
           argument(this.#templateTree)
 
-          const generatedElements = this.#collectedElements[thisLevel].getElements()
+          // @ts-ignore
+          const generatedElements = this.#collectedElements[thisLevel].getElements() ?? []
 
           addChildrenToStack(generatedElements, children)
 
@@ -273,11 +274,12 @@ class ElementsCreator {
 
                           if (isInitialRun) {
                             addChildToStack(commentElementBegin, children)
-                            addChildrenToStack(generatedChildren[0], children)
+                            addChildrenToStack(generatedChildren[0] ?? [], children)
                             addChildToStack(commentElementEnd, children)
                           }
                           else {
-                            this.#collectedElements[0].addElements(generatedChildren[0])
+                            // @ts-ignore
+                            this.#collectedElements[0].addElements(generatedChildren[0] ?? [])
                           }
                         }
                         else if (symTemplateFunction in value) {
@@ -286,7 +288,9 @@ class ElementsCreator {
                           if (isInitialRun) {
                             const level = this.#collectedElements.length - 1
 
-                            const generatedElements = this.#collectedElements[level].getElements()
+                            const generatedElements
+                                    // @ts-ignore
+                                    = this.#collectedElements[level].getElements()
 
                             addChildToStack(commentElementBegin, children)
                             addChildrenToStack(generatedElements, children)
@@ -344,6 +348,7 @@ class ElementsCreator {
      * $.div(templateCall($), $.span())
      */
     if (children.length > 0) {
+      // @ts-ignore
       const collectedElements      = this.#collectedElements[level].getElements()
       const indexOfFirstKnownChild = collectedElements.indexOf(children[0])
 
@@ -357,7 +362,9 @@ class ElementsCreator {
 
     appendChildrenToElement(element, children)
 
+    // @ts-ignore
     this.#collectedElements[level].removeTheseElements(children)
+    // @ts-ignore
     this.#collectedElements[level].addElement(element)
 
     return element
@@ -408,8 +415,13 @@ class ElementsCreator {
 
   /**
    * @returns {Node[]}
+   * @throws {Error}
    */
   getCreatedElements() {
+    if (!this.#collectedElements[0]) {
+      throw new Error('Missing data')
+    }
+
     return this.#collectedElements[0].getElements()
   }
 
@@ -449,7 +461,7 @@ class ElementsCreator {
       keys.length === 0
       && this.#translations.length === 0 // the faster method doesn't translate anything
     )
-      ? this.#htmlForSimpleString((strings instanceof Array) ? strings[0] : strings)
+      ? this.#htmlForSimpleString((strings instanceof Array) ? strings[0] ?? '' : strings)
       : this.#htmlForTemplateLiteral((strings instanceof Array) ? strings : [strings], ...keys)
 
     for (const element of elements) {
@@ -582,16 +594,27 @@ class ElementsCreator {
    * @param {number} input.thisLevel
    * @param {number} input.upperLevel
    * @returns {Node[]}
+   * @throws {Error}
    */
   #afterStatement({ thisLevel, upperLevel }) {
+    const thisLevelCollector  = this.#collectedElements[thisLevel]
+    const upperLevelCollector = this.#collectedElements[upperLevel]
+
+    if (
+      !(thisLevelCollector instanceof ElementsCollector)
+      || !(upperLevelCollector instanceof ElementsCollector)
+    ) {
+      throw new Error('Missing data')
+    }
+
     // Save what will be returned, because the array will be cleared
-    const elements = this.#collectedElements[thisLevel].getElements()
+    const elements = thisLevelCollector.getElements() ?? []
 
     // Move everything collected at this level to the upper level...
-    this.#collectedElements[upperLevel].importElements(this.#collectedElements[thisLevel])
+    upperLevelCollector.importElements(thisLevelCollector)
 
     // ... and clean this level
-    this.#collectedElements[thisLevel].replaceElements([]) // to keep reference
+    thisLevelCollector.replaceElements([]) // to keep reference
     delete this.#collectedElements[thisLevel]
     this.#collectedElements.pop()
 
@@ -620,6 +643,7 @@ class ElementsCreator {
       : collectAtLevel
 
     for (const childrenGroup of generatedChildren) {
+      // @ts-ignore
       this.#collectedElements[level].addElements(childrenGroup)
     }
   }
@@ -857,6 +881,7 @@ class ElementsCreator {
     // Add the newly created elements into the collection
     const level = this.#collectedElements.length - 1
 
+    // @ts-ignore
     this.#collectedElements[level].addElements(elements)
 
     return elements
@@ -910,7 +935,8 @@ class ElementsCreator {
 
       if (!commentElementEnd.renderedElementsMap[index]) continue
 
-      if (prop === '*' || commentElementEnd.renderedElementsMap[index].key === prop) {
+      if (prop === '*' || commentElementEnd.renderedElementsMap[index]?.key === prop) {
+        // @ts-ignore
         for (const element of commentElementEnd.renderedElementsMap[index].elements) {
           // @ts-ignore
           if (element.renderedElementsMap) { // inner end element
@@ -926,6 +952,7 @@ class ElementsCreator {
         }
 
         if (isArray) {
+          // @ts-ignore
           commentElementEnd.renderedElementsMap[index].elements.length = 0
 
           delete commentElementEnd.renderedElementsMap[index]
@@ -1151,6 +1178,7 @@ class ElementsCreator {
       const commentElementEnd   = this.#document.createComment(`${type}-end`)
 
       if (autoAddCommentElements) {
+        // @ts-ignore
         this.#collectedElements[thisLevel].addElement(commentElementBegin)
       }
 
@@ -1165,6 +1193,8 @@ class ElementsCreator {
         const level = this.#collectedElements.length - 1
 
         // Clean all contents.
+
+        // @ts-ignore
         this.#collectedElements[level].removeAllElements()
 
         // Create the new elements
@@ -1172,6 +1202,7 @@ class ElementsCreator {
 
         const success = this.#insertStatementElements(
           commentElementBegin,
+          // @ts-ignore
           this.#collectedElements[level].getElements(),
         )
 
@@ -1199,6 +1230,7 @@ class ElementsCreator {
       callbackForFunction(bindFunctionResult, true, commentElementBegin, commentElementEnd)
 
       if (autoAddCommentElements) {
+        // @ts-ignore
         this.#collectedElements[thisLevel].addElement(commentElementEnd)
       }
     }
@@ -1220,6 +1252,7 @@ class ElementsCreator {
    * ): RenderedElementsMap} callbackForState
    * @param {boolean} hasHandlerOnEmpty
    * @returns {Node[]}
+   * @throws {Error}
    */
   #statementHandlerForState(type, state, callbackForState, hasHandlerOnEmpty) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
@@ -1235,7 +1268,13 @@ class ElementsCreator {
     // @ts-ignore
     const commentElementEnd = this.#document.createComment(`${type}-end`)
 
-    this.#collectedElements[thisLevel].addElement(commentElementBegin)
+    const thisLevelCollectedElements = this.#collectedElements[thisLevel]
+
+    if (!thisLevelCollectedElements) {
+      throw new Error(`There are no collected elements at level ${thisLevel}`)
+    }
+
+    thisLevelCollectedElements.addElement(commentElementBegin)
 
     /**
      * @param {State} updatedState
@@ -1257,6 +1296,7 @@ class ElementsCreator {
       }
 
       const level   = this.#collectedElements.length - 1
+      // @ts-ignore
       const added   = callbackForState(updatedState, this.#collectedElements[level], prop)
       const isArray = updatedObject instanceof Array
 
@@ -1273,7 +1313,7 @@ class ElementsCreator {
         }
 
         for (const element of item.elements) {
-          if (level === 0) {
+          if (level === 0 && this.#collectedElements.length > level) {
             /**
              * Parent element is needed in order to apply 'after'.
              * But if for example there is a for loop (for a state) at top level and
@@ -1283,6 +1323,7 @@ class ElementsCreator {
              * Because of this, let's reorder the collected elements.
              */
 
+            // @ts-ignore
             this.#collectedElements[level].moveElementAfterAnother(element, lastElement)
           }
 
@@ -1346,6 +1387,7 @@ class ElementsCreator {
             if (item.key === prevKey) {
               const { elements } = item
 
+              // @ts-ignore
               lastElement = (elements.length > 0)
                 ? elements[elements.length - 1]
                 : lastElement
@@ -1419,9 +1461,11 @@ class ElementsCreator {
 
               if (oldIndex < 0) break
 
+              // @ts-ignore
               commentElementEnd.renderedElementsMap[index]
                 = commentElementEnd.renderedElementsMap[oldIndex]
 
+              // @ts-ignore
               commentElementEnd.renderedElementsMap[index].key
                 = index.toString()
 
@@ -1437,6 +1481,7 @@ class ElementsCreator {
               index >= start + newItems.length;
               index--
             ) {
+              // @ts-ignore
               commentElementEnd.renderedElementsMap[index].key = index.toString()
             }
           }
@@ -1460,14 +1505,24 @@ class ElementsCreator {
         const [key1, key2] = arrayFunctionArgs
 
         // Change siblings (swap elements objects by reference)
-        const tmp                                            = commentElementEnd.renderedElementsMap[key2].elements
-        commentElementEnd.renderedElementsMap[key2].elements = commentElementEnd.renderedElementsMap[key1].elements
-        commentElementEnd.renderedElementsMap[key1].elements = tmp
+
+        // @ts-ignore
+        const tmp = commentElementEnd.renderedElementsMap[key2].elements
+
+        // @ts-ignore
+        commentElementEnd.renderedElementsMap[key2].elements
+          // @ts-ignore
+          = commentElementEnd.renderedElementsMap[key1].elements
+
+        // @ts-ignore
+        commentElementEnd.renderedElementsMap[key1].elements
+          = tmp
 
         for (let i = 1; i < commentElementEnd.renderedElementsMap.length; i++) {
           chainElements(
             // @ts-ignore
             ...commentElementEnd.renderedElementsMap[i - 1].elements,
+            // @ts-ignore
             ...commentElementEnd.renderedElementsMap[i].elements,
           )
         }
@@ -1578,9 +1633,9 @@ class ElementsCreator {
     )
 
     // In this callback the 'for' loop is called
-    const added = callbackForState(state, this.#collectedElements[thisLevel])
+    const added = callbackForState(state, thisLevelCollectedElements)
 
-    if (added.length === 1 && added[0].key === undefined) {
+    if (added.length === 1 && added[0]?.key === undefined) {
       // Initial draw on empty state. We don't want the result from it, because then it interferes.
       added.splice(0, 1)
     }
@@ -1589,7 +1644,7 @@ class ElementsCreator {
 
     unsetSuggestedItems()
 
-    this.#collectedElements[thisLevel].addElement(commentElementEnd)
+    thisLevelCollectedElements.addElement(commentElementEnd)
 
     return this.#afterStatement({ thisLevel, upperLevel })
   }
@@ -1646,7 +1701,7 @@ class ElementsCreator {
       const globallyTranslated = this.#translateString(
         input,
         // @ts-ignore
-        globalObject?.paintorTranslations,
+        globalObject.paintorTranslations,
       )
 
       if (typeof globallyTranslated === 'string') {
@@ -1702,6 +1757,7 @@ class ElementsCreator {
     while (index > 0) {
       index -= 1
 
+      // @ts-ignore
       this.#unsubscribeElementAndItsChildren(element.childNodes[index])
     }
   }

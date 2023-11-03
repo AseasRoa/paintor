@@ -113,7 +113,10 @@ export class StateProxySubscriptions {
       while (index > 0) {
         index -= 1
 
-        if (subs[index].stateSubscription === this) {
+        if (
+          // @ts-ignore
+          subs[index].stateSubscription === this
+        ) {
           subs.splice(index, 1)
         }
       }
@@ -202,6 +205,7 @@ export function removeAllSubscriptions(element) {
 
     if (!elementSubs[idx]) continue
 
+    // @ts-ignore
     elementSubs[idx].stateSubscription.unsubscribe(element)
   }
 

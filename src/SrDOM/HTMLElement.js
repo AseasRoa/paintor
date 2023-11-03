@@ -19,7 +19,7 @@ function escapeHTML(html) {
     let output = tag
 
     if (tag in charsToReplace) {
-      output = charsToReplace[tag]
+      output = charsToReplace[tag] ?? ''
     }
 
     return output
@@ -37,10 +37,13 @@ function escapeHTML(html) {
 function formatStringToCamelCase(str) {
   const split = str.split('-')
 
-  if (split.length === 1) return split[0]
+  if (split.length === 1) {
+    // @ts-ignore
+    return split[0]
+  }
 
   const appdx = split.slice(1).map(
-    (word) => word[0].toUpperCase() + word.slice(1)
+    (word) => (word[0] ?? '').toUpperCase() + word.slice(1)
   ).join('')
 
   return (split[0] + appdx)
@@ -61,7 +64,7 @@ function getStyleObjectFromString(str) {
 
     const formattedProperty = formatStringToCamelCase(property.trim())
 
-    style[formattedProperty] = value.trim()
+    style[formattedProperty] = (value ?? '').trim()
   })
 
   return style
@@ -119,7 +122,7 @@ class HTMLElement extends Element {
       const style = getStyleObjectFromString(input)
 
       for (const key in style) {
-        this.#style[key] = style[key].toString()
+        this.#style[key] = (style[key] ?? '').toString()
       }
     }
   }

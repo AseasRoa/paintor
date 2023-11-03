@@ -1,3 +1,9 @@
+/**
+ * This file must be an ambient module
+ *
+ * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
+ */
+
 type Elements = import('./WebApi/Elements').Elements
 type Statements = import('./Statements').Statements
 
@@ -23,8 +29,6 @@ interface Component {
   template: Template,
   useTranslations : (...translations: Translation[]) => Component,
 }
-
-declare module 'src/Component.js'
 
 declare module 'paintor' {
   export { Component } from 'src/Component.js'

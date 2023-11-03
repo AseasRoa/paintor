@@ -1,30 +1,27 @@
+/* eslint-disable vitest/expect-expect */
+
 import { DOMException } from '../src/SrDOM/exceptions/DOMException.js'
 import { Window } from '../src/SrDOM/Window.js'
 
 describe('SrDom Tests', () => {
   describe('window, document', () => {
-    let window = new Window()
-    let document = window.document
+    const window = new Window()
+    const document = window.document
 
     test('document contains HTML, HTML contains HEAD and BODY', () => {
       const html = document.children[0]
 
       expect(document.children.length).toBe(1)
-      expect(html.tagName).toBe('HTML')
-      expect(html.children.length).toBe(2)
-      expect(html.children[0].tagName).toBe('HEAD')
-      expect(html.children[1].tagName).toBe('BODY')
+      expect(html?.tagName).toBe('HTML')
+      expect(html?.children.length).toBe(2)
+      expect(html?.children[0]?.tagName).toBe('HEAD')
+      expect(html?.children[1]?.tagName).toBe('BODY')
     })
   })
 
   describe('Create different types of elements', () => {
-    let window = new Window()
-    let document = window.document
-
-    // beforeEach(() => {
-    //   window = new Window()
-    //   document = window.document
-    // })
+    const window = new Window()
+    const document = window.document
 
     test('HTMLElement', () => {
       const el = document.createElement('div')
@@ -70,14 +67,14 @@ describe('SrDom Tests', () => {
   })
 
   describe('Testing appendChild errors', () => {
-    let window = new Window()
-    let document = window.document
+    const window = new Window()
+    const document = window.document
 
     test('fail on appendChild with wrong input', () => {
       expect(
         // @ts-ignore
         () => document.body.appendChild(123),
-      ).toThrowError(TypeError)
+      ).toThrow(TypeError)
     })
 
     test('fail on attempt to append in Document', () => {
@@ -86,7 +83,7 @@ describe('SrDom Tests', () => {
       // @ts-ignore
       expect(
         () => document.appendChild(el),
-      ).toThrowError(DOMException)
+      ).toThrow(DOMException)
     })
 
     test('fail on attempt to append in Comment element', () => {
@@ -95,7 +92,7 @@ describe('SrDom Tests', () => {
 
       expect(
         () => comment.appendChild(div),
-      ).toThrowError(window.DOMException)
+      ).toThrow(window.DOMException)
     })
 
     test('fail on attempt to append an element into itself', () => {
@@ -103,13 +100,13 @@ describe('SrDom Tests', () => {
 
       expect(
         () => el.appendChild(el),
-      ).toThrowError(window.DOMException)
+      ).toThrow(window.DOMException)
     })
   })
 
   describe('Remove elements', () => {
-    let window = new Window()
-    let document = window.document
+    const window = new Window()
+    const document = window.document
 
     test('HTMlElement', () => {
       const el = document.createElement('button')

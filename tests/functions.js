@@ -1,13 +1,21 @@
+import { expect } from 'vitest'
+
 /**
- * @param {NodeListOf<Element | ChildNode>} elements
+ * @param {NodeListOf<Element | ChildNode> | undefined} elements
  * @param {any[] | Object<any, any>} values
  */
 export function expectTextContentsToBeLike(elements, values) {
+  if (elements === undefined) {
+    expect(true).toBe(false)
+
+    return
+  }
+
   if (values instanceof Array) {
     expect(elements.length).toBe(values.length)
 
     values.forEach((value, index) => {
-      expect(elements[index].textContent).toBe(value)
+      expect(elements[index]?.textContent).toBe(value)
     })
   }
   else if (values instanceof Object) {
@@ -16,7 +24,7 @@ export function expectTextContentsToBeLike(elements, values) {
     let key = 0
 
     for (const objKey in values) {
-      expect(elements[key].textContent).toBe(values[objKey])
+      expect(elements[key]?.textContent).toBe(values[objKey])
 
       key += 1
     }

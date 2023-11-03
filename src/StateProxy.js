@@ -343,7 +343,7 @@ class StateProxy {
 
     if (
       // @ts-ignore
-      updatedState[symState]?.path !== statePath
+      updatedState[symState].path !== statePath
       || !statementRepaintFunction
     ) {
       return null
@@ -365,6 +365,7 @@ class StateProxy {
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
           const statementRepaintFunction = this.#getStatementRepaintFunction(
             updatedState,
+            // @ts-ignore
             elementSubscriptions[index],
           )
 
@@ -398,6 +399,7 @@ class StateProxy {
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
           const statementRepaintFunction = this.#getStatementRepaintFunction(
             updatedState,
+            // @ts-ignore
             elementSubscriptions[index],
           )
 
@@ -498,6 +500,7 @@ class StateProxy {
         ) {
           const statementRepaintFunction = this.#getStatementRepaintFunction(
             updatedState,
+            // @ts-ignore
             elementSubscriptions[index],
           )
 
