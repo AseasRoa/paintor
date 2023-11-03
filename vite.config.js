@@ -28,30 +28,14 @@ export default defineConfig({
       preserveEntrySignatures: 'exports-only',
       // https://rollupjs.org/guide/en/#big-list-of-options
       input: {
-        paintor: 'src/paintor.js',
+        bundle: 'src/index.js',
       },
       output: [
         {
           entryFileNames: '[name].js',
           format: 'es',
           exports: 'named',
-        },
-        {
-          entryFileNames: '[name].[format].js',
-          format: 'cjs',
-          exports: 'named',
-        },
-        {
-          entryFileNames: '[name].[format].js',
-          format: 'amd',
-          exports: 'named',
-        },
-        {
-          entryFileNames: '[name].js',
-          format: 'es',
-          exports: 'named',
-          dir: 'docs/v1.x/assets',
-        },
+        }
       ],
     },
   },
