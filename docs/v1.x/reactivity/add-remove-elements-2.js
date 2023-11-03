@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 component(($) => {
   // Create the states
@@ -22,4 +22,4 @@ component(($) => {
     // Reactive, the value will change to 1
     $.div(() => item.number)
   })
-}).paint('add-remove-elements-example-2')
+}).paint('add-remove-elements-2')

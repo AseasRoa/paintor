@@ -40,7 +40,7 @@
     "build:tsc": "tsc",
     "docs:dev": "vitepress dev docs/v1.x",
     "docs:build": "vitepress build docs/v1.x",
-    "docs:serve": "vitepress serve docs/v1.x"
+    "docs:preview": "vitepress preview docs/v1.x"
   },
   "devDependencies": {
     "@types/node": "^20.8.9",

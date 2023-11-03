@@ -18,7 +18,7 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */
@@ -29,7 +29,7 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */
@@ -40,7 +40,7 @@ element is being selected in all examples, but in different ways:
 <div id="myId"></div>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */

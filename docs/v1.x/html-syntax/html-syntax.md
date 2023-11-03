@@ -1,4 +1,12 @@
-<script> import '/./html-syntax/html-syntax.js' </script>
+---
+head:
+  - - script
+    - src: ./html-syntax-1.js
+      type: module
+  - - script
+    - src: ./html-syntax-2.js
+      type: module
+---
 
 ## Introduction
 
@@ -36,29 +44,29 @@ Statements for the HTML syntax are under development.
 ## Reactivity
 
 ::: code-group
-<<< @/./html-syntax/html-syntax-example-1.js [JavaScript]
+<<< @/./html-syntax/html-syntax-1.js [JavaScript]
 ```html [HTML]
-<html-syntax-example-1></html-syntax-example-1>
+<html-syntax-1></html-syntax-1>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <html-syntax-example-1></html-syntax-example-1>
+  <html-syntax-1></html-syntax-1>
   <p></p>
 </div>
 
 ## Translations
 
 ::: code-group
-<<< @/./html-syntax/html-syntax-example-2.js [JavaScript]
+<<< @/./html-syntax/html-syntax-2.js [JavaScript]
 ```html [HTML]
-<html-syntax-example-2></html-syntax-example-2>
+<html-syntax-2></html-syntax-2>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <html-syntax-example-2></html-syntax-example-2>
+  <html-syntax-2></html-syntax-2>
   <p></p>
 </div>

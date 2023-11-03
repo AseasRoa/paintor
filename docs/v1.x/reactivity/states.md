@@ -1,4 +1,24 @@
-<script> import '/./reactivity/states.js' </script>
+---
+head:
+  - - script
+    - src: ./states-1.js
+      type: module
+  - - script
+    - src: ./states-2.js
+      type: module
+  - - script
+    - src: ./states-3.js
+      type: module
+  - - script
+    - src: ./states-4.js
+      type: module
+  - - script
+    - src: ./states-5.js
+      type: module
+  - - script
+    - src: ./states-array.js
+      type: module
+---
 
 ## What is a State?
 
@@ -82,15 +102,15 @@ changing `myState.value`, which is bound with the text content of the \<span\> e
 Click on the `-` and `+` buttons below the source code to try it out:
 
 ::: code-group
-<<< @/./reactivity/states-example-1.js [JavaScript]
+<<< @/./reactivity/states-1.js [JavaScript]
 ```html [HTML]
-<states-example-1></states-example-1>
+<states-1></states-1>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <states-example-1></states-example-1>
+  <states-1></states-1>
   <p></p>
 </div>
 
@@ -102,15 +122,15 @@ Type something in the input field below the source code. You should see the same
 typing on the right side of the input field, where the \<span\> is.
 
 ::: code-group
-<<< @/./reactivity/states-example-2.js [JavaScript]
+<<< @/./reactivity/states-2.js [JavaScript]
 ```html [HTML]
-<states-example-2></states-example-2>
+<states-2></states-2>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <states-example-2></states-example-2>
+  <states-2></states-2>
   <p></p>
 </div>
 
@@ -119,37 +139,37 @@ typing on the right side of the input field, where the \<span\> is.
 One State can serve multiple [Templates](../templates/what-are-templates.md) at the same time.
 
 ::: code-group
-<<< @/./reactivity/states-example-3.js [JavaScript]
+<<< @/./reactivity/states-3.js [JavaScript]
 ```html [HTML]
 <!-- This will hold the button -->
-<states-example-3-button></states-example-3-button>
+<states-3-button></states-3-button>
 <!-- This will hold the paragraph -->
-<states-example-3-paragraph></states-example-3-paragraph>
+<states-3-paragraph></states-3-paragraph>
 <!-- This will hold the textarea -->
-<states-example-3-textarea></states-example-3-textarea>
+<states-3-textarea></states-3-textarea>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <states-example-3-button></states-example-3-button>
-  <states-example-3-paragraph></states-example-3-paragraph>
-  <states-example-3-textarea></states-example-3-textarea>
+  <states-3-button></states-3-button>
+  <states-3-paragraph></states-3-paragraph>
+  <states-3-textarea></states-3-textarea>
   <p></p>
 </div>
 
 ## Many States in one Template
 
 ::: code-group
-<<< @/./reactivity/states-example-4.js [JavaScript]
+<<< @/./reactivity/states-4.js [JavaScript]
 ```html [HTML]
-<states-example-4></states-example-4>
+<states-4></states-4>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <states-example-4></states-example-4>
+  <states-4></states-4>
   <p></p>
 </div>
 
@@ -158,30 +178,30 @@ One State can serve multiple [Templates](../templates/what-are-templates.md) at 
 When the State is made of an object, containing objects, these internal objects are also States.
 
 ::: code-group
-<<< @/./reactivity/states-example-5.js [JavaScript]
+<<< @/./reactivity/states-5.js [JavaScript]
 ```html [HTML]
-<states-example-5></states-example-5>
+<states-5></states-5>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <states-example-5></states-example-5>
+  <states-5></states-5>
   <p></p>
 </div>
 
 ## State from Array
 
 ::: code-group
-<<< @/./reactivity/states-example-array.js [JavaScript]
+<<< @/./reactivity/states-array.js [JavaScript]
 ```html [HTML]
-<states-example-array></states-example-array>
+<states-array></states-array>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <states-example-array></states-example-array>
+  <states-array></states-array>
   <p></p>
 </div>
 

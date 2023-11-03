@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitepress';
 
-// refer https://vitepress.vuejs.org/config/introduction for details
 export default defineConfig({
   base: '/v0.x/',
   lang: 'en-US',

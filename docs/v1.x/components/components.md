@@ -1,4 +1,15 @@
-<script> import '/./components/components.js' </script>
+---
+head:
+  - - script
+    - src: ./components-1.js
+      type: module
+  - - script
+    - src: ./components-2.js
+      type: module
+  - - script
+    - src: ./components-3.js
+      type: module
+---
 
 ## Create a Component with component()
 
@@ -7,7 +18,7 @@ another `component()` function.
 
 ::: code-group
 ```js [Pass as Arguments]
-import { component } from '/assets/paintor.js'
+import { component } from 'paintor'
 
 const componentOne = component(/* ... */)
 const componentTwo = component(/* ... */)
@@ -20,7 +31,7 @@ const app = component(
 app.paint('#app')
 ```
 ```js [Pass as an Array]
-import { component } from '/assets/paintor.js'
+import { component } from 'paintor'
 
 const componentOne = component(/* ... */)
 const componentTwo = component(/* ... */)
@@ -37,15 +48,15 @@ app.paint('#app')
 Or, you can use instances of the 'Component' class in [Templates](../templates/what-are-templates.md).
 
 ::: code-group
-<<< @/./components/components-in-templates.js [JavaScript]
+<<< @/./components/components-1.js [JavaScript]
 ```html [HTML]
-<components-in-templates></components-in-templates>
+<components-1></components-1>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <components-in-templates></components-in-templates>
+  <components-1></components-1>
   <p></p>
 </div>
 
@@ -56,27 +67,27 @@ Or, you can do mixed.
 Each component can have its own internal state if `state()` is used inside the template:
 
 ::: code-group
-<<< @/./components/components-example-2.js [JavaScript]
+<<< @/./components/components-2.js [JavaScript]
 ```html [HTML]
-<components-example-2></components-example-2>
+<components-2></components-2>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <components-example-2></components-example-2>
+  <components-2></components-2>
   <p></p>
 </div>
 
 ::: code-group
-<<< @/./components/components-example-3.js [JavaScript]
+<<< @/./components/components-3.js [JavaScript]
 ```html [HTML]
-<components-example-3></components-example-3>
+<components-3></components-3>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <components-example-3></components-example-3>
+  <components-3></components-3>
   <p></p>
 </div>

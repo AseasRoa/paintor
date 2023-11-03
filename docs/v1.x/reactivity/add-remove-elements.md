@@ -1,4 +1,21 @@
-<script> import '/./reactivity/add-remove-elements.js' </script>
+---
+head:
+  - - script
+    - src: ./add-remove-elements-1.js
+      type: module
+  - - script
+    - src: ./add-remove-elements-2.js
+      type: module
+  - - script
+    - src: ./add-remove-elements-3.js
+      type: module
+  - - script
+    - src: ./add-remove-elements-4.js
+      type: module
+  - - script
+    - src: ./add-remove-elements-5.js
+      type: module
+---
 
 ## Add and Remove Elements, forState() explained
 
@@ -13,15 +30,15 @@ beginning there is an empty Array State. On every second a new item is pushed in
 When the values become 10, they are cleared, and everything starts from the beginning.
 
 ::: code-group
-<<< @/./reactivity/add-remove-elements-example-1.js [JavaScript]
+<<< @/./reactivity/add-remove-elements-1.js [JavaScript]
 ```html [HTML]
-<add-remove-elements-example-1></add-remove-elements-example-1>
+<add-remove-elements-1></add-remove-elements-1>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <add-remove-elements-example-1></add-remove-elements-example-1>
+  <add-remove-elements-1></add-remove-elements-1>
   <p></p>
 </div>
 
@@ -31,15 +48,15 @@ When the value passed in the callback of `forState()` (and `forEach`) is a primi
 (string, boolean, number), this value will not bring reactivity:
 
 ::: code-group
-<<< @/./reactivity/add-remove-elements-example-2.js [JavaScript]
+<<< @/./reactivity/add-remove-elements-2.js [JavaScript]
 ```html [HTML]
-<add-remove-elements-example-2></add-remove-elements-example-2>
+<add-remove-elements-2></add-remove-elements-2>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <add-remove-elements-example-2></add-remove-elements-example-2>
+  <add-remove-elements-2></add-remove-elements-2>
   <p></p>
 </div>
 
@@ -65,15 +82,15 @@ re-created, which in turn will create a new \<button\>. And this new \<button\> 
 place where the previous \<button\> was.
 
 ::: code-group
-<<< @/./reactivity/add-remove-elements-example-3.js [JavaScript]
+<<< @/./reactivity/add-remove-elements-3.js [JavaScript]
 ```html [HTML]
-<add-remove-elements-example-3></add-remove-elements-example-3>
+<add-remove-elements-3></add-remove-elements-3>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <add-remove-elements-example-3></add-remove-elements-example-3>
+  <add-remove-elements-3></add-remove-elements-3>
   <p></p>
 </div>
 
@@ -93,15 +110,15 @@ The behavior in Paintor is similar. And just like the example with the Object, w
 button, it will be re-created at the same place after 1 second:
 
 ::: code-group
-<<< @/./reactivity/add-remove-elements-example-4.js [JavaScript]
+<<< @/./reactivity/add-remove-elements-4.js [JavaScript]
 ```html [HTML]
-<add-remove-elements-example-4></add-remove-elements-example-4>
+<add-remove-elements-4></add-remove-elements-4>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <add-remove-elements-example-4></add-remove-elements-example-4>
+  <add-remove-elements-4></add-remove-elements-4>
   <p></p>
 </div>
 
@@ -127,14 +144,14 @@ When using `sort()`, all DOM elements will be repainted.
 ## Render elements on empty State
 
 ::: code-group
-<<< @/./reactivity/add-remove-elements-example-5.js [JavaScript]
+<<< @/./reactivity/add-remove-elements-5.js [JavaScript]
 ```html [HTML]
-<add-remove-elements-example-5></add-remove-elements-example-5>
+<add-remove-elements-5></add-remove-elements-5>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <add-remove-elements-example-5></add-remove-elements-example-5>
+  <add-remove-elements-5></add-remove-elements-5>
   <p></p>
 </div>

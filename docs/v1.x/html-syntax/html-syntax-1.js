@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 component(($) => {
   const localState = state({ time: new Date().toLocaleTimeString() })
@@ -13,4 +13,4 @@ component(($) => {
     ${ () => localState.time }
   </div>
   `
-}).paint('html-syntax-example-1')
+}).paint('html-syntax-1')

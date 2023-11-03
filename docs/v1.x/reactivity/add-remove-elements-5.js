@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 component(($) => {
   const localState = state([])
@@ -27,4 +27,4 @@ component(($) => {
     )
   )
 
-}).paint('add-remove-elements-example-5')
+}).paint('add-remove-elements-5')

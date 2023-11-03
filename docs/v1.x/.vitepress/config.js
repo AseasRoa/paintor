@@ -1,18 +1,24 @@
 import { defineConfig } from 'vitepress';
 
-// refer https://vitepress.vuejs.org/config/introduction for details
 export default defineConfig({
   base: '/',
   lang: 'en-US',
   title: 'Paintor Docs',
   description: 'Paintor View Library Documentation',
   lastUpdated: false,
+  vite: {
+    build: {
+      target: 'esnext',
+      minify: 'esbuild'
+    },
+    resolve: {
+      alias: {
+        'paintor': '#paintor'
+      }
+    }
+  },
 
   head: [
-    [
-      'script',
-      { src: 'https://cdn.jsdelivr.net/gh/AseasRoa/paintor@54c93d888460d3e137540589f817f5f5faf59fee/dist/paintor.js', crossorigin: '' }
-    ],
     [
       'link',
       { rel: 'stylesheet', href: '/style.css' }

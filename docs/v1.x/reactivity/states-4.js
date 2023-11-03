@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 const stateOne = state({ number: 0 })
 const stateTwo = state({ number: 0 })
@@ -14,4 +14,4 @@ component(($) => {
   $.p(() => `1 * Number = ${stateOne.number}` )
   $.p(() => `2 * Number = ${stateTwo.number}` )
   $.p(() => `3 * Number = ${stateThree.number}` )
-}).paint('states-example-4')
+}).paint('states-4')

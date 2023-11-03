@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 component(($) => {
   const localState = state({ text: '' })
@@ -15,4 +15,4 @@ component(($) => {
     }),
     $.span(() => localState.text), // The callback here is needed for reactivity
   )
-}).paint('states-example-2')
+}).paint('states-2')

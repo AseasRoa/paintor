@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 const plusMinusComponent = component(($) => {
   const localState = state({ value: 0 })
@@ -14,4 +14,4 @@ component(($) => {
   $.div('Component 1', plusMinusComponent)
   $.div('Component 2', plusMinusComponent)
   $.div('Component 3', plusMinusComponent)
-}).paint('components-example-2')
+}).paint('components-2')

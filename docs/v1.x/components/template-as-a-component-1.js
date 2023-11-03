@@ -1,4 +1,4 @@
-import { component, state, template } from '/assets/paintor.js'
+import { component, state, template } from 'paintor'
 
 const plusMinusTemplate = template(($) => {
   const localState = state({ value: 0 })
@@ -14,4 +14,4 @@ component(
   plusMinusTemplate,
   plusMinusTemplate,
   plusMinusTemplate
-).paint('components-example-1')
+).paint('template-as-a-component-1')

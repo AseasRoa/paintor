@@ -1,4 +1,4 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 const globalState = state({
   number: 0,
@@ -20,4 +20,4 @@ component(($) => {
   $.p(() => `1 * Number = ${globalState.number}` )
   $.p(() => `2 * Number = ${globalState.inner.number}` )
   $.p(() => `3 * Number = ${globalState.inner.inner.number}` )
-}).paint('states-example-5')
+}).paint('states-5')

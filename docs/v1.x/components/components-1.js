@@ -1,4 +1,4 @@
-import { component, template } from '/assets/paintor.js'
+import { component, template } from 'paintor'
 
 const componentOne = component(($) => $.button('1'))
 const componentTwo = component(($) => $.button('2'))
@@ -23,4 +23,4 @@ const app = component(
   templateTwo
 )
 
-app.paint('components-in-templates')
+app.paint('components-1')

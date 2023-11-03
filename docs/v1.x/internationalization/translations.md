@@ -1,4 +1,12 @@
-<script> import '/./internationalization/translations.js' </script>
+---
+head:
+  - - script
+    - src: ./translations-1.js
+      type: module
+  - - script
+    - src: ./translations-2.js
+      type: module
+---
 
 ::: warning
 Translations are experimental in Paintor and their implementation may change!
@@ -11,15 +19,15 @@ Translations are just JavaScript Objects, containing key-value pairs of strings.
 example:
 
 ::: code-group
-<<< @/./internationalization/translations-example-1.js [JavaScript]
+<<< @/./internationalization/translations-1.js [JavaScript]
 ```html [HTML]
-<translations-example-1></translations-example-1>
+<translations-1></translations-1>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <translations-example-1></translations-example-1>
+  <translations-1></translations-1>
   <p></p>
 </div>
 
@@ -66,14 +74,14 @@ component(($) => {
 - The `value` property of `<input type="button">`
 
 ::: code-group
-<<< @/./internationalization/translations-example-2.js [JavaScript]
+<<< @/./internationalization/translations-2.js [JavaScript]
 ```html [HTML]
-<translations-example-2></translations-example-2>
+<translations-2></translations-2>
 ```
 :::
 
 <div class="example">
   <p></p>
-  <translations-example-2></translations-example-2>
+  <translations-2></translations-2>
   <p></p>
 </div>

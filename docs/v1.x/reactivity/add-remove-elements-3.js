@@ -1,7 +1,7 @@
-import { component, state } from '/assets/paintor.js'
+import { component, state } from 'paintor'
 
 component(($) => {
-  const localState = state([ '0', '1', '2', '3', '4' ])
+  const localState = state({ 1: '1', 2: '2', 3: '3', 4: '4', 5: '5' })
 
   $.forState(localState, (value, key) => {
     $.button({
@@ -15,4 +15,4 @@ component(($) => {
       }
     })
   })
-}).paint('add-remove-elements-example-4')
+}).paint('add-remove-elements-3')
