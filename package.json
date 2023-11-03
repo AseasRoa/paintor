@@ -17,15 +17,27 @@
   "license": "MIT",
   "type": "module",
   "types": "./src/types/global.d.ts",
-  "main": "./dist/paintor.js",
-  "module": "./dist/paintor.js",
-  "exports": "./dist/paintor.js",
+  "main": "./src/index.js",
+  "browser": "./dist/bundle.js",
+  "exports": {
+    "types": "./src/types/global.d.ts",
+    "browser": "./dist/bundle.js",
+    "require": "./dist/bundle.cjs.js",
+    "import": "./src/index.js",
+    "default": "./src/index.js"
+  },
+  "imports": {
+    "#paintor": {
+      "default": "./src/index.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "build": "vite build",
+    "build:tsc": "tsc",
     "docs:dev": "vitepress dev docs/v1.x",
     "docs:build": "vitepress build docs/v1.x",
     "docs:serve": "vitepress serve docs/v1.x"
@@ -40,6 +52,7 @@
     "jsdom": "^22.1.0",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
+    "vite-plugin-dts": "^3.6.3",
     "vitepress": "^1.0.0-rc.24",
     "vitest": "^0.34.6"
   },
