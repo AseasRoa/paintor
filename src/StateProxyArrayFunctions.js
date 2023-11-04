@@ -1,4 +1,5 @@
 import { EnumStateAction } from './constants.js'
+import { ElementsCreator } from './ElementsCreator.js'
 
 /** @typedef {Object<*, *> | Array<*>} ProxyObject */
 
@@ -28,6 +29,7 @@ export class StateProxyArrayFunctions {
       case 'sort':       return this.#arrayFnSort
       case 'splice':     return this.#arrayFnSplice
       case 'unshift':    return this.#arrayFnUnshift
+      case 'forEach':    return this.#arrayFnForEach
       default:           return target[fnName]
     }
   }
@@ -71,6 +73,20 @@ export class StateProxyArrayFunctions {
     )
 
     return result
+  }
+
+  /**
+   * @param {(value: string, index: number, array: string[]) => void} callbackFn
+   * @param {any} thisArg
+   */
+  #arrayFnForEach = (callbackFn, thisArg) => {
+    const { target, receiver } = this.#arrayFnObjects
+    const currentTree = ElementsCreator.lastTemplateTreeToRender
+
+    currentTree?.forState(receiver, (value, key) => {
+      // @ts-ignore
+      callbackFn.apply(thisArg, [value, key, target])
+    })
   }
 
   /**

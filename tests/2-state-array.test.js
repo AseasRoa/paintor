@@ -277,4 +277,23 @@ describe('State: Array', () => {
     expectTextContentsToBeLike(elements, ['a', 'b', 'c'])
     expectSpecialCommentElementsInStatement(elements)
   })
+
+  test('unshift() - using array.forEach()', () => {
+    const container = document.body
+
+    const arrayState = state([ 'c' ])
+
+    component(($) => {
+      arrayState.forEach((value) => {
+        $.div(value)
+      })
+    }).paint(container)
+
+    arrayState.unshift('a', 'b')
+
+    const elements = container.querySelectorAll('*')
+
+    expectTextContentsToBeLike(elements, ['a', 'b', 'c'])
+    expectSpecialCommentElementsInStatement(elements)
+  })
 })

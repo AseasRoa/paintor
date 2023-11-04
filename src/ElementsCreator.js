@@ -121,6 +121,15 @@ class ElementsCreator {
   }
 
   /**
+   * Used to track the last instance of this class, which used the render function.
+   * This is needed for functions like reactiveArray.forEach(handler), in order to
+   * re-paint the contents in the handler.
+   *
+   * @type {TemplateTree | null}
+   */
+  static lastTemplateTreeToRender = null
+
+  /**
    * Create a DOM element (or multiple elements) and put it into the elements collector
    *
    * @param {string} tagName
@@ -526,6 +535,8 @@ class ElementsCreator {
   }
 
   async render() {
+    ElementsCreator.lastTemplateTreeToRender = this.#templateTree
+
     this.#collectedElements = [new ElementsCollector()] // Reset
 
     for (const template of this.#templates) {
