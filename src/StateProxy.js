@@ -30,9 +30,20 @@ class StateProxy {
    * - If the state is the parent state, this is an empty string.
    * <br>
    * - If the state is a child state, this is the path to it (dot notated).
+   * @param {State | null} [parentState]
    * @returns {T}
    */
-  createProxy(object, statePath) {
+  createProxy(object, statePath, parentState = null) {
+    /*
+     * // Wrap the object in a "base" object
+     * if (!statePath && parentState === undefined) {
+     *   const baseObj = { '#base': object }
+     *   const baseState = this.createProxy(baseObj, '', null)
+     *
+     *   object = baseState['#base']
+     * }
+     */
+
     /**
      * Performance hint: Access to the original object instead of the proxy object
      * whenever possible, because accessing a proxy has worse performance.
@@ -54,7 +65,7 @@ class StateProxy {
 
     if (object instanceof Object) {
       if (!(symState in proxy)) {
-        proxy[symState] = { target: object, path: statePath }
+        proxy[symState] = { target: object, path: statePath, parent: parentState }
       }
     }
 
@@ -71,7 +82,7 @@ class StateProxy {
         const innerStatePath = (statePath === '') ? key : `${statePath}.${key}`
 
         // @ts-ignore
-        proxy[key] = this.createProxy(object[key], innerStatePath)
+        proxy[key] = this.createProxy(object[key], innerStatePath, proxy)
       }
       else {
         /*

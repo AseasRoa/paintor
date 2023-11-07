@@ -44,7 +44,7 @@ declare module 'paintor' {
   export function state<T>(object : T) : T
 
   export function isTemplate(func: Template) : boolean
-  export function template(from: Template) : Template
+  export function template<T extends Template>(from: T) : T
 
   /**
    * @template T

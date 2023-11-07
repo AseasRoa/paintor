@@ -177,4 +177,32 @@ export interface Statements {
     to : number,
     handler : (key:number) => boolean | any
   ) : HTMLElement[] | Error
+
+  with<
+    Input extends Array<>
+  >(state: Input) : {
+    paint: (
+      handler: (state: Input) => Template,
+      handlerOnEmpty?: () => void
+    ) => HTMLElement[] | Error,
+    paintEach: (
+      handler: (value: Input[number], key: number) => Template,
+      handlerOnEmpty?: () => void
+    ) => void
+  }
+
+  with<
+    Input extends Object<>,
+    Key extends keyof Input
+  >(state: Input) : {
+    paint: (
+      handler: (state: Input) => Template,
+      handlerOnEmpty?: () => void
+    ) => HTMLElement[] | Error,
+    paintEach: (
+      handler: (value: Input[Key], key: Key) => Template,
+      handlerOnEmpty?: () => void
+    ) => void
+  }
 }
+

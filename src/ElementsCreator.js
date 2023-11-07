@@ -534,6 +534,59 @@ class ElementsCreator {
       )
   }
 
+  /**
+   * @template S
+   * @param {S} state
+   * @returns {{
+   *   paint: (handler: (state: S) => Template, handlerOnEmpty: () => void) => Node[] | Error,
+   *   paintEach: (handler: (value: any, key: any) => Template, handlerOnEmpty: () => void) => Node[] | Error
+   * }}
+   */
+  with(state) {
+    return {
+      paint: (handler, handlerOnEmpty) => {
+        const parentState = state[symState].parent
+
+        const idx = state[symState].path.indexOf('.')
+        const keyToPaint = (idx === -1) ? state[symState].path : state[symState].path.substring(idx)
+
+        if (!isState(parentState)) {
+          throw new Error('The state must be a part of a state')
+        }
+
+        return this.#forEachLoop(
+          2,
+          parentState,
+          // @ts-ignore
+          (value, key) => {
+            if (key !== keyToPaint) {
+              return
+            }
+
+            return handler(value)(this.#templateTree)
+          },
+          handlerOnEmpty,
+          keyToPaint
+        )
+      },
+      paintEach: (handler, handlerOnEmpty) => {
+        if (!isState(state)) {
+          throw new Error('The state must be a state')
+        }
+
+        return this.#forEachLoop(
+          2,
+          state,
+          // @ts-ignore
+          (value, key) => {
+            return handler(value, key)(this.#templateTree)
+          },
+          handlerOnEmpty
+        )
+      }
+    }
+  }
+
   async render() {
     ElementsCreator.lastTemplateTreeToRender = this.#templateTree
 
@@ -715,9 +768,10 @@ class ElementsCreator {
    * @param {(T | function() : T) | State} input
    * @param {ForLoopCallback<T>} handler
    * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
+   * @param {string | number} [keyToRender]
    * @returns {Node[] | Error}
    */
-  #forEachLoop(forLoopType, input, handler, handlerOnEmpty) {
+  #forEachLoop(forLoopType, input, handler, handlerOnEmpty, keyToRender) {
     /** @type {Node[] | null} */
     let renderedElementsMapOnEmpty = null
 
@@ -810,6 +864,7 @@ class ElementsCreator {
         input,
         callbackForState,
         handlerOnEmpty instanceof Function,
+        keyToRender
       )
     }
 
@@ -1262,10 +1317,13 @@ class ElementsCreator {
    *   State, ElementsCollector, (string | number | symbol)=
    * ): RenderedElementsMap} callbackForState
    * @param {boolean} hasHandlerOnEmpty
+   * @param {string | number} [keyToRender]
    * @returns {Node[]}
    * @throws {Error}
    */
-  #statementHandlerForState(type, state, callbackForState, hasHandlerOnEmpty) {
+  #statementHandlerForState(
+    type, state, callbackForState, hasHandlerOnEmpty, keyToRender
+  ) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
 
     const commentElementBegin = this.#document.createComment(`${type}-begin`)
@@ -1294,6 +1352,10 @@ class ElementsCreator {
      * @param {string | symbol | undefined} prop
      */
     const createElements = (updatedState, updatedObject, lastElement, prop) => {
+      if (keyToRender !== undefined && keyToRender !== prop) {
+        return
+      }
+
       let isTemporaryLevel = false
 
       if (commentElementBegin.parentElement) {

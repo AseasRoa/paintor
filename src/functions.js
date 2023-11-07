@@ -392,7 +392,11 @@ export function forEachLoop(
 
     nothing = (isProxy) ? state[symAccess] : undefined
 
-    if (keyToRender === undefined && Object.keys(object).length === 0 && handlerOnEmpty instanceof Function) {
+    if (
+      keyToRender === undefined
+      && Object.keys(object).length === 0
+      && handlerOnEmpty instanceof Function
+    ) {
       handlerOnEmpty()
       iterationCallback?.(undefined)
     }
