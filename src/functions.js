@@ -272,8 +272,8 @@ export function appendChildrenToElement(element, children) {
  * @param {Array<T> | Object<string | number, T> | Map<string | number, T>} state
  * @param {ForLoopCallback<T>} handler
  * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
- * @param {(key: number | string) => void} [beforeIterationCallback]
  * @param {string | number | symbol} [keyToRender]
+ * @param {(key: number | string) => void} [beforeIterationCallback]
  * @param {(key: number | string | undefined, component?: Component | null) => void} [iterationCallback]
  * @returns {boolean}
  * @throws {TypeError}
@@ -284,8 +284,8 @@ export function forEachLoop(
   state,
   handler,
   handlerOnEmpty,
-  beforeIterationCallback,
   keyToRender,
+  beforeIterationCallback,
   iterationCallback,
 ) {
   if (!(handler instanceof Function)) {
@@ -323,7 +323,7 @@ export function forEachLoop(
         : object[key]
 
       if (beforeIterationCallback) {
-        value = beforeIterationCallback?.(value)
+        value = beforeIterationCallback?.call(templateTree, value)
       }
 
       let ret = handler(value, key)
@@ -363,7 +363,7 @@ export function forEachLoop(
       let val = value
 
       if (beforeIterationCallback) {
-        val = beforeIterationCallback?.(val)
+        val = beforeIterationCallback?.call(templateTree, val)
       }
 
       let ret = handler(val, key)
@@ -413,7 +413,7 @@ export function forEachLoop(
         : object[key]
 
       if (beforeIterationCallback) {
-        value = beforeIterationCallback?.(value)
+        value = beforeIterationCallback?.call(templateTree, value)
       }
 
       let ret = handler(value, key)

@@ -11,8 +11,6 @@ import {
   chainElements,
   forEachLoop,
   forLoop,
-  format,
-  getGlobalObject,
   insertAfter,
   isEventAttribute,
   modifyStyleRule,
@@ -28,6 +26,7 @@ import {
   moveSubscriptions,
   removeAllSubscriptions,
 } from './StateProxySubscriptions.js'
+import { Translator } from './Translator.js'
 
 /**
  * @typedef {Array<{key: (string | number | symbol | undefined), elements: (Node)[]}>} RenderedElementsMap
@@ -92,8 +91,8 @@ class ElementsCreator {
   /** @type {(Template | Component)[]} */
   #templates = []
 
-  /** @type {Translation[]} */
-  #translations = []
+  /** @type {Translator} */
+  #translator
 
   /** @type {Window} */
   #window
@@ -102,15 +101,15 @@ class ElementsCreator {
    * @param {Window} window
    * @param {HTMLElement | Element | ShadowRoot | null} containerElement
    * @param {(Template | Component)[]} templates
-   * @param {Translation[]} [translations]
+   * @param {Translator} translator
    */
-  constructor(window, containerElement, templates, translations = []) {
+  constructor(window, containerElement, templates, translator) {
     this.#window           = window
     this.#document         = window.document
     this.#isSr             = this.#document.baseURI === ''
     this.#containerElement = containerElement
     this.#templates        = templates
-    this.#translations     = translations
+    this.#translator       = translator
 
     /*
      * HTML_TAGS.forEach((tagName) => {
@@ -156,7 +155,7 @@ class ElementsCreator {
          */
 
         const textNode = this.#document.createTextNode(
-          this.#translate(argument),
+          this.#translator.translate(argument),
         )
 
         addChildToStack(textNode, children)
@@ -207,7 +206,7 @@ class ElementsCreator {
          */
         else {
           const textNode = this.#document.createTextNode(
-            this.#arrayTranslateFormatTranslate(argument),
+            this.#translator.translateArray(argument),
           )
 
           addChildToStack(textNode, children)
@@ -216,12 +215,12 @@ class ElementsCreator {
       else if (argument instanceof Error) {
         // Error message
 
-        element.textContent = this.#translate(argument.message)
+        element.textContent = this.#translator.translate(argument.message)
       }
       else if (argument instanceof Component) {
         const generatedChildren = (this.#isSr)
-          ? argument.useTranslations(this.#translations).getElementsSr()
-          : argument.useTranslations(this.#translations).getElements()
+          ? argument.useTranslations(this.#translator.translations).getElementsSr()
+          : argument.useTranslations(this.#translator.translations).getElements()
 
         const { length } = generatedChildren
 
@@ -278,8 +277,8 @@ class ElementsCreator {
                       if (value instanceof Function || value instanceof Component) {
                         if (value instanceof Component) {
                           const generatedChildren = (this.#isSr)
-                            ? value.useTranslations(this.#translations).getElementsSr()
-                            : value.useTranslations(this.#translations).getElements()
+                            ? value.useTranslations(this.#translator.translations).getElementsSr()
+                            : value.useTranslations(this.#translator.translations).getElements()
 
                           if (isInitialRun) {
                             addChildToStack(commentElementBegin, children)
@@ -394,7 +393,7 @@ class ElementsCreator {
       if (result instanceof Error) console.error(result)
     }
 
-    return this.#statementHandler('for', null, callback)
+    return this.#statementHandlerSimple(null, callback)
   }
 
   /**
@@ -406,7 +405,7 @@ class ElementsCreator {
    * @returns {Node[] | Error}
    */
   forEach(input, handler) {
-    return this.#forEachLoop(1, input, handler)
+    return this.#resolverForObjects(input, handler)
   }
 
   /**
@@ -419,7 +418,7 @@ class ElementsCreator {
    * @returns {Node[] | Error}
    */
   forState(input, handler, handlerOnEmpty) {
-    return this.#forEachLoop(2, input, handler, handlerOnEmpty)
+    return this.#resolverForStates(input, handler, handlerOnEmpty)
   }
 
   /**
@@ -468,7 +467,7 @@ class ElementsCreator {
   html(strings, ...keys) {
     const elements = (
       keys.length === 0
-      && this.#translations.length === 0 // the faster method doesn't translate anything
+      && this.#translator.translations.length === 0 // the faster method doesn't translate anything
     )
       ? this.#htmlForSimpleString((strings instanceof Array) ? strings[0] ?? '' : strings)
       : this.#htmlForTemplateLiteral((strings instanceof Array) ? strings : [strings], ...keys)
@@ -482,7 +481,7 @@ class ElementsCreator {
         // @ts-ignore
         element.tagName === ''
       ) {
-        element.textContent = this.#translate(element.textContent)
+        element.textContent = this.#translator.translate(element.textContent)
       }
     }
 
@@ -529,8 +528,8 @@ class ElementsCreator {
       ? this.#statementHandlerForFunction(
         'if', condition, true, callbackForFunction,
       )
-      : this.#statementHandler(
-        'if', condition, callbackForFunction,
+      : this.#statementHandlerSimple(
+        condition, callbackForFunction,
       )
   }
 
@@ -554,8 +553,7 @@ class ElementsCreator {
           throw new Error('The state must be a part of a state')
         }
 
-        return this.#forEachLoop(
-          2,
+        return this.#resolverForStates(
           parentState,
           // @ts-ignore
           (value, key) => {
@@ -574,8 +572,7 @@ class ElementsCreator {
           throw new Error('The state must be a state')
         }
 
-        return this.#forEachLoop(
-          2,
+        return this.#resolverForStates(
           state,
           // @ts-ignore
           (value, key) => {
@@ -699,8 +696,8 @@ class ElementsCreator {
    */
   #applyComponent(component, collectAtLevel = -1) {
     const generatedChildren = (this.#isSr)
-      ? component.useTranslations(this.#translations).getElementsSr()
-      : component.useTranslations(this.#translations).getElements()
+      ? component.useTranslations(this.#translator.translations).getElementsSr()
+      : component.useTranslations(this.#translator.translations).getElements()
 
     const level = (collectAtLevel < 0)
       ? this.#collectedElements.length - 1
@@ -710,39 +707,6 @@ class ElementsCreator {
       // @ts-ignore
       this.#collectedElements[level].addElements(childrenGroup)
     }
-  }
-
-  /**
-   * @template T
-   * @param {T[]} array
-   * @returns {(string | T)[]}
-   */
-  #arrayTranslate(array) {
-    const needsTranslation = Boolean(this.#translations)
-
-    return (needsTranslation)
-      ? array.map((value) => this.#translate(value))
-      : array
-  }
-
-  /**
-   * This function first translations each part of the input array,
-   * then formats it, then translations the result.
-   *
-   * @template T
-   * @param {T[]} array
-   * The input array is supposed to be what would format() arguments be
-   * (format string plus multiple arguments), but as an array.
-   * @returns {string}
-   */
-  #arrayTranslateFormatTranslate(array) {
-    return this.#translate(
-      format.apply(
-        null,
-        // @ts-ignore
-        this.#arrayTranslate(array),
-      ),
-    )
   }
 
   /**
@@ -763,130 +727,38 @@ class ElementsCreator {
   }
 
   /**
+   * @param {any} value
+   * @returns {string}
+   */
+  #resolverBeforeIterationCallback(value) {
+    return this.#translator.translate(value)
+  }
+
+  /**
    * @template T
-   * @param {ForLoopType} forLoopType
    * @param {(T | function() : T) | State} input
    * @param {ForLoopCallback<T>} handler
-   * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
-   * @param {string | number} [keyToRender]
    * @returns {Node[] | Error}
    */
-  #forEachLoop(forLoopType, input, handler, handlerOnEmpty, keyToRender) {
-    /** @type {Node[] | null} */
-    let renderedElementsMapOnEmpty = null
-
-    /**
-     * @param {any} value
-     * @returns {any}
-     */
-    const beforeIterationCallback = (value) => {
-      return this.#translate(value)
-    }
-
-    if (forLoopType === 2 && isState(input)) {
-      /**
-       * @param {State} state
-       * @param {ElementsCollector} elementsCollector
-       * @param {string | number | symbol} [keyToRender]
-       * @returns {RenderedElementsMap}
-       */
-      const callbackForState = (state, elementsCollector, keyToRender) => {
-        /** @type {RenderedElementsMap} */
-        const renderedElementsMap = []
-
-        /**
-         * Initially there is 1 element - the forEach-begin element.
-         * We want to start after this element.
-         */
-        let index = elementsCollector.getElements().length
-
-        /**
-         * @param {number | string} [key]
-         * @param {Component | null} [component]
-         */
-        const onIteration = (key, component = null) => {
-          /**
-           * When the handler of the loop is a Component,
-           * the component arg is that Component.
-           */
-          if (component) {
-            this.#statementHandlerResolver(component)
-          }
-
-          const elementsFromCollector = elementsCollector.getElements()
-
-          const elements = (index === 0)
-            ? elementsFromCollector
-            : elementsFromCollector.slice(index)
-
-          if (key === undefined) {
-            if (renderedElementsMapOnEmpty) {
-              // Elements are rendered already, stop here
-              return
-            }
-
-            // Save the elements, so then they can be removed
-            renderedElementsMapOnEmpty = elements
-          }
-          else {
-            if (renderedElementsMapOnEmpty) {
-              for (const element of renderedElementsMapOnEmpty) {
-                this.#unsubscribeElementAndItsChildren(element)
-                // @ts-ignore
-                element.remove()
-              }
-
-              renderedElementsMapOnEmpty = null
-            }
-          }
-
-          renderedElementsMap.push({ key, elements })
-
-          index = elementsFromCollector.length
-        }
-
-        forEachLoop(
-          this.#templateTree,
-          forLoopType,
-          state,
-          handler,
-          handlerOnEmpty,
-          beforeIterationCallback,
-          keyToRender,
-          onIteration,
-        )
-
-        return renderedElementsMap
-      }
-
-      return this.#statementHandlerForState(
-        'forState',
-        input,
-        callbackForState,
-        handlerOnEmpty instanceof Function,
-        keyToRender
-      )
-    }
-
+  #resolverForObjects(input, handler) {
     /**
      * @param {State} data
      */
     const callbackForFunction = (data) => {
       forEachLoop(
         this.#templateTree,
-        forLoopType,
+        1,
         data,
         handler,
-        handlerOnEmpty,
-        beforeIterationCallback,
+        undefined,
+        undefined,
+        this.#resolverBeforeIterationCallback,
       )
     }
 
-    const type = (forLoopType === 1) ? 'forEach' : 'forState'
-
     if (input instanceof Function) {
       return this.#statementHandlerForFunction(
-        type,
+        'forEach',
         input,
         true,
         // @ts-ignore
@@ -894,7 +766,107 @@ class ElementsCreator {
       )
     }
 
-    return this.#statementHandler(type, input, callbackForFunction)
+    return this.#statementHandlerSimple(input, callbackForFunction)
+  }
+
+  /**
+   * @template T
+   * @param {(T | function() : T) | State} input
+   * @param {ForLoopCallback<T>} handler
+   * @param {ForLoopCallbackOnEmpty} [handlerOnEmpty]
+   * @param {string | number} [keyToRender]
+   * @returns {Node[] | Error}
+   */
+  #resolverForStates(input, handler, handlerOnEmpty, keyToRender) {
+    /** @type {Node[] | null} */
+    let renderedElementsMapOnEmpty = null
+
+    if (!isState(input)) {
+      return new Error('The input object must be a state')
+    }
+
+    /**
+     * @param {State} state
+     * @param {ElementsCollector} elementsCollector
+     * @param {string | number | symbol} [keyToRender]
+     * @returns {RenderedElementsMap}
+     */
+    const callbackForState = (state, elementsCollector, keyToRender) => {
+      /** @type {RenderedElementsMap} */
+      const renderedElementsMap = []
+
+      /**
+       * Initially there is 1 element - the forEach-begin element.
+       * We want to start after this element.
+       */
+      let index = elementsCollector.getElements().length
+
+      /**
+       * @param {number | string} [key]
+       * @param {Component | null} [component]
+       */
+      const onIteration = (key, component = null) => {
+        /**
+         * When the handler of the loop is a Component,
+         * the component arg is that Component.
+         */
+        if (component) {
+          this.#statementHandlerResolver(component)
+        }
+
+        const elementsFromCollector = elementsCollector.getElements()
+
+        const elements = (index === 0)
+          ? elementsFromCollector
+          : elementsFromCollector.slice(index)
+
+        if (key === undefined) {
+          if (renderedElementsMapOnEmpty) {
+            // Elements are rendered already, stop here
+            return
+          }
+
+          // Save the elements, so then they can be removed
+          renderedElementsMapOnEmpty = elements
+        }
+        else {
+          if (renderedElementsMapOnEmpty) {
+            for (const element of renderedElementsMapOnEmpty) {
+              this.#unsubscribeElementAndItsChildren(element)
+              // @ts-ignore
+              element.remove()
+            }
+
+            renderedElementsMapOnEmpty = null
+          }
+        }
+
+        renderedElementsMap.push({ key, elements })
+
+        index = elementsFromCollector.length
+      }
+
+      forEachLoop(
+        this.#templateTree,
+        2,
+        state,
+        handler,
+        handlerOnEmpty,
+        keyToRender,
+        this.#resolverBeforeIterationCallback,
+        onIteration,
+      )
+
+      return renderedElementsMap
+    }
+
+    return this.#statementHandlerForState(
+      'forState',
+      input,
+      callbackForState,
+      handlerOnEmpty instanceof Function,
+      keyToRender
+    )
   }
 
   /**
@@ -1117,10 +1089,10 @@ class ElementsCreator {
         unsetSuggestedItems()
 
         if (value instanceof Array) {
-          value = this.#arrayTranslateFormatTranslate(value)
+          value = this.#translator.translateArray(value)
         }
         else if (typeof value === 'string') {
-          value = this.#translate(value)
+          value = this.#translator.translate(value)
         }
 
         if (propertyName) {
@@ -1148,10 +1120,10 @@ class ElementsCreator {
       }
       else if (propertyName === 'textContent') {
         if (property instanceof Array) {
-          element[propertyName] = this.#arrayTranslateFormatTranslate(property)
+          element[propertyName] = this.#translator.translateArray(property)
         }
         else {
-          element[propertyName] = this.#translate(property)
+          element[propertyName] = this.#translator.translate(property)
         }
       }
       else {
@@ -1170,7 +1142,7 @@ class ElementsCreator {
             )
           )
         ) {
-          property = this.#translate(property)
+          property = this.#translator.translate(property)
         }
 
         setElementAttrOrProp(element, propertyName, property)
@@ -1215,12 +1187,11 @@ class ElementsCreator {
   }
 
   /**
-   * @param {'if' | 'for' | 'forEach' | 'forState'} type
    * @param {any} data
    * @param {function(any): void} callback
    * @returns {Node[]}
    */
-  #statementHandler(type, data, callback) {
+  #statementHandlerSimple(data, callback) {
     const { thisLevel, upperLevel } = this.#beforeStatement()
 
     callback(data)
@@ -1249,9 +1220,9 @@ class ElementsCreator {
       }
 
       /**
-       * @type {StatementRepaintFunctionForFunction}
+       * @type {RepaintFunctionForFunction}
        */
-      const statementRepaintFunction = (bindFunctionResult) => {
+      const repaintFunction = (bindFunctionResult) => {
         if (this.#isSr) {
           return
         }
@@ -1285,7 +1256,7 @@ class ElementsCreator {
         propertyName,
         '',
         bindFunction,
-        statementRepaintFunction,
+        repaintFunction,
       )
 
       const bindFunctionResult = bindFunction()
@@ -1368,9 +1339,13 @@ class ElementsCreator {
         isTemporaryLevel = true
       }
 
-      const level   = this.#collectedElements.length - 1
-      // @ts-ignore
-      const added   = callbackForState(updatedState, this.#collectedElements[level], prop)
+      const level = this.#collectedElements.length - 1
+      const added = callbackForState(
+        updatedState,
+        // @ts-ignore
+        this.#collectedElements[level],
+        prop
+      )
       const isArray = updatedObject instanceof Array
 
       for (const item of added) {
@@ -1414,11 +1389,12 @@ class ElementsCreator {
     /**
      * TODO Refactor this function, because it's too long
      *
-     * @type {StatementRepaintFunctionForState}
+     * @type {RepaintFunctionForState}
      */
-    const statementRepaintFunction = (action, updatedState, prop, arrayFunctionArgs) => {
+    const repaintFunction = (action, updatedState, prop, arrayFunctionArgs) => {
       // @ts-ignore
-      const stateParams   = updatedState[symState]
+      const stateParams = updatedState[symState]
+      // Work with the original object, because it's much faster than accessing the Proxy object
       const updatedObject = stateParams.target
 
       if (!(updatedObject instanceof Object)) {
@@ -1448,9 +1424,6 @@ class ElementsCreator {
           prevKey = i
         }
 
-        /**
-         * @type {Node}
-         */
         let lastElement = commentElementBegin
 
         if (prevKey !== null) {
@@ -1477,14 +1450,14 @@ class ElementsCreator {
        * - Remove the DOM elements
        * - Remove these same elements from .renderedElementsMap
        */
-      if (action === EnumStateAction.DELETE) {
+      else if (action === EnumStateAction.DELETE) {
         const isArray = updatedObject instanceof Array
 
         this.#removeRenderedElements(commentElementEnd, prop, isArray)
       }
       else if (action === EnumStateAction.UPDATE) {
-        statementRepaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
-        statementRepaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
+        repaintFunction(EnumStateAction.DELETE, updatedState, prop, undefined)
+        repaintFunction(EnumStateAction.CREATE, updatedState, prop, undefined)
       }
       else if (action === EnumStateAction.ARRAY_SPLICE) {
         if (updatedObject instanceof Array) {
@@ -1509,7 +1482,7 @@ class ElementsCreator {
               i < length;
               i++
             ) {
-              statementRepaintFunction(
+              repaintFunction(
                 EnumStateAction.DELETE, updatedState, i.toString(), undefined,
               )
               delete commentElementEnd.renderedElementsMap[i]
@@ -1565,7 +1538,7 @@ class ElementsCreator {
               index < start + newItems.length;
               index++
             ) {
-              statementRepaintFunction(
+              repaintFunction(
                 EnumStateAction.CREATE, updatedState, index.toString(), undefined,
               )
             }
@@ -1609,10 +1582,10 @@ class ElementsCreator {
           fromIndex < end;
           fromIndex++, toIndex++
         ) {
-          statementRepaintFunction(
+          repaintFunction(
             EnumStateAction.DELETE, updatedState, toIndex.toString(), undefined,
           )
-          statementRepaintFunction(
+          repaintFunction(
             EnumStateAction.CREATE, updatedState, toIndex.toString(), undefined,
           )
         }
@@ -1624,10 +1597,10 @@ class ElementsCreator {
           index < length;
           index++
         ) {
-          statementRepaintFunction(
+          repaintFunction(
             EnumStateAction.DELETE, updatedState, index.toString(), undefined,
           )
-          statementRepaintFunction(
+          repaintFunction(
             EnumStateAction.CREATE, updatedState, index.toString(), undefined,
           )
         }
@@ -1675,7 +1648,7 @@ class ElementsCreator {
               continue
             }
 
-            statementRepaintFunction(EnumStateAction.DELETE, updatedState, index.toString(), undefined)
+            repaintFunction(EnumStateAction.DELETE, updatedState, index.toString(), undefined)
           }
         }
 
@@ -1702,7 +1675,7 @@ class ElementsCreator {
       propertyName,
       '',
       bindFunction,
-      statementRepaintFunction,
+      repaintFunction,
     )
 
     // In this callback the 'for' loop is called
@@ -1754,52 +1727,6 @@ class ElementsCreator {
         this.#statementHandlerResolver(ret)
       }
     }
-  }
-
-  /**
-   * @param {any} input
-   * @returns {string}
-   */
-  #translate(input) {
-    if (typeof input === 'string') {
-      const translated = this.#translateString(input, this.#translations)
-
-      if (typeof translated === 'string') {
-        return translated
-      }
-
-      // Use the global translation
-      const globalObject = getGlobalObject()
-
-      const globallyTranslated = this.#translateString(
-        input,
-        // @ts-ignore
-        globalObject.paintorTranslations,
-      )
-
-      if (typeof globallyTranslated === 'string') {
-        return globallyTranslated
-      }
-    }
-
-    return input
-  }
-
-  /**
-   * @param {string} str
-   * @param {Translation[]} [translations]
-   * @returns {string | boolean}
-   */
-  #translateString(str, translations) {
-    if (translations instanceof Array && translations.length > 0) {
-      for (const translateObject of translations) {
-        if (str in translateObject) {
-          return translateObject[str]
-        }
-      }
-    }
-
-    return false
   }
 
   /**

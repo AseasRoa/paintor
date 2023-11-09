@@ -25,7 +25,7 @@ export class StateProxySubscriptions {
    * @param {BindFunction} bindFunction
    * The function that is used instead of a fixed value.
    * For example: () => (state.clicks)
-   * @param {StatementRepaintFunction | null} statementRepaintFunction
+   * @param {RepaintFunction | null} repaintFunction
    * This is only used in the 'if()' function. It's a function that
    * is used to repaint the elements in case the condition is changed
    * from false to true or vice versa.
@@ -37,7 +37,7 @@ export class StateProxySubscriptions {
     propertyName,
     subPropertyName,
     bindFunction,
-    statementRepaintFunction,
+    repaintFunction,
   ) {
     if (
       propertyName === '-s-if'
@@ -68,7 +68,7 @@ export class StateProxySubscriptions {
         item.propertyName === propertyName
         && item.subPropertyName === subPropertyName
         && item.bindFunction === bindFunction
-        && item.statementRepaintFunction === statementRepaintFunction
+        && item.repaintFunction === repaintFunction
       ) return
     }
 
@@ -83,7 +83,7 @@ export class StateProxySubscriptions {
       propertyName,
       subPropertyName,
       bindFunction,
-      statementRepaintFunction,
+      repaintFunction,
       stateSubscription,
       statePath,
     }

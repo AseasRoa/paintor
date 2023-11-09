@@ -137,7 +137,7 @@ class StateProxy {
               suggestedItems.propertyName,
               suggestedItems.subPropertyName,
               suggestedItems.bindFunction,
-              suggestedItems.statementRepaintFunction,
+              suggestedItems.repaintFunction,
             )
           }
         }
@@ -343,24 +343,24 @@ class StateProxy {
   /**
    * @param {State} updatedState
    * @param {Subscription} elementSubscription
-   * @returns {StatementRepaintFunction | null}
+   * @returns {RepaintFunction | null}
    */
-  #getStatementRepaintFunction(updatedState, elementSubscription) {
+  #getRepaintFunction(updatedState, elementSubscription) {
     if (!(symState in updatedState)) {
       throw new Error('The state must have symState')
     }
 
-    const { statementRepaintFunction, statePath } = elementSubscription
+    const { repaintFunction, statePath } = elementSubscription
 
     if (
       // @ts-ignore
       updatedState[symState].path !== statePath
-      || !statementRepaintFunction
+      || !repaintFunction
     ) {
       return null
     }
 
-    return statementRepaintFunction
+    return repaintFunction
   }
 
   /**
@@ -374,15 +374,15 @@ class StateProxy {
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
-          const statementRepaintFunction = this.#getStatementRepaintFunction(
+          const repaintFunction = this.#getRepaintFunction(
             updatedState,
             // @ts-ignore
             elementSubscriptions[index],
           )
 
-          if (statementRepaintFunction) {
+          if (repaintFunction) {
             // @ts-ignore
-            statementRepaintFunction(action, updatedState, '', args)
+            repaintFunction(action, updatedState, '', args)
           }
         }
       }
@@ -408,15 +408,15 @@ class StateProxy {
     if (subscriptions) {
       for (const [element, elementSubscriptions] of subscriptions) {
         for (let index = 0, length = elementSubscriptions.length; index < length; index++) {
-          const statementRepaintFunction = this.#getStatementRepaintFunction(
+          const repaintFunction = this.#getRepaintFunction(
             updatedState,
             // @ts-ignore
             elementSubscriptions[index],
           )
 
-          if (statementRepaintFunction) {
+          if (repaintFunction) {
             // @ts-ignore
-            statementRepaintFunction(action, updatedState, prop)
+            repaintFunction(action, updatedState, prop)
           }
         }
       }
@@ -447,7 +447,7 @@ class StateProxy {
               propertyName,
               subPropertyName,
               bindFunction,
-              statementRepaintFunction,
+              repaintFunction,
             } = subscription
 
             if (Object.hasOwn(element, '--deleted')) {
@@ -468,9 +468,9 @@ class StateProxy {
               || propertyName === '--for'
               || propertyName === '--nest'
             ) {
-              if (statementRepaintFunction) {
+              if (repaintFunction) {
                 // @ts-ignore
-                statementRepaintFunction(result)
+                repaintFunction(result)
               }
             }
             else {
@@ -509,15 +509,15 @@ class StateProxy {
           index < length;
           index++
         ) {
-          const statementRepaintFunction = this.#getStatementRepaintFunction(
+          const repaintFunction = this.#getRepaintFunction(
             updatedState,
             // @ts-ignore
             elementSubscriptions[index],
           )
 
-          if (statementRepaintFunction) {
+          if (repaintFunction) {
             // @ts-ignore
-            statementRepaintFunction(EnumStateAction.UPDATE, updatedState, prop)
+            repaintFunction(EnumStateAction.UPDATE, updatedState, prop)
           }
         }
       }

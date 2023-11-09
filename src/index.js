@@ -1,6 +1,6 @@
 import { Component } from './Component.js'
 import { state } from './state.js'
-import { fetchTranslations } from './Translation.js'
+import { fetchTranslations } from './fetchTranslations.js'
 import { symTemplateFunction } from './constants.js'
 
 /**

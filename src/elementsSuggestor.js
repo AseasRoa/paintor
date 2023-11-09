@@ -4,15 +4,15 @@
  *   propertyName: string,
  *   subPropertyName: string,
  *   bindFunction: null | BindFunction,
- *   statementRepaintFunction: null | StatementRepaintFunction
+ *   repaintFunction: null | RepaintFunction
  * }}
  */
 const suggestedItems = {
-  element                 : null,
-  propertyName            : '',
-  subPropertyName         : '',
-  bindFunction            : null,
-  statementRepaintFunction: null,
+  element         : null,
+  propertyName    : '',
+  subPropertyName : '',
+  bindFunction    : null,
+  repaintFunction : null,
 }
 
 /**
@@ -25,20 +25,20 @@ const suggestedItems = {
  * @param {string} propertyName
  * @param {string} subPropertyName
  * @param {BindFunction} bindFunction
- * @param {null | StatementRepaintFunction} statementRepaintFunction
+ * @param {null | RepaintFunction} repaintFunction
  */
 function setSuggestedItems(
   element,
   propertyName,
   subPropertyName,
   bindFunction,
-  statementRepaintFunction,
+  repaintFunction,
 ) {
-  suggestedItems.element                  = element
-  suggestedItems.propertyName             = propertyName
-  suggestedItems.subPropertyName          = subPropertyName
-  suggestedItems.bindFunction             = bindFunction
-  suggestedItems.statementRepaintFunction = statementRepaintFunction
+  suggestedItems.element         = element
+  suggestedItems.propertyName    = propertyName
+  suggestedItems.subPropertyName = subPropertyName
+  suggestedItems.bindFunction    = bindFunction
+  suggestedItems.repaintFunction = repaintFunction
 }
 
 /**
@@ -47,11 +47,11 @@ function setSuggestedItems(
  * @returns {void}
  */
 function unsetSuggestedItems() {
-  suggestedItems.element                  = null
-  suggestedItems.propertyName             = ''
-  suggestedItems.subPropertyName          = ''
-  suggestedItems.bindFunction             = null
-  suggestedItems.statementRepaintFunction = null
+  suggestedItems.element         = null
+  suggestedItems.propertyName    = ''
+  suggestedItems.subPropertyName = ''
+  suggestedItems.bindFunction    = null
+  suggestedItems.repaintFunction = null
 }
 
 export { suggestedItems, setSuggestedItems, unsetSuggestedItems }

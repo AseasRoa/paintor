@@ -20,15 +20,15 @@ type ForLoopType = 1 | 2
 
 type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefined
 
-type StatementRepaintFunctionForFunction = (data: boolean | State) => void
-type StatementRepaintFunctionForState = (
+type RepaintFunctionForFunction = (data: boolean | State) => void
+type RepaintFunctionForState = (
   action: number,
   updatedState: State,
   prop: string | symbol,
   arrayFunctionArgs?: any[],
 ) => void
 
-type StatementRepaintFunction = StatementRepaintFunctionForFunction | StatementRepaintFunctionForState
+type RepaintFunction = RepaintFunctionForFunction | RepaintFunctionForState
 
 /**
  * A single subscriptions record
@@ -40,7 +40,7 @@ type Subscription = {
   /**
    * Only used in the if() function
    */
-  statementRepaintFunction: null | StatementRepaintFunctionForFunction | StatementRepaintFunctionForState;
+  repaintFunction: null | RepaintFunctionForFunction | RepaintFunctionForState;
   /**
    * Used for cleaning up subscriptions from the DOM element itself,
    * when the element is being removed

@@ -9,6 +9,7 @@ import {
 import { Window as SrWindow } from './SrDOM/Window.js'
 import { state } from './state.js'
 import { removeAllSubscriptions } from './StateProxySubscriptions.js'
+import { Translator } from './Translator.js'
 
 
 const isBrowserEnv = isBrowserEnvironment()
@@ -55,9 +56,12 @@ class Component {
   /** @type {(Template | Component)[]} */
   #templates = []
 
-  /** @type {Translation[]} */
-  #translations = []
+  /** @type {Translator} */
+  #translator = new Translator()
 
+  /**
+   * @type {boolean}
+   */
   #initialized = false
 
   /**
@@ -211,7 +215,7 @@ class Component {
    * @returns {string}
    */
   staticHtml(options) {
-    const key = this.#translations[0] ?? null
+    const key = this.#translator.translations[0] ?? null
 
     if (!this.#staticHtmlCodes.has(key)) {
       const window = this.#getSrWindow()
@@ -264,27 +268,7 @@ class Component {
    * @returns {Component}
    */
   useTranslations(...translations) {
-    /*
-     * Reset translations here, because the whole api chain (containing this function)
-     * can be executed multiple times, but with different translations every time.
-     * EDIT: Commented out, so that translations can be used in Components
-     * this.#translations = []
-     */
-
-    for (const item of translations) {
-      if (item instanceof Array) {
-        for (const subItem of item) {
-          if (!this.#translations.includes(subItem)) {
-            this.#translations = [...this.#translations, subItem]
-          }
-        }
-      }
-      else if (item instanceof Object) {
-        if (!this.#translations.includes(item)) {
-          this.#translations = [...this.#translations, item]
-        }
-      }
-    }
+    this.#translator.useTranslations(...translations)
 
     return this
   }
@@ -307,7 +291,7 @@ class Component {
    * @returns {Node[][]}
    */
   #getElementsAsStatic(container) {
-    const key = this.#translations[0] ?? null
+    const key = this.#translator.translations[0] ?? null
 
     if (!this.#staticFinalElements.has(key)) {
       const window = this.#getSrWindow()
@@ -333,11 +317,10 @@ class Component {
   /**
    * @param {string | HTMLElement | HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
-   * @param {Translation[]} translations
    * @param {(Template | Component)[]} templates
    * @throws {Error}
    */
-  #init(container, window, translations, templates) {
+  #init(container, window, templates) {
     if (this.#initialized) return
 
     this.#initialized = true
@@ -346,7 +329,6 @@ class Component {
     this.#finalHtmlCode = ''
 
     this.#initContainer(container, window)
-    this.#initTranslations(translations)
     this.#initTemplates(templates)
   }
 
@@ -430,21 +412,6 @@ class Component {
   }
 
   /**
-   * @param {Translation[]} translations
-   * @returns {boolean}
-   * @throws {Error}
-   */
-  #initTranslations(translations) {
-    if (!(translations instanceof Array)) {
-      throw new Error('The argument \'translations\' must be an Array')
-    }
-
-    this.#translations = translations
-
-    return true
-  }
-
-  /**
    * @param { string | HTMLElement | HTMLElement[] | HTMLCollection | null} container
    * @param {Window} window
    * @param {boolean} clearContainers
@@ -453,14 +420,13 @@ class Component {
    * @throws {Error}
    */
   #render(container, window, clearContainers = true, htmlOptions = {}) {
-    this.#init(container, window, this.#translations, this.#templates)
+    this.#init(container, window, this.#templates)
 
     if (clearContainers) {
       this.#clearContainerElements()
     }
 
     const templates = this.#templates
-    const translations = this.#translations
 
     if (!window) {
       throw new Error('Missing window element')
@@ -475,7 +441,7 @@ class Component {
         const customElements = document.getElementsByTagName(this.#selector)
 
         for (const customElement of customElements) {
-          this.#renderElements(window, customElement.shadowRoot, templates, translations, htmlOptions)
+          this.#renderElements(window, customElement.shadowRoot, templates, htmlOptions)
         }
 
         return
@@ -497,7 +463,7 @@ class Component {
               throw new Error('Missing shadow root')
             }
 
-            component.#renderElements(window, this.shadowRoot, templates, translations, htmlOptions)
+            component.#renderElements(window, this.shadowRoot, templates, htmlOptions)
           }
 
           disconnectedCallback() {
@@ -525,7 +491,7 @@ class Component {
 
               // check the inserted element for being a code snippet
               if (node.matches(this.#selectorNonId)) {
-                this.#renderElements(window, node, templates, translations, htmlOptions)
+                this.#renderElements(window, node, templates, htmlOptions)
               }
             }
 
@@ -542,12 +508,12 @@ class Component {
       }
 
       if (this.#containerDOMElements.length === 0) {
-        this.#renderElements(window, null, templates, translations, htmlOptions)
+        this.#renderElements(window, null, templates, htmlOptions)
       }
       else {
         for (const containerElement of this.#containerDOMElements) {
           // @ts-ignore
-          this.#renderElements(window, containerElement, templates, translations, htmlOptions)
+          this.#renderElements(window, containerElement, templates, htmlOptions)
         }
       }
     }
@@ -557,14 +523,13 @@ class Component {
    * @param {Window} window
    * @param {Element | ShadowRoot | null} container
    * @param {(Template | Component)[]} templates
-   * @param {Translation[]} translations
    * @param {object} [htmlOptions]
    * @param {string} [htmlOptions.indent]
    * @throws {Error}
    */
-  #renderElements(window, container, templates, translations, htmlOptions = {}) {
+  #renderElements(window, container, templates, htmlOptions = {}) {
     const creator = new ElementsCreator(
-      window, container, templates, translations,
+      window, container, templates, this.#translator,
     )
     creator.render()
 
