@@ -9,5 +9,5 @@ docs/*/.vitepress/dist
 node_modules/
 
 # Files
-.env
+.env*
 package-lock.json
