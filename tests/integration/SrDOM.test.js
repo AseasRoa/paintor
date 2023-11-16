@@ -1,7 +1,7 @@
 /* eslint-disable vitest/expect-expect */
 
-import { DOMException } from '../src/SrDOM/exceptions/DOMException.js'
-import { Window } from '../src/SrDOM/Window.js'
+import { DOMException } from '../../src/SrDOM/exceptions/DOMException.js'
+import { Window } from '../../src/SrDOM/Window.js'
 
 describe('SrDom Tests', () => {
   describe('window, document', () => {
