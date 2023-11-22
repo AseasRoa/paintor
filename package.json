@@ -16,11 +16,11 @@
   ],
   "license": "MIT",
   "type": "module",
-  "types": "./src/types/global.d.ts",
+  "types": "./types/global.d.ts",
   "main": "./src/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
-    "types": "./src/types/global.d.ts",
+    "types": "./types/global.d.ts",
     "browser": "./dist/bundle.js",
     "require": "./dist/bundle.cjs.js",
     "import": "./src/index.js",
