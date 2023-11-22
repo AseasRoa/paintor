@@ -17,23 +17,23 @@
   "license": "MIT",
   "type": "module",
   "types": "./types/global.d.ts",
-  "main": "./src/index.js",
+  "main": "./lib/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
     "types": "./types/global.d.ts",
     "browser": "./dist/bundle.js",
     "require": "./dist/bundle.cjs.js",
-    "import": "./src/index.js",
-    "default": "./src/index.js"
+    "import": "./lib/index.js",
+    "default": "./lib/index.js"
   },
   "imports": {
     "#paintor": {
-      "default": "./src/index.js"
+      "default": "./lib/index.js"
     }
   },
   "scripts": {
     "dev": "vite",
-    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./src",
+    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./lib",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "build": "vite build",
