@@ -31,6 +31,11 @@
       "default": "./lib/index.js"
     }
   },
+  "files": [
+    "dist",
+    "lib",
+    "types"
+  ],
   "scripts": {
     "dev": "vite",
     "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./",
@@ -40,7 +45,8 @@
     "build:tsc": "tsc",
     "docs:dev": "vitepress dev docs/v1.x",
     "docs:build": "vitepress build docs/v1.x",
-    "docs:preview": "vitepress preview docs/v1.x"
+    "docs:preview": "vitepress preview docs/v1.x",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "devDependencies": {
     "@types/node": "^20.9.3",
@@ -57,6 +63,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AseasRoa/paintor.git"
+    "url": "https://github.com/AseasRoa/paintor"
   }
 }
