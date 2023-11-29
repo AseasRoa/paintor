@@ -3,11 +3,15 @@
 .vscode/
 coverage/
 dist/
-docs/*/.vitepress/.temp
-docs/*/.vitepress/cache
-docs/*/.vitepress/dist
 node_modules/
 
 # Files
+**/.DS_Store
+*.log
 .env*
 package-lock.json
+
+# Project Specific Directories
+docs/*/.vitepress/.temp
+docs/*/.vitepress/cache
+docs/*/.vitepress/dist

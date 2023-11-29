@@ -3,16 +3,18 @@
 .vscode/
 coverage/
 dist/
-docs/*/.vitepress/.temp
-docs/*/.vitepress/cache
-docs/*/.vitepress/dist
 node_modules/
 
 # Files
+**/*.ts
+**/.DS_Store
+*.log
 .env*
 package-lock.json
-**/*.ts
-
 # To lint files and folders with names starting with a dot
-# https://github.com/eslint/eslint/issues/8429
 !.*
+
+# Project Specific Directories
+docs/*/.vitepress/.temp
+docs/*/.vitepress/cache
+docs/*/.vitepress/dist
