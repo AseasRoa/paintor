@@ -45,7 +45,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -64,7 +64,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -83,7 +83,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -102,7 +102,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -122,7 +122,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -153,7 +153,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -172,7 +172,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -191,7 +191,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'b', 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -210,7 +210,7 @@ describe('State: Array', () => {
     let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -230,7 +230,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'a', 'c', 'd' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)
@@ -265,7 +265,7 @@ describe('State: Array', () => {
     const arrayState = state([ 'c' ])
 
     component(($) => {
-      $.forState(arrayState, (value) => {
+      $.forEach(arrayState, (value) => {
         $.div(value)
       })
     }).paint(container)

@@ -20,7 +20,8 @@ export interface Statements {
     handler : (
       value : ReturnType<Input>[number],
       key : number
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -33,7 +34,8 @@ export interface Statements {
     handler : (
       value : ReturnType<Input> extends Set<infer V> ? V : never,
       key : number
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -46,7 +48,8 @@ export interface Statements {
     handler : (
       value : ReturnType<Input> extends Map<any, infer V> ? V : never,
       key : ReturnType<Input> extends Map<infer K, any> ? K : never
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -59,7 +62,8 @@ export interface Statements {
     handler : (
       value : ReturnType<Input> extends Object<PropertyKey, infer V> ? V : never,
       key : ReturnType<Input> extends Object<infer K, infer V> ? K : never
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -72,7 +76,8 @@ export interface Statements {
     handler : (
       value : Input[number],
       key : number
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -82,7 +87,8 @@ export interface Statements {
     Input extends Set<>
   >(
     set : Input,
-    handler : (value : Input extends Set<infer V> ? V : never, key : number) => boolean | any
+    handler : (value : Input extends Set<infer V> ? V : never, key : number) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -96,7 +102,8 @@ export interface Statements {
     handler : (
       value : Input extends Map<any, infer V> ? V : never,
       key : Input extends Map<infer K, any> ? K : never
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -110,7 +117,8 @@ export interface Statements {
     handler : (
       value : Input[Key],
       key : Key
-    ) => boolean | any
+    ) => boolean | any,
+    handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
   /**
@@ -121,10 +129,7 @@ export interface Statements {
     Input extends Array<>
   >(
     array : Input,
-    handler : (
-      value : Input[number],
-      key : number
-    ) => boolean | any,
+    handler: Template | ((state: Input) => Template) | ((state: Input) => void),
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
@@ -136,7 +141,7 @@ export interface Statements {
     Input extends Set<>
   >(
     set : Input,
-    handler : (value : Input extends Set<infer V> ? V : never, key : number) => boolean | any,
+    handler: Template | ((state: Input) => Template) | ((state: Input) => void),
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
@@ -149,10 +154,7 @@ export interface Statements {
     Key extends keyof Input
   >(
     map : Input,
-    handler : (
-      value : Input extends Map<any, infer V> ? V : never,
-      key : Input extends Map<infer K, any> ? K : never
-    ) => boolean | any,
+    handler: Template | ((state: Input) => Template) | ((state: Input) => void),
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
@@ -165,10 +167,7 @@ export interface Statements {
     Key extends keyof Input
   >(
     object : Input,
-    handler : (
-      value : Input[Key],
-      key : Key
-    ) => boolean | any,
+    handler: Template | ((state: Input) => Template) | ((state: Input) => void),
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
 
@@ -177,32 +176,5 @@ export interface Statements {
     to : number,
     handler : (key:number) => boolean | any
   ) : HTMLElement[] | Error
-
-  with<
-    Input extends Array<>
-  >(state: Input) : {
-    paint: (
-      handler: (state: Input) => Template,
-      handlerOnEmpty?: () => void
-    ) => HTMLElement[] | Error,
-    paintEach: (
-      handler: (value: Input[number], key: number) => Template,
-      handlerOnEmpty?: () => void
-    ) => void
-  }
-
-  with<
-    Input extends Object<>,
-    Key extends keyof Input
-  >(state: Input) : {
-    paint: (
-      handler: (state: Input) => Template,
-      handlerOnEmpty?: () => void
-    ) => HTMLElement[] | Error,
-    paintEach: (
-      handler: (value: Input[Key], key: Key) => Template,
-      handlerOnEmpty?: () => void
-    ) => void
-  }
 }
 

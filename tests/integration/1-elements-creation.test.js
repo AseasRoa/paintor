@@ -64,507 +64,527 @@ describe('Elements Creation', () => {
   })
 
   describe('Check Order of Rendered Elements', () => {
-    test('(SSR) Table', () => {
-      const html = component(($) => {
-        $.table(
-          $.tr(
-            $.td('Row 1, Column 1'),
-            $.td('Row 1, Column 2'),
-          ),
-          $.tr(
-            $.td('Row 2, Column 1'),
-            $.td('Row 2, Column 2'),
-          ),
-        )
-      }).html()
+    describe('Table', () => {
+      test('SSR', () => {
+        const html = component(($) => {
+          $.table(
+            $.tr(
+              $.td('Row 1, Column 1'),
+              $.td('Row 1, Column 2'),
+            ),
+            $.tr(
+              $.td('Row 2, Column 1'),
+              $.td('Row 2, Column 2'),
+            ),
+          )
+        }).html()
 
-      expect(html).toBe('<table><tr><td>Row 1, Column 1</td><td>Row 1, Column 2</td></tr><tr><td>Row 2, Column 1</td><td>Row 2, Column 2</td></tr></table>')
-    })
-
-    test('(DOM) Table', () => {
-      const container = document.body
-
-      component(($) => {
-        $.table(
-          $.tr(
-            $.td('Row 1, Column 1'),
-            $.td('Row 1, Column 2'),
-          ),
-          $.tr(
-            $.td('Row 2, Column 1'),
-            $.td('Row 2, Column 2'),
-          ),
-        )
-      }).paint(container)
-
-      const table = container.children[0]
-
-      expect(container.children.length).toBe(1)
-      expect(table?.tagName).toBe('TABLE')
-
-      expect(table?.children.length).toBe(2)
-      expect(table?.children[0]?.tagName).toBe('TR')
-      expect(table?.children[1]?.tagName).toBe('TR')
-
-      expect(table?.children[0]?.children.length).toBe(2)
-      expect(table?.children[0]?.children[0]?.tagName).toBe('TD')
-      expect(table?.children[0]?.children[0]?.children.length).toBe(0)
-      expect(table?.children[0]?.children[0]?.textContent).toBe('Row 1, Column 1')
-      expect(table?.children[0]?.children[1]?.tagName).toBe('TD')
-      expect(table?.children[0]?.children[1]?.children.length).toBe(0)
-      expect(table?.children[0]?.children[1]?.textContent).toBe('Row 1, Column 2')
-
-      expect(table?.children[1]?.children.length).toBe(2)
-      expect(table?.children[1]?.children[0]?.tagName).toBe('TD')
-      expect(table?.children[1]?.children[0]?.children.length).toBe(0)
-      expect(table?.children[1]?.children[0]?.textContent).toBe('Row 2, Column 1')
-      expect(table?.children[1]?.children[1]?.tagName).toBe('TD')
-      expect(table?.children[1]?.children[1]?.children.length).toBe(0)
-      expect(table?.children[1]?.children[1]?.textContent).toBe('Row 2, Column 2')
-    })
-
-    test('(SSR) Correct order of elements when automatically calling a Component', () => {
-      const liFragments = component(($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
+        expect(html).toBe('<table><tr><td>Row 1, Column 1</td><td>Row 1, Column 2</td></tr><tr><td>Row 2, Column 1</td><td>Row 2, Column 2</td></tr></table>')
       })
 
-      const html = component(($) => {
-        $.ul(
-          $.li('li-1'),
-          liFragments,
-          $.li('li-2'),
-          liFragments,
-        )
-      }).html()
+      test('DOM', () => {
+        const container = document.body
 
-      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
+        component(($) => {
+          $.table(
+            $.tr(
+              $.td('Row 1, Column 1'),
+              $.td('Row 1, Column 2'),
+            ),
+            $.tr(
+              $.td('Row 2, Column 1'),
+              $.td('Row 2, Column 2'),
+            ),
+          )
+        }).paint(container)
+
+        const table = container.children[0]
+
+        expect(container.children.length).toBe(1)
+        expect(table?.tagName).toBe('TABLE')
+
+        expect(table?.children.length).toBe(2)
+        expect(table?.children[0]?.tagName).toBe('TR')
+        expect(table?.children[1]?.tagName).toBe('TR')
+
+        expect(table?.children[0]?.children.length).toBe(2)
+        expect(table?.children[0]?.children[0]?.tagName).toBe('TD')
+        expect(table?.children[0]?.children[0]?.children.length).toBe(0)
+        expect(table?.children[0]?.children[0]?.textContent).toBe('Row 1, Column 1')
+        expect(table?.children[0]?.children[1]?.tagName).toBe('TD')
+        expect(table?.children[0]?.children[1]?.children.length).toBe(0)
+        expect(table?.children[0]?.children[1]?.textContent).toBe('Row 1, Column 2')
+
+        expect(table?.children[1]?.children.length).toBe(2)
+        expect(table?.children[1]?.children[0]?.tagName).toBe('TD')
+        expect(table?.children[1]?.children[0]?.children.length).toBe(0)
+        expect(table?.children[1]?.children[0]?.textContent).toBe('Row 2, Column 1')
+        expect(table?.children[1]?.children[1]?.tagName).toBe('TD')
+        expect(table?.children[1]?.children[1]?.children.length).toBe(0)
+        expect(table?.children[1]?.children[1]?.textContent).toBe('Row 2, Column 2')
+      })
     })
 
-    test('(DOM) Correct order of elements when automatically calling a Component', () => {
-      const container = document.body
+    describe('Automatically calling a Component', () => {
+      test('SSR', () => {
+        const liFragments = component(($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        })
 
-      const liFragments = component(($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
+        const html = component(($) => {
+          $.ul(
+            $.li('li-1'),
+            liFragments,
+            $.li('li-2'),
+            liFragments,
+          )
+        }).html()
+
+        expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
       })
 
-      component(($) => {
-        $.ul(
-          $.li('li-1'),
-          liFragments,
-          $.li('li-2'),
-          liFragments,
-        )
-      }).paint(container)
+      test('DOM', () => {
+        const container = document.body
 
-      const ul = container.getElementsByTagName('ul')[0]
+        const liFragments = component(($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        })
 
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'li-1',
-        'li-fragment-1',
-        'li-fragment-2',
-        'li-2',
-        'li-fragment-1',
-        'li-fragment-2',
-      ])
+        component(($) => {
+          $.ul(
+            $.li('li-1'),
+            liFragments,
+            $.li('li-2'),
+            liFragments,
+          )
+        }).paint(container)
+
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-fragment-1',
+          'li-fragment-2',
+          'li-2',
+          'li-fragment-1',
+          'li-fragment-2',
+        ])
+      })
     })
 
-    test('(SSR) Correct order of elements when automatically calling template functions', () => {
-      const liFragments = template(($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
+    describe('Automatically calling template functions', () => {
+      test('SSR', () => {
+        const liFragments = template(($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        })
+
+        const html = component(($) => {
+          $.ul(
+            $.li('li-1'),
+            liFragments,
+            $.li('li-2'),
+            liFragments,
+          )
+        }).html()
+
+        expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
       })
 
-      const html = component(($) => {
-        $.ul(
-          $.li('li-1'),
-          liFragments,
-          $.li('li-2'),
-          liFragments,
-        )
-      }).html()
+      test('DOM', () => {
+        const container = document.body
 
-      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
+        const liFragments = template(($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        })
+
+        component(($) => {
+          $.ul(
+            $.li('li-1'),
+            liFragments,
+            $.li('li-2'),
+            liFragments,
+          )
+        }).paint(container)
+
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-fragment-1',
+          'li-fragment-2',
+          'li-2',
+          'li-fragment-1',
+          'li-fragment-2',
+        ])
+      })
     })
 
-    test('(DOM) Correct order of elements when automatically calling template functions', () => {
-      const container = document.body
+    describe('Manually calling template functions', () => {
+      test('SSR', () => {
+        /**
+         * Template function, created without the wrapper
+         *
+         * @param {TemplateTree} $
+         */
+        const liFragments = ($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        }
 
-      const liFragments = template(($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
+        const html = component(($) => {
+          $.ul(
+            $.li('li-1'),
+            liFragments($),
+            $.li('li-2'),
+            liFragments($),
+          )
+        }).html()
+
+        expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
       })
 
-      component(($) => {
-        $.ul(
-          $.li('li-1'),
-          liFragments,
-          $.li('li-2'),
-          liFragments,
-        )
-      }).paint(container)
+      test('DOM', () => {
+        const container = document.body
 
-      const ul = container.getElementsByTagName('ul')[0]
+        /**
+         * Template function, created without the wrapper
+         *
+         * @param {TemplateTree} $
+         */
+        const liFragments = ($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        }
 
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'li-1',
-        'li-fragment-1',
-        'li-fragment-2',
-        'li-2',
-        'li-fragment-1',
-        'li-fragment-2',
-      ])
-    })
+        component(($) => {
+          $.ul(
+            $.li('li-1'),
+            liFragments($),
+            $.li('li-2'),
+            liFragments($),
+          )
+        }).paint(container)
 
-    test('(SSR) Correct order of elements when manually calling template functions', () => {
-      /**
-       * Template function, created without the wrapper
-       *
-       * @param {TemplateTree} $
-       */
-      const liFragments = ($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
-      }
+        const ul = container.getElementsByTagName('ul')[0]
 
-      const html = component(($) => {
-        $.ul(
-          $.li('li-1'),
-          liFragments($),
-          $.li('li-2'),
-          liFragments($),
-        )
-      }).html()
-
-      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
-    })
-
-    test('(DOM) Correct order of elements when manually calling template functions', () => {
-      const container = document.body
-
-      /**
-       * Template function, created without the wrapper
-       *
-       * @param {TemplateTree} $
-       */
-      const liFragments = ($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
-      }
-
-      component(($) => {
-        $.ul(
-          $.li('li-1'),
-          liFragments($),
-          $.li('li-2'),
-          liFragments($),
-        )
-      }).paint(container)
-
-      const ul = container.getElementsByTagName('ul')[0]
-
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'li-1',
-        'li-fragment-1',
-        'li-fragment-2',
-        'li-2',
-        'li-fragment-1',
-        'li-fragment-2',
-      ])
-    })
-
-    test('(SSR) Correct order of elements when using forEach()', () => {
-      const globalState = state(['1', '2'])
-
-      /**
-       * Template function, created without the wrapper
-       *
-       * @param {TemplateTree} $
-       */
-      const liFragments = ($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
-      }
-
-      const html = component(($) => {
-        $.ul(
-          $.forEach(globalState, (value) => {
-            $.li('li-' + value)
-            liFragments($)
-          }),
-        )
-      }).html()
-
-      expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
-    })
-
-    test('(DOM) Correct order of elements when using forEach()', () => {
-      const container = document.body
-      const globalState = state(['1', '2'])
-
-      /**
-       * Template function, created without the wrapper
-       *
-       * @param {TemplateTree} $
-       */
-      const liFragments = ($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
-      }
-
-      component(($) => {
-        $.ul(
-          $.forEach(globalState, (value) => {
-            $.li('li-' + value)
-            liFragments($)
-          }),
-        )
-      }).paint(container)
-
-      const ul = container.getElementsByTagName('ul')[0]
-
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'li-1',
-        'li-fragment-1',
-        'li-fragment-2',
-        'li-2',
-        'li-fragment-1',
-        'li-fragment-2',
-      ])
-    })
-
-    test('(SSR) Correct order of elements when using forState()', () => {
-      const globalState = state(['1', '2'])
-
-      /**
-       * Template function, created without the wrapper
-       *
-       * @param {TemplateTree} $
-       */
-      const liFragments = ($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
-      }
-
-      const html = component(($) => {
-        $.ul(
-          $.forState(globalState, (value) => {
-            $.li('li-' + value)
-            liFragments($)
-          }),
-        )
-      }).html()
-
-      expect(html).toBe('<ul><!--forState-begin--><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li><!--forState-end--></ul>')
-    })
-
-    test('(DOM) Correct order of elements when using forState()', () => {
-      const container = document.body
-      const globalState = state(['1', '2'])
-
-      /**
-       * Template function, created without the wrapper
-       *
-       * @param {TemplateTree} $
-       */
-      const liFragments = ($) => {
-        $.li('li-fragment-1')
-        $.li('li-fragment-2')
-      }
-
-      component(($) => {
-        $.ul(
-          $.forState(globalState, (value) => {
-            $.li('li-' + value)
-            liFragments($)
-          }),
-        )
-      }).paint(container)
-
-      const ul = container.getElementsByTagName('ul')[0]
-
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'forState-begin',
-        'li-1',
-        'li-fragment-1',
-        'li-fragment-2',
-        'li-2',
-        'li-fragment-1',
-        'li-fragment-2',
-        'forState-end',
-      ])
-    })
-
-    test('(SSR) if() with a callback, returning a Template', () => {
-      const ifCallback = template(($) => {
-        $.li('if')
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-fragment-1',
+          'li-fragment-2',
+          'li-2',
+          'li-fragment-1',
+          'li-fragment-2',
+        ])
       })
-      const elseCallback = template(($) => {
-        $.li('else')
+    })
+
+    describe('Using forEach() with normal array', () => {
+      test('SSR', () => {
+        const array = ['1', '2']
+
+        /**
+         * Template function, created without the wrapper
+         *
+         * @param {TemplateTree} $
+         */
+        const liFragments = ($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        }
+
+        const html = component(($) => {
+          $.ul(
+            $.forEach(array, (value) => {
+              $.li('li-' + value)
+              liFragments($)
+            }),
+          )
+        }).html()
+
+        expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
       })
 
-      const html = component(($) => {
-        $.ul(
-          $.if(true, ifCallback, elseCallback),
-        )
+      test('DOM', () => {
+        const container = document.body
+        const array = ['1', '2']
 
-        $.ul(
-          $.if(false, ifCallback, elseCallback),
-        )
-      }).html()
+        /**
+         * Template function, created without the wrapper
+         *
+         * @param {TemplateTree} $
+         */
+        const liFragments = ($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        }
 
-      expect(html).toBe(
-        '<ul><li>if</li></ul>'
-        + '<ul><li>else</li></ul>',
-      )
+        component(($) => {
+          $.ul(
+            $.forEach(array, (value) => {
+              $.li('li-' + value)
+              liFragments($)
+            }),
+          )
+        }).paint(container)
+
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-fragment-1',
+          'li-fragment-2',
+          'li-2',
+          'li-fragment-1',
+          'li-fragment-2'
+        ])
+      })
     })
 
-    test('(DOM) if() with a callback, returning a Template', () => {
-      const container = document.body
+    describe('Using forEach() with reactive state', () => {
+      test('SSR', () => {
+        const globalState = state(['1', '2'])
 
-      const ifCallback = template(($) => {
-        $.li('if')
+        /**
+         * Template function, created without the wrapper
+         *
+         * @param {TemplateTree} $
+         */
+        const liFragments = ($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        }
+
+        const html = component(($) => {
+          $.ul(
+            $.forEach(globalState, (value) => {
+              $.li('li-' + value)
+              liFragments($)
+            }),
+          )
+        }).html()
+
+        expect(html).toBe('<ul><!--reactive-begin--><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li><!--reactive-end--></ul>')
       })
-      const elseCallback = template(($) => {
-        $.li('else')
+
+      test('DOM', () => {
+        const container = document.body
+        const globalState = state(['1', '2'])
+
+        /**
+         * Template function, created without the wrapper
+         *
+         * @param {TemplateTree} $
+         */
+        const liFragments = ($) => {
+          $.li('li-fragment-1')
+          $.li('li-fragment-2')
+        }
+
+        component(($) => {
+          $.ul(
+            $.forEach(globalState, (value) => {
+              $.li('li-' + value)
+              liFragments($)
+            }),
+          )
+        }).paint(container)
+
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'reactive-begin',
+          'li-1',
+          'li-fragment-1',
+          'li-fragment-2',
+          'li-2',
+          'li-fragment-1',
+          'li-fragment-2',
+          'reactive-end',
+        ])
       })
-
-      component(($) => {
-        $.ul(
-          $.if(true, ifCallback, elseCallback),
-        )
-
-        $.ul(
-          $.if(false, ifCallback, elseCallback),
-        )
-      }).paint(container)
-
-      let ul = container.getElementsByTagName('ul')[0]
-
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'if',
-      ])
-
-      ul = container.getElementsByTagName('ul')[1]
-
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'else',
-      ])
     })
 
-    test('(SSR) forEach() and forState() with a callback, returning a Template', () => {
-      const globalState = state(['1', '2'])
+    describe('if() with a callback, returning a Template', () => {
+      test('SSR', () => {
+        const ifCallback = template(($) => {
+          $.li('if')
+        })
+        const elseCallback = template(($) => {
+          $.li('else')
+        })
 
-      /**
-       * @param {string} value
-       * @returns {Template}
-       */
-      const callback = (value) => template(($) => {
-        $.li('li-' + value)
+        const html = component(($) => {
+          $.ul(
+            $.if(true, ifCallback, elseCallback),
+          )
+
+          $.ul(
+            $.if(false, ifCallback, elseCallback),
+          )
+        }).html()
+
+        expect(html).toBe(
+          '<ul><li>if</li></ul>'
+          + '<ul><li>else</li></ul>',
+        )
       })
 
-      const html = component(($) => {
-        $.ul(
-          $.forEach(globalState, callback),
-        )
+      test('DOM', () => {
+        const container = document.body
 
-        $.ul(
-          $.forState(globalState, callback),
-        )
-      }).html()
+        const ifCallback = template(($) => {
+          $.li('if')
+        })
+        const elseCallback = template(($) => {
+          $.li('else')
+        })
 
-      expect(html).toBe(
-        '<ul><li>li-1</li><li>li-2</li></ul>'
-        + '<ul><!--forState-begin--><li>li-1</li><li>li-2</li><!--forState-end--></ul>'
-      )
+        component(($) => {
+          $.ul(
+            $.if(true, ifCallback, elseCallback),
+          )
+
+          $.ul(
+            $.if(false, ifCallback, elseCallback),
+          )
+        }).paint(container)
+
+        let ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'if',
+        ])
+
+        ul = container.getElementsByTagName('ul')[1]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'else',
+        ])
+      })
     })
 
-    test('(DOM) forEach() and forState() with a callback, returning a Template', () => {
-      const container = document.body
-      const globalState = state(['1', '2'])
+    describe('forEach() with a callback, returning a Template', () => {
+      test('SSR', () => {
+        const array = ['1', '2']
+        const globalState = state(['1', '2'])
 
-      /**
-       * @param {string} value
-       * @returns {Template}
-       */
-      const callback = (value) => template(($) => {
-        $.li('li-' + value)
+        /**
+         * @param {string} value
+         * @returns {Template}
+         */
+        const callback = (value) => template(($) => {
+          $.li('li-' + value)
+        })
+
+        const html = component(($) => {
+          $.ul(
+            $.forEach(array, callback),
+          )
+
+          $.ul(
+            $.forEach(globalState, callback),
+          )
+        }).html()
+
+        expect(html).toBe(
+          '<ul><li>li-1</li><li>li-2</li></ul>'
+          + '<ul><!--reactive-begin--><li>li-1</li><li>li-2</li><!--reactive-end--></ul>'
+        )
       })
 
-      component(($) => {
-        $.ul(
-          $.forEach(globalState, callback),
-        )
+      test('DOM', () => {
+        const container = document.body
+        const array = ['1', '2']
+        const globalState = state(['1', '2'])
 
-        $.ul(
-          $.forState(globalState, callback),
-        )
-      }).paint(container)
+        /**
+         * @param {string} value
+         * @returns {Template}
+         */
+        const callback = (value) => template(($) => {
+          $.li('li-' + value)
+        })
 
-      let ul = container.getElementsByTagName('ul')[0]
+        component(($) => {
+          $.ul(
+            $.forEach(array, callback),
+          )
 
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'li-1',
-        'li-2',
-      ])
+          $.ul(
+            $.forEach(globalState, callback),
+          )
+        }).paint(container)
 
-      ul = container.getElementsByTagName('ul')[1]
+        let ul = container.getElementsByTagName('ul')[0]
 
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'forState-begin',
-        'li-1',
-        'li-2',
-        'forState-end',
-      ])
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-2',
+        ])
+
+        ul = container.getElementsByTagName('ul')[1]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'reactive-begin',
+          'li-1',
+          'li-2',
+          'reactive-end',
+        ])
+      })
     })
 
-    test('(SSR) forState() with a callback, returning a Component', () => {
-      const globalState = state(['1', '2'])
+    describe('forEach() with a callback, returning a Component', () => {
+      test('SSR', () => {
+        const globalState = state(['1', '2'])
 
-      /**
-       * @param {string} value
-       * @returns {Component}
-       */
-      const callback = (value) => component(($) => {
-        $.li('li-' + value)
+        /**
+         * @param {string} value
+         * @returns {Component}
+         */
+        const callback = (value) => component(($) => {
+          $.li('li-' + value)
+        })
+
+        const html = component(($) => {
+          $.ul(
+            $.forEach(globalState, callback),
+          )
+        }).html()
+
+        expect(html).toBe('<ul><!--reactive-begin--><li>li-1</li><li>li-2</li><!--reactive-end--></ul>')
       })
 
-      const html = component(($) => {
-        $.ul(
-          $.forState(globalState, callback),
-        )
-      }).html()
+      test('DOM', () => {
+        const container = document.body
+        const globalState = state(['1', '2'])
 
-      expect(html).toBe('<ul><!--forState-begin--><li>li-1</li><li>li-2</li><!--forState-end--></ul>')
-    })
+        /**
+         * @param {string} value
+         * @returns {Component}
+         */
+        const callback = (value) => component(($) => {
+          $.li('li-' + value)
+        })
 
-    test('(DOM) forState() with a callback, returning a Component', () => {
-      const container = document.body
-      const globalState = state(['1', '2'])
+        component(($) => {
+          $.ul(
+            $.forEach(globalState, callback),
+          )
+        }).paint(container)
 
-      /**
-       * @param {string} value
-       * @returns {Component}
-       */
-      const callback = (value) => component(($) => {
-        $.li('li-' + value)
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'reactive-begin',
+          'li-1',
+          'li-2',
+          'reactive-end',
+        ])
       })
-
-      component(($) => {
-        $.ul(
-          $.forState(globalState, callback),
-        )
-      }).paint(container)
-
-      const ul = container.getElementsByTagName('ul')[0]
-
-      expectTextContentsToBeLike(ul?.childNodes, [
-        'forState-begin',
-        'li-1',
-        'li-2',
-        'forState-end',
-      ])
     })
   })
 })
