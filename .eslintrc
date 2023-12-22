@@ -193,7 +193,6 @@
           { "blankLine": "always", "prev": "*", "next": "while" },
           { "blankLine": "always", "prev": "*", "next": "function" },
           { "blankLine": "always", "prev": "*", "next": "if" },
-          { "blankLine": "always", "prev": "*", "next": "export" },
           { "blankLine": "always", "prev": "*", "next": "throw" },
           { "blankLine": "always", "prev": "*", "next": "try" },
           { "blankLine": "always", "prev": "*", "next": "return" }
@@ -201,15 +200,7 @@
         "prefer-reflect": "off",
         "quote-props": ["error", "consistent-as-needed"],
         "quotes": ["error", "single"],
-        "require-jsdoc": ["error", {
-          "require": {
-            "FunctionDeclaration": true,
-            "MethodDefinition": true,
-            "ClassDeclaration": false,
-            "ArrowFunctionExpression": false,
-            "FunctionExpression": true
-          }
-        }],
+        "require-jsdoc": "off",
         "rest-spread-spacing": ["error", "never"],
         "semi": ["error", "never"],
         "semi-spacing": "off",
@@ -217,9 +208,9 @@
         "space-before-blocks": "error",
         "space-before-function-paren": [
           "error", {
-            "anonymous": "always",
+            "anonymous": "never",
             "named": "never",
-            "asyncArrow": "always"
+            "asyncArrow": "never"
           }
         ],
         "space-in-parens": "off",
