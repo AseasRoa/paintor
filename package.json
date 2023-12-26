@@ -7,11 +7,11 @@
   "description": "JavaScript View library for the browser and for the server",
   "license": "MIT",
   "type": "module",
-  "types": "./types/global.d.ts",
+  "types": "./types/index.d.ts",
   "main": "./lib/index.js",
   "browser": "./dist/bundle.js",
   "exports": {
-    "types": "./types/global.d.ts",
+    "types": "./types/index.d.ts",
     "browser": "./dist/bundle.js",
     "import": "./lib/index.js",
     "default": "./lib/index.js"
