@@ -31,7 +31,7 @@ interface Component {
 }
 
 declare module 'paintor' {
-  export { Component } from 'lib/Component.js'
+  export { Component, Template, Translation }
 
   export function component(...from: (Template | Component)[]): Component
   export function component(from: (Template | Component)[]): Component

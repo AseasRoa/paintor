@@ -5,15 +5,6 @@
     "name": "AseasRoa"
   },
   "description": "JavaScript View library for the browser and for the server",
-  "homepage": "https://github.com/AseasRoa/paintor",
-  "keywords": [
-    "javascript",
-    "vanilla",
-    "hyperscript",
-    "view library",
-    "frontend",
-    "backend"
-  ],
   "license": "MIT",
   "type": "module",
   "types": "./types/global.d.ts",
@@ -22,7 +13,6 @@
   "exports": {
     "types": "./types/global.d.ts",
     "browser": "./dist/bundle.js",
-    "require": "./dist/bundle.cjs.js",
     "import": "./lib/index.js",
     "default": "./lib/index.js"
   },
@@ -59,5 +49,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/AseasRoa/paintor"
-  }
+  },
+  "homepage": "https://github.com/AseasRoa/paintor",
+  "keywords": [
+    "javascript",
+    "vanilla",
+    "hyperscript",
+    "view library",
+    "frontend",
+    "backend"
+  ]
 }
