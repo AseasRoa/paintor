@@ -11,7 +11,7 @@ const globalState = state({
 })
 
 setInterval(() => {
-  globalState.number++
+  globalState.number += 1
   globalState.inner.number = globalState.number * 2
   globalState.inner.inner.number = globalState.number * 3
 }, 2000)

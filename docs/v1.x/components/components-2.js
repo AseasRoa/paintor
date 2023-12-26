@@ -4,9 +4,9 @@ const plusMinusComponent = component(($) => {
   const localState = state({ value: 0 })
 
   $.div(
-    $.button({ onClick: () => localState.value-- }, '-'),
+    $.button({ onClick: () => localState.value -= 1 }, '-'),
     $.span(() => localState.value),
-    $.button({ onClick: () => localState.value++ }, '+')
+    $.button({ onClick: () => localState.value += 1 }, '+')
   )
 })
 

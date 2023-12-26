@@ -5,7 +5,7 @@ const stateTwo = state({ number: 0 })
 const stateThree = state({ number: 0 })
 
 setInterval(() => {
-  stateOne.number++
+  stateOne.number += 1
   stateTwo.number = stateOne.number * 2
   stateThree.number = stateOne.number * 3
 }, 2000)

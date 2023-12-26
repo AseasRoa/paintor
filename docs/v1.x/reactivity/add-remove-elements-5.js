@@ -26,5 +26,4 @@ component(($) => {
       }
     )
   )
-
 }).paint('add-remove-elements-5')

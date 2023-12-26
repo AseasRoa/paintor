@@ -33,8 +33,6 @@ function expectSpecialCommentElementsInStatement(elements) {
 }
 
 describe('State: Array', () => {
-  const id = 'container'
-
   beforeEach(() => {
     document.body.innerHTML = ''
   })
@@ -141,11 +139,11 @@ describe('State: Array', () => {
    * Note:
    * There is an issue that the top level of elements have no parent element,
    * which makes it impossible to use functions like 'after' or 'insertBefore',
-   * because they require parent element. Trick is needed for the test example below
-   * to work in the browser. Without it, the newly added element would be placed
-   * after the 'for' loop's end comment.
-   * However, this problem does not happen in JsDOM, so this test example doesn't
-   * test exactly that.
+   * because they require parent element. Trick is needed for the test example
+   * below to work in the browser. Without it, the newly added element would be
+   * placed after the 'for' loop's end comment.
+   * However, this problem does not happen in JsDOM, so this test example
+   * doesn't test exactly that.
    */
   test('push()', () => {
     const container = document.body

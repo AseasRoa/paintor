@@ -16,7 +16,8 @@ component(($) => {
       number = 1
     }
 
-    localState.push(number++)
+    localState.push(number)
+    number += 1
   }, 1000)
 
   $.forState(localState, (number, key) => {

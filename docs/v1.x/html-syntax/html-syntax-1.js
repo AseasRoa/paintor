@@ -10,7 +10,7 @@ component(($) => {
   $.html`
   <div>
     <label>Current Time: </label>
-    ${ () => localState.time }
+    ${() => localState.time}
   </div>
   `
 }).paint('html-syntax-1')

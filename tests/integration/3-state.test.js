@@ -319,7 +319,7 @@ describe('State', () => {
             $.forEach(theState, (a) => {
               // @ts-ignore
               $.forEach(a.b, (value, key) => {
-                $.button(`${key  }-${  value}`)
+                $.button(`${key}-${value}`)
               })
             })
           )
@@ -385,7 +385,7 @@ describe('State', () => {
             $.forEach(theState, (a) => {
               // @ts-ignore
               $.forEach(a.b, (value, key) => {
-                $.button(`${key  }-${  value}`)
+                $.button(`${key}-${value}`)
               })
             })
           )

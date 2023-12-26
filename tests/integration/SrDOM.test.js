@@ -9,7 +9,7 @@ describe('SrDom Tests', () => {
     const document = window.document
 
     test('document contains HTML, HTML contains HEAD and BODY', () => {
-      const html = document.children[0]
+      const [ html ] = document.children
 
       expect(document.children.length).toBe(1)
       expect(html?.tagName).toBe('HTML')
@@ -21,7 +21,7 @@ describe('SrDom Tests', () => {
 
   describe('Create different types of elements', () => {
     const window = new Window()
-    const document = window.document
+    const { document } = window
 
     test('HTMLElement', () => {
       const el = document.createElement('div')
@@ -68,7 +68,7 @@ describe('SrDom Tests', () => {
 
   describe('Testing appendChild errors', () => {
     const window = new Window()
-    const document = window.document
+    const { document } = window
 
     test('fail on appendChild with wrong input', () => {
       expect(
@@ -106,7 +106,7 @@ describe('SrDom Tests', () => {
 
   describe('Remove elements', () => {
     const window = new Window()
-    const document = window.document
+    const { document } = window
 
     test('HTMlElement', () => {
       const el = document.createElement('button')
