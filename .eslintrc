@@ -54,7 +54,7 @@
         "grouped-accessor-pairs": "error",
         "init-declarations": ["error", "always"],
         "max-classes-per-file": ["error", 1],
-        "multiline-comment-style": ["error", "starred-block"],
+        "multiline-comment-style": "off",
         "new-cap": "error",
         "no-array-constructor": "error",
         "no-else-return": "error",
@@ -185,8 +185,6 @@
         "padded-blocks": ["error", "never"],
         "padding-line-between-statements": [
           "error",
-          { "blankLine": "always", "prev": "*", "next": "break" },
-          { "blankLine": "always", "prev": "*", "next": "continue" },
           { "blankLine": "always", "prev": "*", "next": "class" },
           { "blankLine": "always", "prev": "*", "next": "do" },
           { "blankLine": "always", "prev": "*", "next": "for" },
