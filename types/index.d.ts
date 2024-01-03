@@ -1,67 +1,51 @@
 /**
- * This file must be an ambient module
- *
- * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
+ * This file contains types, exported and used by other modules.
  */
 
-type Elements = import('./WebApi/Elements').Elements
-type Statements = import('./Statements').Statements
+import { Component, Template, Translation } from './types.d.ts'
 
-type State = Record<any, any> | Array<any> | Set<any> | Map<any, any>
-type States = Record<string, State>
-type TemplateTree = Elements & Statements
-type Template = (tree : TemplateTree) => (
-  void
-  | string
-  | HTMLElement | HTMLElement[]
-  | Component | Component[]
-  | Template | Template[]
-)
-type Translation = Record<string, any>
+/**
+ * Try to fetch one or more translations, depending on the user's locale.
+ *
+ * @template T
+ * @param {T} defaultPaths
+ * One or more paths to files, exporting an object as default.
+ * The file name of each path will be replaced with the user's locale, so the actual file from
+ * which the translation is read could be different. But if a file for the user's locale doesn't
+ * exist, the provided file name will be used.
+ * @returns {Promise<Translation>}
+ */
+export declare function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
 
-interface Component {
-  // component: (...from: (Template | Component)[]) => Component,
-  clear: () => void,
-  html: (options?: { indent?:string }) => string,
-  paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
-  static: (on?: boolean) => Component,
-  staticHtml: (options?: { indent?:string }) => string,
-  template: Template,
-  useTranslations : (...translations: Translation[]) => Component,
-}
+/**
+ * Checks whether the input value is a component.
+ */
+export declare function isComponent(component: any) : boolean
 
-declare module 'paintor' {
-  export { Component, Template, Translation }
+/**
+ * Checks whether the input value is a template.
+ */
+export declare function isTemplate(func: any) : boolean
 
-  export function component(...from: (Template | Component)[]): Component
-  export function component(from: (Template | Component)[]): Component
+/**
+ * Create a component.
+ */
+export declare function component(...from: (Template | Component)[]): Component
+export declare function component(from: (Template | Component)[]): Component
 
-  /**
-   * @template T
-   * @param {T} object Your input object or array
-   * @returns {T} A proxy object/array that looks the same as the input object/array
-   */
-  export function state<T>(object : T) : T
+/**
+ * Create a state, which is a proxy of the input object or array.
+ */
+export declare function state<STATE>(object : STATE) : STATE
 
-  export function isTemplate(func: Template) : boolean
-  export function template<T extends Template>(from: T) : T
+/**
+ * Create a template function.
+ */
+export declare function template<TEMPLATE extends Template>(from: TEMPLATE) : TEMPLATE
 
-  /**
-   * @template T
-   * @param {T} defaultPaths
-   * One or more paths to files, exporting an object as default.
-   * The file name of each path will be replaced with the user's locale, so the actual file from
-   * which the translation is read could be different. But if a file for the user's locale doesn't
-   * exist, the provided file name will be used.
-   * @returns {Promise<Translation>}
-   */
-  export function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
-
-  export const paintor: {
-    component: typeof component,
-    fetchTranslations: typeof fetchTranslations,
-    state: typeof state,
-    template: typeof template,
-    Component: Component
-  }
+export declare const paintor: {
+  component: typeof component,
+  fetchTranslations: typeof fetchTranslations,
+  state: typeof state,
+  template: typeof template,
 }
