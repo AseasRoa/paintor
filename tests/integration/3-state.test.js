@@ -65,7 +65,7 @@ describe('State', () => {
     })
   })
 
-  describe('.using().forEachIn()', () => {
+  describe('.forEach()', () => {
     describe('New DOM element, created from the State, is reactive', () => {
       test('DOM', () => {
         const container = document.body
