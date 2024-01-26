@@ -10,7 +10,7 @@ import { expectTextContentsToBeLike } from './functions.js'
  * @param {NodeListOf<Element>} elements
  */
 function expectSpecialCommentElementsInStatement(elements) {
-  const length = elements.length
+  const { length } = elements
 
   if (length > 0) {
     // @ts-ignore
@@ -37,261 +37,291 @@ describe('State: Array', () => {
     document.body.innerHTML = ''
   })
 
-  test('update', () => {
-    const container = document.body
+  describe('actions', () => {
+    test('update', () => {
+      const container = document.body
 
-    const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state([ 'a', 'b', 'c' ])
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-    arrayState[1] = 'updated'
+      arrayState[1] = 'updated'
 
-    const allElements = container.querySelectorAll('*')
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'updated', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    expectTextContentsToBeLike(allElements, ['a', 'updated', 'c'])
-    expectSpecialCommentElementsInStatement(allElements)
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['3'])
+    })
+
+    test('delete', () => {
+      const container = document.body
+
+      const arrayState = state([ 'a', 'b', 'c' ])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      delete arrayState[1]
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['3'])
+    })
+
+    test('length', () => {
+      const container = document.body
+
+      const arrayState = state([ 'a', 'b', 'c' ])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      arrayState.length = 1
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['1'])
+    })
   })
 
-  test('delete', () => {
-    const container = document.body
+  describe('methods', () => {
+    test('copyWithin()', () => {
+      const container = document.body
+
+      const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+      }).paint(container)
+
+      // Copy to index 0 all elements from index 3 to the end
+      arrayState.copyWithin(0, 3)
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['d', 'e', 'c', 'd', 'e'])
+      expectSpecialCommentElementsInStatement(divElements)
+    })
+
+    test('pop()', () => {
+      const container = document.body
 
-    const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state([ 'a', 'b', 'c' ])
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-    delete arrayState[1]
+      arrayState.pop()
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['2'])
+    })
 
-    const allElements = container.querySelectorAll('*')
+    /**
+     * This tests the ability of Paintor to place elements in correct order.
+     *
+     * Note:
+     * There is an issue that the top level of elements have no parent
+     * element, which makes it impossible to use functions like 'after'
+     * or 'insertBefore', because they require parent element. Trick is
+     * needed for the test example below to work in the browser.
+     * Without it, the newly added element would be placed after the
+     * 'for' loop's end comment. However, this problem does not happen
+     * in JsDOM, so this test example doesn't test exactly that.
+     */
+    test('push()', () => {
+      const container = document.body
 
-    expectTextContentsToBeLike(allElements, ['a', 'c'])
-    expectSpecialCommentElementsInStatement(allElements)
-  })
+      const arrayState = state([ 'a' ])
 
-  test('length', () => {
-    const container = document.body
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-    const arrayState = state([ 'a', 'b', 'c' ])
+      arrayState.push('b')
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    arrayState.length = 1
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['2'])
+    })
 
-    const allElements = container.querySelectorAll('*')
+    test('reverse()', () => {
+      const container = document.body
 
-    expectTextContentsToBeLike(allElements, ['a'])
-    expectSpecialCommentElementsInStatement(allElements)
-  })
+      const arrayState = state([ 'a', 'b', 'c' ])
 
-  test('copyWithin()', () => {
-    const container = document.body
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+      }).paint(container)
 
-    const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
+      arrayState.reverse()
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      const divElements = container.querySelectorAll('div')
 
-    // Copy to index 0 all elements from index 3 to the end
-    arrayState.copyWithin(0, 3)
+      expectTextContentsToBeLike(divElements, ['c', 'b', 'a'])
+      expectSpecialCommentElementsInStatement(divElements)
+    })
 
-    const allElements = container.querySelectorAll('*')
+    test('shift()', () => {
+      const container = document.body
 
-    expectTextContentsToBeLike(allElements, ['d', 'e', 'c', 'd', 'e'])
-    expectSpecialCommentElementsInStatement(allElements)
-  })
+      const arrayState = state([ 'a', 'b', 'c' ])
 
-  test('pop()', () => {
-    const container = document.body
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-    const arrayState = state([ 'a', 'b', 'c' ])
+      arrayState.shift()
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['b', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    arrayState.pop()
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['2'])
+    })
 
-    const allElements = container.querySelectorAll('*')
+    test('sort()', () => {
+      const container = document.body
 
-    expectTextContentsToBeLike(allElements, ['a', 'b'])
-    expectSpecialCommentElementsInStatement(allElements)
-  })
+      let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
 
-  /**
-   * This tests the ability of Paintor to place elements in correct order.
-   *
-   * Note:
-   * There is an issue that the top level of elements have no parent element,
-   * which makes it impossible to use functions like 'after' or 'insertBefore',
-   * because they require parent element. Trick is needed for the test example
-   * below to work in the browser. Without it, the newly added element would be
-   * placed after the 'for' loop's end comment.
-   * However, this problem does not happen in JsDOM, so this test example
-   * doesn't test exactly that.
-   */
-  test('push()', () => {
-    const container = document.body
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+      }).paint(container)
 
-    const arrayState = state([ 'a' ])
+      // Note: sort() mutates the Array and returns it
+      arrayState = arrayState.sort()
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['Dec', 'Feb', 'Jan', 'March'])
+      expectSpecialCommentElementsInStatement(divElements)
+    })
 
-    arrayState.push('b')
+    test('splice()', () => {
+      const container = document.body
 
-    const elements = container.querySelectorAll('*')
+      const arrayState = state([ 'a', 'c', 'd' ])
 
-    expectTextContentsToBeLike(elements, ['a', 'b'])
-    expectSpecialCommentElementsInStatement(elements)
-  })
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-  test('reverse()', () => {
-    const container = document.body
+      // Insert 'b' at index 1
+      arrayState.splice(1, 0, 'b')
 
-    const arrayState = state([ 'a', 'b', 'c' ])
+      let divElements = container.querySelectorAll('div')
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c', 'd'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    arrayState.reverse()
+      // Replace all elements with new elements
+      arrayState.splice(0, 4, 'A', 'B', 'C', 'D')
 
-    const elements = container.querySelectorAll('*')
+      divElements = container.querySelectorAll('div')
 
-    expectTextContentsToBeLike(elements, ['c', 'b', 'a'])
-    expectSpecialCommentElementsInStatement(elements)
-  })
+      expectTextContentsToBeLike(divElements, ['A', 'B', 'C', 'D'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-  test('shift()', () => {
-    const container = document.body
+      // Remove half of the elements
+      arrayState.splice(1, 2)
 
-    const arrayState = state([ 'a', 'b', 'c' ])
+      divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['A', 'D'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['2'])
+    })
 
-    arrayState.shift()
+    test('unshift()', () => {
+      const container = document.body
 
-    const elements = container.querySelectorAll('*')
+      const arrayState = state([ 'c' ])
 
-    expectTextContentsToBeLike(elements, ['b', 'c'])
-    expectSpecialCommentElementsInStatement(elements)
-  })
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-  test('sort()', () => {
-    const container = document.body
+      arrayState.unshift('a', 'b')
 
-    let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['3'])
+    })
 
-    // Note: sort() mutates the Array and returns it
-    arrayState = arrayState.sort()
+    test('unshift() - using array.forEach()', () => {
+      const container = document.body
 
-    const elements = container.querySelectorAll('*')
+      const arrayState = state([ 'c' ])
 
-    expectTextContentsToBeLike(elements, ['Dec', 'Feb', 'Jan', 'March'])
-    expectSpecialCommentElementsInStatement(elements)
-  })
+      component(($) => {
+        arrayState.forEach((value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
 
-  test('splice()', () => {
-    const container = document.body
+      arrayState.unshift('a', 'b')
 
-    const arrayState = state([ 'a', 'c', 'd' ])
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
 
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
-
-    // Insert 'b' at index 1
-    arrayState.splice(1, 0, 'b')
-
-    let elements = container.querySelectorAll('*')
-
-    expectTextContentsToBeLike(elements, ['a', 'b', 'c', 'd'])
-    expectSpecialCommentElementsInStatement(elements)
-
-    // Replace all elements with new elements
-    arrayState.splice(0, 4, 'A', 'B', 'C', 'D')
-
-    elements = container.querySelectorAll('*')
-
-    expectTextContentsToBeLike(elements, ['A', 'B', 'C', 'D'])
-    expectSpecialCommentElementsInStatement(elements)
-
-    // Remove half of the elements
-    arrayState.splice(1, 2)
-
-    elements = container.querySelectorAll('*')
-    expectTextContentsToBeLike(elements, ['A', 'D'])
-    expectSpecialCommentElementsInStatement(elements)
-  })
-
-  test('unshift()', () => {
-    const container = document.body
-
-    const arrayState = state([ 'c' ])
-
-    component(($) => {
-      $.forEach(arrayState, (value) => {
-        $.div(value)
-      })
-    }).paint(container)
-
-    arrayState.unshift('a', 'b')
-
-    const elements = container.querySelectorAll('*')
-
-    expectTextContentsToBeLike(elements, ['a', 'b', 'c'])
-    expectSpecialCommentElementsInStatement(elements)
-  })
-
-  test('unshift() - using array.forEach()', () => {
-    const container = document.body
-
-    const arrayState = state([ 'c' ])
-
-    component(($) => {
-      arrayState.forEach((value) => {
-        $.div(value)
-      })
-    }).paint(container)
-
-    arrayState.unshift('a', 'b')
-
-    const elements = container.querySelectorAll('*')
-
-    expectTextContentsToBeLike(elements, ['a', 'b', 'c'])
-    expectSpecialCommentElementsInStatement(elements)
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['3'])
+    })
   })
 })
