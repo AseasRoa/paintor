@@ -181,6 +181,35 @@ describe('State: Array', () => {
       expectTextContentsToBeLike(lengthElement, ['2'])
     })
 
+    test('push() object and test reactivity', () => {
+      const container = document.body
+
+      const arrayState = state([ { val: 'a' } ])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(() => value.val)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      arrayState.push({ val: 'b' })
+      arrayState.push({ val: 'c' })
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      // @ts-ignore
+      arrayState[2].val = 'c2'
+
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c2'])
+
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['3'])
+    })
+
     test('reverse()', () => {
       const container = document.body
 
