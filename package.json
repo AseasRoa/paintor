@@ -1,50 +1,22 @@
 {
-  "name": "paintor",
-  "version": "1.0.0",
   "author": {
     "name": "AseasRoa"
   },
-  "description": "JavaScript View library for the browser and for the server",
+  "description": "Paintor Documentation",
   "license": "MIT",
   "type": "module",
-  "types": "./types/index.d.ts",
-  "main": "./lib/index.js",
-  "browser": "./dist/bundle.js",
-  "exports": {
-    "types": "./types/index.d.ts",
-    "browser": "./dist/bundle.js",
-    "import": "./lib/index.js",
-    "default": "./lib/index.js"
-  },
   "imports": {
     "#paintor": {
-      "default": "./lib/index.js"
+      "default": "./paintor/dist/bundle.js"
     }
   },
   "scripts": {
-    "dev": "vite",
-    "lint": "tsc --noEmit && eslint --config .eslintrc --ext .js,.ts ./",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "build": "vite build",
-    "build:tsc": "tsc",
-    "docs:dev": "vitepress dev docs/v1.x",
-    "docs:build": "vitepress build docs/v1.x",
-    "docs:preview": "vitepress preview docs/v1.x",
-    "prepublishOnly": "npm run test && npm run build"
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@types/node": "^20.11.15",
-    "@vitest/coverage-v8": "^1.2.2",
-    "eslint": "^8.56.0",
-    "eslint-plugin-jsdoc": "^48.0.4",
-    "eslint-plugin-vitest": "^0.3.21",
-    "eslint-plugin-vitest-globals": "^1.4.0",
-    "jsdom": "^24.0.0",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.12",
-    "vitepress": "^1.0.0-rc.40",
-    "vitest": "^1.2.2"
+    "vitepress": "^1.0.0-rc.40"
   },
   "repository": {
     "type": "git",
@@ -52,11 +24,8 @@
   },
   "homepage": "https://github.com/AseasRoa/paintor",
   "keywords": [
-    "javascript",
-    "vanilla",
-    "hyperscript",
-    "view library",
-    "frontend",
-    "backend"
+    "paintor",
+    "docs",
+    "documentation"
   ]
 }
