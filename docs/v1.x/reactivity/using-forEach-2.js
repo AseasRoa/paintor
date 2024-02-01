@@ -18,8 +18,8 @@ component(($) => {
   })
 
   // Variant B: The passed value is a State
-  $.forState(stateB, (item) => {
+  $.forEach(stateB, (item) => {
     // Reactive, the value will change to 1
     $.div(() => item.number)
   })
-}).paint('add-remove-elements-2')
+}).paint('using-foreach-2')

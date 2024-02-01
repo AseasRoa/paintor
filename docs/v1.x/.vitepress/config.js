@@ -67,16 +67,16 @@ export default defineConfig({
             link: '/templates/template-tree'
           },
           {
-            text: 'Sub-Templates',
-            link: '/templates/sub-templates'
+            text: 'Template Tree Elements',
+            link: '/templates/template-tree-elements'
           },
           {
             text: 'Properties Object',
             link: '/templates/properties-object'
           },
           {
-            text: 'Statements',
-            link: '/templates/statements'
+            text: 'Template Tree Statements',
+            link: '/templates/template-tree-statements'
           }
         ]
       },
@@ -111,8 +111,12 @@ export default defineConfig({
             link: '/reactivity/states'
           },
           {
-            text: 'Add and Remove Elements',
-            link: '/reactivity/add-remove-elements'
+            text: 'Using forEach()',
+            link: '/reactivity/using-forEach'
+          },
+          {
+            text: 'Using forState()',
+            link: '/reactivity/using-forState'
           }
         ]
       },
@@ -137,6 +141,24 @@ export default defineConfig({
           {
             text: 'HTML Syntax',
             link: '/html-syntax/html-syntax'
+          }
+        ]
+      },
+      {
+        text: 'Examples',
+        collapsed: true,
+        items: [
+          {
+            text: 'To-Do List',
+            link: '/examples/to-do-list'
+          },
+          {
+            text: 'Temperature Converter',
+            link: '/examples/temperature-converter'
+          },
+          {
+            text: 'Many Elements',
+            link: '/examples/many-elements'
           }
         ]
       }

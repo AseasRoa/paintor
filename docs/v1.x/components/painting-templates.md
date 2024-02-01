@@ -2,7 +2,7 @@ In the browser, one Template can be painted into one DOM element, or it can be u
 multiple DOM elements. It all depends on the argument, provided to the `paint()` function.
 The argument could be:
 
-- A string, then under the hood `querySelectorAll()` is applied.
+- String - then under the hood `querySelectorAll()` is applied.
 - HTMLElement
 - Array or HTMLElement
 - HTMLCollection
@@ -51,7 +51,7 @@ element is being selected in all examples, but in different ways:
 
 ## Paint Multiple Elements
 
-What if we have multiple elements with the same class?
+In this case, the same template will be painted over all elements with class `myClass`.
 
 ::: code-group
 ```html [Using a string]
@@ -60,7 +60,7 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */
@@ -73,7 +73,7 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */
@@ -86,7 +86,7 @@ What if we have multiple elements with the same class?
 <div class="myClass"></div>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */
@@ -94,8 +94,6 @@ What if we have multiple elements with the same class?
 </script>
 ```
 :::
-
-In this case, the same template will be painted over all elements with class `myClass`.
 
 ## Paint Custom Elements
 
@@ -113,7 +111,7 @@ Use the name of the Custom Element in `paint()`:
 <custom-element></custom-element>
 
 <script type="module">
-  import { component } from '/assets/paintor.js'
+  import { component } from 'paintor'
 
   component(($) => {
     /* ... */

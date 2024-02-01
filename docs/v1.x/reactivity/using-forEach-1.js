@@ -6,21 +6,18 @@ component(($) => {
   let number = 1
 
   setInterval(() => {
-    // Cleanup the state on too many elements
-    // and reset the number
+    // Reset on too many elements
     if (localState.length > 9) {
-      while (localState.length > 0) {
-        localState.pop()
-      }
-
+      localState.length = 0
       number = 1
     }
 
+    // Create a new element
     localState.push(number)
     number += 1
   }, 1000)
 
-  $.forState(localState, (number, key) => {
+  $.forEach(localState, (number, key) => {
     $.span('<' + number + '>')
   })
-}).paint('add-remove-elements-1')
+}).paint('using-foreach-1')

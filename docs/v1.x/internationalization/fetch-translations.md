@@ -9,7 +9,7 @@ translations. It accepts string arguments, which should be the paths to existing
 the fetched translations are used in `useTranslations()`, as shown below:
 
 ```js
-import { component, fetchTranslations } from './assets/paintor.js'
+import { component, fetchTranslations } from 'paintor'
 
 const translations = await fetchTranslations('/path/to/en.js')
 

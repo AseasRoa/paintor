@@ -2,7 +2,7 @@
 
 #### Browser
 
-There is a file `paintor.js` in `/dist`. It is an [ES Module](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules).
+Paintor is an [ES Module](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules), import it with the `import` syntax:
 
 ```js
 <script type="module">
@@ -12,7 +12,7 @@ There is a file `paintor.js` in `/dist`. It is an [ES Module](https://developer.
 
 #### Server
 
-You can use Paintor in [Node.Js](https://nodejs.org). To install it:
+Paintor can be used in [Node.Js](https://nodejs.org) as well. First, install it:
 
 ::: code-group
 ```bash [npm]
@@ -26,7 +26,7 @@ yarn add paintor
 ```
 :::
 
-Then import it:
+Then, import it:
 ```js
 import paintor from 'paintor'
 ```
@@ -35,15 +35,16 @@ import paintor from 'paintor'
 
 ### In the Browser
 
-Here is an example of a simple clicks counter. We have a `localState`, a \<button\> and a \<span\>.
-When the \<button\> is clicked, it increments the `clicks` property of the state, and this property
-is also displayed in the \<span\> element reactively:
+Here is an example of a simple clicks counter. We have a `localState`, \<button\> and \<span\>
+elements.
+When the \<button\> is clicked, it increments the `clicks` property of the state, which is also
+reflected in the \<span\> element:
 
 ```html
 <div id="container"></div>
 
 <script type="module">
-  import { component, state } from '/assets/paintor.js'
+  import { component, state } from 'paintor'
 
   // Create a component
   const app = component(($) => {
@@ -83,11 +84,12 @@ const htmlCode = app.html()
 <div>Hello, World</div>
 ```
 
+::: info
 `html()` can be used in the browser as well.
+:::
 
 ::: warning
-`state()` is useless when generating HTML code, because the code is a string and is not
-reactive.
+`state()` is useless when generating HTML code.
 :::
 
 
@@ -102,9 +104,8 @@ import paintor from 'paintor'
 - `state()`
 - `template()`
 - `fetchTranslations()`
-
-and a class, which can be used to make class components, or as a type:
-- `Component`
+- `isTemplate()`
+- `isComponent()`
 
 All of these can also be imported as named imports:
 
@@ -115,7 +116,8 @@ import {
   state,
   template,
   fetchTranslations,
-  Component
+  isTemplate,
+  isComponent
 } from 'paintor'
 ```
 
@@ -123,7 +125,7 @@ The following examples are all doing the same thing, only the syntax is differen
 
 ::: code-group
 ```js [named imports (recommended)]
-import { component, state, template } from '/assets/paintor.js'
+import { component, state, template } from 'paintor'
 
 const myState = state(/* ... */)
 const myTemplate = template(/* ... */)
@@ -131,7 +133,7 @@ const myTemplate = template(/* ... */)
 component(myTemplate).paint(/* ... */)
 ```
 ```js [named import]
-import { paintor } from '/assets/paintor.js'
+import { paintor } from 'paintor'
 
 const myState = paintor.state(/* ... */)
 const myTemplate = paintor.template(/* ... */)
@@ -139,7 +141,7 @@ const myTemplate = paintor.template(/* ... */)
 paintor.component(myTemplate).paint(/* ... */)
 ```
 ```js [default import]
-import paintor from '/assets/paintor.js'
+import paintor from 'paintor'
 
 const myState = paintor.state(/* ... */)
 const myTemplate = paintor.template(/* ... */)

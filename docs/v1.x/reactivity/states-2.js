@@ -11,7 +11,7 @@ component(($) => {
     $.input({
       type: 'text',
       placeholder: 'Type something here',
-      onKeyDown: setText
+      onKeyUp: setText
     }),
     $.span(() => localState.text), // The callback here is needed for reactivity
   )

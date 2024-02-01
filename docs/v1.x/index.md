@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: Paintor
-  text: Ugly, but Elegant View Framework for Browser and Server
-  tagline: 100% JavaScript
+  text: JavaScript View Library
+  tagline: Client-side & Server-side
   actions:
     - theme: brand
       text: Get Started

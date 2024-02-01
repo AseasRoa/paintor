@@ -1,12 +1,18 @@
 import { component, state } from 'paintor'
 
 component(($) => {
-  const localState = state([ '0', '1', '2', '3', '4' ])
+  const localState = state({
+    1: '1',
+    2: '2',
+    3: '3',
+    4: '4',
+    5: '5'
+  })
 
-  $.forState(localState, (value, key) => {
+  $.forEach(localState, (value, key) => {
     $.button({
       textContent: value,
-      onClick: (event) => {
+      onClick: () => {
         delete localState[key]
 
         setTimeout(() => {
@@ -15,4 +21,4 @@ component(($) => {
       }
     })
   })
-}).paint('add-remove-elements-4')
+}).paint('using-foreach-3')

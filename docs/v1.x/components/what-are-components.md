@@ -1,14 +1,17 @@
 ## What are Components?
 
 Components are independent and reusable pieces of UI.
+Components are created using the `component()` function.
 
-## Using Multiple Templates
+`component()` accepts one or more templates as arguments, and returns utility functions used to
+display the result.
 
-One `component()` function accepts multiple templates. In this case, the templates will be rendered
-in the order they are used in `component()`:
+In the example below, the three templates will be rendered in the order they are used in
+`component()`:
 
+::: code-group
 ```js
-import { component, template } from '/assets/paintor.js'
+import { component, template } from 'paintor'
 
 const templateOne = template(($) => {
   /* ... */
@@ -26,8 +29,12 @@ component(
   templateOne,
   templateTwo,
   templateThree
-).paint('#container')
+).paint('#app')
 ```
+```html
+<div id="app"></div>
+```
+:::
 
 `component()` also accepts an array of templates:
 
@@ -40,5 +47,7 @@ component(
     templateTwo,
     templateThree
   ]
-).paint('#container')
+).paint('#app')
 ```
+
+Obviously, `.paint()` is used to render the result in an HTML element with id `app`.

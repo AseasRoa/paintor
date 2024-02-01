@@ -15,10 +15,9 @@ component(($) => {
   $.button({ onClick: deleteItem }, 'Remove item')
 
   $.ul(
-    $.forState(
+    $.forEach(
       localState,
       (value) => {
-        console.log(value)
         $.li(value)
       },
       () => {
@@ -26,4 +25,4 @@ component(($) => {
       }
     )
   )
-}).paint('add-remove-elements-5')
+}).paint('using-foreach-5')

@@ -1,4 +1,7 @@
-## First Argument
+## Properties Object
+
+This is an object you can pass to any of the [Template Tree Elements](./template-tree-elements.md),
+and it represents the properties and attributes of the resulting DOM element.
 
 If used, the 'properties' object must be the first argument. This rule exists to force the
 consistency of setting the properties in the beginning. This is also how it's done in HTML anyway.
@@ -12,22 +15,33 @@ $.a({ href: 'https://github.com/' }, 'Go to GitHub')
 <a href="https://github.com/">Go to GitHub</a>
 ```
 
-But this doesn't work as expected, because the 'properties' object is not the first argument:
+But the example below doesn't work, because the 'properties' object is not the first argument:
 
 ```js
-$.a('Go to GitHub', { href: 'https://github.com/' })
+($) => {
+  $.a(
+    'Go to GitHub',
+    { href: 'https://github.com/' } // Doesn't work if not the first argument!
+  )
+}
 ```
 ```html
 <a>Go to GitHub</a>
 ```
 
+Paintor is bundled with TypeScript types, so your IDE should give you code completion and error
+messages if you attempt to use wrong properties.
+
+
 ## HTML Attributes
 
 [HTML Attributes](https://www.w3schools.com/htmL/html_attributes.asp)
 
-You can use all available HTML Attributes. Some are [global](https://www.w3schools.com/tags/ref_standardattributes.asp),
-others depend on the element. Paintor is bundled with TypeScript types, so your IDE should give
-you code completion and error messages if you attempt to use wrong attributes.
+You can represent all [HTML Attributes](https://www.w3schools.com/htmL/html_attributes.asp).
+Some of them are [global](https://www.w3schools.com/tags/ref_standardattributes.asp)
+(the same for all HTML elements), others depend on the element (like `href` for \<a\>).
+
+Here is an example of and \<input\> element with two global and two element-specific attributes.
 
 ```js
 $.input(
@@ -51,8 +65,8 @@ $.input(
 
 [HTML DOM Element Properties](https://www.w3schools.com/jsref/dom_obj_all.asp)
 
-Most of these DOM Element Properties are read-only properties, and it makes no sense to use them in the
-'properties' object. But few are setters, such as:
+Most of the [HTML DOM Element Properties](https://www.w3schools.com/jsref/dom_obj_all.asp) are read-only properties and it makes no sense to
+use them in the 'properties' object. But few are setters, such as:
 
 - className
 - id

@@ -13,7 +13,7 @@ head:
     - src: ./states-4.js
       type: module
   - - script
-    - src: ./states-5.js
+    - src: ./states-recursive.js
       type: module
   - - script
     - src: ./states-array.js
@@ -22,16 +22,17 @@ head:
 
 ## What is a State?
 
-In Paintor, you can bind values from an Object with properties of different DOM elements.
-So, when such value changes, it causes the property to which it is bound to change automatically,
-and vice versa. This Object is then called a State.
+In Paintor, State is an object, whose values are bound to chosen parts of the web page. This means
+that when you update the values of the State, the corresponding parts of the page are being
+automatically updated.
+
+To create a State, use the function `state()`. It takes an Array or an Object and returns a
+[Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) of it.
 
 ## Object <--> State
 
-To create a State, use the function `state()`. It takes an Array or an Object and returns a
-[Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-of it. This makes both, the original Object and the State bound together. When the values of one
-change, the values of the other also change.
+This makes both, the original Object and the State bound together.
+When the values of one change, the corresponding values of the other also change.
 
 ::: warning
 `state()` is useless when generating HTML code, because the code is a string and is not
@@ -39,33 +40,33 @@ reactive.
 :::
 
 ::: code-group
-```html [object -> myState, increment 'myState.count']
+```html [myObject -> myState, increment myState.count]
 <script type="module">
-  import { state } from '/assets/paintor.js'
+  import { state } from 'paintor'
   
   /* Create a State from an Object */
-  const object = { count: 0 }
-  const myState = state(object)
+  const myObject = { count: 0 }
+  const myState = state(myObject)
    
   /* Increment myState.count on every second */
   setInterval(() => {
-    myState.count++
-    console.log(`object.count: ${object.count} | myState.count: ${myState.count}`)
+    myState.count += 1
+    console.log(`myObject.count: ${myObject.count} | myState.count: ${myState.count}`)
   }, 1000)
 </script>
 ```
-```html [object -> myState, increment 'object.count']
+```html [myObject -> myState, increment myObject.count]
 <script type="module">
-  import { state } from '/assets/paintor.js'
+  import { state } from 'paintor'
   
   /* Create a State from an Object */
-  const object = { count: 0 }
-  const myState = state(object)
+  const myObject = { count: 0 }
+  const myState = state(myObject)
 
-  /* Increment object.count on every second */
+  /* Increment myObject.count on every second */
   setInterval(() => {
-    object.count++
-    console.log(`object.count: ${object.count} | myState.count: ${myState.count}`)
+    myObject.count += 1
+    console.log(`myObject.count: ${myObject.count} | myState.count: ${myState.count}`)
   }, 1000)
 </script>
 ```
@@ -74,13 +75,10 @@ reactive.
 If we run either of these for 3 seconds, the output will be:
 
 ```bash
-object.count: 1 | myState.count: 1
-object.count: 2 | myState.count: 2
-object.count: 3 | myState.count: 3
+myObject.count: 1 | myState.count: 1
+myObject.count: 2 | myState.count: 2
+myObject.count: 3 | myState.count: 3
 ```
-
-When `object.count` is incremented,`myState.count` is also incremented.
-But also, when `myState.count` is incremented, `object.count` is also incremented.
 
 ## State <--> DOM
 
@@ -90,16 +88,14 @@ to bind the State's values with the DOM.
 But first, in order to achieve reactivity, here are few IMPORTANT things to remember:
 
 - Although the State and the original Object are bound together, in the Template you should work
-  with the State. For example, `myState.value` would be reactive, but `object.value` not.
+  with the State. For example, `myState.value` will be reactive, but `myObject.value` will not.
 - Where you want to reactively get a value from the State, wrap it in a callback function. For
   example, use `() => myState.value` instead of `myState.value`.
 
 ### Change the DOM on State changes
 
-Let's have two buttons, `-` and `+`, and a \<span\> element between them. Clicking on the buttons is
-changing `myState.value`, which is bound with the text content of the \<span\> element:
-
-Click on the `-` and `+` buttons below the source code to try it out:
+Let's have two buttons, `-` and `+`, and a \<span\> element between them. Clicking on either button
+going to change `myState.value`, which is bound with the text content of the \<span\> element.
 
 ::: code-group
 <<< @/./reactivity/states-1.js [JavaScript]
@@ -107,6 +103,8 @@ Click on the `-` and `+` buttons below the source code to try it out:
 <states-1></states-1>
 ```
 :::
+
+Click on the `-` and `+` buttons below to try it out:
 
 <div class="example">
   <p></p>
@@ -118,9 +116,6 @@ Click on the `-` and `+` buttons below the source code to try it out:
 
 Let's have `myState.text` and an input field from which `myState.text` can be changed.
 
-Type something in the input field below the source code. You should see the same text that you are
-typing on the right side of the input field, where the \<span\> is.
-
 ::: code-group
 <<< @/./reactivity/states-2.js [JavaScript]
 ```html [HTML]
@@ -128,13 +123,33 @@ typing on the right side of the input field, where the \<span\> is.
 ```
 :::
 
+Type something in the input field below. You should see the same text that you are
+typing on the right side of the input field, where the \<span\> is.
+
 <div class="example">
   <p></p>
   <states-2></states-2>
   <p></p>
 </div>
 
-## One State in many Templates
+## States are Recursive
+
+The inner objects and arrays of a state are also states:
+
+::: code-group
+<<< @/./reactivity/states-recursive.js [JavaScript]
+```html [HTML]
+<states-recursive></states-recursive>
+```
+:::
+
+<div class="example">
+  <p></p>
+  <states-recursive></states-recursive>
+  <p></p>
+</div>
+
+## One State in Many Templates
 
 One State can serve multiple [Templates](../templates/what-are-templates.md) at the same time.
 
@@ -158,7 +173,7 @@ One State can serve multiple [Templates](../templates/what-are-templates.md) at 
   <p></p>
 </div>
 
-## Many States in one Template
+## Many States in One Template
 
 ::: code-group
 <<< @/./reactivity/states-4.js [JavaScript]
@@ -170,23 +185,6 @@ One State can serve multiple [Templates](../templates/what-are-templates.md) at 
 <div class="example">
   <p></p>
   <states-4></states-4>
-  <p></p>
-</div>
-
-## State in State
-
-When the State is made of an object, containing objects, these internal objects are also States.
-
-::: code-group
-<<< @/./reactivity/states-5.js [JavaScript]
-```html [HTML]
-<states-5></states-5>
-```
-:::
-
-<div class="example">
-  <p></p>
-  <states-5></states-5>
   <p></p>
 </div>
 
@@ -204,9 +202,3 @@ When the State is made of an object, containing objects, these internal objects 
   <states-array></states-array>
   <p></p>
 </div>
-
-#### Map and Set
-
-::: warning
-JavaScript's Map and Set do not provide full reactivity in Paintor. Don't use them for States.
-:::
