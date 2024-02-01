@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: '/v0.x/',
+  base: '/paintor',
   lang: 'en-US',
   title: 'Paintor Docs (v0.x)',
   description: 'Paintor View Library Documentation',

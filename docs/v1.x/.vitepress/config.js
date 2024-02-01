@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: '/',
+  base: '/paintor',
   lang: 'en-US',
   title: 'Paintor Docs',
   description: 'Paintor View Library Documentation',
@@ -30,13 +30,6 @@ export default defineConfig({
       {
         text: 'View on GitHub',
         link: 'https://github.com/AseasRoa/paintor'
-      },
-      {
-        text: 'v1',
-        items: [
-          { text: 'v1.x', link: '/' },
-          { text: 'v0.x', link: '/v0.x/' },
-        ]
       }
     ],
     sidebar: [
