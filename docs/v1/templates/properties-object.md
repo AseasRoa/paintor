@@ -2,7 +2,7 @@
 title: Properties Object
 ---
 
-## Properties Object
+# Properties Object
 
 This is an object you can pass to any of the [Template Tree Elements](./template-tree-elements.md),
 and it represents the properties and attributes of the resulting DOM element.

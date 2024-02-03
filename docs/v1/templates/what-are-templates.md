@@ -2,7 +2,7 @@
 title: What are Templates?
 ---
 
-## What are Templates?
+# What are Templates?
 
 Templates are functions, containing markup and JavaScript code, used by [Components](../components/what-are-components.md)
 to build the view. This is how a simple Template looks like:

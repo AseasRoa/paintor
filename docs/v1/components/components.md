@@ -12,6 +12,8 @@ title: Components
   })
 </script>
 
+# Components
+
 ## Create a Component with component()
 
 `component()` returns an instance of a class called 'Component', which can be used as an input to

@@ -2,7 +2,9 @@
 title: Template Tree Elements
 ---
 
-## Template Tree Elements
+# Template Tree Elements
+
+## The Argument
 
 The argument `$` (or however you name it) is an instance of a class, containing methods for each
 valid HTML element. For example, `$.div()` is for creating \<div\> elements, `$.p()` is for creating

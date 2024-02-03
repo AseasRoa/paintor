@@ -2,7 +2,7 @@
 title: What are Components?
 ---
 
-## What are Components?
+# What are Components?
 
 Components are independent and reusable pieces of UI.
 Components are created using the `component()` function.

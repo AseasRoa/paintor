@@ -2,7 +2,7 @@
 title: What is Paintor?
 ---
 
-## What is Paintor?
+# What is Paintor?
 
 Paintor is a JavaScript library for building client-side user interfaces or HTML code.
 

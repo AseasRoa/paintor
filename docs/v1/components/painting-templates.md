@@ -2,6 +2,8 @@
 title: Painting Templates
 ---
 
+# Painting Templates
+
 In the browser, one Template can be painted into one DOM element, or it can be used to paint
 multiple DOM elements. It all depends on the argument, provided to the `paint()` function.
 The argument could be:

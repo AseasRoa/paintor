@@ -11,7 +11,7 @@ title: Temperature Converter
   })
 </script>
 
-## Temperature Converter Example
+# Temperature Converter Example
 
 <Badge type="warning" text="example" />
 <div class="example">

@@ -2,7 +2,7 @@
 title: Template Tree Statements
 ---
 
-## Template Tree Statements
+# Template Tree Statements
 
 In the Template Tree you can make statements, such as **IF** or **FOR**. All of them are explained
 below.

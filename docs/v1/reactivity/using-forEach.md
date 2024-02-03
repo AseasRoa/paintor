@@ -14,7 +14,7 @@ title: Using forEach()
   })
 </script>
 
-## forEach() Explained
+# Using forEach()
 
 `forEach()` is a method, used in the [Template Tree](../templates/template-tree.md).
 

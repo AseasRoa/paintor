@@ -11,7 +11,7 @@ title: Using forState()
   })
 </script>
 
-## forState() Explained
+# Using forState()
 
 `forState()` is a method, used in the [Template Tree](../templates/template-tree.md).
 

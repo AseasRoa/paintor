@@ -2,7 +2,7 @@
 title: Template Tree
 ---
 
-## What is a Template Tree?
+# Template Tree
 
 The template tree is the HTML-like structure in a [Template](./what-are-templates.md),
 built in JavaScript. Some call it HyperScript.

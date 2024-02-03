@@ -11,11 +11,11 @@ title: Translations
   })
 </script>
 
+# Translations
+
 ::: warning
 Translations are experimental in Paintor and their implementation may change!
 :::
-
-## Translations
 
 Translations are just JavaScript Objects, containing key-value pairs of strings. Here is a basic
 example:

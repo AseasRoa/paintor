@@ -2,8 +2,6 @@
 title: To-Do List
 ---
 
-## To-Do List Example
-
 <script setup>
   import { onMounted } from 'vue'
   
@@ -12,6 +10,8 @@ title: To-Do List
     await import('./to-do-list.js')
   })
 </script>
+
+# To-Do List Example
 
 <Badge type="warning" text="example" />
 <div class="example">

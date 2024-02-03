@@ -1,4 +1,3 @@
-
 # What is Paintor?
 
 Paintor is a small View library that works in the browser or at the server. It uses JavaScript syntax that is structured like HTML.

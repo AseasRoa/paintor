@@ -11,7 +11,7 @@ title: Template as a Component
   })
 </script>
 
-## Template as a Component
+# Template as a Component
 
 [Templates](../templates/what-are-templates.md) can also be used to make components.
 The example below shows a single Template with its own internal [State](../reactivity/states.md).

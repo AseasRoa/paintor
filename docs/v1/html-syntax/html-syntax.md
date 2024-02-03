@@ -11,7 +11,7 @@ title: HTML Syntax
   })
 </script>
 
-## Introduction
+# HTML Syntax
 
 One of the methods in the [Template Tree](../templates/template-tree) is `html()`. Although it may seem that it
 would produce \<html\> elements, this is not the case. Here is how `html()` is used: 

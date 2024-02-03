@@ -2,6 +2,9 @@
 title: Fetch Translations
 ---
 
+
+# Fetch Translations
+
 ::: warning
 Translations are experimental in Paintor and their implementation may change!
 :::
