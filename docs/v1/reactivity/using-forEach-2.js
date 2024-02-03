@@ -22,4 +22,4 @@ component(($) => {
     // Reactive, the value will change to 1
     $.div(() => item.number)
   })
-}).paint('using-foreach-2')
+}).paint('#using-foreach-2')

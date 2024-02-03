@@ -12,4 +12,4 @@ component(($) => {
   $.p(() => `1 * Number = ${globalState[0]}` )
   $.p(() => `2 * Number = ${globalState[1]}` )
   $.p(() => `3 * Number = ${globalState[2]}` )
-}).paint('states-array')
+}).paint('#states-array')

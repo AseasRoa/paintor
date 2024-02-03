@@ -14,4 +14,4 @@ component(($) => {
   $.p(() => `1 * Number = ${stateOne.number}` )
   $.p(() => `2 * Number = ${stateTwo.number}` )
   $.p(() => `3 * Number = ${stateThree.number}` )
-}).paint('states-4')
+}).paint('#states-4')

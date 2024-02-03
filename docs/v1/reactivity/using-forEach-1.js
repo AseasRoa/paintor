@@ -20,4 +20,4 @@ component(($) => {
   $.forEach(localState, (number, key) => {
     $.span('<' + number + '>')
   })
-}).paint('using-foreach-1')
+}).paint('#using-foreach-1')

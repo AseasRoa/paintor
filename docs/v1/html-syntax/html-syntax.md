@@ -49,13 +49,13 @@ Statements for the HTML syntax are under development.
 ::: code-group
 <<< @/./html-syntax/html-syntax-1.js [JavaScript]
 ```html [HTML]
-<html-syntax-1></html-syntax-1>
+<div id="html-syntax-1"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <html-syntax-1></html-syntax-1>
+  <div id="html-syntax-1"></div>
 </div>
 
 ## Translations
@@ -63,11 +63,11 @@ Statements for the HTML syntax are under development.
 ::: code-group
 <<< @/./html-syntax/html-syntax-2.js [JavaScript]
 ```html [HTML]
-<html-syntax-2></html-syntax-2>
+<div id="html-syntax-2"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <html-syntax-2></html-syntax-2>
+  <div id="html-syntax-2"></div>
 </div>

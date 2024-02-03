@@ -65,13 +65,13 @@ setState(myState, ['two'])
 ::: code-group
 <<< @/./reactivity/using-forState-1.js [JavaScript]
 ```html [HTML]
-<using-forstate-1></using-forstate-1>
+<div id="using-forstate-1"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-forstate-1></using-forstate-1>
+  <div id="using-forstate-1"></div>
 </div>
 
 ## `setState()` Example
@@ -79,11 +79,11 @@ setState(myState, ['two'])
 ::: code-group
 <<< @/./reactivity/using-forState-2.js [JavaScript]
 ```html [HTML]
-<using-forstate-2></using-forstate-2>
+<div id="using-forstate-2"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-forstate-2></using-forstate-2>
+  <div id="using-forstate-2"></div>
 </div>

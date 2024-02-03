@@ -4,4 +4,4 @@ const translationEn = { GREETING: 'Hello!', QUESTION: 'How are you today?' }
 
 component(($) => {
   $.div('GREETING', ' ', 'QUESTION')
-}).useTranslations(translationEn).paint('translations-1')
+}).useTranslations(translationEn).paint('#translations-1')

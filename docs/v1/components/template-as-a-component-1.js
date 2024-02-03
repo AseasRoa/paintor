@@ -14,4 +14,4 @@ component(
   plusMinusTemplate,
   plusMinusTemplate,
   plusMinusTemplate
-).paint('template-as-a-component-1')
+).paint('#template-as-a-component-1')

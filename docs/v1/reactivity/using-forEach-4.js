@@ -15,4 +15,4 @@ component(($) => {
       }
     })
   })
-}).paint('using-foreach-4')
+}).paint('#using-foreach-4')

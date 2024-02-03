@@ -23,13 +23,13 @@ example:
 ::: code-group
 <<< @/./internationalization/translations-1.js [JavaScript]
 ```html [HTML]
-<translations-1></translations-1>
+<div id="translations-1"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <translations-1></translations-1>
+  <div id="translations-1"></div>
 </div>
 
 Multiple translation objects can be used. `useTranslations()` accepts one or more objects,
@@ -77,11 +77,11 @@ component(($) => {
 ::: code-group
 <<< @/./internationalization/translations-2.js [JavaScript]
 ```html [HTML]
-<translations-2></translations-2>
+<div id="translations-2"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <translations-2></translations-2>
+  <div id="translations-2"></div>
 </div>

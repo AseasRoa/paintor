@@ -21,4 +21,4 @@ component(($) => {
       }
     })
   })
-}).paint('using-foreach-3')
+}).paint('#using-foreach-3')

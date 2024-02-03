@@ -42,13 +42,13 @@ When the values become 10, they are cleared, and everything starts from the begi
 ::: code-group
 <<< @/./reactivity/using-forEach-1.js [JavaScript]
 ```html [HTML]
-<using-foreach-1></<using-foreach-1>
+<div id="using-foreach-1"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-foreach-1></using-foreach-1>
+  <div id="using-foreach-1"></div>
 </div>
 
 ## Primitive Values are Not Reactive in forEach()
@@ -59,13 +59,13 @@ When the value passed in the callback of `forEach()` is a primitive value
 ::: code-group
 <<< @/./reactivity/using-forEach-2.js [JavaScript]
 ```html [HTML]
-<<using-foreach-2></<using-foreach-2>
+<div id="using-foreach-2"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-foreach-2></using-foreach-2>
+  <div id="using-foreach-2"></div>
 </div>
 
 ## Automatic Order of the Elements
@@ -92,13 +92,13 @@ place where the previous \<button\> was.
 ::: code-group
 <<< @/./reactivity/using-forEach-3.js [JavaScript]
 ```html [HTML]
-<using-foreach-3></using-foreach-3>
+<div id="using-foreach-3"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-foreach-3></using-foreach-3>
+  <div id="using-foreach-3"></div>
 </div>
 
 ### Array
@@ -119,13 +119,13 @@ button, it will be re-created at the same place after 1 second:
 ::: code-group
 <<< @/./reactivity/using-forEach-4.js [JavaScript]
 ```html [HTML]
-<using-foreach-4></using-foreach-4>
+<div id="using-foreach-4"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-foreach-4></using-foreach-4>
+  <div id="using-foreach-4"></div>
 </div>
 
 ## Applying Array Mutating Methods Over Array State
@@ -152,11 +152,11 @@ When using `sort()`, all DOM elements will be repainted.
 ::: code-group
 <<< @/./reactivity/using-forEach-5.js [JavaScript]
 ```html [HTML]
-<using-foreach-5></using-foreach-5>
+<div id="using-foreach-5"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <using-foreach-5></using-foreach-5>
+  <div id="using-foreach-5"></div>
 </div>

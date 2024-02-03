@@ -5,8 +5,8 @@ const plusMinusComponent = component(($) => {
 
   $.div(
     $.button({ onClick: () => localState.value -= 1 }, '-'),
-    $.button({ onClick: () => localState.value += 1 }, '+'),
-    $.span(() => localState.value)
+    $.span(() => localState.value),
+    $.button({ onClick: () => localState.value += 1 }, '+')
   )
 })
 

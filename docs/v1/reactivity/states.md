@@ -97,7 +97,7 @@ going to change `myState.value`, which is bound with the text content of the \<s
 ::: code-group
 <<< @/./reactivity/states-1.js [JavaScript]
 ```html [HTML]
-<states-1></states-1>
+<div id="states-1"></div>
 ```
 :::
 
@@ -105,7 +105,7 @@ Click on the `-` and `+` buttons below to try it out:
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <states-1></states-1>
+  <div id="states-1"></div>
 </div>
 
 ### Change the State on DOM changes
@@ -115,7 +115,7 @@ Let's have `myState.text` and an input field from which `myState.text` can be ch
 ::: code-group
 <<< @/./reactivity/states-2.js [JavaScript]
 ```html [HTML]
-<states-2></states-2>
+<div id="states-2"></div>
 ```
 :::
 
@@ -124,7 +124,7 @@ typing on the right side of the input field, where the \<span\> is.
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <states-2></states-2>
+  <div id="states-2"></div>
 </div>
 
 ## States are Recursive
@@ -134,13 +134,13 @@ The inner objects and arrays of a state are also states:
 ::: code-group
 <<< @/./reactivity/states-recursive.js [JavaScript]
 ```html [HTML]
-<states-recursive></states-recursive>
+<div id="states-recursive"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <states-recursive></states-recursive>
+  <div id="states-recursive"></div>
 </div>
 
 ## One State in Many Templates
@@ -151,19 +151,19 @@ One State can serve multiple [Templates](../templates/what-are-templates.md) at 
 <<< @/./reactivity/states-3.js [JavaScript]
 ```html [HTML]
 <!-- This will hold the button -->
-<states-3-button></states-3-button>
+<div id="states-3-button"></div>
 <!-- This will hold the paragraph -->
-<states-3-paragraph></states-3-paragraph>
+<div id="states-3-paragraph"></div>
 <!-- This will hold the textarea -->
-<states-3-textarea></states-3-textarea>
+<div id="states-3-textarea"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <states-3-button></states-3-button>
-  <states-3-paragraph></states-3-paragraph>
-  <states-3-textarea></states-3-textarea>
+  <div id="states-3-button"></div>
+  <div id="states-3-paragraph"></div>
+  <div id="states-3-textarea"></div>
 </div>
 
 ## Many States in One Template
@@ -171,13 +171,13 @@ One State can serve multiple [Templates](../templates/what-are-templates.md) at 
 ::: code-group
 <<< @/./reactivity/states-4.js [JavaScript]
 ```html [HTML]
-<states-4></states-4>
+<div id="states-4"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <states-4></states-4>
+  <div id="states-4"></div>
 </div>
 
 ## State from Array
@@ -185,11 +185,11 @@ One State can serve multiple [Templates](../templates/what-are-templates.md) at 
 ::: code-group
 <<< @/./reactivity/states-array.js [JavaScript]
 ```html [HTML]
-<states-array></states-array>
+<div id="states-array"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <states-array></states-array>
+  <div id="states-array"></div>
 </div>

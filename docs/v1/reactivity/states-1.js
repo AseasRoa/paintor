@@ -11,4 +11,4 @@ component(($) => {
     $.span(() => localState.value), // The callback here is needed for reactivity
     $.button({ onClick: increment }, '+')
   )
-}).paint('states-1')
+}).paint('#states-1')

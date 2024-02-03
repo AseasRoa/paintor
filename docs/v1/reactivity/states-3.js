@@ -10,12 +10,12 @@ const tick = () => globalState.tick
 
 component(($) => {
   $.button({ textContent: tick })
-}).paint('states-3-button')
+}).paint('#states-3-button')
 
 component(($) => {
   $.p(tick)
-}).paint('states-3-paragraph')
+}).paint('#states-3-paragraph')
 
 component(($) => {
   $.textarea({ value: tick })
-}).paint('states-3-textarea')
+}).paint('#states-3-textarea')

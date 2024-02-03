@@ -21,13 +21,13 @@ Component.
 ::: code-group
 <<< @/./components/template-as-a-component-1.js [JavaScript]
 ```html [HTML]
-<template-as-a-component-1></template-as-a-component-1>
+<div id="template-as-a-component-1"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <template-as-a-component-1></template-as-a-component-1>
+  <div id="template-as-a-component-1"></div>
 </div>
 
 The same Template can be used in another Template, but there is a catch - the Template Tree must be
@@ -36,11 +36,11 @@ The same Template can be used in another Template, but there is a catch - the Te
 ::: code-group
 <<< @/./components/template-as-a-component-2.js [JavaScript]
 ```html [HTML]
-<template-as-a-component-2></template-as-a-component-2>
+<div id="template-as-a-component-2"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <template-as-a-component-2></template-as-a-component-2>
+  <div id="template-as-a-component-2"></div>
 </div>

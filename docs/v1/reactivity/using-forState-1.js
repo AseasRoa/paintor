@@ -26,4 +26,4 @@ component(($) => {
       value: subState.value,
     })
   })
-}).paint('using-forstate-1')
+}).paint('#using-forstate-1')

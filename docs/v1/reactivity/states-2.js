@@ -15,4 +15,4 @@ component(($) => {
     }),
     $.span(() => localState.text), // The callback here is needed for reactivity
   )
-}).paint('states-2')
+}).paint('#states-2')

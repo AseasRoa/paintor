@@ -16,4 +16,4 @@ component(($) => {
   $.div('Component 1', plusMinusTemplate($))
   $.div('Component 2', plusMinusTemplate($))
   $.div('Component 3', plusMinusTemplate($))
-}).paint('template-as-a-component-2')
+}).paint('#template-as-a-component-2')

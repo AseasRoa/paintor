@@ -13,4 +13,4 @@ component(($) => {
     ${() => localState.time}
   </div>
   `
-}).paint('html-syntax-1')
+}).paint('#html-syntax-1')
