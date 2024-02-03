@@ -5,21 +5,21 @@ component(($) => {
   const stateA = state([0])
   const stateB = state([{ number: 0 }])
 
-  // And try to change them
+  // And change them
   setInterval(() => {
-    stateA[0] = 1
-    stateB[0].number = 1
+    stateA[0] += 1
+    stateB[0].number += 1
   }, 1000)
 
   // Variant A: The passed value is a primitive number
-  $.forState(stateA, (number) => {
-    // Not reactive, the value will remain 0
+  $.forEach(stateA, (number) => {
+    // Reactive, the value will change
     $.div(() => number)
   })
 
   // Variant B: The passed value is a State
   $.forEach(stateB, (item) => {
-    // Reactive, the value will change to 1
+    // Reactive, the value will change
     $.div(() => item.number)
   })
 }).paint('#using-foreach-2')

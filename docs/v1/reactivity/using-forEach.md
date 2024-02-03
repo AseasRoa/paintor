@@ -51,10 +51,10 @@ When the values become 10, they are cleared, and everything starts from the begi
   <div id="using-foreach-1"></div>
 </div>
 
-## Primitive Values are Not Reactive in forEach()
+## Primitive Values are Also Reactive in forEach()
 
 When the value passed in the callback of `forEach()` is a primitive value
-(string, boolean, number), this value will not bring reactivity:
+(string, boolean, number), this value is also reactive:
 
 ::: code-group
 <<< @/./reactivity/using-forEach-2.js [JavaScript]
