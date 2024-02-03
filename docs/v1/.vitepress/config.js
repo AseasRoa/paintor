@@ -19,12 +19,6 @@ export default defineConfig({
       }
     }
   },
-  head: [
-    [
-      'link',
-      { rel: 'stylesheet', href: '/paintor/style.css' }
-    ]
-  ],
   themeConfig: {
     nav: [
       {
@@ -39,6 +33,10 @@ export default defineConfig({
         ]
       }
     ],
+    /*
+     * target: "_self" makes it so the page is actually reloaded,
+     * which is needed for pages with live scripts
+     */
     sidebar: [
       {
         text: 'Introduction',
@@ -46,11 +44,13 @@ export default defineConfig({
         items: [
           {
             text: 'What is Paintor?',
-            link: '/introduction/what-is-paintor'
+            link: '/introduction/what-is-paintor',
+            target: "_self"
           },
           {
             text: 'Getting Started',
-            link: '/introduction/getting-started'
+            link: '/introduction/getting-started',
+            target: "_self"
           }
         ]
       },
@@ -60,23 +60,28 @@ export default defineConfig({
         items: [
           {
             text: 'What are Templates?',
-            link: '/templates/what-are-templates'
+            link: '/templates/what-are-templates',
+            target: "_self"
           },
           {
             text: 'Template Tree',
-            link: '/templates/template-tree'
+            link: '/templates/template-tree',
+            target: "_self"
           },
           {
             text: 'Template Tree Elements',
-            link: '/templates/template-tree-elements'
+            link: '/templates/template-tree-elements',
+            target: "_self"
           },
           {
             text: 'Properties Object',
-            link: '/templates/properties-object'
+            link: '/templates/properties-object',
+            target: "_self"
           },
           {
             text: 'Template Tree Statements',
-            link: '/templates/template-tree-statements'
+            link: '/templates/template-tree-statements',
+            target: "_self"
           }
         ]
       },
@@ -86,19 +91,23 @@ export default defineConfig({
         items: [
           {
             text: 'What are Components?',
-            link: '/components/what-are-components'
+            link: '/components/what-are-components',
+            target: "_self"
           },
           {
             text: 'Painting Templates',
-            link: '/components/painting-templates'
+            link: '/components/painting-templates',
+            target: "_self"
           },
           {
             text: 'Components',
-            link: '/components/components'
+            link: '/components/components',
+            target: "_self"
           },
           {
             text: 'Template as a Component',
-            link: '/components/template-as-a-component'
+            link: '/components/template-as-a-component',
+            target: "_self"
           }
         ]
       },
@@ -108,15 +117,18 @@ export default defineConfig({
         items: [
           {
             text: 'States',
-            link: '/reactivity/states'
+            link: '/reactivity/states',
+            target: "_self"
           },
           {
             text: 'Using forEach()',
-            link: '/reactivity/using-forEach'
+            link: '/reactivity/using-forEach',
+            target: "_self"
           },
           {
             text: 'Using forState()',
-            link: '/reactivity/using-forState'
+            link: '/reactivity/using-forState',
+            target: "_self"
           }
         ]
       },
@@ -126,11 +138,13 @@ export default defineConfig({
         items: [
           {
             text: 'Translations',
-            link: '/internationalization/translations'
+            link: '/internationalization/translations',
+            target: "_self"
           },
           {
             text: 'Fetch Translations',
-            link: '/internationalization/fetch-translations'
+            link: '/internationalization/fetch-translations',
+            target: "_self"
           }
         ]
       },
@@ -140,7 +154,8 @@ export default defineConfig({
         items: [
           {
             text: 'HTML Syntax',
-            link: '/html-syntax/html-syntax'
+            link: '/html-syntax/html-syntax',
+            target: "_self"
           }
         ]
       },
@@ -150,15 +165,18 @@ export default defineConfig({
         items: [
           {
             text: 'To-Do List',
-            link: '/examples/to-do-list'
+            link: '/examples/to-do-list',
+            target: "_self"
           },
           {
             text: 'Temperature Converter',
-            link: '/examples/temperature-converter'
+            link: '/examples/temperature-converter',
+            target: "_self"
           },
           {
             text: 'Many Elements',
-            link: '/examples/many-elements'
+            link: '/examples/many-elements',
+            target: "_self"
           }
         ]
       }
