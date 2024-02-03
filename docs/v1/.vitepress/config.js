@@ -34,8 +34,8 @@ export default defineConfig({
       {
         text: 'Versions',
         items: [
-          { text: 'v1', link: '/' },
-          { text: 'v0', link: '/v0' }
+          { text: 'v1', link: '/', target: '_self' },
+          { text: 'v0', link: '/v0', target: '_self' }
         ]
       }
     ],
