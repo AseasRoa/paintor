@@ -2,7 +2,7 @@
 .idea/
 .vscode/
 coverage/
-paintor/dist/
+dist/
 node_modules/
 
 # Files
@@ -12,5 +12,5 @@ node_modules/
 package-lock.json
 
 # Project Specific Directories
-docs/.vitepress/.temp
-docs/.vitepress/cache
+docs/*/.vitepress/.temp
+docs/*/.vitepress/cache

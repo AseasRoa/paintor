@@ -1,0 +1,19 @@
+:root {
+  --vp-c-brand-1: deeppink;
+  --vp-c-brand-2: deeppink;
+}
+
+.example {
+  margin: 0.7rem 0.7rem;
+  max-height: 100vh;
+  overflow: auto;
+
+  & button {
+    background: #efefef;
+    border: 0.01rem solid #767676;
+    width: revert;
+    padding: revert;
+    font-family: revert;
+    border-radius: 0.2rem;
+  }
+}
