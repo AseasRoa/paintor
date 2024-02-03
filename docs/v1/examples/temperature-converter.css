@@ -1,4 +1,9 @@
 #temperature-converter {
+  padding: 0.4rem;
+  width: fit-content;
+  border-radius: 0.4rem;
+  border: 0.1rem solid currentColor;
+
   & div {
     display: table;
 
@@ -12,7 +17,8 @@
       margin: 0.3rem;
       padding: 0 0.3rem;
       width: 5rem;
-      border: 0.1rem solid aqua;
+      border: 0.1rem solid deepskyblue;
+      border-radius: 0.4rem;
     }
   }
 }

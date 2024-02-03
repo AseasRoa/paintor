@@ -13,6 +13,7 @@ title: Temperature Converter
 
 # Temperature Converter Example
 
+<p></p>
 <Badge type="warning" text="example" />
 <div class="example">
   <div id="temperature-converter"></div>

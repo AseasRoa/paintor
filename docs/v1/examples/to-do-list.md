@@ -13,6 +13,7 @@ title: To-Do List
 
 # To-Do List Example
 
+<p></p>
 <Badge type="warning" text="example" />
 <div class="example">
   <div id="to-do-list"></div>
