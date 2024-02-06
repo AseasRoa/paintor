@@ -27,10 +27,6 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "build": "vite build",
-    "build:tsc": "tsc",
-    "docs:dev": "vitepress dev docs/v1.x",
-    "docs:build": "vitepress build docs/v1.x",
-    "docs:preview": "vitepress preview docs/v1.x",
     "prepublishOnly": "npm run test && npm run build"
   },
   "devDependencies": {
@@ -43,7 +39,6 @@
     "jsdom": "^24.0.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
-    "vitepress": "^1.0.0-rc.40",
     "vitest": "^1.2.2"
   },
   "repository": {

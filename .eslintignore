@@ -13,8 +13,3 @@ node_modules/
 package-lock.json
 # To lint files and folders with names starting with a dot
 !.*
-
-# Project Specific Directories
-docs/*/.vitepress/.temp
-docs/*/.vitepress/cache
-docs/*/.vitepress/dist
