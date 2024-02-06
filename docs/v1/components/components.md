@@ -7,19 +7,72 @@ title: Components
   
   onMounted(async () => {
     await import('./components-1.js')
-    await import('./components-2.css')
-    await import('./components-2.js')
-    await import('./components-3.css')
-    await import('./components-3.js')
   })
 </script>
 
 # Components
 
-## Create a Component with component()
+Components are independent and reusable pieces of UI.
 
-`component()` returns an instance of a class called 'Component', which can be used as an input to
-another `component()` function.
+## Create Components
+
+Components are created using the `component()` function. `component()` accepts
+one or more templates or components as arguments, and returns utility functions
+used to display the result.
+
+### From Templates
+
+In the example below, the three templates will be rendered in the order they are
+used in `component()`:
+
+::: code-group
+```js
+import { component, template } from 'paintor'
+
+const templateOne = template(($) => {
+  /* ... */
+})
+
+const templateTwo = template(($) => {
+  /* ... */
+})
+
+const templateThree = template(($) => {
+  /* ... */
+})
+
+component(
+  templateOne,
+  templateTwo,
+  templateThree
+).paint('#app')
+```
+```html
+<div id="app"></div>
+```
+:::
+
+`component()` also accepts an array of templates:
+
+```js
+/* ... */
+
+component(
+  [
+    templateOne,
+    templateTwo,
+    templateThree
+  ]
+).paint('#app')
+```
+
+Obviously, `.paint()` is used to render the result in an HTML element with id
+`app`.
+
+### From Components
+
+Or, instead of templates, you can use other components. But note that it's not
+a good practice to have two or more `component()` usages in a single file.
 
 ::: code-group
 ```js [Pass as Arguments]
@@ -50,7 +103,9 @@ app.paint('#app')
 ```
 :::
 
-Or, you can use instances of the 'Component' class in [Templates](../templates/what-are-templates.md).
+### Mixed
+
+You can also use Components in Templates:
 
 ::: code-group
 <<< @/./components/components-1.js [JavaScript]
@@ -62,36 +117,4 @@ Or, you can use instances of the 'Component' class in [Templates](../templates/w
 <Badge type="warning" text="example" />
 <div class="example">
   <div id="components-1"></div>
-</div>
-
-Or, you can do mixed.
-
-## Reactivity
-
-Each component can have its own internal state if `state()` is used inside the template:
-
-::: code-group
-<<< @/./components/components-2.js [JavaScript]
-<<< @/./components/components-2.css [CSS]
-```html [HTML]
-<div id="components-2"></div>
-```
-:::
-
-<Badge type="warning" text="example" />
-<div class="example">
-  <div id="components-2"></div>
-</div>
-
-::: code-group
-<<< @/./components/components-3.js [JavaScript]
-<<< @/./components/components-3.css [CSS]
-```html [HTML]
-<div id="components-3"></div>
-```
-:::
-
-<Badge type="warning" text="example" />
-<div class="example">
-  <div id="components-3"></div>
 </div>

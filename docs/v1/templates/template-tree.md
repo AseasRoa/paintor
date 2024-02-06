@@ -27,9 +27,10 @@ built in JavaScript. Some call it HyperScript.
   )
 }
 ```
-In a [Template](./what-are-templates.md) function, `$` is an instance of a class, containing a bunch
-of methods. There is a method for each HTML element. For example, we have `$.a()`
-for \<a\>, `$.p()` for \<p\>, `$.input()` for \<input\>, and so on.
+In a [Template](./what-are-templates.md) function, `$` is an instance of
+a class, containing a bunch of methods. There is a method for each HTML element.
+For example, we have `$.a()` for \<a\>, `$.p()` for \<p\>, `$.input()` for
+\<input\>, and so on.
 
 These are a little bit special, they will be explained later:
 
@@ -40,14 +41,15 @@ There are a few extra functions, such as:
 
 - `$.createElement()` - for creating a custom element.
 - `$.if()` - `if` statement.
-- `$.for()` - `for` iteration loop, starting with one number and ending with another.
+- `$.for()` - `for` iteration loop, starting with one number and ending with
+  another.
 - `$.forEach()` - to iterate over Array, Object, or [State](../reactivity/states).
 - `$.forState()` - to react on [State](../reactivity/states) changes.
 
 ## Argument Name
 
-The argument name in the template function doesn't matter, it's your choice. The following
-two examples are doing exactly the same:
+The argument name in the template function doesn't matter, it's your choice.
+The following two examples are doing exactly the same:
 
 ```js
 ($) => {
@@ -68,8 +70,9 @@ two examples are doing exactly the same:
 
 ### Free Style
 
-You probably noticed that in the examples above the function calls in the template function aren't
-entangled in any way. Other blocks of code can exist in between:
+You probably noticed that in the examples above the function calls in the
+template function aren't entangled in any way. Other blocks of code can exist
+in between:
 
 ```js
 ($) => {

@@ -27,10 +27,10 @@ title: Using forEach()
 `forEach()` is a method, used in the [Template Tree](../templates/template-tree.md).
 :::
 
-`forEach()` accepts a [State](./states.md) as an input, and it calls the provided callback
-function once for each element in the state. You can render the same pattern
-of DOM elements for each element in the state. The callback function provides
-two arguments - value and key.
+`forEach()` accepts a [State](./states.md) as an input, and it calls the provided
+callback function once for each element in the state. You can render the same
+pattern of DOM elements for each element in the state. The callback function
+provides two arguments - value and key.
 
 ```js
 $.forEach(myState, (value, key) => {

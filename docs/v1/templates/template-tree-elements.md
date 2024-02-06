@@ -6,9 +6,10 @@ title: Template Tree Elements
 
 ## The Argument
 
-The argument `$` (or however you name it) is an instance of a class, containing methods for each
-valid HTML element. For example, `$.div()` is for creating \<div\> elements, `$.p()` is for creating
-\<p\> elements, and so on. Each of these methods accepts multiple arguments, used for creating text content or
+The argument `$` (or however you name it) is an instance of a class, containing
+methods for each valid HTML element. For example, `$.div()` is for creating
+\<div\> elements, `$.p()` is for creating \<p\> elements, and so on. Each of
+these methods accepts multiple arguments, used for creating text content or
 child elements.
 
 Here is an example of a simple table with one row and two columns:
@@ -34,8 +35,8 @@ Here is an example of a simple table with one row and two columns:
 
 ## Element Properties (The First Argument)
 
-The first argument also accepts and object, containing global element properties (id, class...)
-and element-specific properties:
+The first argument also accepts and object, containing global element properties
+(id, class...) and element-specific properties:
 ```js
 ($) => {
   $.a(
@@ -51,7 +52,8 @@ and element-specific properties:
 <a>Go to GitHub</a>
 ```
 
-If the properties object is not the first argument, it is not honored. The following is NOT valid:
+If the properties object is not the first argument, it is not honored.
+The following is NOT valid:
 
 ```js
 ($) => {
@@ -65,7 +67,8 @@ If the properties object is not the first argument, it is not honored. The follo
 <a>Go to GitHub</a>
 ```
 
-By the way, you can pass the text content as a `textContent` property, or as a second argument:
+By the way, you can pass the text content as a `textContent` property,
+or as a second argument:
 
 ```js
 ($) => {

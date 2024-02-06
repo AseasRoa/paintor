@@ -1,10 +1,10 @@
 import { component, state } from 'paintor'
 
 component(($) => {
-  const localState = state({ text: '' })
+  const myState = state({ text: '' })
 
   const setText = (event) => {
-    localState.text = event.target.value
+    myState.text = event.target.value
   }
 
   $.div(
@@ -13,6 +13,6 @@ component(($) => {
       placeholder: 'Type something here',
       onKeyUp: setText
     }),
-    $.span(() => localState.text), // The callback here is needed for reactivity
+    $.span(() => myState.text), // The callback here is needed for reactivity
   )
 }).paint('#states-2')

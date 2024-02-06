@@ -8,7 +8,9 @@ title: Getting Started
 
 #### Browser
 
-Paintor is an [ES Module](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules), import it with the `import` syntax:
+Paintor is an
+[ES Module](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules),
+import it with the `import` syntax:
 
 ```js
 <script type="module">
@@ -41,10 +43,10 @@ import paintor from 'paintor'
 
 ### In the Browser
 
-Here is an example of a simple clicks counter. We have a `localState`, \<button\> and \<span\>
-elements.
-When the \<button\> is clicked, it increments the `clicks` property of the state, which is also
-reflected in the \<span\> element:
+Here is an example of a simple clicks counter. We have a `localState`,
+\<button\> and \<span\> elements.
+When the \<button\> is clicked, it increments the `clicks` property of the
+state, which is also reflected in the \<span\> element:
 
 ```html
 <div id="container"></div>
@@ -127,7 +129,8 @@ import {
 } from 'paintor'
 ```
 
-The following examples are all doing the same thing, only the syntax is different:
+The following examples are all doing the same thing, only the syntax is
+different:
 
 ::: code-group
 ```js [named imports (recommended)]

@@ -4,8 +4,9 @@ title: What are Templates?
 
 # What are Templates?
 
-Templates are functions, containing markup and JavaScript code, used by [Components](../components/what-are-components.md)
-to build the view. This is how a simple Template looks like:
+Templates are functions, containing markup and JavaScript code, used by
+[Components](../components/what-are-components.md) to build the view.
+This is how a simple Template looks like:
 
 ```js
 ($) => {
@@ -13,7 +14,8 @@ to build the view. This is how a simple Template looks like:
 }
 ```
 
-This function can't do anything by itself, it must be used in a [Component](../components/what-are-components.md):
+This function can't do anything by itself, it must be used in a
+[Component](../components/what-are-components.md):
 
 ::: code-group
 ```javascript
@@ -30,7 +32,8 @@ app.paint('#app')
 ```
 :::
 
-Other JavaScript code can reside in the template function. For example, a local [State](../reactivity/states.md):
+Other JavaScript code can reside in the template function. For example, a local
+[State](../reactivity/states.md):
 
 ::: code-group
 ```javascript
@@ -52,8 +55,8 @@ app.paint('#app')
 ```
 :::
 
-The template function can be defined outside the [Components](../components/what-are-components.md),
-like this:
+The template function can be defined outside the
+[Components](../components/what-are-components.md), like this:
 
 ::: code-group
 ```javascript
@@ -71,11 +74,13 @@ component(myTemplate).paint('#app')
 :::
 
 ::: info
-`template()` returns the input function. Technically it is not required to use it,
-but it helps, because it infers the necessary TypeScript types, which makes the code type safe and
-provides for code completion without the need to write any types.
+`template()` returns the input function. Technically it is not required to use
+it, but it helps, because it infers the necessary TypeScript types, which makes
+the code type safe and provides for code completion without the need to write
+any types.
 :::
 
 ## Template Tree (The Argument)
 
-The template function has an argument, which in the examples above is named `$`. This is the [Template Tree](./template-tree.md).
+The template function has an argument, which in the examples above is named `$`.
+This is the [Template Tree](./template-tree.md).

@@ -13,8 +13,9 @@ title: HTML Syntax
 
 # HTML Syntax
 
-One of the methods in the [Template Tree](../templates/template-tree) is `html()`. Although it may seem that it
-would produce \<html\> elements, this is not the case. Here is how `html()` is used: 
+One of the methods in the [Template Tree](../templates/template-tree) is
+`html()`. Although it may seem that it would produce \<html\> elements, this is
+not the case. Here is how `html()` is used: 
 
 ```js
 ($) => {
@@ -27,16 +28,17 @@ This is important.
 
 ## Characteristics
 
-- **Code Highlighting**: The HTML code may not be highlighted if your IDE does not support code
-  highlighting in template literals.
-- **Performance**: Internally, the HTML syntax is first converted into a [Template Tree](../templates/template-tree),
-  and then it's rendered. This additional step obviously lowers the performance. However, if the
-  template string is one piece, and you are not using translations, this could lead to better
-  performance.
-- **Type Safety**: For TypeScript this is just a string, you will not be warned you if you make a
-  mistake in the HTML code.
-- **Limited Capabilities**: Not all functionalities are supported, you can do more things with the
-  JS syntax.
+- **Code Highlighting**: The HTML code may not be highlighted if your IDE does 
+  not support code highlighting in template literals.
+- **Performance**: Internally, the HTML syntax is first converted into a
+  [Template Tree](../templates/template-tree),
+  and then it's rendered. This additional step obviously lowers the performance.
+  However, if the template string is one piece, and you are not using
+  translations, this could lead to better performance.
+- **Type Safety**: For TypeScript this is just a string, you will not be warned
+  you if you make a mistake in the HTML code.
+- **Limited Capabilities**: Not all functionalities are supported, you can do
+  more things with the JS syntax.
 
 ## Statements
 

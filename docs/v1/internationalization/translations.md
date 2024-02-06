@@ -17,8 +17,8 @@ title: Translations
 Translations are experimental in Paintor and their implementation may change!
 :::
 
-Translations are just JavaScript Objects, containing key-value pairs of strings. Here is a basic
-example:
+Translations are just JavaScript Objects, containing key-value pairs of strings.
+Here is a basic example:
 
 ::: code-group
 <<< @/./internationalization/translations-1.js [JavaScript]
@@ -32,8 +32,8 @@ example:
   <div id="translations-1"></div>
 </div>
 
-Multiple translation objects can be used. `useTranslations()` accepts one or more objects,
-or an array of objects, or objects mixed with arrays of objects.
+Multiple translation objects can be used. `useTranslations()` accepts one or
+more objects, or an array of objects, or objects mixed with arrays of objects.
 
 ::: code-group
 
