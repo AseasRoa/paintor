@@ -4,7 +4,7 @@
   "author": {
     "name": "AseasRoa"
   },
-  "description": "JavaScript View library for the browser and for the server",
+  "description": "100% JavaScript view library for the browser and for the server",
   "license": "MIT",
   "type": "module",
   "types": "./types/index.d.ts",
@@ -47,11 +47,14 @@
   },
   "homepage": "https://github.com/AseasRoa/paintor",
   "keywords": [
-    "javascript",
+    "frontend",
+    "backend",
+    "templates",
+    "components",
+    "ui",
+    "view",
     "vanilla",
     "hyperscript",
-    "view library",
-    "frontend",
-    "backend"
+    "reactive"
   ]
 }
