@@ -11,7 +11,7 @@ setInterval(() => {
 }, 2000)
 
 component(($) => {
-  $.p(() => `1 * Number = ${stateOne.number}` )
-  $.p(() => `2 * Number = ${stateTwo.number}` )
-  $.p(() => `3 * Number = ${stateThree.number}` )
+  $.p(() => `1 * number = ${stateOne.number}` )
+  $.p(() => `2 * number = ${stateTwo.number}` )
+  $.p(() => `3 * number = ${stateThree.number}` )
 }).paint('#states-4')

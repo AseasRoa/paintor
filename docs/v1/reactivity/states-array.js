@@ -9,7 +9,7 @@ setInterval(() => {
 }, 2000)
 
 component(($) => {
-  $.p(() => `1 * Number = ${globalState[0]}` )
-  $.p(() => `2 * Number = ${globalState[1]}` )
-  $.p(() => `3 * Number = ${globalState[2]}` )
+  $.p(() => `1 * number = ${globalState[0]}` )
+  $.p(() => `2 * number = ${globalState[1]}` )
+  $.p(() => `3 * number = ${globalState[2]}` )
 }).paint('#states-array')

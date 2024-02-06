@@ -6,6 +6,7 @@ title: States
   import { onMounted } from 'vue'
   
   onMounted(async () => {
+    await import('./states-1.css')
     await import('./states-1.js')
     await import('./states-2.js')
     await import('./states-3.js')
@@ -96,6 +97,7 @@ going to change `myState.value`, which is bound with the text content of the \<s
 
 ::: code-group
 <<< @/./reactivity/states-1.js [JavaScript]
+<<< @/./reactivity/states-1.css [CSS]
 ```html [HTML]
 <div id="states-1"></div>
 ```

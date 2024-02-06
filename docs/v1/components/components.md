@@ -7,7 +7,9 @@ title: Components
   
   onMounted(async () => {
     await import('./components-1.js')
+    await import('./components-2.css')
     await import('./components-2.js')
+    await import('./components-3.css')
     await import('./components-3.js')
   })
 </script>
@@ -70,6 +72,7 @@ Each component can have its own internal state if `state()` is used inside the t
 
 ::: code-group
 <<< @/./components/components-2.js [JavaScript]
+<<< @/./components/components-2.css [CSS]
 ```html [HTML]
 <div id="components-2"></div>
 ```
@@ -82,6 +85,7 @@ Each component can have its own internal state if `state()` is used inside the t
 
 ::: code-group
 <<< @/./components/components-3.js [JavaScript]
+<<< @/./components/components-3.css [CSS]
 ```html [HTML]
 <div id="components-3"></div>
 ```

@@ -1,0 +1,5 @@
+#components-3 {
+  & span {
+    padding: 0 0.5rem;
+  }
+}
