@@ -90,23 +90,18 @@ export default defineConfig({
         collapsed: true,
         items: [
           {
-            text: 'What are Components?',
-            link: '/components/what-are-components',
-            target: "_self"
-          },
-          {
-            text: 'Painting Templates',
-            link: '/components/painting-templates',
-            target: "_self"
-          },
-          {
             text: 'Components',
             link: '/components/components',
             target: "_self"
           },
           {
-            text: 'Template as a Component',
-            link: '/components/template-as-a-component',
+            text: 'Components vs Templates',
+            link: '/components/components-vs-templates',
+            target: "_self"
+          },
+          {
+            text: 'Painting',
+            link: '/components/painting',
             target: "_self"
           }
         ]
@@ -118,6 +113,11 @@ export default defineConfig({
           {
             text: 'States',
             link: '/reactivity/states',
+            target: "_self"
+          },
+          {
+            text: 'States are Deep',
+            link: '/reactivity/states-are-deep',
             target: "_self"
           },
           {

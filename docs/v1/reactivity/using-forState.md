@@ -17,9 +17,9 @@ title: Using forState()
 `forState()` is a method, used in the [Template Tree](../templates/template-tree.md).
 :::
 
-`forEach()` accepts a [State](./states.md) as an input, and it calls the provided callback function once, so you
-can render some DOM elements, representing the state. The callback function provides one
-argument - the input state.
+`forEach()` accepts a [State](./states.md) as an input, and it calls the provided
+callback function once, so you can render some DOM elements, representing
+the state. The callback function provides one argument - the input state.
 
 ```js
 $.forState(myState, (myState) => {
@@ -27,11 +27,12 @@ $.forState(myState, (myState) => {
 })
 ```
 
-The reactivity happens when you change the state itself - then the rendered DOM elements
-are removed, the callback is called again and new DOM elements are rendered.
+The reactivity happens when you change the state itself - then the rendered DOM
+elements are removed, the callback is called again and new DOM elements are
+rendered.
 
-But how to change the state? If you have the state in a variable, and you set the variable to
-something else, the variable is simply reassigned:
+But how to change the state? If you have the state in a variable, and you set
+the variable to something else, the variable is simply reassigned:
 
 ```js
 import { state } from 'paintor'

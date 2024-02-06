@@ -1,6 +1,6 @@
-import { component, state, template } from 'paintor'
+import { component, template, state } from 'paintor'
 
-const plusMinusTemplate = template(($) => {
+const plusMinus = template(($) => {
   const localState = state({ value: 0 })
 
   $.div(
@@ -10,8 +10,7 @@ const plusMinusTemplate = template(($) => {
   )
 })
 
-component(
-  plusMinusTemplate,
-  plusMinusTemplate,
-  plusMinusTemplate
-).paint('#template-as-a-component-1')
+component(($) => {
+  $.div('Template 1', plusMinus)
+  $.div('Template 2', plusMinus)
+}).paint('#states-scope-local')

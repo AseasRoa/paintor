@@ -19,4 +19,4 @@ component(($) => {
   $.p(() => `First counter: ${globalState.counter}` )
   $.p(() => `Second counter: ${globalState.innerObject.counter}` )
   $.p(() => `Third counter: ${globalState.innerObject.innerArray[0]}` )
-}).paint('#states-recursive')
+}).paint('#states-are-deep-1')
