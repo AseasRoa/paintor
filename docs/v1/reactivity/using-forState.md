@@ -13,10 +13,13 @@ title: Using forState()
 
 # Using forState()
 
+::: info
 `forState()` is a method, used in the [Template Tree](../templates/template-tree.md).
+:::
 
-`forEach()` accepts a state as an input, and it has a callback that is called once.
-In the callback you can access the input state, and you can render some DOM elements.
+`forEach()` accepts a [State](./states.md) as an input, and it calls the provided callback function once, so you
+can render some DOM elements, representing the state. The callback function provides one
+argument - the input state.
 
 ```js
 $.forState(myState, (myState) => {

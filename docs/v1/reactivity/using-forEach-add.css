@@ -1,0 +1,5 @@
+#using-foreach-add {
+  input[type=number] {
+    width: 2.5rem;
+  }
+}

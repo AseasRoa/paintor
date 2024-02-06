@@ -1,13 +1,7 @@
 import { component, state } from 'paintor'
 
 component(($) => {
-  const localState = state({
-    1: '1',
-    2: '2',
-    3: '3',
-    4: '4',
-    5: '5'
-  })
+  const localState = state([ '0', '1', '2', '3', '4' ])
 
   $.forEach(localState, (value, key) => {
     $.button({
@@ -21,4 +15,4 @@ component(($) => {
       }
     })
   })
-}).paint('#using-foreach-3')
+}).paint('#using-foreach-automatic-order-array')

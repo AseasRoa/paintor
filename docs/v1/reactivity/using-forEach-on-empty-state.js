@@ -25,4 +25,4 @@ component(($) => {
       }
     )
   )
-}).paint('#using-foreach-5')
+}).paint('#using-foreach-on-empty-state')
