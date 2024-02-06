@@ -1,4 +1,14 @@
-# What is Paintor?
+## Paintor
+
+![Static Badge](https://img.shields.io/badge/100%25%20JavaScript-F0DB4F?style=for-the-badge&logo=JavaScript&labelColor=black)
+![Static Badge](https://img.shields.io/badge/NodeJs-3C873A?style=for-the-badge&logo=node.js&labelColor=black)
+
+[![npm version](https://img.shields.io/npm/v/paintor.svg?logo=npm&color=cb3837)](https://www.npmjs.com/package/paintor)
+![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/paintor?color=cb3837)
+![npm downloads](https://img.shields.io/npm/dm/paintor?color=cb3837)
+![npm type definitions](https://img.shields.io/npm/types/paintor)
+[![test](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml/badge.svg)](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml)
+![license](https://img.shields.io/npm/l/paintor)
 
 Paintor is a JavaScript library for building client-side user interfaces or HTML
 code.
