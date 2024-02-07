@@ -15,7 +15,7 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        paintor: '../../../paintor/v1/bundle.js'
+        paintor: 'paintor/v1/bundle.js'
       }
     }
   },
