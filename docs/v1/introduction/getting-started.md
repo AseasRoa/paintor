@@ -68,7 +68,6 @@ state, which is also reflected in the \<span\> element:
 
   // Render the component
   app.paint('#app')
-
 </script>
 ```
 

@@ -1,0 +1,17 @@
+#oneCard, #manyCards {
+  .profileCard {
+    margin: 0.4rem 0;
+    padding: 0.4rem;
+    width: fit-content;
+    border-radius: 0.4rem;
+    border: 0.1rem solid currentColor;
+
+    & label {
+      color: #666
+    }
+
+    & span {
+      color: #999
+    }
+  }
+}
