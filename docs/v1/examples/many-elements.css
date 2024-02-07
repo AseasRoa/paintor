@@ -3,8 +3,9 @@
     margin-right: 0.5rem;
   }
 
-  & input {
+  & input, label {
     cursor: pointer;
+    user-select: none;
   }
 
   #elements-container {

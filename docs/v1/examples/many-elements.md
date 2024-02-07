@@ -20,7 +20,8 @@ title: Many Elements
 </div>
 
 ::: code-group
-<<< @/./examples/many-elements.js [JavaScript]
+<<< @/./examples/many-elements.js [app.js]
+<<< @/./examples/components/ManyElements.js [components/ManyElements.js]
 <<< @/./examples/many-elements.css [CSS]
 ```html [HTML]
 <div id="many-elements"></div>
