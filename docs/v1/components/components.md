@@ -163,7 +163,7 @@ returning templates or components. This allows us to use parameters.
 Also, we can move the component in its own file.
 
 ::: code-group
-<<< @/./components/components-parameters.js [main.js]
+<<< @/./components/components-parameters.js [app.js]
 <<< @/./components/ProfileCard.js [ProfileCard.js]
 <<< @/./components/components-parameters.css [CSS]
 ```html [HTML]

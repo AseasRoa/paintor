@@ -20,7 +20,8 @@ title: To-Do List
 </div>
 
 ::: code-group
-<<< @/./examples/to-do-list.js [JavaScript]
+<<< @/./examples/to-do-list.js [app.js]
+<<< @/./examples/components/ToDoList.js [components/ToDoList.js]
 <<< @/./examples/to-do-list.css [CSS]
 ```html [HTML]
 <div id="to-do-list"></div>

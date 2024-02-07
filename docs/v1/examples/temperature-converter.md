@@ -20,9 +20,11 @@ title: Temperature Converter
 </div>
 
 ::: code-group
-<<< @/./examples/temperature-converter.js [JavaScript]
+<<< @/./examples/temperature-converter.js [app.js]
+<<< @/./examples/components/TemperatureConverter.js [components/TemperatureConverter.js]
 <<< @/./examples/temperature-converter.css [CSS]
 ```html [HTML]
 <div id="temperature-converter"></div>
 ```
 :::
+
