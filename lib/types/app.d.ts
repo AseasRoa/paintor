@@ -48,3 +48,6 @@ type Subscription = {
   stateSubscription: import('../StateProxySubscriptions').StateProxySubscriptions;
   statePath: string;
 }
+
+type TargetObject = Object<any, any> | Array<any>
+
