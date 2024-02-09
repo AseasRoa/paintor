@@ -66,7 +66,7 @@ describe('State', () => {
   })
 
   describe('.forEach()', () => {
-    describe('New DOM element, created from the State, is reactive', () => {
+    describe('New element is reactive?', () => {
       test('DOM', () => {
         const container = document.body
 
@@ -137,7 +137,53 @@ describe('State', () => {
       })
     })
 
-    describe('with fallback handler', () => {
+    describe('Updated element is still reactive?', () => {
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {{ a: number }[]} */
+        const theState = state([{ a: 0 }])
+
+        component(($) => {
+          $.div(
+            $.forEach(theState, (value) => {
+              $.div(() => {
+                return value.a
+              })
+            })
+          )
+        }).paint(container)
+
+        let div = container.getElementsByTagName('div')[0]
+        expectTextContentsToBeLike(div?.childNodes, [
+          'reactive-begin',
+          '0',
+          'reactive-end',
+        ])
+
+        // Update the whole element
+        theState[0] = { a: 1 }
+
+        div = container.getElementsByTagName('div')[0]
+        expectTextContentsToBeLike(div?.childNodes, [
+          'reactive-begin',
+          '1',
+          'reactive-end',
+        ])
+
+        // Update key in the element
+        theState[0].a = 2
+
+        div = container.getElementsByTagName('div')[0]
+        expectTextContentsToBeLike(div?.childNodes, [
+          'reactive-begin',
+          '2',
+          'reactive-end',
+        ])
+      })
+    })
+
+    describe('With fallback handler', () => {
       test('DOM', () => {
         const container = document.body
 
@@ -426,6 +472,41 @@ describe('State', () => {
           'reactive-end',
           'reactive-end',
         ])
+      })
+    })
+
+    /**
+     * Checking the correct amount of callback passes
+     */
+    describe('Performance', () => {
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {{ a: number }[]} */
+        const theState = state([])
+        let passes1 = 0
+        let passes2 = 0
+
+        component(($) => {
+          $.div(
+            $.forEach(theState, (value) => {
+              passes1 += 1
+
+              $.div(() => {
+                passes2 += 1
+
+                return value.a
+              })
+            })
+          )
+        }).paint(container)
+
+        for (let i = 0; i < 10; i++) {
+          theState[i] = { a: i }
+        }
+
+        expect(passes1).toBe(10)
+        expect(passes2).toBe(10)
       })
     })
   })
