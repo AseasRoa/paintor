@@ -1,0 +1,36 @@
+{
+  "author": {
+    "name": "AseasRoa"
+  },
+  "description": "Paintor Benchmark for js-framework-benchmark",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "npm run jsfb:build && npm run paintor:build",
+    "server": "npm run jsfb:start",
+    "bench": "cd dist/js-framework-benchmark/webdriver-ts && npm run bench LANG=\"en_US.UTF-8\"",
+    "bench:paintor": "npm run bench keyed/paintor",
+    "bench:vanillajs": "npm run bench keyed/vanillajs",
+    "results": "cd dist/js-framework-benchmark/webdriver-ts && npm run results",
+    "jsfb:build": "npm run jsfb:install && cd dist/js-framework-benchmark && npm run install-local && npm run install-server",
+    "jsfb:install": "rimraf dist && git clone https://github.com/krausest/js-framework-benchmark.git dist/js-framework-benchmark && cd dist/js-framework-benchmark && npm ci",
+    "jsfb:start": "cd dist/js-framework-benchmark && npm run start",
+    "paintor:build": "npm run paintor:copy && cd dist/js-framework-benchmark/frameworks/keyed/paintor && npm install && npm run build-prod",
+    "paintor:copy": "cpx 'paintor/**/*' dist/js-framework-benchmark/frameworks/keyed/paintor"
+  },
+  "dependencies": {
+    "cpx": "^1.5.0",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AseasRoa/paintor"
+  },
+  "homepage": "https://github.com/AseasRoa/paintor",
+  "keywords": [
+    "paintor",
+    "benchmark",
+    "js-framework-benchmark"
+  ]
+}

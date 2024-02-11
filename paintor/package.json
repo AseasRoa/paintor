@@ -1,0 +1,17 @@
+{
+  "name": "js-framework-benchmark-paintor",
+  "version": "1.0.0",
+  "description": "Benchmark for Paintor",
+  "main": "lib/index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.x",
+    "frameworkHomeURL": "https://github.com/AseasRoa/paintor"
+  },
+  "scripts": {
+    "build-dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "dependencies": {
+    "paintor": "^1.0.0"
+  }
+}
