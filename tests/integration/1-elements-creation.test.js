@@ -587,4 +587,32 @@ describe('Elements Creation', () => {
       })
     })
   })
+
+  describe('Destructured method names', () => {
+    test('(SSR) destructured template tree', () => {
+      const html = component(({ a, button, div }) => {
+        a('a')
+        button('button')
+        div('div')
+      }).html()
+
+      expect(html).toBe('<a>a</a><button>button</button><div>div</div>')
+    })
+
+    test('(DOM) destructured template tree', () => {
+      const container = document.createElement('div')
+      container.id = id
+      document.body.appendChild(container)
+
+      component(({ a, button, div }) => {
+        a('a')
+        button('button')
+        div('div')
+      }).paint(container)
+
+      const elements = container.querySelectorAll('*')
+
+      expectTextContentsToBeLike(elements, ['a', 'button', 'div',])
+    })
+  })
 })
