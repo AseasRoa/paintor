@@ -164,6 +164,37 @@ Each argument can be any of the following.
 <p>The quick brown <strong>fox</strong> jumped 3 times  over the lazy <strong>dog</strong></p>
 ```
 
+## Destructuring
+
+If you don't like the `$.` prefix, you can use the
+[destructuring assignment](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
+syntax:
+
+```js
+({ table, tr, td }) => {
+  table(
+    tr(
+      td('Row 1, Column 1'),
+      td('Row 1, Column 2'),
+    )
+  )
+}
+```
+
+Or like this:
+```js
+($) => {
+  const { table, tr, td } = $
+
+  table( 
+    tr(
+      td('Row 1, Column 1'),
+      $.td('Row 1, Column 2'), // $. can still be used
+    )
+  )
+}
+```
+
 ## The Template Tree is Synchronous
 
 In the following example the \<h2\> element will not be rendered,

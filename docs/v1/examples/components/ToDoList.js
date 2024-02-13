@@ -1,11 +1,7 @@
 import { component, state, template } from 'paintor'
 
 const tasks = state([])
-
-const newTask = {
-  title: '',
-  completed: false
-}
+const newTask = { title: '', completed: false }
 
 function addTask() {
   if (!newTask.title) {
@@ -17,10 +13,10 @@ function addTask() {
 }
 
 function deleteTask(task) {
-  tasks.splice(getTaskKey(task), 1)
+  tasks.splice(getTaskIndex(task), 1)
 }
 
-function getTaskKey(task) {
+function getTaskIndex(task) {
   return tasks.indexOf(task)
 }
 
@@ -28,12 +24,11 @@ function toggleCompleted(task) {
   task.completed = !task.completed
 }
 
-const todoHeader = template(($) => {
-  $.h3('Tasks ', $.span(() => `(${tasks.length})`)),
-    $.div(
+const todoHeader = template(({ h3, span, div, input, button }) => {
+  h3('Tasks ', span(() => `(${tasks.length})`)),
+    div(
       { class: 'header' },
-
-      $.input(
+      input(
         {
           type: 'text',
           placeholder: 'New Task...',
@@ -42,26 +37,29 @@ const todoHeader = template(($) => {
           }
         }
       ),
-      $.button({ onClick: addTask }, 'Add')
+      button({ onClick: addTask }, 'Add')
     )
 })
 
-const taskItem = (task) => template(($) => {
-  $.li(
+const taskItem = (task) => template(({ li, button }) => {
+  li(
     {
       class: () => (task.completed ? 'completed' : ''),
       onClick: () => toggleCompleted(task)
     },
     task.title,
-    $.button({
-      onClick: () => deleteTask(task)
-    }, '\u00D7')
+    button(
+      {
+        onClick: () => deleteTask(task)
+      },
+      '\u00D7'
+    )
   )
 })
 
-const todoTasks = template(($) => {
-  $.ul(
-    $.forEach(tasks, taskItem)
+const todoTasks = template(({ ul, forEach }) => {
+  ul(
+    forEach(tasks, taskItem)
   )
 })
 
