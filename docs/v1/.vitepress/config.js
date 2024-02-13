@@ -48,8 +48,13 @@ export default defineConfig({
             target: "_self"
           },
           {
-            text: 'Getting Started',
-            link: '/introduction/getting-started',
+            text: 'Installation',
+            link: '/introduction/installation',
+            target: "_self"
+          },
+          {
+            text: 'Basic Usage',
+            link: '/introduction/basic-usage',
             target: "_self"
           }
         ]
