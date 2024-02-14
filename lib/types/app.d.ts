@@ -23,6 +23,7 @@ type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefin
 type RepaintFunctionForFunction = (data: boolean | State) => void
 type RepaintFunctionForState = (
   action: number,
+  updatedObject: TargetObject,
   updatedState: State,
   prop: string | symbol,
   arrayFunctionArgs?: any[],
