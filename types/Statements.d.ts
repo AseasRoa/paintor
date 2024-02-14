@@ -19,7 +19,7 @@ export interface Statements {
     func : Input,
     handler : (
       value : ReturnType<Input>[number],
-      key : number
+      key : string
     ) => boolean | any,
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
@@ -75,7 +75,7 @@ export interface Statements {
     array : Input,
     handler : (
       value : Input[number],
-      key : number
+      key : string
     ) => boolean | any,
     handlerOnEmpty?: () => void
   ) : HTMLElement[] | Error
