@@ -50,5 +50,5 @@ type Subscription = {
   statePath: string;
 }
 
+type ObjectKey = string | number | symbol
 type TargetObject = Object<any, any> | Array<any>
-

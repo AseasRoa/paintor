@@ -344,6 +344,43 @@ describe('Elements Creation', () => {
       })
     })
 
+    describe('Using forEach() with normal array, breaking the loop', () => {
+      test('SSR', () => {
+        const array = ['1', '2', '3', '4']
+
+        const html = component(($) => {
+          $.ul(
+            $.forEach(array, (value, key) => {
+              if (key === '2') return false
+
+              return $.li(value)
+            })
+          )
+        }).html()
+
+        expect(html).toBe('<ul><li>1</li><li>2</li></ul>')
+      })
+
+      test('DOM', () => {
+        const container = document.body
+        const array = ['1', '2', '3', '4']
+
+        component(($) => {
+          $.ul(
+            $.forEach(array, (value, key) => {
+              if (key === '2') return false
+
+              return $.li(value)
+            })
+          )
+        }).paint(container)
+
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, ['1', '2'])
+      })
+    })
+
     describe('Using forEach() with reactive state', () => {
       test('SSR', () => {
         const globalState = state(['1', '2'])

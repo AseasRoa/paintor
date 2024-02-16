@@ -38,6 +38,50 @@ describe('State: Array', () => {
   })
 
   describe('actions', () => {
+    test('create', () => {
+      const container = document.body
+
+      const arrayState = state([])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      arrayState[0] = 'a'
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['1'])
+    })
+
+    test('delete', () => {
+      const container = document.body
+
+      const arrayState = state([ 'a', 'b', 'c' ])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      delete arrayState[1]
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'c'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['3'])
+    })
+
     test('update', () => {
       const container = document.body
 
@@ -60,7 +104,7 @@ describe('State: Array', () => {
       expectTextContentsToBeLike(lengthElement, ['3'])
     })
 
-    test('delete', () => {
+    test('update after delete', () => {
       const container = document.body
 
       const arrayState = state([ 'a', 'b', 'c' ])
@@ -72,11 +116,11 @@ describe('State: Array', () => {
         $.span(() => arrayState.length)
       }).paint(container)
 
-      delete arrayState[1]
+      delete arrayState[1] // Array is now: ['a', empty 'c']
+      arrayState[2] = 'C' // Array is now ['a', empty, 'C']
 
       const divElements = container.querySelectorAll('div')
-      expectTextContentsToBeLike(divElements, ['a', 'c'])
-      expectSpecialCommentElementsInStatement(divElements)
+      expectTextContentsToBeLike(divElements, ['a', 'C'])
 
       const lengthElement = container.querySelectorAll('span')
       expectTextContentsToBeLike(lengthElement, ['3'])
@@ -102,6 +146,32 @@ describe('State: Array', () => {
 
       const lengthElement = container.querySelectorAll('span')
       expectTextContentsToBeLike(lengthElement, ['1'])
+    })
+
+    test('set length, then fill', () => {
+      const container = document.body
+
+      const arrayState = state([])
+
+      component(($) => {
+        $.forEach(arrayState, (value) => {
+          $.div(value)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      arrayState.length = 3
+      arrayState[2] = 'c'
+      arrayState[0] = 'a'
+      arrayState[1] = 'b'
+      arrayState[3] = 'd'
+
+      const divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c', 'd'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['4'])
     })
   })
 
