@@ -35,19 +35,20 @@ type RepaintFunction = RepaintFunctionForFunction | RepaintFunctionForState
  * A single subscriptions record
  */
 type Subscription = {
-  propertyName: string;
-  subPropertyName: string;
-  bindFunction: BindFunction;
+  propertyName: string,
+  subPropertyName: string,
+  bindFunction: BindFunction,
   /**
    * Only used in the if() function
    */
-  repaintFunction: null | RepaintFunctionForFunction | RepaintFunctionForState;
+  repaintFunction: null | RepaintFunctionForFunction | RepaintFunctionForState,
   /**
    * Used for cleaning up subscriptions from the DOM element itself,
    * when the element is being removed
    */
-  stateSubscription: import('../StateProxySubscriptions').StateProxySubscriptions;
-  statePath: string;
+  stateSubscription: import('../StateProxySubscriptions').StateProxySubscriptions,
+  statePath: string,
+  state: State
 }
 
 type ObjectKey = string | number | symbol
