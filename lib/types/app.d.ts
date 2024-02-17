@@ -46,7 +46,7 @@ type Subscription = {
    * Used for cleaning up subscriptions from the DOM element itself,
    * when the element is being removed
    */
-  stateSubscription: import('../state/StateProxySubscriptions').StateProxySubscriptions,
+  subscriptionsInstance: import('../state/Subscriptions').Subscriptions,
   statePath: string,
   state: State
 }
