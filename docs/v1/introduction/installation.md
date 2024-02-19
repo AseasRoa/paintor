@@ -23,6 +23,9 @@ pnpm add paintor
 ```bash [yarn]
 yarn add paintor
 ```
+```bash [bun]
+bun install paintor
+```
 :::
 
 ## Browser
