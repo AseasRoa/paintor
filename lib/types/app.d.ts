@@ -47,7 +47,6 @@ type Subscription = {
    * when the element is being removed
    */
   subscriptionsInstance: import('../state/Subscriptions').Subscriptions,
-  statePath: string,
   state: State
 }
 
