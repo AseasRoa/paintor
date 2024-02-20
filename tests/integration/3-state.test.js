@@ -1,6 +1,6 @@
 /* eslint-disable vitest/expect-expect */
 
-import { component, state } from '#paintor'
+import { component, setState, state } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
 
 describe('State', () => {
@@ -310,49 +310,6 @@ describe('State', () => {
       })
     })
 
-    describe('Update the state (with inner array)', () => {
-      /**
-       * This test ensures that when an inner array state is changed by length
-       * (which happens internally), this doesn't interfere with the elements
-       * printed for the main state.
-       */
-      test('DOM', () => {
-        const container = document.body
-
-        /** @type {{mainState: {innerArrayState: any[]}}} */
-        const theState = state({
-          mainState: { innerArrayState: [] },
-        })
-
-        component(($) => {
-          let counter = 0
-
-          $.forState(theState.mainState.innerArrayState, () => {
-            counter += 1
-            $.div(counter)
-          })
-        }).paint(container)
-
-        let elements = container.querySelectorAll('*')
-
-        expectTextContentsToBeLike(elements, { innerArrayState: '1' })
-
-        // Array length set to 2. Only one div should remain, but updated.
-        theState.mainState = { innerArrayState: [ 1, 2 ] }
-
-        elements = container.querySelectorAll('*')
-
-        expectTextContentsToBeLike(elements, { innerArrayState: '2' })
-
-        // Array length set back to 0. Only one div should remain, but updated.
-        theState.mainState = { innerArrayState: [] }
-
-        elements = container.querySelectorAll('*')
-
-        expectTextContentsToBeLike(elements, { innerArrayState: '3' })
-      })
-    })
-
     describe('Nested', () => {
       test('DOM', () => {
         const container = document.body
@@ -507,6 +464,117 @@ describe('State', () => {
 
         expect(passes1).toBe(10)
         expect(passes2).toBe(10)
+      })
+    })
+  })
+
+  describe('.forState', () => {
+    describe('Update the state', () => {
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {{items: Object<string, string>}} */
+        const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
+
+        component(($) => {
+          $.forState(theState.items, (items) => {
+            for (const item in items) {
+              // @ts-ignore
+              for (const k in item) {
+                $.div(item[k])
+              }
+            }
+          })
+        }).paint(container)
+
+        let elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { a: 'a', b: 'b', c: 'c' })
+
+        // Update directly
+        theState.items = { d: 'd', e: 'e' }
+
+        elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { d: 'd', e: 'e' })
+
+        // Update with setState()
+        setState(theState.items, { f: 'f', g: 'g' })
+
+        elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { f: 'f', g: 'g' })
+      })
+    })
+
+    describe('Update top level state with setState()', () => {
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {Object<string, string>} */
+        const theState = state({ a: 'a', b: 'b', c: 'c' })
+
+        component(($) => {
+          $.forState(theState, (state) => {
+            for (const k in state) {
+              $.div(state[k])
+            }
+          })
+        }).paint(container)
+
+        let elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { a: 'a', b: 'b', c: 'c' })
+
+        // Update with setState()
+        setState(theState, { f: 'f', g: 'g' })
+
+        elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { f: 'f', g: 'g' })
+      })
+    })
+
+    describe('Update the state (with inner array)', () => {
+      /**
+       * This test ensures that when an inner array state is changed by length
+       * (which happens internally), this doesn't interfere with the elements
+       * printed for the main state.
+       */
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {{mainState: {innerArrayState: any[]}}} */
+        const theState = state({
+          mainState: { innerArrayState: [] },
+        })
+
+        component(($) => {
+          let counter = 0
+
+          $.forState(theState.mainState.innerArrayState, () => {
+            counter += 1
+            $.div(counter)
+          })
+        }).paint(container)
+
+        let elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { innerArrayState: '1' })
+
+        // Array length set to 2. Only one div should remain, but updated.
+        theState.mainState = { innerArrayState: [ 1, 2 ] }
+
+        elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { innerArrayState: '2' })
+
+        // Array length set back to 0. Only one div should remain, but updated.
+        theState.mainState = { innerArrayState: [] }
+
+        elements = container.querySelectorAll('*')
+
+        expectTextContentsToBeLike(elements, { innerArrayState: '3' })
       })
     })
   })
