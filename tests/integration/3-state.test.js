@@ -65,6 +65,78 @@ describe('State', () => {
     })
   })
 
+  describe('Reactive .if()', () => {
+    describe('Basic test', () => {
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {[boolean]} */
+        const globalState = state([false])
+        let count = 0
+
+        component(($) => {
+          $.if(() => globalState[0], () => {
+            count += 1
+            $.div(count)
+          })
+        }).paint(container)
+
+        let elements = container.querySelectorAll('div')
+
+        expect(elements[0]).toBeUndefined()
+
+        globalState[0] = !globalState[0] // set to true
+        globalState[0] = !globalState[0] // set to false
+        globalState[0] = !globalState[0] // set to true
+
+        elements = container.querySelectorAll('div')
+
+        expect(elements[0] instanceof HTMLDivElement).toBe(true)
+        expectTextContentsToBeLike(elements, ['2'])
+      })
+    })
+  })
+
+  describe('Reactive .for()', () => {
+    describe('Basic test', () => {
+      test('DOM', () => {
+        const container = document.body
+
+        /** @type {[number, number]} */
+        const globalState = state([0, 0])
+        let count = 0
+
+        component(($) => {
+          $.for(
+            () => globalState[0],
+            () => globalState[1],
+            (key) => {
+              count += 1
+              $.div(key)
+            }
+          )
+        }).paint(container)
+
+        let elements = container.querySelectorAll('div')
+
+        expectTextContentsToBeLike(elements, ['0'])
+        expect(count).toBe(1)
+
+        globalState[1] = 2
+
+        elements = container.querySelectorAll('div')
+        expectTextContentsToBeLike(elements, ['0', '1', '2'])
+        expect(count).toBe(4)
+
+        globalState[0] = 1
+
+        elements = container.querySelectorAll('div')
+        expectTextContentsToBeLike(elements, ['1', '2'])
+        expect(count).toBe(6)
+      })
+    })
+  })
+
   describe('.forEach()', () => {
     describe('New element is reactive?', () => {
       test('DOM', () => {

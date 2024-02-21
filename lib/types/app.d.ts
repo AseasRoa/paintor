@@ -8,15 +8,13 @@ type TargetObject = Object<any, any> | Array<any>
 type BindFunction = (element?: Node | undefined) => any
 type CallbackForFunction = (
   (
-    value: Template | Component,
+    values: any[],
     isInitialRun: boolean,
     commentElementBegin: Comment | null,
     commentElementEnd: Comment | null
   ) => void
 )
-| (
-  (value: boolean | State) => void
-)
+
 /**
  * Used in "if" statement for the condition parameter
  */
@@ -26,7 +24,7 @@ type ForLoopCallback<T> = (value?: T | undefined, key?: string | number | undefi
 type ForLoopCallbackOnEmpty = () => undefined
 type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefined
 
-type RepaintFunctionForFunction = (data: boolean | State) => void
+type RepaintFunctionForFunction = (data: boolean | number | State) => void
 type RepaintFunctionForState = (
   action: number,
   updatedObject: TargetObject,

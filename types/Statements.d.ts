@@ -5,7 +5,7 @@
 
 export interface Statements {
   if (
-    condition: boolean | { (element?: HTMLElement): boolean },
+    condition: boolean | (() => boolean),
     handler: (() => void | Template) | Template,
     elseHandler?: (() => void | Template) | Template,
   ) : HTMLElement[]
@@ -172,8 +172,8 @@ export interface Statements {
   ) : HTMLElement[] | Error
 
   for(
-    from : number,
-    to : number,
-    handler : (key:number) => boolean | any
+    from : number | (() => number),
+    to : number | (() => number),
+    handler : (key: number) => boolean | any
   ) : HTMLElement[] | Error
 }
