@@ -5,7 +5,7 @@
 
 export interface Statements {
   if (
-    condition : boolean|{ (element?: HTMLElement):boolean },
+    condition: boolean | { (element?: HTMLElement): boolean },
     handler: (() => void | Template) | Template,
     elseHandler?: (() => void | Template) | Template,
   ) : HTMLElement[]
@@ -177,4 +177,3 @@ export interface Statements {
     handler : (key:number) => boolean | any
   ) : HTMLElement[] | Error
 }
-
