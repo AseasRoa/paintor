@@ -38,7 +38,7 @@ type RepaintFunction = RepaintFunctionForFunction | RepaintFunctionForState
  * A single subscriptions record
  */
 type Subscription = {
-  propertyName: string,
+  propertyName: string | symbol,
   subPropertyName: string,
   bindFunction: BindFunction,
   /**
