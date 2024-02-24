@@ -173,6 +173,44 @@ describe('State: Array', () => {
       const lengthElement = container.querySelectorAll('span')
       expectTextContentsToBeLike(lengthElement, ['4'])
     })
+
+    test('swap elements', () => {
+      const container = document.body
+
+      const arrayState = state([
+        { name: 'a' },
+        { name: 'b' },
+        { name: 'c' },
+        { name: 'd' },
+        { name: 'e' }
+      ])
+
+      component(($) => {
+        $.forEach(arrayState, (item) => {
+          $.div(item.name)
+        })
+        $.span(() => arrayState.length)
+      }).paint(container)
+
+      let divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'b', 'c', 'd', 'e'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      // Do the swap
+      const tmp = arrayState[1]
+
+      // @ts-ignore
+      arrayState[1] = arrayState[3]
+      // @ts-ignore
+      arrayState[3] = tmp
+
+      divElements = container.querySelectorAll('div')
+      expectTextContentsToBeLike(divElements, ['a', 'd', 'c', 'b', 'e'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      const lengthElement = container.querySelectorAll('span')
+      expectTextContentsToBeLike(lengthElement, ['5'])
+    })
   })
 
   describe('methods', () => {
