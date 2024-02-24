@@ -362,7 +362,7 @@ describe('State', () => {
 
         component(($) => {
           $.forEach(theState, (value) => {
-            if (value instanceof Object) {
+            if (typeof value === 'object') {
               for (const k in value) {
                 $.div(value[k])
               }
