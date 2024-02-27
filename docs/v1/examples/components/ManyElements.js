@@ -43,9 +43,7 @@ const header = (elementsCounts) => template((x) => {
 })
 
 const elementsContainer = template((x) => {
-  x.div(
-    { id: 'elements-container' },
-
+  x.div({ id: 'elements-container' },
     x.forEach(
       elements,
       (value) => {

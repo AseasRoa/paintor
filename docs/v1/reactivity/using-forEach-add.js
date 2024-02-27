@@ -3,8 +3,9 @@ import { component, state } from 'paintor'
 component((x) => {
   const localState = state([1, 2])
 
-  x.button(
-    { onClick: () => localState.push(localState.length + 1) },
+  x.button({
+      onClick: () => localState.push(localState.length + 1)
+    },
     'Add'
   )
 

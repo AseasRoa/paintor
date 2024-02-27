@@ -3,8 +3,9 @@ import { component, state } from 'paintor'
 component((x) => {
   const localState = state([1, 2, 3])
 
-  x.button(
-    { onClick: () => localState[1] += 1 },
+  x.button({
+      onClick: () => localState[1] += 1
+    },
     'Update Middle'
   )
 

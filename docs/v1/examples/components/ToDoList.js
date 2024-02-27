@@ -26,8 +26,7 @@ function toggleCompleted(task) {
 
 const todoHeader = template(({ h3, span, div, input, button }) => {
   h3('Tasks ', span(() => `(${tasks.length})`)),
-    div(
-      { class: 'header' },
+    div({ class: 'header' },
       input(
         {
           type: 'text',
@@ -42,8 +41,7 @@ const todoHeader = template(({ h3, span, div, input, button }) => {
 })
 
 const taskItem = (task) => template(({ li, button }) => {
-  li(
-    {
+  li({
       class: () => (task.completed ? 'completed' : ''),
       onClick: () => toggleCompleted(task)
     },
