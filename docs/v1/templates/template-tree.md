@@ -9,42 +9,42 @@ built in JavaScript. Some call it HyperScript.
 
 ```js
 // This function is a Template
-($) => {
+(x) => {
   // Use the $ argument to build a tree
-  $.table(
-    $.thead(
-      $.tr(
-        $.td(/* ... */),
-        $.td(/* ... */)
+  x.table(
+    x.thead(
+      x.tr(
+        x.td(/* ... */),
+        x.td(/* ... */)
       )
     ),
-    $.tbody(
-      $.tr(
-        $.td(/* ... */),
-        $.td(/* ... */)
+    x.tbody(
+      x.tr(
+        x.td(/* ... */),
+        x.td(/* ... */)
       )
     )
   )
 }
 ```
-In a [Template](./what-are-templates.md) function, `$` is an instance of
+In a [Template](./what-are-templates.md) function, `x` is an instance of
 a class, containing a bunch of methods. There is a method for each HTML element.
-For example, we have `$.a()` for \<a\>, `$.p()` for \<p\>, `$.input()` for
+For example, we have `.a()` for \<a\>, `.p()` for \<p\>, `.input()` for
 \<input\>, and so on.
 
 These are a little bit special, they will be explained later:
 
-- `$.html()`
-- `$.script()`
+- `.html()`
+- `.script()`
 
 There are a few extra functions, such as:
 
-- `$.createElement()` - for creating a custom element.
-- `$.if()` - `if` statement.
-- `$.for()` - `for` iteration loop, starting with one number and ending with
+- `.createElement()` - for creating a custom element.
+- `.if()` - `if` statement.
+- `.for()` - `for` iteration loop, starting with one number and ending with
   another.
-- `$.forEach()` - to iterate over Array, Object, or [State](../reactivity/states).
-- `$.forState()` - to react on [State](../reactivity/states) changes.
+- `.forEach()` - to iterate over Array, Object, or [State](../reactivity/states).
+- `.forState()` - to react on [State](../reactivity/states) changes.
 
 ## Argument Name
 
@@ -52,10 +52,10 @@ The argument name in the template function doesn't matter, it's your choice.
 The following two examples are doing exactly the same:
 
 ```js
-($) => {
-  $.h1('h1 element')
-  $.h2('h2 element')
-  $.h3('h3 element')
+(x) => {
+  x.h1('h1 element')
+  x.h2('h2 element')
+  x.h3('h3 element')
 }
 ```
 ```js
@@ -66,6 +66,81 @@ The following two examples are doing exactly the same:
 }
 ```
 
+Here are few examples with different names:
+
+::: code-group
+```js [$]
+($) => {
+  $.table(
+    $.tr(
+      $.td('tr1 td1'),
+      $.td('tr1 td2')
+    ),
+    $.tr(
+      $.td('tr2 td1'),
+      $.td('tr2 td2')
+    )
+  )
+}
+```
+```js [L]
+(L) => {
+  L.table(
+    L.tr(
+      L.td('tr1 td1'),
+      L.td('tr1 td2')
+    ),
+    L.tr(
+      L.td('tr2 td1'),
+      L.td('tr2 td2')
+    )
+  )
+}
+```
+```js [_]
+(_) => {
+  _.table(
+    _.tr(
+      _.td('tr1 td1'),
+      _.td('tr1 td2')
+    ),
+    _.tr(
+      _.td('tr2 td1'),
+      _.td('tr2 td2')
+    )
+  )
+}
+```
+```js [o]
+(o) => {
+  o.table(
+    o.tr(
+      o.td('tr1 td1'),
+      o.td('tr1 td2')
+    ),
+    o.tr(
+      o.td('tr2 td1'),
+      o.td('tr2 td2')
+    )
+  )
+}
+```
+```js [x]
+(x) => {
+  x.table(
+    x.tr(
+      x.td('tr1 td1'),
+      x.td('tr1 td2')
+    ),
+    x.tr(
+      x.td('tr2 td1'),
+      x.td('tr2 td2')
+    )
+  )
+}
+```
+:::
+
 ## Syntax Styles
 
 ### Free Style
@@ -75,18 +150,18 @@ template function aren't entangled in any way. Other blocks of code can exist
 in between:
 
 ```js
-($) => {
+(x) => {
   /* ... JS code ... */
   
-  $.h1('h1 element')
+  x.h1('h1 element')
 
   /* ... JS code ... */
   
-  $.h2('h2 element')
+  x.h2('h2 element')
 
   /* ... JS code ... */
   
-  $.h3('h3 element')
+  x.h3('h3 element')
 
   /* ... JS code ... */
 }
@@ -97,10 +172,10 @@ in between:
 With this style, the elements live together within the same Array:
 
 ```js
-($) => [
-  $.h1('h1 element'),
-  $.h2('h2 element'),
-  $.h3('h3 element'),
+(x) => [
+  x.h1('h1 element'),
+  x.h2('h2 element'),
+  x.h3('h3 element'),
 ]
 ```
 ```html
@@ -112,10 +187,10 @@ With this style, the elements live together within the same Array:
 Or within a single element:
 
 ```js
-($) => $.div(
-  $.h1('h1 element'),
-  $.h2('h2 element'),
-  $.h3('h3 element'),
+(x) => $.div(
+  x.h1('h1 element'),
+  x.h2('h2 element'),
+  x.h3('h3 element'),
 )
 ```
 ```html

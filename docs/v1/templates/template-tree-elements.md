@@ -6,20 +6,20 @@ title: Template Tree Elements
 
 ## The Argument
 
-The argument `$` (or however you name it) is an instance of a class, containing
-methods for each valid HTML element. For example, `$.div()` is for creating
-\<div\> elements, `$.p()` is for creating \<p\> elements, and so on. Each of
+The argument `x` (or however you name it) is an instance of a class, containing
+methods for each valid HTML element. For example, `.div()` is for creating
+\<div\> elements, `.p()` is for creating \<p\> elements, and so on. Each of
 these methods accepts multiple arguments, used for creating text content or
 child elements.
 
 Here is an example of a simple table with one row and two columns:
 
 ```js
-($) => {
-  $.table(
-    $.tr(
-      $.td('Row 1, Column 1'),
-      $.td('Row 1, Column 2'),
+(x) => {
+  x.table(
+    x.tr(
+      x.td('Row 1, Column 1'),
+      x.td('Row 1, Column 2'),
     )
   )
 }
@@ -38,8 +38,8 @@ Here is an example of a simple table with one row and two columns:
 The first argument also accepts and object, containing global element properties
 (id, class...) and element-specific properties:
 ```js
-($) => {
-  $.a(
+(x) => {
+  x.a(
     {
       class: 'anchors', // "class" is valid for all elements
       href: 'https://github.com/' // "href" is specific for <a> elements
@@ -56,8 +56,8 @@ If the properties object is not the first argument, it is not honored.
 The following is NOT valid:
 
 ```js
-($) => {
-  $.a(
+(x) => {
+  x.a(
     'Go to GitHub',
     { href: 'https://github.com/' } // Doesn't work if not the first argument!
   )
@@ -71,9 +71,9 @@ By the way, you can pass the text content as a `textContent` property,
 or as a second argument:
 
 ```js
-($) => {
-  $.a({ href: 'https://github.com/', textContent: 'Go to GitHub' })
-  $.a({ href: 'https://github.com/' }, 'Go to GitHub')
+(x) => {
+  x.a({ href: 'https://github.com/', textContent: 'Go to GitHub' })
+  x.a({ href: 'https://github.com/' }, 'Go to GitHub')
 }
 ```
 ```html
@@ -88,8 +88,8 @@ Each argument can be any of the following.
 ### Text
 
 ```js
-($) => {
-  $.div('text')
+(x) => {
+  x.div('text')
 }
 ```
 ```html
@@ -99,8 +99,8 @@ Each argument can be any of the following.
 ### Number
 
 ```js
-($) => {
-  $.div(123456)
+(x) => {
+  x.div(123456)
 }
 ```
 ```html
@@ -110,11 +110,11 @@ Each argument can be any of the following.
 ### Child Elements
 
 ```js
-($) => {
-  $.ul(
-    $.li('List Item 1'),
-    $.li('List Item 2'),
-    $.li('List Item 3'),
+(x) => {
+  x.ul(
+    x.li('List Item 1'),
+    x.li('List Item 2'),
+    x.li('List Item 3'),
   )
 }
 ```
@@ -129,12 +129,12 @@ Each argument can be any of the following.
 ### Array of Child Elements
 
 ```js
-($) => {
-  $.ul(
+(x) => {
+  x.ul(
     [
-      $.li('List Item 1'),
-      $.li('List Item 2'),
-      $.li('List Item 3'),
+      x.li('List Item 1'),
+      x.li('List Item 2'),
+      x.li('List Item 3'),
     ]
   )
 }
@@ -150,13 +150,13 @@ Each argument can be any of the following.
 ### Mixed
 
 ```js
-($) => {
-  $.p(
+(x) => {
+  x.p(
     'The quick brown ',
-    $.strong('fox'),
+    x.strong('fox'),
     [' jumped', 3, 'times '],
     [' over the lazy '],
-    $.strong('dog')
+    x.strong('dog')
   )
 }
 ```
@@ -166,7 +166,7 @@ Each argument can be any of the following.
 
 ## Destructuring
 
-If you don't like the `$.` prefix, you can use the
+If you don't like the `x.` prefix, you can use the
 [destructuring assignment](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
 syntax:
 
@@ -183,13 +183,13 @@ syntax:
 
 Or like this:
 ```js
-($) => {
-  const { table, tr, td } = $
+(x) => {
+  const { table, tr, td } = x
 
   table( 
     tr(
       td('Row 1, Column 1'),
-      $.td('Row 1, Column 2'), // $. can still be used
+      x.td('Row 1, Column 2'), // x. can still be used
     )
   )
 }
@@ -198,12 +198,12 @@ Or like this:
 ## The Template Tree is Synchronous
 
 In the following example the \<h2\> element will not be rendered,
-because `$.h2()` is executed after the tree has already been rendered:
+because `.h2()` is executed after the tree has already been rendered:
 ```js
-($) => {
-  $.h1('h1 element')
-  setTimeout(() => $.h2('h2 element'), 0)
-  $.h3('h3 element')
+(x) => {
+  x.h1('h1 element')
+  setTimeout(() => x.h2('h2 element'), 0)
+  x.h3('h3 element')
 }
 ```
 ```html

@@ -9,8 +9,8 @@ Templates are functions, containing markup and JavaScript code, used by
 This is how a simple Template looks like:
 
 ```js
-($) => {
-  $.div('Hello')
+(x) => {
+  x.div('Hello')
 }
 ```
 
@@ -21,8 +21,8 @@ This function can't do anything by itself, it must be used in a
 ```javascript
 import { component } from 'paintor'
 
-const app = component(($) => {
-  $.div('Hello')
+const app = component((x) => {
+  x.div('Hello')
 })
 
 app.paint('#app')
@@ -39,12 +39,12 @@ Other JavaScript code can reside in the template function. For example, a local
 ```javascript
 import { component, state } from 'paintor'
 
-const app = component(($) => {
+const app = component((x) => {
   const localState = state({ clicks: 0 })
 
-  $.div(
-    $.button({ onClick: () => localState.clicks++ }, 'Click me'),
-    $.div(() => localState.clicks)
+  x.div(
+    x.button({ onClick: () => localState.clicks++ }, 'Click me'),
+    x.div(() => localState.clicks)
   )
 })
 
@@ -62,7 +62,7 @@ The template function can be defined outside the
 ```javascript
 import { component, template } from 'paintor'
 
-const myTemplate = template(($) => {
+const myTemplate = template((x) => {
   /* ... */
 })
 
@@ -82,5 +82,5 @@ any types.
 
 ## Template Tree (The Argument)
 
-The template function has an argument, which in the examples above is named `$`.
+The template function has an argument, which in the examples above is named `x`.
 This is the [Template Tree](./template-tree.md).

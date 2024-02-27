@@ -33,7 +33,7 @@ pattern of DOM elements for each element in the state. The callback function
 provides two arguments - value and key.
 
 ```js
-$.forEach(myState, (value, key) => {
+x.forEach(myState, (value, key) => {
   // ...
 })
 ```

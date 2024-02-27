@@ -1,6 +1,6 @@
 import { component, state } from 'paintor'
 
-component(($) => {
+component((x) => {
   const localState = state([])
 
   function addItem() {
@@ -11,17 +11,17 @@ component(($) => {
     localState.pop()
   }
 
-  $.button({ onClick: addItem }, 'Add item')
-  $.button({ onClick: deleteItem }, 'Remove item')
+  x.button({ onClick: addItem }, 'Add item')
+  x.button({ onClick: deleteItem }, 'Remove item')
 
-  $.ul(
-    $.forEach(
+  x.ul(
+    x.forEach(
       localState,
       (value) => {
-        $.li(value)
+        x.li(value)
       },
       () => {
-        $.div('No items')
+        x.div('No items')
       }
     )
   )

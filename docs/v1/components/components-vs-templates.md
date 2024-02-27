@@ -20,11 +20,11 @@ created in a very similar way - by putting the same kind of function in
 ```js
 import { component, template } from 'paintor'
 
-const myTemplate = template(($) => { ... })
-const myComponent = component(($) => { ... })
+const myTemplate = template((x) => { ... })
+const myComponent = component((x) => { ... })
 ```
 
-In reality, the `($) => { ... }` function is the template. `template()` returns
+In reality, the `(x) => { ... }` function is the template. `template()` returns
 back the input template function and is used mostly for type safety and code
 completion. You can omit `template()` most of the time, but then you have to
 type the template function manually:
@@ -33,7 +33,7 @@ type the template function manually:
 import { component, template } from 'paintor'
 
 /** @type {Template} */
-const myTemplate = ($) => { ... }
+const myTemplate = (x) => { ... }
 ```
 
 However, this is not recommended, because `template()` also marks the template

@@ -1,18 +1,18 @@
 import { component, state } from 'paintor'
 
-component(($) => {
+component((x) => {
   const localState = state([1, 2])
 
-  $.button(
+  x.button(
     { onClick: () => localState.push(localState.length + 1) },
     'Add'
   )
 
-  $.ul(
-    $.forEach(localState, (value, key) => {
-      $.li(
-        $.label('key ' + key + ' | value '),
-        $.input({ type: 'number', value: value })
+  x.ul(
+    x.forEach(localState, (value, key) => {
+      x.li(
+        x.label('key ' + key + ' | value '),
+        x.input({ type: 'number', value: value })
       )
     })
   )

@@ -62,7 +62,7 @@ function convert(fromScale, toScale, temperature) {
   return rounded.toString()
 }
 
-const temperatureInput = (fromScale) => template(($) => {
+const temperatureInput = (fromScale) => template((x) => {
   const handleChange = ({ target }) => {
     temperaturesState[fromScale] = target.value
 
@@ -73,12 +73,12 @@ const temperatureInput = (fromScale) => template(($) => {
     }
   }
 
-  $.div(
-    $.input({
+  x.div(
+    x.input({
       onKeyUp: handleChange,
       value: () => temperaturesState[fromScale],
     }),
-    $.label(scaleNames[fromScale])
+    x.label(scaleNames[fromScale])
   )
 })
 

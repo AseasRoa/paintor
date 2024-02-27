@@ -15,8 +15,8 @@ setInterval(() => {
   globalState.innerObject.innerArray[0] += 1
 }, 2000)
 
-component(($) => {
-  $.p(() => `First counter: ${globalState.counter}` )
-  $.p(() => `Second counter: ${globalState.innerObject.counter}` )
-  $.p(() => `Third counter: ${globalState.innerObject.innerArray[0]}` )
+component((x) => {
+  x.p(() => `First counter: ${globalState.counter}` )
+  x.p(() => `Second counter: ${globalState.innerObject.counter}` )
+  x.p(() => `Third counter: ${globalState.innerObject.innerArray[0]}` )
 }).paint('#states-are-deep-1')

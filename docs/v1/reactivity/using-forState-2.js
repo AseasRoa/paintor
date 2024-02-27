@@ -1,6 +1,6 @@
 import { component, setState, state } from 'paintor'
 
-component(($) => {
+component((x) => {
   const myStates = state({ subState: { type: 'text', value: 'Text' } })
   const buttons = [
     { type: 'text', value: 'Text' },
@@ -10,7 +10,7 @@ component(($) => {
   ]
 
   for (const button of buttons) {
-    $.button({
+    x.button({
       textContent: button.type,
       onClick: () => {
         setState(myStates.subState, button)
@@ -18,10 +18,10 @@ component(($) => {
     })
   }
 
-  $.hr()
+  x.hr()
 
-  $.forState(myStates.subState, (subState) => {
-    $.input({
+  x.forState(myStates.subState, (subState) => {
+    x.input({
       type: subState.type,
       value: subState.value,
     })

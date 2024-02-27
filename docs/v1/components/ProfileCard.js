@@ -1,11 +1,11 @@
 import { component, template } from 'paintor'
 
 const profileTemplate = (name, age) => template(
-  ($) => {
-    $.div(
+  (x) => {
+    x.div(
       { class: 'profileCard' },
-      $.div($.label('Name: '), $.span(name)),
-      $.div($.label('Age: '), $.span(age))
+      x.div(x.label('Name: '), x.span(name)),
+      x.div(x.label('Age: '), x.span(age))
     )
   }
 )

@@ -41,7 +41,7 @@ more objects, or an array of objects, or objects mixed with arrays of objects.
 const translationOne = { /* ... */ }
 const translationTwo = { /* ... */ }
 
-component(($) => {
+component((x) => {
   /* ... */
 }).useTranslations(translationOne, translationTwo).paint('#container')
 ```
@@ -51,7 +51,7 @@ const translationOne = { /* ... */ }
 const translationTwo = { /* ... */ }
 const translations   = [translationOne, translationTwo]
 
-component(($) => {
+component((x) => {
   /* ... */
 }).useTranslations(translations).paint('#container')
 ```
@@ -62,7 +62,7 @@ const translationTwo   = { /* ... */ }
 const translationThree = { /* ... */ }
 const translations     = [translationOne, translationTwo]
 
-component(($) => {
+component((x) => {
   /* ... */
 }).useTranslations(translations, translationThree).paint('#container')
 ```

@@ -8,9 +8,9 @@ setInterval(() => {
   stateTwo.number -= 1
 }, 1000)
 
-const myTemplate = template(($) => {
-  $.p(() => stateOne.number )
-  $.p(() => stateTwo.number )
+const myTemplate = template((x) => {
+  x.p(() => stateOne.number )
+  x.p(() => stateTwo.number )
 })
 
 component(myTemplate).paint('#states-many-in-one')

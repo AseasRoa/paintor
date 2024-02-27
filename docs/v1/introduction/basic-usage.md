@@ -80,14 +80,14 @@ state, which is also reflected in the \<span\> element:
   import { component, state } from 'paintor'
 
   // Create a component
-  const app = component(($) => {
+  const app = component((x) => {
     // Use a local state
     const localState = state({ clicks: 0 })
 
     // Build a hyperscript markup
-    $.div(
-      $.button({ onClick: () => localState.clicks++ }, 'Click me'),
-      $.div(() => localState.clicks)
+    x.div(
+      x.button({ onClick: () => localState.clicks++ }, 'Click me'),
+      x.div(() => localState.clicks)
     )
   })
 
@@ -103,8 +103,8 @@ On the server, `html()` is used instead of `paint()`:
 ```js
 import { component } from 'paintor'
 
-const app = component(($) => {
-  $.div('Hello')
+const app = component((x) => {
+  x.div('Hello')
 })
 
 const htmlCode = app.html()

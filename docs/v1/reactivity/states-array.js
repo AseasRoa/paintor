@@ -7,7 +7,7 @@ setInterval(() => {
   globalState[1] -= 1
 }, 2000)
 
-component(($) => {
-  $.p(() => globalState[0] )
-  $.p(() => globalState[1] )
+component((x) => {
+  x.p(() => globalState[0] )
+  x.p(() => globalState[1] )
 }).paint('#states-array')

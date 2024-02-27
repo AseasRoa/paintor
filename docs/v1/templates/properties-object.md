@@ -14,7 +14,7 @@ also how it's done in HTML anyway.
 For example, this works:
 
 ```js
-$.a({ href: 'https://github.com/' }, 'Go to GitHub')
+x.a({ href: 'https://github.com/' }, 'Go to GitHub')
 ```
 ```html
 <a href="https://github.com/">Go to GitHub</a>
@@ -24,8 +24,8 @@ But the example below doesn't work, because the 'properties' object is not the
 first argument:
 
 ```js
-($) => {
-  $.a(
+(x) => {
+  x.a(
     'Go to GitHub',
     { href: 'https://github.com/' } // Doesn't work if not the first argument!
   )
@@ -52,7 +52,7 @@ Here is an example of and \<input\> element with two global and two
 element-specific attributes.
 
 ```js
-$.input(
+x.input(
   {
     class : 'buttonClass', // Global attribute
     title : 'This is a button', // Global attribute
@@ -88,7 +88,7 @@ such as:
 - slot
 
 ```js
-$.p(
+x.p(
   { className: 'myClass', id: 'myId', innerHTML: '<strong>Some Text</strong>' }
 )
 ```
@@ -103,7 +103,7 @@ $.p(
 Use callback functions for these:
 
 ```js
-$.button(
+x.button(
   {
     /**
      * @param {MouseEvent} event
@@ -130,12 +130,12 @@ The result will be the same.
 
 ```js
 // Inline style as a string
-$.p(
+x.p(
   { style: 'color: blue; border: 1px solid red;' }
 )
 
 // Inline style as an object
-$.p(
+x.p(
   { style: { color: 'Blue', border: '1px solid red' } }
 )
 ```
@@ -150,12 +150,12 @@ be the same:
 
 ```js
 // Dashed style name
-$.p(
+x.p(
   { style: { 'background-color': 'LightYellow' } }
 )
 
 // camelCase style name
-$.p(
+x.p(
   { style: { backgroundColor: 'LightYellow' } }
 )
 ```
@@ -183,9 +183,9 @@ If you want to get this:
 Do this:
 
 ```js
-$.ul(
-  $.li({ data: { 'animal-type': 'mammal' } }, 'Cat'),
-  $.li({ data: { 'animal-type': 'bird' } }, 'Parrot'),
-  $.li({ data: { 'animal-type': 'reptile' } }, 'Gecko')
+x.ul(
+  x.li({ data: { 'animal-type': 'mammal' } }, 'Cat'),
+  x.li({ data: { 'animal-type': 'bird' } }, 'Parrot'),
+  x.li({ data: { 'animal-type': 'reptile' } }, 'Gecko')
 )
 ```

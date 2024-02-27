@@ -1,6 +1,6 @@
 import { component, state } from 'paintor'
 
-component(($) => {
+component((x) => {
   const localState = state({
     1: '1',
     2: '2',
@@ -9,8 +9,8 @@ component(($) => {
     5: '5'
   })
 
-  $.forEach(localState, (value, key) => {
-    $.button({
+  x.forEach(localState, (value, key) => {
+    x.button({
       textContent: value,
       onClick: () => {
         delete localState[key]

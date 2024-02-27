@@ -1,18 +1,18 @@
 import { component, state } from 'paintor'
 
-component(($) => {
+component((x) => {
   const myState = state({ pass: true })
   let counter = 0
 
   const ifHandler = () => {
-    $.div({ style: { color: 'green' }}, counter++)
+    x.div({ style: { color: 'green' }}, counter++)
   }
   const elseHandler = () => {
-    $.div({ style: { color: 'red' }}, counter++)
+    x.div({ style: { color: 'red' }}, counter++)
   }
 
-  $.div(
-    $.if(
+  x.div(
+    x.if(
       () => myState.pass, // Condition
       ifHandler, // Runs on true
       elseHandler // Runs on false

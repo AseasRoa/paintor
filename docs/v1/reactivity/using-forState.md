@@ -22,7 +22,7 @@ callback function once, so you can render some DOM elements, representing
 the state. The callback function provides one argument - the input state.
 
 ```js
-$.forState(myState, (myState) => {
+x.forState(myState, (myState) => {
   // ...
 })
 ```

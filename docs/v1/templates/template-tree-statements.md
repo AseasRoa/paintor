@@ -24,11 +24,11 @@ three arguments:
 ```js
 const loggedIn = true
 
-$.div(
-  $.if(
+x.div(
+  x.if(
     loggedIn, // condition
-    () => $.span('You are logged-in'), // handler
-    () => $.span('You are not logged-in') // else-handler
+    () => x.span('You are logged-in'), // handler
+    () => x.span('You are not logged-in') // else-handler
   )
 )
 ```
@@ -57,11 +57,11 @@ three arguments:
   argument for the iteration index.
 
 ```js
-$.ul(
-  $.for(
+x.ul(
+  x.for(
     1, // from (inclusive)
     3, // to (inclusive)
-    (index) => $.li(index), // handler
+    (index) => x.li(index), // handler
   )
 )
 ```
@@ -76,11 +76,11 @@ $.ul(
 If `from` is the bigger number, the iteration happens in reverse order:
 
 ```js
-$.ul(
-  $.for(
+x.ul(
+  x.for(
     3, // from (inclusive)
     1, // to (inclusive)
-    (index) => $.li(index), // handler
+    (index) => x.li(index), // handler
   )
 )
 ```
@@ -112,10 +112,10 @@ const object = {
   js: 'JavaScript'
 }
 
-$.ul(
-  $.forEach(
+x.ul(
+  x.forEach(
     object, // Object input
-    (value, key) => $.li(`${key} - ${value}`), // handler
+    (value, key) => x.li(`${key} - ${value}`), // handler
   )
 )
 ```
@@ -136,10 +136,10 @@ map.set('de', 'Germany')
 map.set('fr', 'France')
 map.set('it', 'Italy')
 
-$.ul(
-  $.forEach(
+x.ul(
+  x.forEach(
     map, // Map input
-    (value, key) => $.li(`${key} - ${value}`), // handler
+    (value, key) => x.li(`${key} - ${value}`), // handler
   )
 )
 ```
@@ -156,10 +156,10 @@ $.ul(
 ```js
 const array = ['Zero', 'One', 'Two']
 
-$.ul(
-  $.forEach(
+x.ul(
+  x.forEach(
     array, // Array input
-    (value, index) => $.li(`${index}: ${value}`), // handler
+    (value, index) => x.li(`${index}: ${value}`), // handler
   )
 )
 ```
@@ -180,10 +180,10 @@ set.add('Screwdriver')
 set.add('Hammer')
 set.add('Pliers')
 
-$.ul(
-  $.forEach(
+x.ul(
+  x.forEach(
     set, // Set input
-    (value) => $.li(value), // handler
+    (value) => x.li(value), // handler
   )
 )
 ```
@@ -211,11 +211,11 @@ import { component, state } from 'paintor'
 
 const arrayState = state(['Zero', 'One', 'Two'])
 
-component(($) => {
-  $.ul(
-    $.forEach(
+component((x) => {
+  x.ul(
+    x.forEach(
       arrayState,
-      (value, index) => $.li(`${index}: ${value}`), // handler
+      (value, index) => x.li(`${index}: ${value}`), // handler
     )
   )
 }).paint('#app')

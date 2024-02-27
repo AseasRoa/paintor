@@ -18,8 +18,8 @@ One of the methods in the [Template Tree](../templates/template-tree) is
 not the case. Here is how `html()` is used: 
 
 ```js
-($) => {
-  $.html`<h3>This is HTML</h3>`
+(x) => {
+  x.html`<h3>This is HTML</h3>`
 }
 ```
 

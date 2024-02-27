@@ -64,8 +64,8 @@ Create one or more templates with `template()` and then use them in
 ```js
 import { component, template } from 'paintor'
 
-const templateOne = template(($) => {/* ... */})
-const templateTwo = template(($) => {/* ... */})
+const templateOne = template((x) => {/* ... */})
+const templateTwo = template((x) => {/* ... */})
 
 component(
   templateOne,
@@ -86,8 +86,8 @@ In this case `template()` can be omitted:
 import { component } from 'paintor'
 
 component(
-  ($) => {/* ... */},
-  ($) => {/* ... */}
+  (x) => {/* ... */},
+  (x) => {/* ... */}
 ).paint('#app')
 ```
 ```html

@@ -8,16 +8,16 @@ setInterval(() => {
 
 const tick = () => globalState.tick
 
-const button = template(($) => {
-  $.button({ textContent: tick })
+const button = template((x) => {
+  x.button({ textContent: tick })
 })
 
-const paragraph = template(($) => {
-  $.p(tick)
+const paragraph = template((x) => {
+  x.p(tick)
 })
 
-const textarea = template(($) => {
-  $.textarea({ value: tick })
+const textarea = template((x) => {
+  x.textarea({ value: tick })
 })
 
 component(

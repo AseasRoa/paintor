@@ -28,7 +28,7 @@ ways:
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint('#myId')
 </script>
@@ -39,7 +39,7 @@ ways:
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint(document.querySelector('#myId'))
 </script>
@@ -50,7 +50,7 @@ ways:
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint(document.getElementById('myId'))
 </script>
@@ -71,7 +71,7 @@ In this case, the same component will be painted over all elements with class
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint('.myClass')
 </script>
@@ -84,7 +84,7 @@ In this case, the same component will be painted over all elements with class
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint(document.querySelectorAll('.myClass'))
 </script>
@@ -97,7 +97,7 @@ In this case, the same component will be painted over all elements with class
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint(document.getElementsByClassName('.myClass'))
 </script>
@@ -122,7 +122,7 @@ Use the name of the Custom Element in `paint()`:
 <script type="module">
   import { component } from 'paintor'
 
-  component(($) => {
+  component((x) => {
     /* ... */
   }).paint('custom-element')
 </script>

@@ -1,18 +1,18 @@
 import { component, template } from 'paintor'
 
-const componentOne = component(($) => $.button('1'))
-const componentTwo = component(($) => $.button('2'))
-const templateOne = template(($) => {
-  $.div(
+const componentOne = component((x) => x.button('1'))
+const componentTwo = component((x) => x.button('2'))
+const templateOne = template((x) => {
+  x.div(
     componentOne,
     componentTwo
   )
 })
 
-const componentThree = component(($) => $.button('3'))
-const componentFour = component(($) => $.button('4'))
-const templateTwo = template(($) => {
-  $.div(
+const componentThree = component((x) => x.button('3'))
+const componentFour = component((x) => x.button('4'))
+const templateTwo = template((x) => {
+  x.div(
     componentThree,
     componentFour
   )

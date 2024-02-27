@@ -10,8 +10,8 @@ function buildData(count, array) {
   }
 }
 
-const header = (elementsCounts) => template(($) => {
-  $.div(
+const header = (elementsCounts) => template((x) => {
+  x.div(
     {
       onClick: (event) => {
         if (!(event.target instanceof HTMLInputElement)) {
@@ -22,40 +22,40 @@ const header = (elementsCounts) => template(($) => {
       }
     },
 
-    $.h3('How many elements to draw?'),
+    x.h3('How many elements to draw?'),
 
-    $.forEach(elementsCounts, (count) => {
+    x.forEach(elementsCounts, (count) => {
       const idName = `elements-${count}`
 
-      $.div(
-        $.input({
+      x.div(
+        x.input({
           type: 'radio',
           name: 'elements',
           id: idName,
           value: count,
           checked: (count === 0)
         }),
-        $.label({ for: idName }, count)
+        x.label({ for: idName }, count)
       )
 
     })
   )
 })
 
-const elementsContainer = template(($) => {
-  $.div(
+const elementsContainer = template((x) => {
+  x.div(
     { id: 'elements-container' },
 
-    $.forEach(
+    x.forEach(
       elements,
       (value) => {
-        $.span({
+        x.span({
           textContent: value,
           style: { width: '46px', height: '46px' },
         })
       },
       () => {
-        $.div('No elements')
+        x.div('No elements')
       }
     )
   )
