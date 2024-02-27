@@ -1,6 +1,6 @@
 /* eslint-disable vitest/expect-expect */
 
-import { component, setState, state } from '#paintor'
+import { component, setState, state, template } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
 
 describe('State', () => {
@@ -62,6 +62,36 @@ describe('State', () => {
       }
 
       expect(p?.textContent).toBe('10')
+    })
+  })
+
+  describe('Same bind function in many templates', () => {
+    test('DOM', () => {
+      const container = document.body
+
+      const globalState = state({ tick: 0 })
+
+      const tick = () => globalState.tick
+
+      const buttonTpl = template((x) => {
+        x.button({ textContent: tick })
+      })
+
+      const paragraphTpl = template((x) => {
+        x.p(tick)
+      })
+
+      component(buttonTpl, paragraphTpl).paint(container)
+
+      globalState.tick += 1
+      globalState.tick += 1
+      globalState.tick += 1
+
+      const button = container.getElementsByTagName('button')[0]
+      const p = container.getElementsByTagName('p')[0]
+
+      expect(button?.textContent).toBe('3')
+      expect(p?.textContent).toBe('3')
     })
   })
 
