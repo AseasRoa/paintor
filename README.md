@@ -66,14 +66,14 @@ took some years and it's still an ongoing process.
 import { component, state } from 'paintor'
 
 // Create a component
-const app = component((o) => {
+const app = component((x) => {
   // Use a local state
   const localState = state({ clicks: 0 })
 
   // Build a hyperscript markup
-  o.div(
-    o.button({ onClick: () => localState.clicks++ }, 'Click me'),
-    o.div(() => localState.clicks)
+  x.div(
+    x.button({ onClick: () => localState.clicks++ }, 'Click me'),
+    x.div(() => localState.clicks)
   )
 })
 
