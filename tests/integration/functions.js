@@ -18,7 +18,7 @@ export function expectTextContentsToBeLike(elements, values) {
       expect(elements[index]?.textContent).toBe(value)
     })
   }
-  else if (typeof values === 'object') {
+  else if (values instanceof Object) {
     expect(elements.length).toBe(Object.keys(values).length)
 
     let key = 0
