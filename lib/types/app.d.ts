@@ -1,5 +1,5 @@
 type ObjectKey = string | number | symbol
-type TargetObject = Object<any, any> | Array<any>
+type TargetObject = import('../../types/types.d.ts').TargetObject
 
 /**
  * A function that binds the property of
@@ -42,12 +42,5 @@ type Subscription = {
   repaintFn: null | RepaintFnForFunction | RepaintFnForState
 }
 
-type ObserverListener = (
-  event: {
-    key: string | number | symbol
-    value: any,
-    oldValue: any,
-    target: TargetObject,
-    state: State
-  }
-) => void
+type ObserverType = import('../../types/types.d.ts').ObserverType
+type ObserverListener = import('../../types/types.d.ts').ObserverListener

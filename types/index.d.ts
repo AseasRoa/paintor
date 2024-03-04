@@ -2,7 +2,7 @@
  * This file contains types, exported and used by other modules.
  */
 
-import { Component, Template, Translation } from './types.d.ts'
+import { Component, ObserverType, Template, Translation } from './types.d.ts'
 
 /**
  * Try to fetch one or more translations, depending on the user's locale.
@@ -97,10 +97,17 @@ export declare function on<
   ) : void,
 }
 
+export declare function off(
+  stateOrProp: State | any,
+  type: ObserverType,
+  listener: ObserverListener
+) : void
+
 export declare const paintor: {
   component: typeof component,
   fetchTranslations: typeof fetchTranslations,
   on: typeof on,
+  off: typeof off,
   state: typeof state,
   template: typeof template,
 }
