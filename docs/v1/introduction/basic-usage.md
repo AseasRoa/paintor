@@ -16,6 +16,8 @@ import paintor from 'paintor'
 - `component()`
 - `state()`
 - `template()`
+- `on()`
+- `off()`
 - `fetchTranslations()`
 - `isTemplate()`
 - `isComponent()`
@@ -30,6 +32,8 @@ import {
   component,
   state,
   template,
+  on,
+  off,
   fetchTranslations,
   isTemplate,
   isComponent

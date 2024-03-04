@@ -126,6 +126,11 @@ export default defineConfig({
             target: "_self"
           },
           {
+            text: 'Observe States',
+            link: '/reactivity/observe-states',
+            target: "_self"
+          },
+          {
             text: 'Reactive if() and for()',
             link: '/reactivity/reactive-if-for',
             target: "_self"
