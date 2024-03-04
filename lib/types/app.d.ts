@@ -41,3 +41,13 @@ type Subscription = {
   elementInnerProp: string,
   repaintFn: null | RepaintFnForFunction | RepaintFnForState
 }
+
+type ObserverListener = (
+  event: {
+    key: string | number | symbol
+    value: any,
+    oldValue: any,
+    target: TargetObject,
+    state: State
+  }
+) => void
