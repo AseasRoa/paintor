@@ -22,6 +22,7 @@ export class Store {
    */
   appendData(count = 1000) {
     const length = this.data.length
+    this.data.length += count
 
     for (let i = length; i < length + count; i++) {
       const id = this.#id++
@@ -91,8 +92,11 @@ export class Store {
         throw new Error('Missing data element')
       }
 
-      const a = data[1]
+      // Variant 1 (shorter, but so much more confusing)
+      // data[1] = data.splice(998, 1, data[1])[0]
 
+      // Variant 2
+      const a = data[1]
       data[1] = data[998]
       data[998] = a
     }
