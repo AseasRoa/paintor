@@ -14,14 +14,14 @@ describe('State', () => {
 
       const globalState = state({ clicks: 0 })
 
-      component(($) => {
-        $.button({
+      component((x) => {
+        x.button({
           textContent: 'Click me',
           onClick: () => {
             globalState.clicks += 1
           },
         })
-        $.p({ textContent: () => (globalState.clicks) })
+        x.p({ textContent: () => (globalState.clicks) })
       }).paint(container)
 
       const button = container.getElementsByTagName('button')[0]
@@ -43,8 +43,8 @@ describe('State', () => {
 
       const globalState = state({ clicks: 0 })
 
-      component(($) => {
-        $.html`
+      component((x) => {
+        x.html`
 <button onclick="${() => globalState.clicks += 1}">Click me</button>
 <p>${() => (globalState.clicks)}</p>
       `
@@ -104,10 +104,10 @@ describe('State', () => {
         const globalState = state([false])
         let count = 0
 
-        component(($) => {
-          $.if(() => globalState[0], () => {
+        component((x) => {
+          x.if(() => globalState[0], () => {
             count += 1
-            $.div(count)
+            x.div(count)
           })
         }).paint(container)
 
@@ -136,13 +136,13 @@ describe('State', () => {
         const globalState = state([0, 0])
         let count = 0
 
-        component(($) => {
-          $.for(
+        component((x) => {
+          x.for(
             () => globalState[0],
             () => globalState[1],
             (key) => {
               count += 1
-              $.div(key)
+              x.div(key)
             }
           )
         }).paint(container)
@@ -175,9 +175,9 @@ describe('State', () => {
         /** @type {Object<string, {color: string}>} */
         const globalState = state({})
 
-        component(($) => {
-          $.forEach(globalState, (item, key) => {
-            $.div(
+        component((x) => {
+          x.forEach(globalState, (item, key) => {
+            x.div(
               { style: { color: () => item.color } },
               () => `${key}:${item.color}`,
             )
@@ -210,9 +210,9 @@ describe('State', () => {
         /** @type {Object<string, {color: string}>} */
         const globalState = state({})
 
-        component(($) => {
-          $.forEach(globalState, (item, key) => {
-            $.html`
+        component((x) => {
+          x.forEach(globalState, (item, key) => {
+            x.html`
 <div style="color: ${() => item.color}">${() => `${key}:${item.color}`}</div>
 `
           })
@@ -246,10 +246,10 @@ describe('State', () => {
         /** @type {{ a: number }[]} */
         const theState = state([{ a: 0 }])
 
-        component(($) => {
-          $.div(
-            $.forEach(theState, (value) => {
-              $.div(() => {
+        component((x) => {
+          x.div(
+            x.forEach(theState, (value) => {
+              x.div(() => {
                 return value.a
               })
             })
@@ -292,15 +292,15 @@ describe('State', () => {
         /** @type {string[]} */
         const globalState = state([])
 
-        component(($) => {
-          $.ul(
-            $.forEach(
+        component((x) => {
+          x.ul(
+            x.forEach(
               globalState,
               (item) => {
-                $.li(item)
+                x.li(item)
               },
               () => {
-                $.li('initial')
+                x.li('initial')
               },
             ),
           )
@@ -365,9 +365,9 @@ describe('State', () => {
 
         const theState = state({ items: [ 'a', 'b', 'c'] })
 
-        component(($) => {
-          $.forEach(theState.items, (value) => {
-            $.div(value)
+        component((x) => {
+          x.forEach(theState.items, (value) => {
+            x.div(value)
           })
         }).paint(container)
 
@@ -390,11 +390,11 @@ describe('State', () => {
         /** @type {{items: Object<string, string>}} */
         const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
 
-        component(($) => {
-          $.forEach(theState, (value) => {
+        component((x) => {
+          x.forEach(theState, (value) => {
             if (typeof value === 'object') {
               for (const k in value) {
-                $.div(value[k])
+                x.div(value[k])
               }
             }
           })
@@ -419,12 +419,12 @@ describe('State', () => {
         /** @type {{a: {b: Object<string, string>}}} */
         const theState = state({ a: { b: { c: 'C' } } })
 
-        component(($) => {
-          $.div(
-            $.forEach(theState, (a) => {
+        component((x) => {
+          x.div(
+            x.forEach(theState, (a) => {
               // @ts-ignore
-              $.forEach(a.b, (value, key) => {
-                $.button(`${key}-${value}`)
+              x.forEach(a.b, (value, key) => {
+                x.button(`${key}-${value}`)
               })
             })
           )
@@ -485,12 +485,12 @@ describe('State', () => {
         /** @type {{a: {b: Object<string, string>}}} */
         const theState = state({ a: { b: { c: 'C' } } })
 
-        component(($) => {
-          $.div(
-            $.forEach(theState, (a) => {
+        component((x) => {
+          x.div(
+            x.forEach(theState, (a) => {
               // @ts-ignore
-              $.forEach(a.b, (value, key) => {
-                $.button(`${key}-${value}`)
+              x.forEach(a.b, (value, key) => {
+                x.button(`${key}-${value}`)
               })
             })
           )
@@ -546,12 +546,12 @@ describe('State', () => {
         let passes1 = 0
         let passes2 = 0
 
-        component(($) => {
-          $.div(
-            $.forEach(theState, (value) => {
+        component((x) => {
+          x.div(
+            x.forEach(theState, (value) => {
               passes1 += 1
 
-              $.div(() => {
+              x.div(() => {
                 passes2 += 1
 
                 return value.a
@@ -578,12 +578,12 @@ describe('State', () => {
         /** @type {{items: Object<string, string>}} */
         const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
 
-        component(($) => {
-          $.forState(theState.items, (items) => {
+        component((x) => {
+          x.forState(theState.items, (items) => {
             for (const item in items) {
               // @ts-ignore
               for (const k in item) {
-                $.div(item[k])
+                x.div(item[k])
               }
             }
           })
@@ -616,10 +616,10 @@ describe('State', () => {
         /** @type {Object<string, string>} */
         const theState = state({ a: 'a', b: 'b', c: 'c' })
 
-        component(($) => {
-          $.forState(theState, (state) => {
+        component((x) => {
+          x.forState(theState, (state) => {
             for (const k in state) {
-              $.div(state[k])
+              x.div(state[k])
             }
           })
         }).paint(container)
@@ -651,12 +651,12 @@ describe('State', () => {
           mainState: { innerArrayState: [] },
         })
 
-        component(($) => {
+        component((x) => {
           let counter = 0
 
-          $.forState(theState.mainState.innerArrayState, () => {
+          x.forState(theState.mainState.innerArrayState, () => {
             counter += 1
-            $.div(counter)
+            x.div(counter)
           })
         }).paint(container)
 

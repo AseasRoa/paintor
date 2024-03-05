@@ -12,12 +12,12 @@
 <script type="module">
   import { component, state, template } from '#paintor'
 
-  const mainTemplate = template(($) => {
+  const mainTemplate = template((x) => {
     const localState = state({ clicks: 0 })
 
-    $.div(
-      $.button({ onClick: () => localState.clicks++ }, 'Click me'),
-      $.div(() => localState.clicks)
+    x.div(
+      x.button({ onClick: () => localState.clicks++ }, 'Click me'),
+      x.div(() => localState.clicks)
     )
   })
 

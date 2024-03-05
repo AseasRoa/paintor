@@ -12,10 +12,10 @@ describe('Elements Creation', () => {
 
   describe('Paint in elements, selected in different ways', () => {
     test('(SSR) 3 divs', () => {
-      const html = component(($) => {
-        $.div('div 1')
-        $.div('div 2')
-        $.div('div 3')
+      const html = component((x) => {
+        x.div('div 1')
+        x.div('div 2')
+        x.div('div 3')
       }).html()
 
       expect(html).toBe('<div>div 1</div><div>div 2</div><div>div 3</div>')
@@ -26,10 +26,10 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component(($) => {
-        $.div('div 1')
-        $.div('div 2')
-        $.div('div 3')
+      component((x) => {
+        x.div('div 1')
+        x.div('div 2')
+        x.div('div 3')
       }).paint(container)
 
       expect(container.childNodes.length).toBe(3)
@@ -40,10 +40,10 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component(($) => {
-        $.div('div 1')
-        $.div('div 2')
-        $.div('div 3')
+      component((x) => {
+        x.div('div 1')
+        x.div('div 2')
+        x.div('div 3')
       }).paint(`#${id}`)
 
       expect(container.childNodes.length).toBe(3)
@@ -53,10 +53,10 @@ describe('Elements Creation', () => {
       const container = document.createElement('component-element')
       document.body.appendChild(container)
 
-      component(($) => {
-        $.div('div 1')
-        $.div('div 2')
-        $.div('div 3')
+      component((x) => {
+        x.div('div 1')
+        x.div('div 2')
+        x.div('div 3')
       }).paint('component-element')
 
       expect(container.shadowRoot?.children.length).toBe(3)
@@ -66,15 +66,15 @@ describe('Elements Creation', () => {
   describe('Check Order of Rendered Elements', () => {
     describe('Table', () => {
       test('SSR', () => {
-        const html = component(($) => {
-          $.table(
-            $.tr(
-              $.td('Row 1, Column 1'),
-              $.td('Row 1, Column 2'),
+        const html = component((x) => {
+          x.table(
+            x.tr(
+              x.td('Row 1, Column 1'),
+              x.td('Row 1, Column 2'),
             ),
-            $.tr(
-              $.td('Row 2, Column 1'),
-              $.td('Row 2, Column 2'),
+            x.tr(
+              x.td('Row 2, Column 1'),
+              x.td('Row 2, Column 2'),
             ),
           )
         }).html()
@@ -85,15 +85,15 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        component(($) => {
-          $.table(
-            $.tr(
-              $.td('Row 1, Column 1'),
-              $.td('Row 1, Column 2'),
+        component((x) => {
+          x.table(
+            x.tr(
+              x.td('Row 1, Column 1'),
+              x.td('Row 1, Column 2'),
             ),
-            $.tr(
-              $.td('Row 2, Column 1'),
-              $.td('Row 2, Column 2'),
+            x.tr(
+              x.td('Row 2, Column 1'),
+              x.td('Row 2, Column 2'),
             ),
           )
         }).paint(container)
@@ -127,16 +127,16 @@ describe('Elements Creation', () => {
 
     describe('Automatically calling a Component', () => {
       test('SSR', () => {
-        const liFragments = component(($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = component((x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         })
 
-        const html = component(($) => {
-          $.ul(
-            $.li('li-1'),
+        const html = component((x) => {
+          x.ul(
+            x.li('li-1'),
             liFragments,
-            $.li('li-2'),
+            x.li('li-2'),
             liFragments,
           )
         }).html()
@@ -147,16 +147,16 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const liFragments = component(($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = component((x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         })
 
-        component(($) => {
-          $.ul(
-            $.li('li-1'),
+        component((x) => {
+          x.ul(
+            x.li('li-1'),
             liFragments,
-            $.li('li-2'),
+            x.li('li-2'),
             liFragments,
           )
         }).paint(container)
@@ -176,16 +176,16 @@ describe('Elements Creation', () => {
 
     describe('Automatically calling template functions', () => {
       test('SSR', () => {
-        const liFragments = template(($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = template((x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         })
 
-        const html = component(($) => {
-          $.ul(
-            $.li('li-1'),
+        const html = component((x) => {
+          x.ul(
+            x.li('li-1'),
             liFragments,
-            $.li('li-2'),
+            x.li('li-2'),
             liFragments,
           )
         }).html()
@@ -196,16 +196,16 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const liFragments = template(($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = template((x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         })
 
-        component(($) => {
-          $.ul(
-            $.li('li-1'),
+        component((x) => {
+          x.ul(
+            x.li('li-1'),
             liFragments,
-            $.li('li-2'),
+            x.li('li-2'),
             liFragments,
           )
         }).paint(container)
@@ -228,19 +228,19 @@ describe('Elements Creation', () => {
         /**
          * Template function, created without the wrapper
          *
-         * @param {TemplateTree} $
+         * @param {TemplateTree} x
          */
-        const liFragments = ($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = (x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         }
 
-        const html = component(($) => {
-          $.ul(
-            $.li('li-1'),
-            liFragments($),
-            $.li('li-2'),
-            liFragments($),
+        const html = component((x) => {
+          x.ul(
+            x.li('li-1'),
+            liFragments(x),
+            x.li('li-2'),
+            liFragments(x),
           )
         }).html()
 
@@ -253,19 +253,19 @@ describe('Elements Creation', () => {
         /**
          * Template function, created without the wrapper
          *
-         * @param {TemplateTree} $
+         * @param {TemplateTree} x
          */
-        const liFragments = ($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = (x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         }
 
-        component(($) => {
-          $.ul(
-            $.li('li-1'),
-            liFragments($),
-            $.li('li-2'),
-            liFragments($),
+        component((x) => {
+          x.ul(
+            x.li('li-1'),
+            liFragments(x),
+            x.li('li-2'),
+            liFragments(x),
           )
         }).paint(container)
 
@@ -289,18 +289,18 @@ describe('Elements Creation', () => {
         /**
          * Template function, created without the wrapper
          *
-         * @param {TemplateTree} $
+         * @param {TemplateTree} x
          */
-        const liFragments = ($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = (x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         }
 
-        const html = component(($) => {
-          $.ul(
-            $.forEach(array, (value) => {
-              $.li('li-' + value)
-              liFragments($)
+        const html = component((x) => {
+          x.ul(
+            x.forEach(array, (value) => {
+              x.li('li-' + value)
+              liFragments(x)
             }),
           )
         }).html()
@@ -315,19 +315,19 @@ describe('Elements Creation', () => {
         /**
          * Template function, created without the wrapper
          *
-         * @param {TemplateTree} $
+         * @param {TemplateTree} x
          */
-        const liFragments = ($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = (x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         }
 
-        component(($) => {
-          $.ul(
-            $.forEach(array, (value) => {
-              $.li('li-' + value)
-              liFragments($)
-            }),
+        component((x) => {
+          x.ul(
+            x.forEach(array, (value) => {
+              x.li('li-' + value)
+              liFragments(x)
+            })
           )
         }).paint(container)
 
@@ -348,12 +348,12 @@ describe('Elements Creation', () => {
       test('SSR', () => {
         const array = ['1', '2', '3', '4']
 
-        const html = component(($) => {
-          $.ul(
-            $.forEach(array, (value, key) => {
+        const html = component((x) => {
+          x.ul(
+            x.forEach(array, (value, key) => {
               if (key === '2') return false
 
-              return $.li(value)
+              return x.li(value)
             })
           )
         }).html()
@@ -365,12 +365,12 @@ describe('Elements Creation', () => {
         const container = document.body
         const array = ['1', '2', '3', '4']
 
-        component(($) => {
-          $.ul(
-            $.forEach(array, (value, key) => {
+        component((x) => {
+          x.ul(
+            x.forEach(array, (value, key) => {
               if (key === '2') return false
 
-              return $.li(value)
+              return x.li(value)
             })
           )
         }).paint(container)
@@ -388,19 +388,19 @@ describe('Elements Creation', () => {
         /**
          * Template function, created without the wrapper
          *
-         * @param {TemplateTree} $
+         * @param {TemplateTree} x
          */
-        const liFragments = ($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = (x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         }
 
-        const html = component(($) => {
-          $.ul(
-            $.forEach(globalState, (value) => {
-              $.li('li-' + value)
-              liFragments($)
-            }),
+        const html = component((x) => {
+          x.ul(
+            x.forEach(globalState, (value) => {
+              x.li('li-' + value)
+              liFragments(x)
+            })
           )
         }).html()
 
@@ -414,18 +414,18 @@ describe('Elements Creation', () => {
         /**
          * Template function, created without the wrapper
          *
-         * @param {TemplateTree} $
+         * @param {TemplateTree} x
          */
-        const liFragments = ($) => {
-          $.li('li-fragment-1')
-          $.li('li-fragment-2')
+        const liFragments = (x) => {
+          x.li('li-fragment-1')
+          x.li('li-fragment-2')
         }
 
-        component(($) => {
-          $.ul(
-            $.forEach(globalState, (value) => {
-              $.li('li-' + value)
-              liFragments($)
+        component((x) => {
+          x.ul(
+            x.forEach(globalState, (value) => {
+              x.li('li-' + value)
+              liFragments(x)
             }),
           )
         }).paint(container)
@@ -447,20 +447,20 @@ describe('Elements Creation', () => {
 
     describe('if() with a callback, returning a Template', () => {
       test('SSR', () => {
-        const ifCallback = template(($) => {
-          $.li('if')
+        const ifCallback = template((x) => {
+          x.li('if')
         })
-        const elseCallback = template(($) => {
-          $.li('else')
+        const elseCallback = template((x) => {
+          x.li('else')
         })
 
-        const html = component(($) => {
-          $.ul(
-            $.if(true, ifCallback, elseCallback),
+        const html = component((x) => {
+          x.ul(
+            x.if(true, ifCallback, elseCallback),
           )
 
-          $.ul(
-            $.if(false, ifCallback, elseCallback),
+          x.ul(
+            x.if(false, ifCallback, elseCallback),
           )
         }).html()
 
@@ -473,20 +473,20 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const ifCallback = template(($) => {
-          $.li('if')
+        const ifCallback = template((x) => {
+          x.li('if')
         })
-        const elseCallback = template(($) => {
-          $.li('else')
+        const elseCallback = template((x) => {
+          x.li('else')
         })
 
-        component(($) => {
-          $.ul(
-            $.if(true, ifCallback, elseCallback),
+        component((x) => {
+          x.ul(
+            x.if(true, ifCallback, elseCallback),
           )
 
-          $.ul(
-            $.if(false, ifCallback, elseCallback),
+          x.ul(
+            x.if(false, ifCallback, elseCallback),
           )
         }).paint(container)
 
@@ -513,17 +513,17 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Template}
          */
-        const callback = (value) => template(($) => {
-          $.li('li-' + value)
+        const callback = (value) => template((x) => {
+          x.li('li-' + value)
         })
 
-        const html = component(($) => {
-          $.ul(
-            $.forEach(array, callback),
+        const html = component((x) => {
+          x.ul(
+            x.forEach(array, callback),
           )
 
-          $.ul(
-            $.forEach(globalState, callback),
+          x.ul(
+            x.forEach(globalState, callback),
           )
         }).html()
 
@@ -542,17 +542,17 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Template}
          */
-        const callback = (value) => template(($) => {
-          $.li('li-' + value)
+        const callback = (value) => template((x) => {
+          x.li('li-' + value)
         })
 
-        component(($) => {
-          $.ul(
-            $.forEach(array, callback),
+        component((x) => {
+          x.ul(
+            x.forEach(array, callback),
           )
 
-          $.ul(
-            $.forEach(globalState, callback),
+          x.ul(
+            x.forEach(globalState, callback),
           )
         }).paint(container)
 
@@ -582,13 +582,13 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Component}
          */
-        const callback = (value) => component(($) => {
-          $.li('li-' + value)
+        const callback = (value) => component((x) => {
+          x.li('li-' + value)
         })
 
-        const html = component(($) => {
-          $.ul(
-            $.forEach(globalState, callback),
+        const html = component((x) => {
+          x.ul(
+            x.forEach(globalState, callback),
           )
         }).html()
 
@@ -603,13 +603,13 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Component}
          */
-        const callback = (value) => component(($) => {
-          $.li('li-' + value)
+        const callback = (value) => component((x) => {
+          x.li('li-' + value)
         })
 
-        component(($) => {
-          $.ul(
-            $.forEach(globalState, callback),
+        component((x) => {
+          x.ul(
+            x.forEach(globalState, callback),
           )
         }).paint(container)
 
