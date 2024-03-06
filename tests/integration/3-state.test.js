@@ -534,6 +534,90 @@ describe('State', () => {
       })
     })
 
+    describe('State, containing the same object multiple times', () => {
+      describe('array state', () => {
+        test('DOM', () => {
+          const container = document.body
+
+          const zero = { label: 'zero' }
+          const globalState = state([
+            zero,
+            { label: 'one' },
+            { label: 'two' }
+          ])
+
+          component((x) => {
+            x.forEach(globalState, (item) => {
+              x.div(() => item.label)
+            })
+          }).paint(container)
+
+          let divs = container.querySelectorAll('div')
+
+          expect(divs.length).toBe(3)
+
+          // @ts-ignore
+          globalState.push(globalState[0])
+
+          divs = container.querySelectorAll('div')
+          expectTextContentsToBeLike(divs, ['zero', 'one', 'two', 'zero'])
+
+          // @ts-ignore
+          globalState[1] = globalState[2]
+          divs = container.querySelectorAll('div')
+          expectTextContentsToBeLike(divs, ['zero', 'two', 'two', 'zero'])
+
+          // @ts-ignore
+          globalState[0].label = 'ZERO'
+          // @ts-ignore
+          globalState[1].label = 'TWO'
+          divs = container.querySelectorAll('div')
+          expectTextContentsToBeLike(divs, ['ZERO', 'TWO', 'TWO', 'ZERO'])
+        })
+      })
+
+      describe('object state', () => {
+        test('DOM', () => {
+          const container = document.body
+
+          const zero = { label: 'zero' }
+          const globalState = state({
+            zero: zero,
+            one: { label: 'one' },
+            two: { label: 'two' }
+          })
+
+          component((x) => {
+            x.forEach(globalState, (item) => {
+              // @ts-ignore
+              x.div(() => item.label)
+            })
+          }).paint(container)
+
+          let divs = container.querySelectorAll('div')
+
+          expect(divs.length).toBe(3)
+
+          // @ts-ignore
+          globalState.three = globalState.zero
+
+          divs = container.querySelectorAll('div')
+          expectTextContentsToBeLike(divs, ['zero', 'one', 'two', 'zero'])
+
+          globalState.one = globalState.two
+          divs = container.querySelectorAll('div')
+          expectTextContentsToBeLike(divs, ['zero', 'two', 'two', 'zero'])
+
+          // @ts-ignore
+          globalState.zero.label = 'ZERO'
+          // @ts-ignore
+          globalState.one.label = 'TWO'
+          divs = container.querySelectorAll('div')
+          expectTextContentsToBeLike(divs, ['ZERO', 'TWO', 'TWO', 'ZERO'])
+        })
+      })
+    })
+
     /**
      * Checking the correct amount of callback passes
      */
