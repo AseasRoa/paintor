@@ -10,23 +10,76 @@
 [![test](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml/badge.svg)](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml)
 ![license](https://img.shields.io/npm/l/paintor)
 
-Paintor is a JavaScript library for building client-side user interfaces or HTML
+A JavaScript library for building reactive client-side user interfaces or HTML
 code.
 
 ## [Documentation and Examples](https://aseasroa.github.io/paintor)
 
 ## Key Features
-- **100% JavaScript**: No transpilation. The code you write is the code to run.
-- **JS Templates**: HTML-like structure (HyperScript) in JavaScript with type
-  safety in the smallest detail.
-- **HTML Templates**: Optional HTML syntax in JavaScript [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
-- **SSR**: The output can be HTML code for server-side rendering.
-- **Reactivity**: Through [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-  and DOM events.
-- **Internationalization (i18n)**: Render the templates in the client's
-  language.
-- **Type Definitions**: TypeScript type definitions for code completion and type
-  safety.
+- **JavaScript**: The code you write is the code to run
+- **Zero dependencies**
+- **Reactive**: Through [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+  and DOM events
+- **Templates in JavaScript or HTML**: JavaScript HTML-like tree structure
+  (HyperScript) or HTML syntax in [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+- **Observers**: Receive events on state changes
+- **SSR**: Generate HTML code on the server
+- **Internationalization (i18n)**
+- **Type Definitions**: Built-in TypeScript definitions for code completion and
+  type safety
+
+## Quick Example
+
+```javascript
+import { component, state, template, on } from 'paintor'
+
+// Use a global state
+const globalState = state({ clicks: 0 })
+
+// Create a template
+const myTemplate = template((tags) => {
+  const { div, button, html } = tags
+
+  // Or, use a local state
+  const localState = state({ clicks: 0 })
+
+  // Build JavaScript template
+  div(
+    button(
+      {
+        class: 'buttons',
+        onClick: () => globalState.clicks++
+      },
+      'Click me'
+    ),
+    div(() => globalState.clicks)
+  )
+
+  // Or, build HTML template in a string
+  html`
+    <div>
+      <button class="buttons" onClick=${() => localState.clicks++}>
+        Click me
+      </button>
+      <div>${() => localState.clicks}</div>
+    </div>
+  `
+})
+
+// Create a component, using the template
+const app = component(myTemplate)
+
+// Render the component
+app.paint('#app')
+
+// Or, generate HTML string
+const htmlCode = app.html()
+
+// Observe state changes if you want
+on(globalState.clicks).change((event) => {
+  console.log(`Clicked ${event.value} times`)
+})
+```
 
 ## Why?
 
@@ -59,27 +112,3 @@ Then I was inspired by Mithril, which is fairly easy to understand and vanilla,
 although it doesn't really have the "wow" factor. As I often do in such cases,
 I decided to quickly write something like it, tailored for my needs. Well, this
 took some years and it's still an ongoing process.
-
-## Quick Example
-
-```javascript
-import { component, state } from 'paintor'
-
-// Create a component
-const app = component((x) => {
-  // Use a local state
-  const localState = state({ clicks: 0 })
-
-  // Build a hyperscript markup
-  x.div(
-    x.button({ onClick: () => localState.clicks++ }, 'Click me'),
-    x.div(() => localState.clicks)
-  )
-})
-
-// Render the component
-app.paint('#app')
-
-// Or, generate HTML
-const htmlCode = app.html()
-```
