@@ -10,8 +10,8 @@ type CallbackForFunction = (
   (
     values: any[],
     isInitialRun: boolean,
-    commentElementBegin: Comment | null,
-    commentElementEnd: Comment | null
+    commentBegin: Comment | null,
+    commentEnd: Comment | null
   ) => void
 )
 
@@ -44,3 +44,12 @@ type Subscription = {
 
 type ObserverType = import('../../types/types.d.ts').ObserverType
 type ObserverListener = import('../../types/types.d.ts').ObserverListener
+
+type KeyToElements = Record<ObjectKey, Node[]> | Array<number, Node[]>
+
+function CallbackForState(
+  state: State,
+  elementsCollector: import('../ElementsCollector.js').ElementsCollector,
+  keyToRender?: ObjectKey,
+  isArray?: boolean
+) : KeyToElements
