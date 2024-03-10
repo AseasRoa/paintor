@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<custom-element></custom-element>
+<div id="app"></div>
 
 <script type="module">
   import { component, state, template } from '#paintor'
@@ -23,7 +23,7 @@
 
   const app = component(mainTemplate)
 
-  app.paint('custom-element')
+  app.paint('#app')
 
 </script>
 </body>
