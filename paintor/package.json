@@ -12,6 +12,6 @@
     "build-prod": "exit 0"
   },
   "dependencies": {
-    "paintor": "^1.0.0"
+    "paintor": "^1.3.4"
   }
 }
