@@ -177,6 +177,7 @@ In JavaScript there are multiple [methods](https://developer.mozilla.org/en-US/d
 to manipulate an Array. Some of them are mutating the input Array. These methods
 also work on an array state:
 
+- fill()
 - copyWithin()
 - push()
 - reverse()
