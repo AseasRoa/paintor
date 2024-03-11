@@ -214,6 +214,29 @@ describe('State: Array', () => {
   })
 
   describe('methods', () => {
+    test('fill', () => {
+      const container = document.body
+
+      const arrayState = state(new Array(3))
+
+      component((x) => {
+        x.forEach(arrayState, (value) => {
+          x.div(() => value.label)
+        })
+      }).paint(container)
+
+      arrayState.fill({ label: 'a' })
+
+      const divElements = container.querySelectorAll('div')
+
+      expectTextContentsToBeLike(divElements, ['a', 'a', 'a'])
+      expectSpecialCommentElementsInStatement(divElements)
+
+      arrayState[0].label = 'A'
+      expectTextContentsToBeLike(divElements, ['A', 'A', 'A'])
+      expectSpecialCommentElementsInStatement(divElements)
+    })
+
     test('copyWithin()', () => {
       const container = document.body
 
