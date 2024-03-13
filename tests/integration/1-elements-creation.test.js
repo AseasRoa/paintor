@@ -654,11 +654,29 @@ describe('Elements Creation', () => {
   })
 
   describe('Static HTML', () => {
+    test('(SSR) staticHtml()', () => {
+      let counter = 0
+
+      const app = component((x) => {
+        x.div(counter)
+        counter += 1
+      })
+
+      for (let i = 0; i < 6; i++) {
+        const staticHtml = app.staticHtml()
+        const dynamicHtml = app.html()
+
+        expect(staticHtml).toBe('<div>0</div>')
+        expect(dynamicHtml).toBe(`<div>${counter - 1}</div>`)
+      }
+    })
+
     test('(SSR) static(true)', () => {
       let counter = 0
 
       const app = component((x) => {
-        x.div(counter++)
+        x.div(counter)
+        counter += 1
       })
 
       app.static()
@@ -684,22 +702,6 @@ describe('Elements Creation', () => {
       expect(app.html()).toBe('<div>7</div>')
       app.static()
       expect(app.html()).toBe('<div>8</div>')
-    })
-
-    test('(SSR) staticHtml()', () => {
-      let counter = 0
-
-      const app = component((x) => {
-        x.div(counter++)
-      })
-
-      for (let i = 0; i < 6; i++) {
-        const staticHtml = app.staticHtml()
-        const dynamicHtml = app.html()
-
-        expect(staticHtml).toBe('<div>0</div>')
-        expect(dynamicHtml).toBe(`<div>${counter - 1}</div>`)
-      }
     })
   })
 })
