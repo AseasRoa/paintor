@@ -175,6 +175,17 @@ export default defineConfig({
         ]
       },
       {
+        text: 'Server Usage',
+        collapsed: true,
+        items: [
+          {
+            text: 'Generate HTML',
+            link: '/server-usage/generate-html',
+            target: "_self"
+          }
+        ]
+      },
+      {
         text: 'Examples',
         collapsed: true,
         items: [

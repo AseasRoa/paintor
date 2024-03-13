@@ -102,7 +102,11 @@ state, which is also reflected in the \<span\> element:
 
 ## Server Usage
 
-On the server, `html()` is used instead of `paint()`:
+To generate HTML code on the server, use `html()`.
+
+::: info
+`html()` can be used in the browser as well.
+:::
 
 ```js
 import { component } from 'paintor'
@@ -112,17 +116,8 @@ const app = component((x) => {
 })
 
 const htmlCode = app.html()
+// htmlCode: <div>Hello</div>
 ```
-
-`html()` renders an HTML string:
-
-```html
-<div>Hello, World</div>
-```
-
-::: info
-`html()` can be used in the browser as well.
-:::
 
 ::: warning
 `state()` is useless when generating HTML code.
