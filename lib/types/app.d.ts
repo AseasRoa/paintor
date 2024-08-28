@@ -42,6 +42,12 @@ type Subscription = {
   repaintFn: null | RepaintFnForFunction | RepaintFnForState
 }
 
+enum EnumObserverType {
+  CREATE = 0,
+  CHANGE = 1,
+  DELETE = 2,
+  SET = 3
+}
 type ObserverType = import('../../types/types.d.ts').ObserverType
 type ObserverListener = import('../../types/types.d.ts').ObserverListener
 
