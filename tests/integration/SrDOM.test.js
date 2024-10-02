@@ -6,7 +6,7 @@ import { Window } from '../../lib/SrDOM/Window.js'
 describe('SrDom Tests', () => {
   describe('window, document', () => {
     const window = new Window()
-    const document = window.document
+    const { document } = window
 
     test('document contains HTML, HTML contains HEAD and BODY', () => {
       const [ html ] = document.children
