@@ -57,5 +57,5 @@ function CallbackForState(
   state: State,
   elementsCollector: import('../ElementsCollector.js').ElementsCollector,
   keyToRender?: ObjectKey,
-  isArray?: boolean
+  isArrayState?: boolean
 ) : KeyToElements

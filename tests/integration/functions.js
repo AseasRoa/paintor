@@ -11,7 +11,7 @@ export function expectTextContentsToBeLike(elements, values) {
     return
   }
 
-  if (values instanceof Array) {
+  if (Array.isArray(values)) {
     expect(elements.length).toBe(values.length)
 
     values.forEach((value, index) => {
