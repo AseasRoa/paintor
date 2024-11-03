@@ -16,7 +16,7 @@
     "jsfb:install": "rimraf dist && git clone https://github.com/krausest/js-framework-benchmark.git dist/js-framework-benchmark && cd dist/js-framework-benchmark && npm ci",
     "jsfb:start": "cd dist/js-framework-benchmark && npm run start",
     "paintor:build": "npm run paintor:copy && cd dist/js-framework-benchmark/frameworks/keyed/paintor && npm install && npm run build-prod",
-    "paintor:copy": "mkdirp dist/js-framework-benchmark/frameworks/keyed/paintor && cpx paintor/**/* dist/js-framework-benchmark/frameworks/keyed/paintor"
+    "paintor:copy": "mkdirp dist/js-framework-benchmark/frameworks/keyed/paintor && cpx 'paintor/**/*' dist/js-framework-benchmark/frameworks/keyed/paintor"
   },
   "dependencies": {
     "cpx": "^1.5.0",
