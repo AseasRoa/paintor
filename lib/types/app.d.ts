@@ -51,7 +51,7 @@ enum EnumObserverType {
 type ObserverType = import('../../types/types.d.ts').ObserverType
 type ObserverListener = import('../../types/types.d.ts').ObserverListener
 
-type KeyToElements = Record<ObjectKey, Node[]> | Array<number, Node[]>
+type KeyToElements = Array<Set<Node>> | Record<ObjectKey, Set<Node>>
 
 function CallbackForState(
   state: State,
