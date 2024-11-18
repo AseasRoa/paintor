@@ -1,7 +1,7 @@
 /* eslint-disable vitest/expect-expect */
 
-import { component, state } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
+import { component, state } from '#paintor'
 
 /**
  * 'for' loops in Paintor contain these 'begin' and 'end' Comment elements.

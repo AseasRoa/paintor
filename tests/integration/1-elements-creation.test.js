@@ -1,7 +1,7 @@
 /* eslint-disable vitest/expect-expect */
 
-import { component, state, template } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
+import { component, state, template } from '#paintor'
 
 describe('Elements Creation', () => {
   const id = 'container'

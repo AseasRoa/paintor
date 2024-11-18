@@ -1,7 +1,7 @@
 /* eslint-disable vitest/expect-expect */
 
-import { component, setState, state, template } from '#paintor'
 import { expectTextContentsToBeLike } from './functions.js'
+import { component, setState, state, template } from '#paintor'
 
 describe('State', () => {
   beforeEach(() => {
