@@ -2,8 +2,11 @@ import { on, state } from '#paintor'
 
 describe('observers', () => {
   test('throw if not a state', () => {
+    // @ts-expect-error
     expect(() => on({}).create()).toThrow(Error)
+    // @ts-expect-error
     expect(() => on([]).create()).toThrow(Error)
+    // @ts-expect-error
     expect(() => on(1).create()).toThrow(Error)
   })
 
