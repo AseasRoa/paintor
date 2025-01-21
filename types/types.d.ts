@@ -24,8 +24,9 @@ export interface Component {
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   static: (on?: boolean) => Component,
   staticHtml: (options?: { indent?:string }) => string,
-  template: Template,
   useTranslations : (...translations: Translation[]) => Component,
+  state?: State,
+  template?: Template,
 }
 
 export type ObserverType = 'create' | 'change' | 'delete' | 'set'
