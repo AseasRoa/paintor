@@ -49,7 +49,7 @@ type KeyToElements = Array<Set<Node>> | Record<ObjectKey, Set<Node>>
 
 function CallbackForState(
   state: State,
-  elementsCollector: import('../ElementsCollector.js').ElementsCollector,
+  elementsCollector: import('../TemplateRenderer/ElementsCollector.js').ElementsCollector,
   keyToRender?: ObjectKey,
   isArrayState?: boolean
 ) : KeyToElements
