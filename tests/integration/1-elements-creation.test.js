@@ -1,7 +1,7 @@
 /* eslint-disable vitest/expect-expect */
 
 import { expectTextContentsToBeLike } from './functions.js'
-import { component, state, template } from '#paintor'
+import { component, Component, state, template } from '#paintor'
 
 describe('Elements Creation', () => {
   const id = 'container'
@@ -299,7 +299,7 @@ describe('Elements Creation', () => {
         const html = component((x) => {
           x.ul(
             x.forEach(array, (value) => {
-              x.li('li-' + value)
+              x.li(`li-${value}`)
               liFragments(x)
             }),
           )
@@ -325,7 +325,7 @@ describe('Elements Creation', () => {
         component((x) => {
           x.ul(
             x.forEach(array, (value) => {
-              x.li('li-' + value)
+              x.li(`li-${value}`)
               liFragments(x)
             })
           )
@@ -398,7 +398,7 @@ describe('Elements Creation', () => {
         const html = component((x) => {
           x.ul(
             x.forEach(globalState, (value) => {
-              x.li('li-' + value)
+              x.li(`li-${value}`)
               liFragments(x)
             })
           )
@@ -424,7 +424,7 @@ describe('Elements Creation', () => {
         component((x) => {
           x.ul(
             x.forEach(globalState, (value) => {
-              x.li('li-' + value)
+              x.li(`li-${value}`)
               liFragments(x)
             }),
           )
@@ -514,7 +514,7 @@ describe('Elements Creation', () => {
          * @returns {Template}
          */
         const callback = (value) => template((x) => {
-          x.li('li-' + value)
+          x.li(`li-${value}`)
         })
 
         const html = component((x) => {
@@ -543,7 +543,7 @@ describe('Elements Creation', () => {
          * @returns {Template}
          */
         const callback = (value) => template((x) => {
-          x.li('li-' + value)
+          x.li(`li-${value}`)
         })
 
         component((x) => {
@@ -583,7 +583,7 @@ describe('Elements Creation', () => {
          * @returns {Component}
          */
         const callback = (value) => component((x) => {
-          x.li('li-' + value)
+          x.li(`li-${value}`)
         })
 
         const html = component((x) => {
@@ -604,7 +604,7 @@ describe('Elements Creation', () => {
          * @returns {Component}
          */
         const callback = (value) => component((x) => {
-          x.li('li-' + value)
+          x.li(`li-${value}`)
         })
 
         component((x) => {
