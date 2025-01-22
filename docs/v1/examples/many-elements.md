@@ -11,7 +11,7 @@ title: Many Elements
   })
 </script>
 
-# To-Do List Example
+# Many Elements
 
 <p></p>
 <Badge type="warning" text="example" />
