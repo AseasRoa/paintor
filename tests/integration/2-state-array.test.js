@@ -1,5 +1,6 @@
 /* eslint-disable vitest/expect-expect */
 
+import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
 import { component, state } from '#paintor'
 

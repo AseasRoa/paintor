@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { on, state } from '#paintor'
 
 describe('observers', () => {
