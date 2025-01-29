@@ -6,25 +6,7 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-
-<div id="app"></div>
-
-<script type="module">
-  import { component, state, template } from '#paintor'
-
-  const mainTemplate = template((x) => {
-    const localState = state({ clicks: 0 })
-
-    x.div(
-      x.button({ onClick: () => localState.clicks++ }, 'Click me'),
-      x.div(() => localState.clicks)
-    )
-  })
-
-  const app = component(mainTemplate)
-
-  app.paint('#app')
-
-</script>
+  <div id="app"></div>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
