@@ -1,4 +1,5 @@
 import { Combo } from './common'
+import { CssAttribute } from '../types'
 
 type CommonAttributes = {
   /** @see https://www.w3schools.com/tags/att_script_crossorigin.asp */
@@ -250,13 +251,17 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/article
    * @see https://www.w3schools.com/tags/tag_article.asp
    */
-  article : {},
+  article : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside
    * @see https://www.w3schools.com/tags/tag_aside.asp
    */
-  aside : {},
+  aside : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
@@ -308,6 +313,7 @@ export type ElementAttributes = {
    * @see https://www.w3schools.com/tags/tag_blockquote.asp
    */
   blockquote : {
+    css?: CssAttribute,
     cite? : Combo<string>,
   },
 
@@ -315,7 +321,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/body
    * @see https://www.w3schools.com/tags/tag_body.asp
    */
-  body : {},
+  body : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br
@@ -440,7 +448,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div
    * @see https://www.w3schools.com/tags/tag_div.asp
    */
-  div : {},
+  div : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dl
@@ -497,7 +507,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/footer
    * @see https://www.w3schools.com/tags/tag_footer.asp
    */
-  footer : {},
+  footer : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form
@@ -519,37 +531,49 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h1
    * @see https://www.w3schools.com/tags/tag_hn.asp
    */
-  h1 : {},
+  h1 : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h2
    * @see https://www.w3schools.com/tags/tag_hn.asp
    */
-  h2 : {},
+  h2 : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h3
    * @see https://www.w3schools.com/tags/tag_hn.asp
    */
-  h3 : {},
+  h3 : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h4
    * @see https://www.w3schools.com/tags/tag_hn.asp
    */
-  h4 : {},
+  h4 : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h5
    * @see https://www.w3schools.com/tags/tag_hn.asp
    */
-  h5 : {},
+  h5 : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/h6
    * @see https://www.w3schools.com/tags/tag_hn.asp
    */
-  h6 : {},
+  h6 : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/head
@@ -561,7 +585,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/header
    * @see https://www.w3schools.com/tags/tag_header.asp
    */
-  header : {},
+  header : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hgroup
@@ -725,7 +751,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/main
    * @see https://www.w3schools.com/tags/tag_main.asp
    */
-  main : {},
+  main : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/map
@@ -770,7 +798,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav
    * @see https://www.w3schools.com/tags/tag_nav.asp
    */
-  nav : {},
+  nav : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/noscript
@@ -841,7 +871,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
    * @see https://www.w3schools.com/tags/tag_p.asp
    */
-  p : {},
+  p : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture
@@ -934,7 +966,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/section
    * @see https://www.w3schools.com/tags/tag_section.asp
    */
-  section : {},
+  section : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
@@ -981,7 +1015,9 @@ export type ElementAttributes = {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span
    * @see https://www.w3schools.com/tags/tag_span.asp
    */
-  span : {},
+  span : {
+    css?: CssAttribute,
+  },
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong
