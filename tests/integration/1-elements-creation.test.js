@@ -301,7 +301,7 @@ describe('Elements Creation', () => {
       })
     })
 
-    describe('Using forEach() with normal array', () => {
+    describe('Using $each() with normal array', () => {
       test('SSR', () => {
         const array = ['1', '2']
 
@@ -353,7 +353,7 @@ describe('Elements Creation', () => {
       })
     })
 
-    describe('Using forEach() with normal array, breaking the loop', () => {
+    describe('Using $each() with normal array, breaking the loop', () => {
       test('SSR', () => {
         const array = ['1', '2', '3', '4']
 
@@ -390,7 +390,7 @@ describe('Elements Creation', () => {
       })
     })
 
-    describe('Using forEach() with reactive state', () => {
+    describe('Using $each() with reactive state', () => {
       test('SSR', () => {
         const globalState = state(['1', '2'])
 
@@ -502,7 +502,7 @@ describe('Elements Creation', () => {
       })
     })
 
-    describe('forEach() with a callback, returning a Template', () => {
+    describe('$each() with a callback, returning a Template', () => {
       test('SSR', () => {
         const array = ['1', '2']
         const globalState = state(['1', '2'])
@@ -572,7 +572,7 @@ describe('Elements Creation', () => {
       })
     })
 
-    describe('forEach() with a callback, returning a Component', () => {
+    describe('$each() with a callback, returning a Component', () => {
       test('SSR', () => {
         const globalState = state(['1', '2'])
 
