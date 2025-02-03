@@ -4,7 +4,6 @@
  */
 
 import { Template } from './types'
-import { CssAttribute } from "./common";
 
 export interface Statements {
   if (
@@ -180,5 +179,5 @@ export interface Statements {
     handler : (key: number) => boolean | any
   ) : HTMLElement[] | Error
 
-  css(input: CssAttribute): void
+  $css(sheet: CSSStyleSheet | string | string[]): void
 }

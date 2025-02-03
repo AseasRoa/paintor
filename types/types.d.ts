@@ -1,10 +1,7 @@
-import { CssAttribute } from "./common";
-
 type Elements = import('./WebApi/Elements').Elements
 type Statements = import('./Statements').Statements
 type CSSPropertiesJsStyle = import('./WebApi/CSSProperties').CSSPropertiesJsStyle
 
-export type CssAttribute = CSSStyleSheet | string | string[]
 export type StyleRules = CSSPropertiesJsStyle
 export type TemplateTree = Elements & Statements
 export type Template = (tree : TemplateTree) => (
