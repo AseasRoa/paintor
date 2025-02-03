@@ -11,12 +11,40 @@ describe('Elements Creation', () => {
     document.body.innerHTML = ''
   })
 
+  describe('Not-destructured method names', () => {
+    test('(SSR) not-destructured template tree', () => {
+      const html = component((x) => {
+        x.a('a')
+        x.button('button')
+        x.div('div')
+      }).html()
+
+      expect(html).toBe('<a>a</a><button>button</button><div>div</div>')
+    })
+
+    test('(DOM) not-destructured template tree', () => {
+      const container = document.createElement('div')
+      container.id = id
+      document.body.appendChild(container)
+
+      component((x) => {
+        x.a('a')
+        x.button('button')
+        x.div('div')
+      }).paint(container)
+
+      const elements = container.querySelectorAll('*')
+
+      expectTextContentsToBeLike(elements, ['a', 'button', 'div',])
+    })
+  })
+
   describe('Paint in elements, selected in different ways', () => {
     test('(SSR) 3 divs', () => {
-      const html = component((x) => {
-        x.div('div 1')
-        x.div('div 2')
-        x.div('div 3')
+      const html = component(({ div }) => {
+        div('div 1')
+        div('div 2')
+        div('div 3')
       }).html()
 
       expect(html).toBe('<div>div 1</div><div>div 2</div><div>div 3</div>')
@@ -27,10 +55,10 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component((x) => {
-        x.div('div 1')
-        x.div('div 2')
-        x.div('div 3')
+      component(({ div }) => {
+        div('div 1')
+        div('div 2')
+        div('div 3')
       }).paint(container)
 
       expect(container.childNodes.length).toBe(3)
@@ -41,10 +69,10 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component((x) => {
-        x.div('div 1')
-        x.div('div 2')
-        x.div('div 3')
+      component(({ div }) => {
+        div('div 1')
+        div('div 2')
+        div('div 3')
       }).paint(`#${id}`)
 
       expect(container.childNodes.length).toBe(3)
@@ -54,10 +82,10 @@ describe('Elements Creation', () => {
       const container = document.createElement('component-element')
       document.body.appendChild(container)
 
-      component((x) => {
-        x.div('div 1')
-        x.div('div 2')
-        x.div('div 3')
+      component(({ div }) => {
+        div('div 1')
+        div('div 2')
+        div('div 3')
       }).paint('component-element')
 
       expect(container.shadowRoot?.children.length).toBe(3)
@@ -67,15 +95,15 @@ describe('Elements Creation', () => {
   describe('Check Order of Rendered Elements', () => {
     describe('Table', () => {
       test('SSR', () => {
-        const html = component((x) => {
-          x.table(
-            x.tr(
-              x.td('Row 1, Column 1'),
-              x.td('Row 1, Column 2'),
+        const html = component(({ table, tr, td }) => {
+          table(
+            tr(
+              td('Row 1, Column 1'),
+              td('Row 1, Column 2'),
             ),
-            x.tr(
-              x.td('Row 2, Column 1'),
-              x.td('Row 2, Column 2'),
+            tr(
+              td('Row 2, Column 1'),
+              td('Row 2, Column 2'),
             ),
           )
         }).html()
@@ -86,15 +114,15 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        component((x) => {
-          x.table(
-            x.tr(
-              x.td('Row 1, Column 1'),
-              x.td('Row 1, Column 2'),
+        component(({ table, tr, td }) => {
+          table(
+            tr(
+              td('Row 1, Column 1'),
+              td('Row 1, Column 2'),
             ),
-            x.tr(
-              x.td('Row 2, Column 1'),
-              x.td('Row 2, Column 2'),
+            tr(
+              td('Row 2, Column 1'),
+              td('Row 2, Column 2'),
             ),
           )
         }).paint(container)
@@ -128,16 +156,16 @@ describe('Elements Creation', () => {
 
     describe('Automatically calling a Component', () => {
       test('SSR', () => {
-        const liFragments = component((x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = component(({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         })
 
-        const html = component((x) => {
-          x.ul(
-            x.li('li-1'),
+        const html = component(({ li, ul }) => {
+          ul(
+            li('li-1'),
             liFragments,
-            x.li('li-2'),
+            li('li-2'),
             liFragments,
           )
         }).html()
@@ -148,16 +176,16 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const liFragments = component((x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = component(({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         })
 
-        component((x) => {
-          x.ul(
-            x.li('li-1'),
+        component(({ li, ul }) => {
+          ul(
+            li('li-1'),
             liFragments,
-            x.li('li-2'),
+            li('li-2'),
             liFragments,
           )
         }).paint(container)
@@ -177,16 +205,16 @@ describe('Elements Creation', () => {
 
     describe('Automatically calling template functions', () => {
       test('SSR', () => {
-        const liFragments = template((x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = template(({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         })
 
-        const html = component((x) => {
-          x.ul(
-            x.li('li-1'),
+        const html = component(({ li, ul }) => {
+          ul(
+            li('li-1'),
             liFragments,
-            x.li('li-2'),
+            li('li-2'),
             liFragments,
           )
         }).html()
@@ -197,16 +225,16 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const liFragments = template((x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = template(({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         })
 
-        component((x) => {
-          x.ul(
-            x.li('li-1'),
+        component(({ li, ul }) => {
+          ul(
+            li('li-1'),
             liFragments,
-            x.li('li-2'),
+            li('li-2'),
             liFragments,
           )
         }).paint(container)
@@ -226,14 +254,9 @@ describe('Elements Creation', () => {
 
     describe('Manually calling template functions', () => {
       test('SSR', () => {
-        /**
-         * Template function, created without the wrapper
-         *
-         * @param {TemplateTree} x
-         */
-        const liFragments = (x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = ({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         }
 
         const html = component((x) => {
@@ -251,14 +274,9 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        /**
-         * Template function, created without the wrapper
-         *
-         * @param {TemplateTree} x
-         */
-        const liFragments = (x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = ({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         }
 
         component((x) => {
@@ -287,19 +305,14 @@ describe('Elements Creation', () => {
       test('SSR', () => {
         const array = ['1', '2']
 
-        /**
-         * Template function, created without the wrapper
-         *
-         * @param {TemplateTree} x
-         */
-        const liFragments = (x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = ({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         }
 
         const html = component((x) => {
           x.ul(
-            x.forEach(array, (value) => {
+            x.$each(array, (value) => {
               x.li(`li-${value}`)
               liFragments(x)
             }),
@@ -313,19 +326,14 @@ describe('Elements Creation', () => {
         const container = document.body
         const array = ['1', '2']
 
-        /**
-         * Template function, created without the wrapper
-         *
-         * @param {TemplateTree} x
-         */
-        const liFragments = (x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = ({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         }
 
         component((x) => {
           x.ul(
-            x.forEach(array, (value) => {
+            x.$each(array, (value) => {
               x.li(`li-${value}`)
               liFragments(x)
             })
@@ -349,12 +357,12 @@ describe('Elements Creation', () => {
       test('SSR', () => {
         const array = ['1', '2', '3', '4']
 
-        const html = component((x) => {
-          x.ul(
-            x.forEach(array, (value, key) => {
+        const html = component(({ $each, li, ul }) => {
+          ul(
+            $each(array, (value, key) => {
               if (key === '2') return false
 
-              return x.li(value)
+              return li(value)
             })
           )
         }).html()
@@ -366,12 +374,12 @@ describe('Elements Creation', () => {
         const container = document.body
         const array = ['1', '2', '3', '4']
 
-        component((x) => {
-          x.ul(
-            x.forEach(array, (value, key) => {
+        component(({ $each, li, ul }) => {
+          ul(
+            $each(array, (value, key) => {
               if (key === '2') return false
 
-              return x.li(value)
+              return li(value)
             })
           )
         }).paint(container)
@@ -386,19 +394,14 @@ describe('Elements Creation', () => {
       test('SSR', () => {
         const globalState = state(['1', '2'])
 
-        /**
-         * Template function, created without the wrapper
-         *
-         * @param {TemplateTree} x
-         */
-        const liFragments = (x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = ({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         }
 
         const html = component((x) => {
           x.ul(
-            x.forEach(globalState, (value) => {
+            x.$each(globalState, (value) => {
               x.li(`li-${value}`)
               liFragments(x)
             })
@@ -412,19 +415,14 @@ describe('Elements Creation', () => {
         const container = document.body
         const globalState = state(['1', '2'])
 
-        /**
-         * Template function, created without the wrapper
-         *
-         * @param {TemplateTree} x
-         */
-        const liFragments = (x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
+        const liFragments = ({ li }) => {
+          li('li-fragment-1')
+          li('li-fragment-2')
         }
 
         component((x) => {
           x.ul(
-            x.forEach(globalState, (value) => {
+            x.$each(globalState, (value) => {
               x.li(`li-${value}`)
               liFragments(x)
             }),
@@ -448,20 +446,19 @@ describe('Elements Creation', () => {
 
     describe('if() with a callback, returning a Template', () => {
       test('SSR', () => {
-        const ifCallback = template((x) => {
-          x.li('if')
+        const ifCallback = template(({ li }) => {
+          li('if')
         })
-        const elseCallback = template((x) => {
-          x.li('else')
+        const elseCallback = template(({ li }) => {
+          li('else')
         })
 
-        const html = component((x) => {
-          x.ul(
-            x.if(true, ifCallback, elseCallback),
+        const html = component(({ $if, ul }) => {
+          ul(
+            $if(true, ifCallback, elseCallback),
           )
-
-          x.ul(
-            x.if(false, ifCallback, elseCallback),
+          ul(
+            $if(false, ifCallback, elseCallback),
           )
         }).html()
 
@@ -474,20 +471,20 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const ifCallback = template((x) => {
-          x.li('if')
+        const ifCallback = template(({ li }) => {
+          li('if')
         })
-        const elseCallback = template((x) => {
-          x.li('else')
+        const elseCallback = template(({ li }) => {
+          li('else')
         })
 
-        component((x) => {
-          x.ul(
-            x.if(true, ifCallback, elseCallback),
+        component(({ $if, ul }) => {
+          ul(
+            $if(true, ifCallback, elseCallback),
           )
 
-          x.ul(
-            x.if(false, ifCallback, elseCallback),
+          ul(
+            $if(false, ifCallback, elseCallback),
           )
         }).paint(container)
 
@@ -514,17 +511,17 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Template}
          */
-        const callback = (value) => template((x) => {
-          x.li(`li-${value}`)
+        const callback = (value) => template(({ li }) => {
+          li(`li-${value}`)
         })
 
-        const html = component((x) => {
-          x.ul(
-            x.forEach(array, callback),
+        const html = component(({ $each, ul }) => {
+          ul(
+            $each(array, callback),
           )
 
-          x.ul(
-            x.forEach(globalState, callback),
+          ul(
+            $each(globalState, callback),
           )
         }).html()
 
@@ -543,17 +540,17 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Template}
          */
-        const callback = (value) => template((x) => {
-          x.li(`li-${value}`)
+        const callback = (value) => template(({ li }) => {
+          li(`li-${value}`)
         })
 
-        component((x) => {
-          x.ul(
-            x.forEach(array, callback),
+        component(({ $each, ul }) => {
+          ul(
+            $each(array, callback),
           )
 
-          x.ul(
-            x.forEach(globalState, callback),
+          ul(
+            $each(globalState, callback),
           )
         }).paint(container)
 
@@ -583,13 +580,13 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Component}
          */
-        const callback = (value) => component((x) => {
-          x.li(`li-${value}`)
+        const callback = (value) => component(({ li }) => {
+          li(`li-${value}`)
         })
 
-        const html = component((x) => {
-          x.ul(
-            x.forEach(globalState, callback),
+        const html = component(({ $each, ul }) => {
+          ul(
+            $each(globalState, callback),
           )
         }).html()
 
@@ -604,13 +601,13 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Component}
          */
-        const callback = (value) => component((x) => {
-          x.li(`li-${value}`)
+        const callback = (value) => component(({ li }) => {
+          li(`li-${value}`)
         })
 
-        component((x) => {
-          x.ul(
-            x.forEach(globalState, callback),
+        component(({ $each, ul }) => {
+          ul(
+            $each(globalState, callback),
           )
         }).paint(container)
 
@@ -626,40 +623,12 @@ describe('Elements Creation', () => {
     })
   })
 
-  describe('Destructured method names', () => {
-    test('(SSR) destructured template tree', () => {
-      const html = component(({ a, button, div }) => {
-        a('a')
-        button('button')
-        div('div')
-      }).html()
-
-      expect(html).toBe('<a>a</a><button>button</button><div>div</div>')
-    })
-
-    test('(DOM) destructured template tree', () => {
-      const container = document.createElement('div')
-      container.id = id
-      document.body.appendChild(container)
-
-      component(({ a, button, div }) => {
-        a('a')
-        button('button')
-        div('div')
-      }).paint(container)
-
-      const elements = container.querySelectorAll('*')
-
-      expectTextContentsToBeLike(elements, ['a', 'button', 'div',])
-    })
-  })
-
   describe('Static HTML', () => {
     test('(SSR) staticHtml()', () => {
       let counter = 0
 
-      const app = component((x) => {
-        x.div(counter)
+      const app = component(({ div }) => {
+        div(counter)
         counter += 1
       })
 
@@ -675,8 +644,8 @@ describe('Elements Creation', () => {
     test('(SSR) static(true)', () => {
       let counter = 0
 
-      const app = component((x) => {
-        x.div(counter)
+      const app = component(({ div }) => {
+        div(counter)
         counter += 1
       })
 
