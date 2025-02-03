@@ -3,6 +3,7 @@
  * @see https://www.typescriptlang.org/docs/handbook/utility-types.html
  */
 
+import { Reactive } from './common'
 import { Template } from './types'
 
 export interface Statements {
@@ -10,7 +11,7 @@ export interface Statements {
    * @since 1.5.0
    */
   $if (
-    condition: boolean | (() => boolean),
+    condition: boolean | Reactive<boolean>,
     handler: (() => void | Template) | Template,
     elseHandler?: (() => void | Template) | Template,
   ) : HTMLElement[]
@@ -207,8 +208,8 @@ export interface Statements {
    * @since 1.5.0
    */
   $repeat(
-    from : number | (() => number),
-    to : number | (() => number),
+    from : number | Reactive<number>,
+    to : number | Reactive<number>,
     handler : (key: number) => boolean | any
   ) : HTMLElement[] | Error
 

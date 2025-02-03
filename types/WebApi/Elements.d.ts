@@ -1,6 +1,7 @@
 import { ElementAttributes } from './ElementAttributes'
 import { GlobalElementAttributes } from './ElementAttributes'
 import { GlobalProperties } from './ElementProperties'
+import { FormatArray } from "./common";
 
 type Children = Array<any // Added any, because it shows error when using two children -> string and array of strings
 | Error | HTMLElement | HTMLElement[] | string | Component | void>
@@ -23,7 +24,8 @@ export interface Elements {
     properties : ElementAttributes['a'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  a(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  a(textContent : string, ...children : Children) : HTMLElement;
+  a(formatArray : FormatArray, ...children : Children) : HTMLElement;
   a(...children : Children) : HTMLElement;
 
   /**
@@ -34,7 +36,8 @@ export interface Elements {
     properties : ElementAttributes['abbr'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  abbr(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  abbr(textContent : string, ...children : Children) : HTMLElement;
+  abbr(formatArray : FormatArray, ...children : Children) : HTMLElement;
   abbr(...children : Children) : HTMLElement;
 
   /**
@@ -45,7 +48,8 @@ export interface Elements {
     properties : ElementAttributes['address'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  address(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  address(textContent : string, ...children : Children) : HTMLElement;
+  address(formatArray : FormatArray, ...children : Children) : HTMLElement;
   address(...children : Children) : HTMLElement;
 
   /**
@@ -56,7 +60,8 @@ export interface Elements {
     properties : ElementAttributes['area'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  area(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  area(textContent : string, ...children : Children) : HTMLElement;
+  area(formatArray : FormatArray, ...children : Children) : HTMLElement;
   area(...children : Children) : HTMLElement;
 
   /**
@@ -67,7 +72,8 @@ export interface Elements {
     properties : ElementAttributes['article'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  article(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  article(textContent : string, ...children : Children) : HTMLElement;
+  article(formatArray : FormatArray, ...children : Children) : HTMLElement;
   article(...children : Children) : HTMLElement;
 
   /**
@@ -78,7 +84,8 @@ export interface Elements {
     properties : ElementAttributes['aside'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  aside(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  aside(textContent : string, ...children : Children) : HTMLElement;
+  aside(formatArray : FormatArray, ...children : Children) : HTMLElement;
   aside(...children : Children) : HTMLElement;
 
   /**
@@ -89,7 +96,8 @@ export interface Elements {
     properties : ElementAttributes['audio'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  audio(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  audio(textContent : string, ...children : Children) : HTMLElement;
+  audio(formatArray : FormatArray, ...children : Children) : HTMLElement;
   audio(...children : Children) : HTMLElement;
 
   /**
@@ -100,7 +108,8 @@ export interface Elements {
     properties : ElementAttributes['b'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  b(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  b(textContent : string, ...children : Children) : HTMLElement;
+  b(formatArray : FormatArray, ...children : Children) : HTMLElement;
   b(...children : Children) : HTMLElement;
 
   /**
@@ -111,7 +120,8 @@ export interface Elements {
     properties : ElementAttributes['base'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  base(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  base(textContent : string, ...children : Children) : HTMLElement;
+  base(formatArray : FormatArray, ...children : Children) : HTMLElement;
   base(...children : Children) : HTMLElement;
 
   /**
@@ -122,7 +132,8 @@ export interface Elements {
     properties : ElementAttributes['bdi'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  bdi(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  bdi(textContent : string, ...children : Children) : HTMLElement;
+  bdi(formatArray : FormatArray, ...children : Children) : HTMLElement;
   bdi(...children : Children) : HTMLElement;
 
   /**
@@ -133,7 +144,8 @@ export interface Elements {
     properties : ElementAttributes['bdo'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  bdo(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  bdo(textContent : string, ...children : Children) : HTMLElement;
+  bdo(formatArray : FormatArray, ...children : Children) : HTMLElement;
   bdo(...children : Children) : HTMLElement;
 
   /**
@@ -144,7 +156,8 @@ export interface Elements {
     properties : ElementAttributes['blockquote'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  blockquote(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  blockquote(textContent : string, ...children : Children) : HTMLElement;
+  blockquote(formatArray : FormatArray, ...children : Children) : HTMLElement;
   blockquote(...children : Children) : HTMLElement;
 
   /**
@@ -155,7 +168,8 @@ export interface Elements {
     properties : ElementAttributes['body'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  body(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  body(textContent : string, ...children : Children) : HTMLElement;
+  body(formatArray : FormatArray, ...children : Children) : HTMLElement;
   body(...children : Children) : HTMLElement;
 
   /**
@@ -166,7 +180,8 @@ export interface Elements {
     properties : ElementAttributes['br'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  br(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  br(textContent : string, ...children : Children) : HTMLElement;
+  br(formatArray : FormatArray, ...children : Children) : HTMLElement;
   br(...children : Children) : HTMLElement;
 
   /**
@@ -177,7 +192,8 @@ export interface Elements {
     properties : ElementAttributes['button'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  button(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  button(textContent : string, ...children : Children) : HTMLElement;
+  button(formatArray : FormatArray, ...children : Children) : HTMLElement;
   button(...children : Children) : HTMLElement;
 
   /**
@@ -188,7 +204,8 @@ export interface Elements {
     properties : ElementAttributes['canvas'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  canvas(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  canvas(textContent : string, ...children : Children) : HTMLElement;
+  canvas(formatArray : FormatArray, ...children : Children) : HTMLElement;
   canvas(...children : Children) : HTMLElement;
 
   /**
@@ -199,7 +216,8 @@ export interface Elements {
     properties : ElementAttributes['caption'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  caption(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  caption(textContent : string, ...children : Children) : HTMLElement;
+  caption(formatArray : FormatArray, ...children : Children) : HTMLElement;
   caption(...children : Children) : HTMLElement;
 
   /**
@@ -210,7 +228,8 @@ export interface Elements {
     properties : ElementAttributes['cite'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  cite(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  cite(textContent : string, ...children : Children) : HTMLElement;
+  cite(formatArray : FormatArray, ...children : Children) : HTMLElement;
   cite(...children : Children) : HTMLElement;
 
   /**
@@ -221,7 +240,8 @@ export interface Elements {
     properties : ElementAttributes['code'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  code(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  code(textContent : string, ...children : Children) : HTMLElement;
+  code(formatArray : FormatArray, ...children : Children) : HTMLElement;
   code(...children : Children) : HTMLElement;
 
   /**
@@ -232,7 +252,8 @@ export interface Elements {
     properties : ElementAttributes['col'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  col(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  col(textContent : string, ...children : Children) : HTMLElement;
+  col(formatArray : FormatArray, ...children : Children) : HTMLElement;
   col(...children : Children) : HTMLElement;
 
   /**
@@ -243,7 +264,8 @@ export interface Elements {
     properties : ElementAttributes['colgroup'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  colgroup(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  colgroup(textContent : string, ...children : Children) : HTMLElement;
+  colgroup(formatArray : FormatArray, ...children : Children) : HTMLElement;
   colgroup(...children : Children) : HTMLElement;
 
   /**
@@ -254,7 +276,8 @@ export interface Elements {
     properties : ElementAttributes['data'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  data(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  data(textContent : string, ...children : Children) : HTMLElement;
+  data(formatArray : FormatArray, ...children : Children) : HTMLElement;
   data(...children : Children) : HTMLElement;
 
   /**
@@ -265,7 +288,8 @@ export interface Elements {
     properties : ElementAttributes['datalist'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  datalist(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  datalist(textContent : string, ...children : Children) : HTMLElement;
+  datalist(formatArray : FormatArray, ...children : Children) : HTMLElement;
   datalist(...children : Children) : HTMLElement;
 
   /**
@@ -276,7 +300,8 @@ export interface Elements {
     properties : ElementAttributes['dd'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  dd(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  dd(textContent : string, ...children : Children) : HTMLElement;
+  dd(formatArray : FormatArray, ...children : Children) : HTMLElement;
   dd(...children : Children) : HTMLElement;
 
   /**
@@ -287,7 +312,8 @@ export interface Elements {
     properties : ElementAttributes['del'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  del(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  del(textContent : string, ...children : Children) : HTMLElement;
+  del(formatArray : FormatArray, ...children : Children) : HTMLElement;
   del(...children : Children) : HTMLElement;
 
   /**
@@ -298,7 +324,8 @@ export interface Elements {
     properties : ElementAttributes['details'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  details(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  details(textContent : string, ...children : Children) : HTMLElement;
+  details(formatArray : FormatArray, ...children : Children) : HTMLElement;
   details(...children : Children) : HTMLElement;
 
   /**
@@ -309,7 +336,8 @@ export interface Elements {
     properties : ElementAttributes['dfn'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  dfn(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  dfn(textContent : string, ...children : Children) : HTMLElement;
+  dfn(formatArray : FormatArray, ...children : Children) : HTMLElement;
   dfn(...children : Children) : HTMLElement;
 
   /**
@@ -320,7 +348,8 @@ export interface Elements {
     properties : ElementAttributes['dialog'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  dialog(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  dialog(textContent : string, ...children : Children) : HTMLElement;
+  dialog(formatArray : FormatArray, ...children : Children) : HTMLElement;
   dialog(...children : Children) : HTMLElement;
 
   /**
@@ -331,7 +360,8 @@ export interface Elements {
     properties : ElementAttributes['div'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  div(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  div(textContent : string, ...children : Children) : HTMLElement;
+  div(formatArray : FormatArray, ...children : Children) : HTMLElement;
   div(...children : Children) : HTMLElement;
 
   /**
@@ -342,7 +372,8 @@ export interface Elements {
     properties : ElementAttributes['dl'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  dl(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  dl(textContent : string, ...children : Children) : HTMLElement;
+  dl(formatArray : FormatArray, ...children : Children) : HTMLElement;
   dl(...children : Children) : HTMLElement;
 
   /**
@@ -353,7 +384,8 @@ export interface Elements {
     properties : ElementAttributes['dt'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  dt(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  dt(textContent : string, ...children : Children) : HTMLElement;
+  dt(formatArray : FormatArray, ...children : Children) : HTMLElement;
   dt(...children : Children) : HTMLElement;
 
   /**
@@ -364,7 +396,8 @@ export interface Elements {
     properties : ElementAttributes['em'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  em(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  em(textContent : string, ...children : Children) : HTMLElement;
+  em(formatArray : FormatArray, ...children : Children) : HTMLElement;
   em(...children : Children) : HTMLElement;
 
   /**
@@ -375,7 +408,8 @@ export interface Elements {
     properties : ElementAttributes['embed'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  embed(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  embed(textContent : string, ...children : Children) : HTMLElement;
+  embed(formatArray : FormatArray, ...children : Children) : HTMLElement;
   embed(...children : Children) : HTMLElement;
 
   /**
@@ -386,7 +420,8 @@ export interface Elements {
     properties : ElementAttributes['fieldset'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  fieldset(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  fieldset(textContent : string, ...children : Children) : HTMLElement;
+  fieldset(formatArray : FormatArray, ...children : Children) : HTMLElement;
   fieldset(...children : Children) : HTMLElement;
 
   /**
@@ -397,7 +432,8 @@ export interface Elements {
     properties : ElementAttributes['figcaption'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  figcaption(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  figcaption(textContent : string, ...children : Children) : HTMLElement;
+  figcaption(formatArray : FormatArray, ...children : Children) : HTMLElement;
   figcaption(...children : Children) : HTMLElement;
 
   /**
@@ -408,7 +444,8 @@ export interface Elements {
     properties : ElementAttributes['figure'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  figure(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  figure(textContent : string, ...children : Children) : HTMLElement;
+  figure(formatArray : FormatArray, ...children : Children) : HTMLElement;
   figure(...children : Children) : HTMLElement;
 
   /**
@@ -419,7 +456,8 @@ export interface Elements {
     properties : ElementAttributes['footer'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  footer(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  footer(textContent : string, ...children : Children) : HTMLElement;
+  footer(formatArray : FormatArray, ...children : Children) : HTMLElement;
   footer(...children : Children) : HTMLElement;
 
   /**
@@ -430,7 +468,8 @@ export interface Elements {
     properties : ElementAttributes['form'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  form(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  form(textContent : string, ...children : Children) : HTMLElement;
+  form(formatArray : FormatArray, ...children : Children) : HTMLElement;
   form(...children : Children) : HTMLElement;
 
   /**
@@ -441,7 +480,8 @@ export interface Elements {
     properties : ElementAttributes['h1'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  h1(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  h1(textContent : string, ...children : Children) : HTMLElement;
+  h1(formatArray : FormatArray, ...children : Children) : HTMLElement;
   h1(...children : Children) : HTMLElement;
 
   /**
@@ -452,7 +492,8 @@ export interface Elements {
     properties : ElementAttributes['h2'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  h2(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  h2(textContent : string, ...children : Children) : HTMLElement;
+  h2(formatArray : FormatArray, ...children : Children) : HTMLElement;
   h2(...children : Children) : HTMLElement;
 
   /**
@@ -463,7 +504,8 @@ export interface Elements {
     properties : ElementAttributes['h3'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  h3(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  h3(textContent : string, ...children : Children) : HTMLElement;
+  h3(formatArray : FormatArray, ...children : Children) : HTMLElement;
   h3(...children : Children) : HTMLElement;
 
   /**
@@ -474,7 +516,8 @@ export interface Elements {
     properties : ElementAttributes['h4'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  h4(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  h4(textContent : string, ...children : Children) : HTMLElement;
+  h4(formatArray : FormatArray, ...children : Children) : HTMLElement;
   h4(...children : Children) : HTMLElement;
 
   /**
@@ -485,7 +528,8 @@ export interface Elements {
     properties : ElementAttributes['h5'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  h5(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  h5(textContent : string, ...children : Children) : HTMLElement;
+  h5(formatArray : FormatArray, ...children : Children) : HTMLElement;
   h5(...children : Children) : HTMLElement;
 
   /**
@@ -496,7 +540,8 @@ export interface Elements {
     properties : ElementAttributes['h6'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  h6(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  h6(textContent : string, ...children : Children) : HTMLElement;
+  h6(formatArray : FormatArray, ...children : Children) : HTMLElement;
   h6(...children : Children) : HTMLElement;
 
   /**
@@ -507,7 +552,8 @@ export interface Elements {
     properties : ElementAttributes['head'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  head(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  head(textContent : string, ...children : Children) : HTMLElement;
+  head(formatArray : FormatArray, ...children : Children) : HTMLElement;
   head(...children : Children) : HTMLElement;
 
   /**
@@ -518,7 +564,8 @@ export interface Elements {
     properties : ElementAttributes['header'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  header(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  header(textContent : string, ...children : Children) : HTMLElement;
+  header(formatArray : FormatArray, ...children : Children) : HTMLElement;
   header(...children : Children) : HTMLElement;
 
   /**
@@ -529,7 +576,8 @@ export interface Elements {
     properties : ElementAttributes['hgroup'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  hgroup(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  hgroup(textContent : string, ...children : Children) : HTMLElement;
+  hgroup(formatArray : FormatArray, ...children : Children) : HTMLElement;
   hgroup(...children : Children) : HTMLElement;
 
 
@@ -541,7 +589,8 @@ export interface Elements {
     properties : ElementAttributes['hr'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  hr(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  hr(textContent : string, ...children : Children) : HTMLElement;
+  hr(formatArray : FormatArray, ...children : Children) : HTMLElement;
   hr(...children : Children) : HTMLElement;
 
   /**
@@ -552,7 +601,8 @@ export interface Elements {
       properties : ElementAttributes['html'] & (GlobalElementAttributes | GlobalProperties),
       ...children : Children
   ) : HTMLElement;
-  html(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  html(textContent : string, ...children : Children) : HTMLElement;
+  html(formatArray : FormatArray, ...children : Children) : HTMLElement;
   html(...children : Children) : HTMLElement;
 
   /**
@@ -563,7 +613,8 @@ export interface Elements {
     properties : ElementAttributes['i'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  i(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  i(textContent : string, ...children : Children) : HTMLElement;
+  i(formatArray : FormatArray, ...children : Children) : HTMLElement;
   i(...children : Children) : HTMLElement;
 
   /**
@@ -574,7 +625,8 @@ export interface Elements {
     properties : ElementAttributes['iframe'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  iframe(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  iframe(textContent : string, ...children : Children) : HTMLElement;
+  iframe(formatArray : FormatArray, ...children : Children) : HTMLElement;
   iframe(...children : Children) : HTMLElement;
 
   /**
@@ -585,7 +637,8 @@ export interface Elements {
     properties : ElementAttributes['img'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  img(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  img(textContent : string, ...children : Children) : HTMLElement;
+  img(formatArray : FormatArray, ...children : Children) : HTMLElement;
   img(...children : Children) : HTMLElement;
 
   /**
@@ -596,7 +649,8 @@ export interface Elements {
     properties : ElementAttributes['input'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  input(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  input(textContent : string, ...children : Children) : HTMLElement;
+  input(formatArray : FormatArray, ...children : Children) : HTMLElement;
   input(...children : Children) : HTMLElement;
 
   /**
@@ -607,7 +661,8 @@ export interface Elements {
     properties : ElementAttributes['ins'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  ins(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  ins(textContent : string, ...children : Children) : HTMLElement;
+  ins(formatArray : FormatArray, ...children : Children) : HTMLElement;
   ins(...children : Children) : HTMLElement;
 
   /**
@@ -618,7 +673,8 @@ export interface Elements {
     properties : ElementAttributes['kbd'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  kbd(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  kbd(textContent : string, ...children : Children) : HTMLElement;
+  kbd(formatArray : FormatArray, ...children : Children) : HTMLElement;
   kbd(...children : Children) : HTMLElement;
 
   /**
@@ -629,7 +685,8 @@ export interface Elements {
     properties : ElementAttributes['label'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  label(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  label(textContent : string, ...children : Children) : HTMLElement;
+  label(formatArray : FormatArray, ...children : Children) : HTMLElement;
   label(...children : Children) : HTMLElement;
 
   /**
@@ -640,7 +697,8 @@ export interface Elements {
     properties : ElementAttributes['legend'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  legend(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  legend(textContent : string, ...children : Children) : HTMLElement;
+  legend(formatArray : FormatArray, ...children : Children) : HTMLElement;
   legend(...children : Children) : HTMLElement;
 
   /**
@@ -651,7 +709,8 @@ export interface Elements {
     properties : ElementAttributes['li'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  li(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  li(textContent : string, ...children : Children) : HTMLElement;
+  li(formatArray : FormatArray, ...children : Children) : HTMLElement;
   li(...children : Children) : HTMLElement;
 
   /**
@@ -662,7 +721,8 @@ export interface Elements {
     properties : ElementAttributes['link'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  link(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  link(textContent : string, ...children : Children) : HTMLElement;
+  link(formatArray : FormatArray, ...children : Children) : HTMLElement;
   link(...children : Children) : HTMLElement;
 
   /**
@@ -673,7 +733,8 @@ export interface Elements {
     properties : ElementAttributes['main'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  main(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  main(textContent : string, ...children : Children) : HTMLElement;
+  main(formatArray : FormatArray, ...children : Children) : HTMLElement;
   main(...children : Children) : HTMLElement;
 
   /**
@@ -684,7 +745,8 @@ export interface Elements {
     properties : ElementAttributes['map'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  map(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  map(textContent : string, ...children : Children) : HTMLElement;
+  map(formatArray : FormatArray, ...children : Children) : HTMLElement;
   map(...children : Children) : HTMLElement;
 
   /**
@@ -695,7 +757,8 @@ export interface Elements {
     properties : ElementAttributes['mark'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  mark(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  mark(textContent : string, ...children : Children) : HTMLElement;
+  mark(formatArray : FormatArray, ...children : Children) : HTMLElement;
   mark(...children : Children) : HTMLElement;
 
   /**
@@ -706,7 +769,8 @@ export interface Elements {
     properties : ElementAttributes['meta'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  meta(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  meta(textContent : string, ...children : Children) : HTMLElement;
+  meta(formatArray : FormatArray, ...children : Children) : HTMLElement;
   meta(...children : Children) : HTMLElement;
 
   /**
@@ -717,7 +781,8 @@ export interface Elements {
     properties : ElementAttributes['meter'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  meter(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  meter(textContent : string, ...children : Children) : HTMLElement;
+  meter(formatArray : FormatArray, ...children : Children) : HTMLElement;
   meter(...children : Children) : HTMLElement;
 
   /**
@@ -728,7 +793,8 @@ export interface Elements {
     properties : ElementAttributes['nav'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  nav(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  nav(textContent : string, ...children : Children) : HTMLElement;
+  nav(formatArray : FormatArray, ...children : Children) : HTMLElement;
   nav(...children : Children) : HTMLElement;
 
   /**
@@ -739,7 +805,8 @@ export interface Elements {
     properties : ElementAttributes['noscript'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  noscript(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  noscript(textContent : string, ...children : Children) : HTMLElement;
+  noscript(formatArray : FormatArray, ...children : Children) : HTMLElement;
   noscript(...children : Children) : HTMLElement;
 
   /**
@@ -750,7 +817,8 @@ export interface Elements {
     properties : ElementAttributes['object'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  object(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  object(textContent : string, ...children : Children) : HTMLElement;
+  object(formatArray : FormatArray, ...children : Children) : HTMLElement;
   object(...children : Children) : HTMLElement;
 
   /**
@@ -761,7 +829,8 @@ export interface Elements {
     properties : ElementAttributes['ol'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  ol(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  ol(textContent : string, ...children : Children) : HTMLElement;
+  ol(formatArray : FormatArray, ...children : Children) : HTMLElement;
   ol(...children : Children) : HTMLElement;
 
   /**
@@ -772,7 +841,8 @@ export interface Elements {
     properties : ElementAttributes['optgroup'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  optgroup(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  optgroup(textContent : string, ...children : Children) : HTMLElement;
+  optgroup(formatArray : FormatArray, ...children : Children) : HTMLElement;
   optgroup(...children : Children) : HTMLElement;
 
   /**
@@ -783,7 +853,8 @@ export interface Elements {
     properties : ElementAttributes['option'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  option(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  option(textContent : string, ...children : Children) : HTMLElement;
+  option(formatArray : FormatArray, ...children : Children) : HTMLElement;
   option(...children : Children) : HTMLElement;
 
   /**
@@ -794,7 +865,8 @@ export interface Elements {
     properties : ElementAttributes['output'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  output(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  output(textContent : string, ...children : Children) : HTMLElement;
+  output(formatArray : FormatArray, ...children : Children) : HTMLElement;
   output(...children : Children) : HTMLElement;
 
   /**
@@ -805,7 +877,8 @@ export interface Elements {
     properties : ElementAttributes['p'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  p(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  p(textContent : string, ...children : Children) : HTMLElement;
+  p(formatArray : FormatArray, ...children : Children) : HTMLElement;
   p(...children : Children) : HTMLElement;
 
   /**
@@ -816,7 +889,8 @@ export interface Elements {
     properties : ElementAttributes['picture'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  picture(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  picture(textContent : string, ...children : Children) : HTMLElement;
+  picture(formatArray : FormatArray, ...children : Children) : HTMLElement;
   picture(...children : Children) : HTMLElement;
 
   /**
@@ -827,7 +901,8 @@ export interface Elements {
     properties : ElementAttributes['pre'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  pre(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  pre(textContent : string, ...children : Children) : HTMLElement;
+  pre(formatArray : FormatArray, ...children : Children) : HTMLElement;
   pre(...children : Children) : HTMLElement;
 
   /**
@@ -838,7 +913,8 @@ export interface Elements {
     properties : ElementAttributes['progress'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  progress(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  progress(textContent : string, ...children : Children) : HTMLElement;
+  progress(formatArray : FormatArray, ...children : Children) : HTMLElement;
   progress(...children : Children) : HTMLElement;
 
   /**
@@ -849,7 +925,8 @@ export interface Elements {
     properties : ElementAttributes['q'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  q(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  q(textContent : string, ...children : Children) : HTMLElement;
+  q(formatArray : FormatArray, ...children : Children) : HTMLElement;
   q(...children : Children) : HTMLElement;
 
   /**
@@ -860,7 +937,8 @@ export interface Elements {
     properties : ElementAttributes['rp'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  rp(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  rp(textContent : string, ...children : Children) : HTMLElement;
+  rp(formatArray : FormatArray, ...children : Children) : HTMLElement;
   rp(...children : Children) : HTMLElement;
 
   /**
@@ -871,7 +949,8 @@ export interface Elements {
     properties : ElementAttributes['rt'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  rt(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  rt(textContent : string, ...children : Children) : HTMLElement;
+  rt(formatArray : FormatArray, ...children : Children) : HTMLElement;
   rt(...children : Children) : HTMLElement;
 
   /**
@@ -882,7 +961,8 @@ export interface Elements {
     properties : ElementAttributes['ruby'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  ruby(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  ruby(textContent : string, ...children : Children) : HTMLElement;
+  ruby(formatArray : FormatArray, ...children : Children) : HTMLElement;
   ruby(...children : Children) : HTMLElement;
 
   /**
@@ -893,7 +973,8 @@ export interface Elements {
     properties : ElementAttributes['s'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  s(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  s(textContent : string, ...children : Children) : HTMLElement;
+  s(formatArray : FormatArray, ...children : Children) : HTMLElement;
   s(...children : Children) : HTMLElement;
 
   /**
@@ -904,7 +985,8 @@ export interface Elements {
     properties : ElementAttributes['samp'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  samp(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  samp(textContent : string, ...children : Children) : HTMLElement;
+  samp(formatArray : FormatArray, ...children : Children) : HTMLElement;
   samp(...children : Children) : HTMLElement;
 
   /**
@@ -924,7 +1006,8 @@ export interface Elements {
     clientCode : () => void,
     ...children : Children
   ) : HTMLElement;
-  script(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  script(textContent : string, ...children : Children) : HTMLElement;
+  script(formatArray : FormatArray, ...children : Children) : HTMLElement;
   script(...children : Children) : HTMLElement;
 
   /**
@@ -935,7 +1018,8 @@ export interface Elements {
     properties : ElementAttributes['section'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  section(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  section(textContent : string, ...children : Children) : HTMLElement;
+  section(formatArray : FormatArray, ...children : Children) : HTMLElement;
   section(...children : Children) : HTMLElement;
 
   /**
@@ -946,7 +1030,8 @@ export interface Elements {
     properties : ElementAttributes['select'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  select(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  select(textContent : string, ...children : Children) : HTMLElement;
+  select(formatArray : FormatArray, ...children : Children) : HTMLElement;
   select(...children : Children) : HTMLElement;
 
   /**
@@ -957,9 +1042,9 @@ export interface Elements {
     properties : ElementAttributes['slot'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  slot(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  slot(textContent : string, ...children : Children) : HTMLElement;
+  slot(formatArray : FormatArray, ...children : Children) : HTMLElement;
   slot(...children : Children) : HTMLElement;
-
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/small
@@ -969,7 +1054,8 @@ export interface Elements {
     properties : ElementAttributes['small'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  small(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  small(textContent : string, ...children : Children) : HTMLElement;
+  small(formatArray : FormatArray, ...children : Children) : HTMLElement;
   small(...children : Children) : HTMLElement;
 
   /**
@@ -980,7 +1066,8 @@ export interface Elements {
     properties : ElementAttributes['source'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  source(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  source(textContent : string, ...children : Children) : HTMLElement;
+  source(formatArray : FormatArray, ...children : Children) : HTMLElement;
   source(...children : Children) : HTMLElement;
 
   /**
@@ -991,7 +1078,8 @@ export interface Elements {
     properties : ElementAttributes['span'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  span(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  span(textContent : string, ...children : Children) : HTMLElement;
+  span(formatArray : FormatArray, ...children : Children) : HTMLElement;
   span(...children : Children) : HTMLElement;
 
   /**
@@ -1002,7 +1090,8 @@ export interface Elements {
     properties : ElementAttributes['strong'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  strong(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  strong(textContent : string, ...children : Children) : HTMLElement;
+  strong(formatArray : FormatArray, ...children : Children) : HTMLElement;
   strong(...children : Children) : HTMLElement;
 
   /**
@@ -1013,7 +1102,8 @@ export interface Elements {
     properties : ElementAttributes['style'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  style(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  style(textContent : string, ...children : Children) : HTMLElement;
+  style(formatArray : FormatArray, ...children : Children) : HTMLElement;
   style(...children : Children) : HTMLElement;
 
   /**
@@ -1024,7 +1114,8 @@ export interface Elements {
     properties : ElementAttributes['sub'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  sub(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  sub(textContent : string, ...children : Children) : HTMLElement;
+  sub(formatArray : FormatArray, ...children : Children) : HTMLElement;
   sub(...children : Children) : HTMLElement;
 
   /**
@@ -1035,7 +1126,8 @@ export interface Elements {
     properties : ElementAttributes['summary'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  summary(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  summary(textContent : string, ...children : Children) : HTMLElement;
+  summary(formatArray : FormatArray, ...children : Children) : HTMLElement;
   summary(...children : Children) : HTMLElement;
 
   /**
@@ -1046,7 +1138,8 @@ export interface Elements {
     properties : ElementAttributes['sup'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  sup(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  sup(textContent : string, ...children : Children) : HTMLElement;
+  sup(formatArray : FormatArray, ...children : Children) : HTMLElement;
   sup(...children : Children) : HTMLElement;
 
   /**
@@ -1057,7 +1150,8 @@ export interface Elements {
     properties : ElementAttributes['svg'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  svg(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  svg(textContent : string, ...children : Children) : HTMLElement;
+  svg(formatArray : FormatArray, ...children : Children) : HTMLElement;
   svg(...children : Children) : HTMLElement;
 
   /**
@@ -1068,7 +1162,8 @@ export interface Elements {
     properties : ElementAttributes['table'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  table(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  table(textContent : string, ...children : Children) : HTMLElement;
+  table(formatArray : FormatArray, ...children : Children) : HTMLElement;
   table(...children : Children) : HTMLElement;
 
   /**
@@ -1079,7 +1174,8 @@ export interface Elements {
     properties : ElementAttributes['tbody'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  tbody(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  tbody(textContent : string, ...children : Children) : HTMLElement;
+  tbody(formatArray : FormatArray, ...children : Children) : HTMLElement;
   tbody(...children : Children) : HTMLElement;
 
   /**
@@ -1090,7 +1186,8 @@ export interface Elements {
     properties : ElementAttributes['td'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  td(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  td(textContent : string, ...children : Children) : HTMLElement;
+  td(formatArray : FormatArray, ...children : Children) : HTMLElement;
   td(...children : Children) : HTMLElement;
 
   /**
@@ -1101,7 +1198,8 @@ export interface Elements {
     properties : ElementAttributes['template'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  template(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  template(textContent : string, ...children : Children) : HTMLElement;
+  template(formatArray : FormatArray, ...children : Children) : HTMLElement;
   template(...children : Children) : HTMLElement;
 
   /**
@@ -1112,7 +1210,8 @@ export interface Elements {
     properties : ElementAttributes['textarea'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  textarea(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  textarea(textContent : string, ...children : Children) : HTMLElement;
+  textarea(formatArray : FormatArray, ...children : Children) : HTMLElement;
   textarea(...children : Children) : HTMLElement;
 
   /**
@@ -1123,7 +1222,8 @@ export interface Elements {
     properties : ElementAttributes['tfoot'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  tfoot(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  tfoot(textContent : string, ...children : Children) : HTMLElement;
+  tfoot(formatArray : FormatArray, ...children : Children) : HTMLElement;
   tfoot(...children : Children) : HTMLElement;
 
   /**
@@ -1134,7 +1234,8 @@ export interface Elements {
     properties : ElementAttributes['th'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  th(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  th(textContent : string, ...children : Children) : HTMLElement;
+  th(formatArray : FormatArray, ...children : Children) : HTMLElement;
   th(...children : Children) : HTMLElement;
 
   /**
@@ -1145,7 +1246,8 @@ export interface Elements {
     properties : ElementAttributes['thead'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  thead(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  thead(textContent : string, ...children : Children) : HTMLElement;
+  thead(formatArray : FormatArray, ...children : Children) : HTMLElement;
   thead(...children : Children) : HTMLElement;
 
   /**
@@ -1156,7 +1258,8 @@ export interface Elements {
     properties : ElementAttributes['time'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  time(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  time(textContent : string, ...children : Children) : HTMLElement;
+  time(formatArray : FormatArray, ...children : Children) : HTMLElement;
   time(...children : Children) : HTMLElement;
 
   /**
@@ -1167,7 +1270,8 @@ export interface Elements {
     properties : ElementAttributes['title'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  title(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  title(textContent : string, ...children : Children) : HTMLElement;
+  title(formatArray : FormatArray, ...children : Children) : HTMLElement;
   title(...children : Children) : HTMLElement;
 
   /**
@@ -1178,7 +1282,8 @@ export interface Elements {
     properties : ElementAttributes['tr'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  tr(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  tr(textContent : string, ...children : Children) : HTMLElement;
+  tr(formatArray : FormatArray, ...children : Children) : HTMLElement;
   tr(...children : Children) : HTMLElement;
 
   /**
@@ -1189,7 +1294,8 @@ export interface Elements {
     properties : ElementAttributes['track'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  track(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  track(textContent : string, ...children : Children) : HTMLElement;
+  track(formatArray : FormatArray, ...children : Children) : HTMLElement;
   track(...children : Children) : HTMLElement;
 
   /**
@@ -1200,7 +1306,8 @@ export interface Elements {
     properties : ElementAttributes['u'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  u(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  u(textContent : string, ...children : Children) : HTMLElement;
+  u(formatArray : FormatArray, ...children : Children) : HTMLElement;
   u(...children : Children) : HTMLElement;
 
   /**
@@ -1211,7 +1318,8 @@ export interface Elements {
     properties : ElementAttributes['ul'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  ul(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  ul(textContent : string, ...children : Children) : HTMLElement;
+  ul(formatArray : FormatArray, ...children : Children) : HTMLElement;
   ul(...children : Children) : HTMLElement;
 
   /**
@@ -1222,7 +1330,8 @@ export interface Elements {
     properties : ElementAttributes['var'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  var(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  var(textContent : string, ...children : Children) : HTMLElement;
+  var(formatArray : FormatArray, ...children : Children) : HTMLElement;
   var(...children : Children) : HTMLElement;
 
   /**
@@ -1233,7 +1342,8 @@ export interface Elements {
     properties : ElementAttributes['video'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  video(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  video(textContent : string, ...children : Children) : HTMLElement;
+  video(formatArray : FormatArray, ...children : Children) : HTMLElement;
   video(...children : Children) : HTMLElement;
 
   /**
@@ -1244,6 +1354,7 @@ export interface Elements {
     properties : ElementAttributes['wbr'] & (GlobalElementAttributes | GlobalProperties),
     ...children : Children
   ) : HTMLElement;
-  wbr(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  wbr(textContent : string, ...children : Children) : HTMLElement;
+  wbr(formatArray : FormatArray, ...children : Children) : HTMLElement;
   wbr(...children : Children) : HTMLElement;
 }

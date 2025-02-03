@@ -3,6 +3,7 @@
  * @see https://www.typescriptlang.org/docs/handbook/utility-types.html
  */
 
+import { Reactive } from './common'
 import { Template } from './types'
 
 export interface StatementsDeprecated {
@@ -204,8 +205,8 @@ export interface StatementsDeprecated {
    * @deprecated Replaced with $for() in 1.5.0
    */
   for(
-    from : number | (() => number),
-    to : number | (() => number),
+    from : Reactive<number>,
+    to : Reactive<number>,
     handler : (key: number) => boolean | any
   ) : HTMLElement[] | Error
 }
