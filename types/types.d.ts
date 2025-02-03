@@ -1,9 +1,10 @@
 type Elements = import('./WebApi/Elements').Elements
 type Statements = import('./Statements').Statements
+type StatementsDeprecated = import('./StatementsDeprecated').StatementsDeprecated
 type CSSPropertiesJsStyle = import('./WebApi/CSSProperties').CSSPropertiesJsStyle
 
 export type StyleRules = CSSPropertiesJsStyle
-export type TemplateTree = Elements & Statements
+export type TemplateTree = Elements & Statements & StatementsDeprecated
 export type Template = (tree : TemplateTree) => (
   void
   | string

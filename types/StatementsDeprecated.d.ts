@@ -5,11 +5,11 @@
 
 import { Template } from './types'
 
-export interface Statements {
+export interface StatementsDeprecated {
   /**
-   * @since 1.5.0
+   * @deprecated Replaced with $if() in 1.5.0
    */
-  $if (
+  if (
     condition: boolean | (() => boolean),
     handler: (() => void | Template) | Template,
     elseHandler?: (() => void | Template) | Template,
@@ -18,9 +18,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Object or Map.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends (...args: any) => Array<>
   >(
     func : Input,
@@ -34,9 +34,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Object or Map.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends (...args: any) => Set<>
   >(
     func : Input,
@@ -50,9 +50,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Object or Map.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends (...args: any) => Map<>
   >(
     func : Input,
@@ -66,9 +66,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Object or Map.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends (...args: any) => Object<>
   >(
     func : Input,
@@ -82,9 +82,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Array.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends Array<>
   >(
     array : Input,
@@ -98,9 +98,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Set.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends Set<>
   >(
     set : Input,
@@ -111,9 +111,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Map.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends Map<>,
     Key extends keyof Input
   >(
@@ -128,9 +128,9 @@ export interface Statements {
   /**
    * Calls a callback function for each element in the input Object.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $each() in 1.5.0
    */
-  $each<
+  forEach<
     Input extends Object<>,
     Key extends keyof Input
   >(
@@ -146,9 +146,9 @@ export interface Statements {
    * Calls a callback function for each element in the state,
    * when the state is an Array.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $state() in 1.5.0
    */
-  $state<
+  forState<
     Input extends Array<>
   >(
     array : Input,
@@ -160,9 +160,9 @@ export interface Statements {
    * Calls a callback function for each element in the state,
    * when the state is a Set.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $state() in 1.5.0
    */
-  $state<
+  forState<
     Input extends Set<>
   >(
     set : Input,
@@ -174,9 +174,9 @@ export interface Statements {
    * Calls a callback function for each element in the state,
    * when the state is a Map.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $state() in 1.5.0
    */
-  $state<
+  forState<
     Input extends Map<>,
     Key extends keyof Input
   >(
@@ -189,9 +189,9 @@ export interface Statements {
    * Calls a callback function for each element in the state,
    * when the state is an Object.
    *
-   * @since 1.5.0
+   * @deprecated Replaced with $state() in 1.5.0
    */
-  $state<
+  forState<
     Input extends Object<>,
     Key extends keyof Input
   >(
@@ -201,29 +201,11 @@ export interface Statements {
   ) : HTMLElement[] | Error
 
   /**
-   * Run the handler repeatedly for each number between "from"
-   * and "to", including "from" and "to".
-   *
-   * @since 1.5.0
+   * @deprecated Replaced with $for() in 1.5.0
    */
-  $repeat(
+  for(
     from : number | (() => number),
     to : number | (() => number),
     handler : (key: number) => boolean | any
   ) : HTMLElement[] | Error
-
-  /**
-   * @since 1.5.0
-   */
-  $css(sheet: CSSStyleSheet | string | string[]): void
-
-  /**
-   * @since 1.5.0
-   */
-  $html(htmlString: string) : HTMLElement[];
-
-  /**
-   * @since 1.5.0
-   */
-  $html(str : TemplateStringsArray, ...keys : any[]) : HTMLElement[];
 }

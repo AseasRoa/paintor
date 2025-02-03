@@ -16,11 +16,6 @@ export interface Elements {
   ) : HTMLElement;
 
   /**
-   * A special function to parse JS template strings, containing HTML code
-   */
-  html(string : TemplateStringsArray | string, ...keys : any[]) : HTMLElement;
-
-  /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
    * @see https://www.w3schools.com/tags/tag_a.asp
    */
@@ -548,6 +543,17 @@ export interface Elements {
   ) : HTMLElement;
   hr(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
   hr(...children : Children) : HTMLElement;
+
+  /**
+   * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/html
+   * @see https://www.w3schools.com/tags/tag_html.asp
+   */
+  html(
+      properties : ElementAttributes['html'] & (GlobalElementAttributes | GlobalProperties),
+      ...children : Children
+  ) : HTMLElement;
+  html(textContent : string | Array<string | number>, ...children : Children) : HTMLElement;
+  html(...children : Children) : HTMLElement;
 
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i

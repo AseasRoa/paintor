@@ -45,7 +45,7 @@ describe('State', () => {
       const globalState = state({ clicks: 0 })
 
       component((x) => {
-        x.html`
+        x.$html`
 <button onclick="${() => globalState.clicks += 1}">Click me</button>
 <p>${() => (globalState.clicks)}</p>
       `
@@ -128,7 +128,7 @@ describe('State', () => {
     })
   })
 
-  describe('Reactive .for()', () => {
+  describe('Reactive .$for()', () => {
     describe('Basic test', () => {
       test('DOM', () => {
         const container = document.body
@@ -138,7 +138,7 @@ describe('State', () => {
         let count = 0
 
         component((x) => {
-          x.for(
+          x.$repeat(
             () => globalState[0],
             () => globalState[1],
             (key) => {
@@ -168,7 +168,7 @@ describe('State', () => {
     })
   })
 
-  describe('.forEach()', () => {
+  describe('.$each()', () => {
     describe('New element is reactive?', () => {
       test('DOM', () => {
         const container = document.body
@@ -177,7 +177,7 @@ describe('State', () => {
         const globalState = state({})
 
         component((x) => {
-          x.forEach(globalState, (item, key) => {
+          x.$each(globalState, (item, key) => {
             x.div(
               { style: { color: () => item.color } },
               () => `${key}:${item.color}`,
@@ -212,8 +212,8 @@ describe('State', () => {
         const globalState = state({})
 
         component((x) => {
-          x.forEach(globalState, (item, key) => {
-            x.html`
+          x.$each(globalState, (item, key) => {
+            x.$html`
 <div style="color: ${() => item.color}">${() => `${key}:${item.color}`}</div>
 `
           })
@@ -295,7 +295,7 @@ describe('State', () => {
 
         component((x) => {
           x.ul(
-            x.forEach(
+            x.$each(
               globalState,
               (item) => {
                 x.li(item)
@@ -367,7 +367,7 @@ describe('State', () => {
         const theState = state({ items: [ 'a', 'b', 'c'] })
 
         component((x) => {
-          x.forEach(theState.items, (value) => {
+          x.$each(theState.items, (value) => {
             x.div(value)
           })
         }).paint(container)
@@ -392,7 +392,7 @@ describe('State', () => {
         const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
 
         component((x) => {
-          x.forEach(theState, (value) => {
+          x.$each(theState, (value) => {
             if (typeof value === 'object') {
               for (const k in value) {
                 x.div(value[k])
@@ -488,9 +488,9 @@ describe('State', () => {
 
         component((x) => {
           x.div(
-            x.forEach(theState, (a) => {
+            x.$each(theState, (a) => {
               // @ts-ignore
-              x.forEach(a.b, (value, key) => {
+              x.$each(a.b, (value, key) => {
                 x.button(`${key}-${value}`)
               })
             })
@@ -548,7 +548,7 @@ describe('State', () => {
           ])
 
           component((x) => {
-            x.forEach(globalState, (item) => {
+            x.$each(globalState, (item) => {
               x.div(() => item.label)
             })
           }).paint(container)
@@ -589,7 +589,7 @@ describe('State', () => {
           })
 
           component((x) => {
-            x.forEach(globalState, (item) => {
+            x.$each(globalState, (item) => {
               // @ts-ignore
               x.div(() => item.label)
             })
@@ -633,7 +633,7 @@ describe('State', () => {
 
         component((x) => {
           x.div(
-            x.forEach(theState, (value) => {
+            x.$each(theState, (value) => {
               passes1 += 1
 
               x.div(() => {
@@ -655,7 +655,7 @@ describe('State', () => {
     })
   })
 
-  describe('.forState', () => {
+  describe('.$state', () => {
     describe('Update the state', () => {
       test('DOM', () => {
         const container = document.body
@@ -664,7 +664,7 @@ describe('State', () => {
         const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
 
         component((x) => {
-          x.forState(theState.items, (items) => {
+          x.$state(theState.items, (items) => {
             for (const item in items) {
               // @ts-ignore
               for (const k in item) {
@@ -702,7 +702,7 @@ describe('State', () => {
         const theState = state({ a: 'a', b: 'b', c: 'c' })
 
         component((x) => {
-          x.forState(theState, (state) => {
+          x.$state(theState, (state) => {
             for (const k in state) {
               x.div(state[k])
             }
@@ -739,7 +739,7 @@ describe('State', () => {
         component((x) => {
           let counter = 0
 
-          x.forState(theState.mainState.innerArrayState, () => {
+          x.$state(theState.mainState.innerArrayState, () => {
             counter += 1
             x.div(counter)
           })
