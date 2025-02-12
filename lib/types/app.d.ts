@@ -1,5 +1,8 @@
-type ObjectKey = string | number | symbol
 type TargetObject = import('../../types/types.d.ts').TargetObject
+/**
+ * Note: (keyof any) is the same as (string|number|symbol)
+ */
+type ObjectKey = (keyof any)
 
 /**
  * A function that binds the property of
@@ -20,7 +23,8 @@ type CallbackForFunction = (
  */
 type StatementBindFn = (element?: HTMLElement | undefined) => boolean
 
-type ForLoopCallback<T> = (value?: T | undefined, key?: string | number | undefined) => boolean | undefined | Template | Component
+type Loopable = Array<any> | Record<keyof any, any> | Map<any, any> | Set<any>
+type ForLoopCallback = (value: any, key: any) => boolean | void | Template | Component
 type ForLoopCallbackOnEmpty = () => undefined
 type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefined
 
@@ -43,11 +47,10 @@ type Subscription = {
 }
 
 type ObserverType = import('../../types/types.d.ts').ObserverType
-type ObserverListener = import('../../types/types.d.ts').ObserverListener
 
 type KeyToElements = Array<Set<Node>> | Record<ObjectKey, Set<Node>>
 
-function CallbackForState(
+declare function CallbackForState(
   state: State,
   elementsCollector: import('../TemplateRenderer/ElementsCollector.js').ElementsCollector,
   keyToRender?: ObjectKey,

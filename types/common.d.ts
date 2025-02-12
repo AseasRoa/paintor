@@ -1,1 +1,1 @@
-export type Reactive<T> = T | ((T) => void)
+export type Reactive<T> = T | (() => T)

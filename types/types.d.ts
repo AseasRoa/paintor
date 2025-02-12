@@ -1,10 +1,9 @@
-type Elements = import('./WebApi/Elements').Elements
-type Statements = import('./Statements').Statements
-type StatementsDeprecated = import('./StatementsDeprecated').StatementsDeprecated
-type CSSPropertiesJsStyle = import('./WebApi/CSSProperties').CSSPropertiesJsStyle
+import { CSSPropertiesJsStyle } from './WebApi/CSSProperties'
+import { Elements } from './WebApi/Elements'
+import { Statements } from './Statements'
 
-export type StyleRules = CSSPropertiesJsStyle
-export type TemplateTree = Elements & Statements & StatementsDeprecated
+export interface StyleRules extends CSSPropertiesJsStyle {}
+export interface TemplateTree extends Elements, Statements {}
 export type Template = (tree : TemplateTree) => (
   void
   | string
@@ -15,28 +14,28 @@ export type Template = (tree : TemplateTree) => (
 
 export type Translation = Record<string, any>
 
-export type TargetObject = Object<any, any> | Array<any>
-export type State = Record<any, any> | Array<any> | Set<any> | Map<any, any>
+export type TargetObject = (Array<any> | Record<keyof any, any>)
+export type State = (Array<any> | Record<keyof any, any>)
 export type States = Record<string, State>
 
 export interface Component {
   clear: () => void,
-  html: (options?: { indent?:string }) => string,
+  html: (options?: { indent?: string }) => string,
   paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
   static: (on?: boolean) => Component,
-  staticHtml: (options?: { indent?:string }) => string,
+  staticHtml: (options?: { indent?: string }) => string,
   useTranslations : (...translations: Translation[]) => Component,
   state?: State,
   template?: Template,
 }
 
-export type ObserverType = 'create' | 'change' | 'delete' | 'set'
+export type ObserverType = ('create'|'change'|'delete'|'set')
 export type ObserverListener = (
   event: {
-    key: string | number | symbol
+    key: keyof any,
     value: any,
     oldValue: any,
     target: TargetObject,
-    state: State
+    state: State,
   }
 ) => void
