@@ -44,11 +44,11 @@ describe('State: Array', () => {
 
       const arrayState = state([])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState[0] = 'a'
@@ -66,11 +66,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       delete arrayState[1]
@@ -88,11 +88,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState[1] = 'updated'
@@ -110,11 +110,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       delete arrayState[1] // Array is now: ['a', empty 'c']
@@ -132,11 +132,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.length = 1
@@ -154,11 +154,11 @@ describe('State: Array', () => {
 
       const arrayState = state([])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.length = 3
@@ -186,11 +186,11 @@ describe('State: Array', () => {
         { name: 'e' }
       ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (item) => {
-          div(item.name)
+      component((x) => {
+        x.$each(arrayState, (item) => {
+          x.div(item.name)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       let divElements = container.querySelectorAll('div')
@@ -220,9 +220,9 @@ describe('State: Array', () => {
 
       const arrayState = state(new Array(3))
 
-      component(({ $each, div }) => {
-        $each(arrayState, (value) => {
-          div(() => value.label)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(() => value.label)
         })
       }).paint(container)
 
@@ -243,9 +243,9 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
 
-      component(({ $each, div }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
       }).paint(container)
 
@@ -262,11 +262,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.pop()
@@ -296,11 +296,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.push('b')
@@ -318,11 +318,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ { val: 'a' } ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(() => value.val)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(() => value.val)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.push({ val: 'b' })
@@ -347,9 +347,9 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
       }).paint(container)
 
@@ -366,11 +366,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.shift()
@@ -388,9 +388,9 @@ describe('State: Array', () => {
 
       let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
 
-      component(({ $each, div }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
       }).paint(container)
 
@@ -407,11 +407,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'c', 'd' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       // Insert 'b' at index 1
@@ -446,11 +446,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'c' ])
 
-      component(({ $each, div, span }) => {
-        $each(arrayState, (value) => {
-          div(value)
+      component((x) => {
+        x.$each(arrayState, (value) => {
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.unshift('a', 'b')
@@ -468,11 +468,11 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'c' ])
 
-      component(({ div, span }) => {
+      component((x) => {
         arrayState.forEach((value) => {
-          div(value)
+          x.div(value)
         })
-        span(() => arrayState.length)
+        x.span(() => arrayState.length)
       }).paint(container)
 
       arrayState.unshift('a', 'b')
