@@ -2,7 +2,7 @@ import { NodeProps } from './NodeProps'
 import { Bindable } from '../common'
 
 /**
- * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element)
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element)
  */
 export interface ElementProps extends NodeProps {
   /**
@@ -19,7 +19,7 @@ export interface ElementProps extends NodeProps {
    * - `true`: Assistive technologies will present the entire changed
    * region as a whole, including the author-defined label if one exists.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaAtomic)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaAtomic)
    */
   ariaAtomic?: Bindable<'false'|'true'>,
 
@@ -49,7 +49,7 @@ export interface ElementProps extends NodeProps {
    * of an automatic suggestion that attempts to predict how the
    * user intends to complete the input.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaAutoComplete)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaAutoComplete)
    */
   ariaAutoComplete?: Bindable<'inline'|'list'|'both'|'none'>,
 
@@ -65,7 +65,7 @@ export interface ElementProps extends NodeProps {
    * The value is a string, an unconstrained value type, that is intended
    * to be converted into braille.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaBrailleLabel)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaBrailleLabel)
    */
   ariaBrailleLabel?: Bindable<string>,
 
@@ -83,7 +83,7 @@ export interface ElementProps extends NodeProps {
    * The value is a string, an unconstrained value type, that is intended
    * to be converted into braille.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaBrailleRoleDescription)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaBrailleRoleDescription)
    */
   ariaBrailleRoleDescription?: Bindable<string>,
 
@@ -99,7 +99,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `false`: There are no expected updates for the element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaBusy)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaBusy)
    */
   ariaBusy?: Bindable<'true'|'false'>,
 
@@ -125,7 +125,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `undefined`: The element does not support being checked.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaChecked)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaChecked)
    */
   ariaChecked?: Bindable<'true'|'false'|'mixed'|'undefined'>,
 
@@ -133,7 +133,7 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-colcount` attribute, which defines
    * the number of columns in a table, grid, or treegrid.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaColCount)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaColCount)
    */
   ariaColCount?: Bindable<string>,
 
@@ -144,7 +144,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaColIndex)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaColIndex)
    */
   ariaColIndex?: Bindable<string|number>,
 
@@ -152,7 +152,7 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-colindextext` attribute, which defines
    * a human-readable text alternative of aria-colindex.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaColIndexText)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaColIndexText)
    */
   ariaColIndexText?: Bindable<string>,
 
@@ -163,7 +163,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaColSpan)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaColSpan)
    */
   ariaColSpan?: Bindable<string|number>,
 
@@ -189,7 +189,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `false`: Does not represent the current item within a set.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaCurrent)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaCurrent)
    */
   ariaCurrent?: Bindable<'page'|'step'|'location'|'date'|'time'|'true'|'false'>,
 
@@ -197,7 +197,7 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-description` attribute, which defines
    * a string value that describes or annotates the current element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaDescription)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaDescription)
    */
   ariaDescription?: Bindable<string>,
 
@@ -213,7 +213,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `false`: The element is enabled.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaDisabled)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaDisabled)
    */
   ariaDisabled?: Bindable<'true'|'false'>,
 
@@ -233,7 +233,7 @@ export interface ElementProps extends NodeProps {
    * - `undefined`: The element does not own or control
    * a grouping element that is expandable.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaExpanded)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaExpanded)
    */
   ariaExpanded?: Bindable<'true'|'false'|'undefined'>,
 
@@ -258,7 +258,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `dialog`: The element has a popup that is a dialog.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaHasPopup)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaHasPopup)
    */
   ariaHasPopup?: Bindable<'false'|'true'|'menu'|'listbox'|'tree'|'grid'|'dialog'>,
 
@@ -276,7 +276,7 @@ export interface ElementProps extends NodeProps {
    * - `undefined`: The element's hidden state is determined
    * by the user agent based on whether it is rendered.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaHidden)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaHidden)
    */
   ariaHidden?: Bindable<'true'|'false'|'undefined'>,
 
@@ -285,7 +285,7 @@ export interface ElementProps extends NodeProps {
    * keyboard shortcuts that an author has implemented to activate or give
    * focus to an element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaKeyShortcuts)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaKeyShortcuts)
    */
   ariaKeyShortcuts?: Bindable<string>,
 
@@ -293,7 +293,7 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-label` attribute, which defines a string
    * value that labels the current element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaLabel)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaLabel)
    */
   ariaLabel?: Bindable<string|null>,
 
@@ -303,7 +303,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaLevel)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaLevel)
    */
   ariaLevel?: Bindable<string|number>,
 
@@ -312,7 +312,7 @@ export interface ElementProps extends NodeProps {
    * an element will be updated, and describes the types of updates
    * the user agents, assistive technologies, and user can expect
    * from the
-   * [live region](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions)
+   * [live region](https://developer.mozilla.org/docs/Web/Accessibility/ARIA/ARIA_Live_Regions)
    * .
    *
    * A string with one of the following values:
@@ -327,7 +327,7 @@ export interface ElementProps extends NodeProps {
    * at the next graceful opportunity, such as at the end of speaking
    * the current sentence or when the user pauses typing.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaLive)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaLive)
    */
   ariaLive?: Bindable<'assertive'|'off'|'polite'>,
 
@@ -344,7 +344,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `false`: The element is not modal.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaModal)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaModal)
    */
   ariaModal?: Bindable<'true'|'false'>,
 
@@ -358,7 +358,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `false`: This is a single-line text box.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaMultiLine)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaMultiLine)
    */
   ariaMultiLine?: Bindable<'true'|'false'>,
 
@@ -373,7 +373,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `false`: Only one item may be selected.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaMultiSelectable)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaMultiSelectable)
    */
   ariaMultiSelectable?: Bindable<'true'|'false'>,
 
@@ -390,7 +390,7 @@ export interface ElementProps extends NodeProps {
    *
    * - `undefined`: The element's orientation is unknown.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaOrientation)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaOrientation)
    */
   ariaOrientation?: Bindable<'horizontal'|'vertical'|'undefined'>,
 
@@ -399,7 +399,7 @@ export interface ElementProps extends NodeProps {
    * a short hint intended to aid the user with data entry when the control
    * has no value.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaPlaceholder)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaPlaceholder)
    */
   ariaPlaceholder?: Bindable<string>,
 
@@ -410,7 +410,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaPosInSet)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaPosInSet)
    */
   ariaPosInSet?: Bindable<string|number>,
 
@@ -429,7 +429,7 @@ export interface ElementProps extends NodeProps {
    *
    * - "undefined" - The element does not support being pressed.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaPressed)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaPressed)
    */
   ariaPressed?: Bindable<'true'|'false'|'mixed'|'undefined'>,
 
@@ -443,7 +443,7 @@ export interface ElementProps extends NodeProps {
    *
    * - "false" - The user can set the value of the element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaReadOnly)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaReadOnly)
    */
   ariaReadOnly?: Bindable<'true'|'false'>,
 
@@ -463,7 +463,7 @@ export interface ElementProps extends NodeProps {
    *
    * - "all" - Equivalent to "additions removals text".
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRelevant)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRelevant)
    */
   ariaRelevant?: Bindable<'additions'|'removals'|'text'|'all'>,
 
@@ -478,7 +478,7 @@ export interface ElementProps extends NodeProps {
    *
    * - "false" - User input is not necessary to submit the form.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRequired)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRequired)
    */
   ariaRequired?: Bindable<'true'|'false'>,
 
@@ -486,7 +486,7 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-roledescription` attribute, which defines
    * a human-readable, author-localized description for the role of an element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRoleDescription)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRoleDescription)
    */
   ariaRoleDescription?: Bindable<string>,
 
@@ -496,7 +496,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRowCount)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRowCount)
    */
   ariaRowCount?: Bindable<string|number>,
 
@@ -507,7 +507,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRowIndex)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRowIndex)
    */
   ariaRowIndex?: Bindable<string|number>,
 
@@ -515,7 +515,7 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-rowindextext` attribute, which defines
    * a human-readable text alternative of aria-rowindex.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRowIndexText)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRowIndexText)
    */
   ariaRowIndexText?: Bindable<string>,
 
@@ -526,7 +526,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaRowSpan)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaRowSpan)
    */
   ariaRowSpan?: Bindable<string|number>,
 
@@ -542,7 +542,7 @@ export interface ElementProps extends NodeProps {
    *
    * - "undefined" - The item is not selectable.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaSelected)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaSelected)
    */
   ariaSelected?: Bindable<'true'|'false'|'undefined'>,
 
@@ -552,7 +552,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaSetSize)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaSetSize)
    */
   ariaSetSize?: Bindable<string|number>,
 
@@ -571,7 +571,7 @@ export interface ElementProps extends NodeProps {
    * - "other" - A sort algorithm other than ascending or descending
    * has been applied.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaSort)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaSort)
    */
   ariaSort?: Bindable<'ascending'|'descending'|'none'|'other'>,
 
@@ -581,7 +581,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaValueMax)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaValueMax)
    */
   ariaValueMax?: Bindable<string|number>,
 
@@ -591,7 +591,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaValueMin)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaValueMin)
    */
   ariaValueMin?: Bindable<string|number>,
 
@@ -601,7 +601,7 @@ export interface ElementProps extends NodeProps {
    *
    * A string which contains an integer, or an integer.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaValueNow)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaValueNow)
    */
   ariaValueNow?: Bindable<string|number>,
 
@@ -609,24 +609,31 @@ export interface ElementProps extends NodeProps {
    * Reflects the value of the `aria-valuetext` attribute, which defines
    * the human-readable text alternative of aria-valuenow for a range widget.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/ariaValueText)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaValueText)
    */
   ariaValueText?: Bindable<string>,
 
   /**
    * Sets the value of the class attribute of the specified element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/className)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/className)
+   * */
+  class?: Bindable<string>,
+
+  /**
+   * Sets the value of the class attribute of the specified element.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/className)
    * */
   className?: Bindable<string>,
 
   /**
    * Identifies elements for observation in the
-   * [PerformanceElementTiming API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceElementTiming)
+   * [PerformanceElementTiming API](https://developer.mozilla.org/docs/Web/API/PerformanceElementTiming)
    * . The `elementTiming` property reflects the value of the `elementtiming`
    * attribute.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/elementTiming)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/elementTiming)
    * */
   elementTiming?: Bindable<string>,
 
@@ -639,7 +646,7 @@ export interface ElementProps extends NodeProps {
    * element. Another common case is to use an element's ID as a selector when
    * styling the document with CSS.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/id)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/id)
    */
   id?: Bindable<string>,
 
@@ -671,11 +678,11 @@ export interface ElementProps extends NodeProps {
    * and replaces them with nodes constructed by parsing the HTML given in
    * the string *htmlString*.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/innerHTML)
    */
   innerHTML?: Bindable<string>,
 
-  /** [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML) */
+  /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/outerHTML) */
   // Gives error like "... element has no parent."
   // outerHTML: Bindable<Element['outerHTML']>,
 
@@ -684,7 +691,7 @@ export interface ElementProps extends NodeProps {
    * the `part` attribute), returned as a `DOMTokenList`. These can be
    * used to style parts of a shadow DOM, via the `::part` pseudo-element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/part)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/part)
    */
   part?: Bindable<DOMTokenList>,
 
@@ -713,7 +720,7 @@ export interface ElementProps extends NodeProps {
    * to the specified horizontal position, in the same way as using
    * `Element.scroll()` with `behavior: "auto"`.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollLeft)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/scrollLeft)
    */
   scrollLeft?: Bindable<number>,
 
@@ -742,7 +749,7 @@ export interface ElementProps extends NodeProps {
    * to the specified vertical position, in the same way as using
    * `Element.scroll()` with `behavior: "auto"`.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollLeft)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/scrollLeft)
    */
   scrollTop?: Bindable<number>,
 
@@ -752,7 +759,7 @@ export interface ElementProps extends NodeProps {
    * A slot is a placeholder inside a web component that users can fill with
    * their own markup (see Using templates and slots for more information).
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/slot)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/slot)
    */
   slot?: Bindable<string>,
 
@@ -842,7 +849,7 @@ export interface ElementProps extends NodeProps {
    * user has found the content through the "find in page" feature or through
    * fragment navigation.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/beforematch_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/beforematch_event)
    */
   onBeforeMatch?(this: GlobalEventHandlers, event: Event): any,
 
@@ -901,9 +908,9 @@ export interface ElementProps extends NodeProps {
    * For example, this event could be fired after a user finishes entering
    * a Chinese character using a
    * [Pinyin](https://en.wikipedia.org/wiki/Pinyin)
-   * [Input method editor](https://developer.mozilla.org/en-US/docs/Glossary/Input_method_editor).
+   * [Input method editor](https://developer.mozilla.org/docs/Glossary/Input_method_editor).
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/compositionend_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/compositionend_event)
    */
   onCompositionEnd?(this: GlobalEventHandlers, event: CompositionEvent): any,
 
@@ -916,9 +923,9 @@ export interface ElementProps extends NodeProps {
    * For example, this event could be fired after a user starts entering
    * a Chinese character using a
    * [Pinyin](https://en.wikipedia.org/wiki/Pinyin)
-   * [Input method editor](https://developer.mozilla.org/en-US/docs/Glossary/Input_method_editor).
+   * [Input method editor](https://developer.mozilla.org/docs/Glossary/Input_method_editor).
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/compositionend_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/compositionend_event)
    */
   onCompositionStart?(this: GlobalEventHandlers, event: CompositionEvent): any,
 
@@ -932,9 +939,9 @@ export interface ElementProps extends NodeProps {
    * For example, this event could be fired while a user enters a Chinese
    * character using a
    * [Pinyin](https://en.wikipedia.org/wiki/Pinyin)
-   * [Input method editor](https://developer.mozilla.org/en-US/docs/Glossary/Input_method_editor).
+   * [Input method editor](https://developer.mozilla.org/docs/Glossary/Input_method_editor).
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/compositionend_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/compositionend_event)
    */
   onCompositionUpdate?(this: GlobalEventHandlers, event: CompositionEvent): any,
 
@@ -1045,7 +1052,7 @@ export interface ElementProps extends NodeProps {
    *
    * The `focusin` event is not cancelable.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/focusin_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/focusin_event)
    */
   onFocusIn?(this: GlobalEventHandlers, event: FocusEvent): any,
 
@@ -1059,7 +1066,7 @@ export interface ElementProps extends NodeProps {
    *
    * The `focusout` event is not cancelable.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/focusout_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/focusout_event)
    */
   onFocusOut?(this: GlobalEventHandlers, event: FocusEvent): any,
 
@@ -1076,7 +1083,7 @@ export interface ElementProps extends NodeProps {
    *
    * This event is not cancelable.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/fullscreenchange_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/fullscreenchange_event)
    */
   onFullScreenChange?(this: GlobalEventHandlers, event: Event): any,
 
@@ -1090,7 +1097,7 @@ export interface ElementProps extends NodeProps {
    *
    * This event is not cancelable.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/fullscreenerror_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/fullscreenerror_event)
    */
   onFullScreenError?(this: GlobalEventHandlers, event: Event): any,
 

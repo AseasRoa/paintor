@@ -103,7 +103,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * A double. 1.0 is "normal speed". Values lower than 1.0 make the media play
    * slower than normal, higher values make it play faster.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/defaultPlaybackRate)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/defaultPlaybackRate)
    */
   defaultPlaybackRate?: Bindable<number>,
 
@@ -114,7 +114,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * A boolean value indicating whether the media element may have a remote
    * playback UI. (`false` means "not disabled", which means "enabled")
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/disableRemotePlayback)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/disableRemotePlayback)
    */
   disableRemotePlayback?: Bindable<boolean>,
 
@@ -122,7 +122,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * Controls whether the media element should start over when it reaches
    * the end.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/loop)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/loop)
    */
   loop?: Bindable<boolean>,
 
@@ -130,7 +130,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * Indicates the name of the group of elements it belongs to.
    * A group of media elements shares a common controller.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/mediaGroup)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/mediaGroup)
    * @deprecated
    */
   mediaGroup?: Bindable<string>,
@@ -138,7 +138,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
   /**
    * Indicates whether the media element is muted.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/muted)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/muted)
    */
   muted?: Bindable<boolean>,
 
@@ -162,7 +162,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * A double. 1.0 is "normal speed". Values lower than 1.0 make the media play
    * slower than normal, higher values make it play faster. (Default: 1.0)
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/playbackRate)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/playbackRate)
    */
   playbackRate?: Bindable<number>,
 
@@ -179,7 +179,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * The default value is different for each browser. The spec advises
    * it to be set to metadata.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/preload)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/preload)
    */
   preload?: Bindable<'none'|'metadata'|'auto'>,
 
@@ -189,14 +189,14 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * A boolean value defaulting to `true`.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/preservesPitch)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/preservesPitch)
    */
   preservesPitch?: Bindable<boolean>,
 
   /**
    * The URL of a media resource to use in the element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/src)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/src)
    */
   src?: Bindable<string>,
 
@@ -204,7 +204,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * Sets the object which serves as the source of the media associated with
    * the `HTMLMediaElement`, or `null` if not assigned.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/srcObject)
    */
   srcObject?: Bindable<MediaStream|MediaSource|Blob|File>,
 
@@ -214,7 +214,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * A double values must fall between 0 and 1, where 0 is effectively muted
    * and 1 is the loudest possible value.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/volume)
    */
   volume?: Bindable<number>,
 
@@ -366,7 +366,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * This event is not cancelable and does not bubble.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/progress_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/progress_event)
    */
   onProgress?(this: GlobalEventHandlers, event: Event): any,
 
@@ -467,7 +467,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    * Otherwise, including if the data was previously available but isn't
    * anymore, the `readyState` is set to `HAVE_METADATA`.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/waitingforkey_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/waitingforkey_event)
    */
   onWaitingForKey?(this: GlobalEventHandlers, event: Event): any,
 }

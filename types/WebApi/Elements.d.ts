@@ -1634,7 +1634,7 @@ export interface Elements {
      * of elements which are dedicated to the construction,
      * drawing, and layout of vector images and diagrams.
      *
-     * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/SVG/Element)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Element)
      */
     (): HTMLElement
     (props: SvgElementProps, ...children: Children): HTMLElement

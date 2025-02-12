@@ -579,7 +579,7 @@ export interface BlockquoteElementProps extends HTMLElementProps {
 }
 
 /**
- * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement)
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement)
  */
 export interface ButtonElementProps extends HTMLElementProps {
   /**
@@ -610,14 +610,14 @@ export interface ButtonElementProps extends HTMLElementProps {
    *
    * - Custom values - This attribute can represent custom values that are prefixed with a two hyphen characters (--). Buttons with a custom value will dispatch the CommandEvent on the controlled element.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/command)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/command)
    */
   command?: Bindable<'show-modal'|'close'|'show-popover'|'hide-popover'|'toggle-popover'|string>,
 
   /**
    * Sets the element to control via a button.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/commandForElement)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/commandForElement)
    */
   commandFor?: Bindable<string>,
 
@@ -625,7 +625,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * Indicates whether the control is disabled, meaning that it
    * does not accept any clicks.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/disabled)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/disabled)
    */
   disabled?: Bindable<boolean>,
 
@@ -637,7 +637,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * interface if the form is submitted via the button. This property
    * can be retrieved or set.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/formAction)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/formAction)
    */
   formAction?: Bindable<string>,
 
@@ -652,7 +652,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    *
    * - *empty string*: Sends data without any encoding at all. Not recommended.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/formEnctype)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/formEnctype)
    */
   formEnctype?: Bindable<'application/x-www-form-urlencoded'|'multipart/form-data'|'text/plain'|string>,
 
@@ -666,7 +666,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * default value is `get`. If not set at all, the value is the empty
    * string (`""`).
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/formMethod)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/formMethod)
    */
   formMethod?: Bindable<'post'|'get'|'dialog'|''>,
 
@@ -678,7 +678,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * interface if the form is submitted via the button. This property can
    * be retrieved or set.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/formNoValidate)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/formNoValidate)
    */
   formNoValidate?: Bindable<boolean>,
 
@@ -690,7 +690,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * interface if the form is submitted via the button. This property
    * can be retrieved or set. If not set, the value is the empty string (`""`).
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/formTarget)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/formTarget)
    */
   formTarget?: Bindable<string>,
 
@@ -698,7 +698,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * Indicates the name of the `<button>` element or the empty string
    * if the element has no name.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/name)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/name)
    */
   name?: Bindable<string>,
 
@@ -719,7 +719,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    * it will be hidden. If `popoverTargetAction` is not set, `"toggle"` is
    * the default action that will be performed by the control button.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/popoverTargetAction)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/popoverTargetAction)
    */
   popoverTargetAction?: Bindable<'hide'|'show'|'toggle'>,
 
@@ -728,7 +728,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    *
    * A reference to a popover element in the DOM.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/popoverTargetElement)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/popoverTargetElement)
    */
   popoverTargetElement?: Bindable<string>,
 
@@ -747,7 +747,7 @@ export interface ButtonElementProps extends HTMLElementProps {
    *
    * - `menu` (experimental): The button displays a menu.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/type)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/type)
    */
   type?: Bindable<'submit'|'reset'|'button'|'menu'>,
 
@@ -755,26 +755,26 @@ export interface ButtonElementProps extends HTMLElementProps {
    * The value of the `<button>` element as a string, or the empty string
    * if no value is set.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/value)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/value)
    */
   value?: Bindable<string>,
 }
 
 /**
- * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement)
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement)
  */
 export interface CanvasElementProps extends HTMLElementProps {
   /**
    * The height of the coordinate space in CSS pixels. Defaults to 150.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/height)
    */
   height?: Bindable<number>,
 
   /**
    * The width of the coordinate space in CSS pixels. Defaults to 300.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/width)
    */
   width?: Bindable<number>,
 
@@ -816,7 +816,7 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * This event does not bubble.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/webglcontextcreationerror_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/webglcontextcreationerror_event)
    */
   onWebGLContextCreationError?(
     this: GlobalEventHandlers,
@@ -830,7 +830,7 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * This event does not bubble.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/webglcontextlost_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/webglcontextlost_event)
    */
   onWebGLContextLost?(
     this: GlobalEventHandlers,
@@ -848,7 +848,7 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * This event does not bubble.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/webglcontextlost_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/webglcontextlost_event)
    */
   onWebGLContextRestored?(
     this: GlobalEventHandlers,
@@ -950,7 +950,7 @@ export interface DetailsElementProps extends HTMLElementProps {
 }
 
 /**
- * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement)
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement)
  */
 export interface DialogElementProps extends HTMLElementProps {
   /**
@@ -965,7 +965,7 @@ export interface DialogElementProps extends HTMLElementProps {
    * boxes by toggling the presence of the `open` attribute, this approach is
    * not recommended.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/open)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/open)
    */
   open?: Bindable<boolean>,
 
@@ -973,7 +973,7 @@ export interface DialogElementProps extends HTMLElementProps {
    * Sets the return value for the `<dialog>`, usually to indicate which button
    * the user pressed to close it.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/returnValue)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/returnValue)
    */
   returnValue?: Bindable<string>,
 
@@ -987,7 +987,7 @@ export interface DialogElementProps extends HTMLElementProps {
    * When a `<dialog>` is dismissed with the `Esc` key, both the `cancel` and
    * `close` events are fired.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/cancel_event)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/cancel_event)
    */
   onCancel?(this: GlobalEventHandlers, event: Event): any,
 
@@ -2529,7 +2529,7 @@ export interface InputElementProps extends HTMLElementProps {
    * The `value` attribute is always optional, though should be considered
    * mandatory for `checkbox`, `radio`, and `hidden`.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#value)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/input#value)
    */
   value?: Bindable<StringConvertible>,
 

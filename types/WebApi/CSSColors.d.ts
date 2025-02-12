@@ -1,7 +1,7 @@
 /**
  * [W3Schools](https://www.w3schools.com/colors/colors_names.asp)
  *
- * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/CSS/named-color)
+ * [MDN Reference](https://developer.mozilla.org/docs/Web/CSS/named-color)
  */
 type CSSColorsCamelCase =
   'AliceBlue'|'AntiqueWhite'|'Aqua'|'Aquamarine'|'Azure'

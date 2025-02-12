@@ -7,14 +7,14 @@ export interface NodeProps {
 /**
    * Sets the value of the current node.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeValue)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Node/nodeValue)
    */
   nodeValue?: Bindable<StringConvertible>,
 
   /**
    * Sets the value of the current node.
    *
-   * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent)
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Node/textContent)
    */
   textContent?: Bindable<StringConvertible>,
 
