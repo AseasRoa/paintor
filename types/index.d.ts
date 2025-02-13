@@ -23,42 +23,42 @@ import {
  * exist, the provided file name will be used.
  * @returns {Promise<Translation>}
  */
-export declare function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
+export function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
 
 /**
  * Checks whether the input value is a component.
  */
-export declare function isComponent(component: any) : boolean
+export function isComponent(component: any) : boolean
 
 /**
  * Checks whether the input value is a template.
  */
-export declare function isTemplate(func: any) : boolean
+export function isTemplate(func: any) : boolean
 
 /**
  * Create a component.
  */
-export declare function component(...from: (Template | Component)[]): Component
-export declare function component(from: (Template | Component)[]): Component
+export function component(...from: (Template | Component)[]): Component
+export function component(from: (Template | Component)[]): Component
 
 /**
  * Create a state, which is a proxy of the input object or array.
  */
-export declare function state<STATE>(object : STATE) : STATE
+export function state<STATE>(object : STATE) : STATE
 
 /**
  * Create a style object, containing CSS rules.
  */
-export declare function style<
+export function style<
   RULES extends Partial<StyleRules>
 >(rules : RULES) : RULES
 
 /**
  * Create a template function.
  */
-export declare function template(from: Template) : Template
+export function template(from: Template) : Template
 
-export declare function on<
+export function on<
   Input extends Array<any>
 >(from: Input) : {
   create(
@@ -106,7 +106,7 @@ export declare function on<
     ) => void
   ) : void,
 }
-export declare function on<
+export function on<
   Input extends Record<any, any>,
   K extends keyof Input
 >(from: Input) : {
@@ -155,7 +155,7 @@ export declare function on<
     ) => void
   ) : void,
 }
-export declare function on<
+export function on<
   Input extends any
 >(from: Input) : {
   create(
@@ -203,7 +203,7 @@ export declare function on<
     ) => void
   ) : void,
 }
-export declare function on<
+export function on<
   Input extends any
 >(from: Input) : {
   create(
@@ -252,13 +252,13 @@ export declare function on<
   ) : void,
 }
 
-export declare function off(
+export function off(
   stateOrProp: State | any,
   type: ObserverType,
   listener: ObserverListener
 ) : void
 
-export declare const paintor: {
+export const paintor: {
   component: typeof component,
   fetchTranslations: typeof fetchTranslations,
   on: typeof on,
