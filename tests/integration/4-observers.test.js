@@ -110,7 +110,7 @@ describe('observers', () => {
         event = e
       })
 
-      // @ts-ignore
+      // @ts-expect-error
       delete myState.a
 
       expect(event).toMatchObject({

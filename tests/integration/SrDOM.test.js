@@ -73,7 +73,7 @@ describe('SrDom Tests', () => {
 
     test('fail on appendChild with wrong input', () => {
       expect(
-        // @ts-ignore
+        // @ts-expect-error
         () => document.body.appendChild(123),
       ).toThrow(TypeError)
     })
@@ -81,7 +81,6 @@ describe('SrDom Tests', () => {
     test('fail on attempt to append in Document', () => {
       const el = document.createElement('div')
 
-      // @ts-ignore
       expect(
         () => document.appendChild(el),
       ).toThrow(DOMException)

@@ -14,20 +14,20 @@ function expectSpecialCommentElementsInStatement(elements) {
   const { length } = elements
 
   if (length > 0) {
-    // @ts-ignore
+    // @ts-expect-error
     expect(elements[0].previousSibling instanceof Comment).toBe(true)
 
     let i = 0
 
     for (i = 0; i < length - 1; i++) {
       expect(
-        // @ts-ignore
+        // @ts-expect-error
         elements[i].nextSibling
       ).toBe(elements[i + 1])
     }
 
     expect(
-      // @ts-ignore
+      // @ts-expect-error
       elements[i].nextSibling instanceof Comment
     ).toBe(true)
   }
@@ -200,9 +200,9 @@ describe('State: Array', () => {
       // Do the swap
       const tmp = arrayState[1]
 
-      // @ts-ignore
+      // @ts-expect-error
       arrayState[1] = arrayState[3]
-      // @ts-ignore
+      // @ts-expect-error
       arrayState[3] = tmp
 
       divElements = container.querySelectorAll('div')
@@ -332,7 +332,7 @@ describe('State: Array', () => {
       expectTextContentsToBeLike(divElements, ['a', 'b', 'c'])
       expectSpecialCommentElementsInStatement(divElements)
 
-      // @ts-ignore
+      // @ts-expect-error
       arrayState[2].val = 'c2'
 
       expectTextContentsToBeLike(divElements, ['a', 'b', 'c2'])

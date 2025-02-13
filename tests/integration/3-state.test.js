@@ -557,20 +557,20 @@ describe('State', () => {
 
           expect(divs.length).toBe(3)
 
-          // @ts-ignore
+          // @ts-expect-error
           globalState.push(globalState[0])
 
           divs = container.querySelectorAll('div')
           expectTextContentsToBeLike(divs, ['zero', 'one', 'two', 'zero'])
 
-          // @ts-ignore
+          // @ts-expect-error
           globalState[1] = globalState[2]
           divs = container.querySelectorAll('div')
           expectTextContentsToBeLike(divs, ['zero', 'two', 'two', 'zero'])
 
-          // @ts-ignore
+          // @ts-expect-error
           globalState[0].label = 'ZERO'
-          // @ts-ignore
+          // @ts-expect-error
           globalState[1].label = 'TWO'
           divs = container.querySelectorAll('div')
           expectTextContentsToBeLike(divs, ['ZERO', 'TWO', 'TWO', 'ZERO'])
@@ -599,7 +599,7 @@ describe('State', () => {
 
           expect(divs.length).toBe(3)
 
-          // @ts-ignore
+          // @ts-expect-error
           globalState.three = globalState.zero
 
           divs = container.querySelectorAll('div')
@@ -609,9 +609,7 @@ describe('State', () => {
           divs = container.querySelectorAll('div')
           expectTextContentsToBeLike(divs, ['zero', 'two', 'two', 'zero'])
 
-          // @ts-ignore
           globalState.zero.label = 'ZERO'
-          // @ts-ignore
           globalState.one.label = 'TWO'
           divs = container.querySelectorAll('div')
           expectTextContentsToBeLike(divs, ['ZERO', 'TWO', 'TWO', 'ZERO'])
