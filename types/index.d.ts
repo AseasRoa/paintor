@@ -266,3 +266,5 @@ export const paintor: {
   state: typeof state,
   template: typeof template,
 }
+
+export { Template }
