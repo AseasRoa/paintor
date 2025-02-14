@@ -10,105 +10,101 @@
 [![test](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml/badge.svg)](https://github.com/AseasRoa/DocSchema/actions/workflows/test.yml)
 ![license](https://img.shields.io/npm/l/paintor)
 
-A JavaScript library for building reactive client-side user interfaces or HTML
-code.
+A JavaScript library with component-based model for building reactive
+client-side user interfaces or generating HTML code.
+
+Why? Because JavaScript is good enough. So good, in fact, that even HTML
+can be written in JavaScript.
 
 ## [Documentation and Examples](https://aseasroa.github.io/paintor)
 
 ## Key Features
-- **JavaScript**: The code you write is the code to run
-- **Zero dependencies**
-- **Reactive**: Through [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+- **JavaScript syntax**: The code you write is the code to run
+- **No dependencies**
+- **No Virtual DOM**: Reactivity is achieved through [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
   and DOM events
-- **Templates in JavaScript or HTML**: JavaScript HTML-like tree structure
-  (HyperScript) or HTML syntax in [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+- **Templates in JavaScript or HTML (experimental)**: JavaScript HTML-like
+tree structure (HyperScript) or HTML syntax in [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+- **Scoped CSS**: Each component can have its own style
 - **Observers**: Receive events on state changes
-- **SSR**: Generate HTML code on the server
+- **Server-Side Rendering (SSR)**: Generate HTML code on the server
 - **Internationalization (i18n)**
-- **Type Definitions**: Built-in TypeScript definitions for code completion and
+- **Type definitions**: Built-in TypeScript definitions for code completion and
   type safety
 
-## Quick Example
+## Quick Examples
 
+#### Clicks counter
 ```javascript
-import { component, state, template, on } from 'paintor'
+import { compose, state, template } from 'paintor'
 
-// Use a global state
-const globalState = state({ clicks: 0 })
+// Component
+function Counter(/* Props */ { buttonText }) {
+  // Template
+  return template((x) => {
+    // Local state
+    const counter = state({ clicks: 0 })
 
-// Create a template
-const myTemplate = template((tags) => {
-  const { div, button, html } = tags
+    // Scoped CSS
+    x.$css`
+      div {
+        span {
+          color: blue;
+        }
+      }
+    `
 
-  // Or, use a local state
-  const localState = state({ clicks: 0 })
+    // HTML elements
+    x.div(
+      x.button(
+        { onClick: () => counter.clicks++ },
+        buttonText
+      ),
+      x.span(() => counter.clicks)
+    )
 
-  // Build JavaScript template
-  div(
-    button(
-      {
-        class: 'buttons',
-        onClick: () => globalState.clicks++
-      },
-      'Click me'
-    ),
-    div(() => globalState.clicks)
-  )
+    // Observe state changes
+    on(counter.clicks).change((event) => {
+      console.log(`Clicked ${event.value} times`)
+    })
+  })
+}
 
-  // Or, build HTML template in a string
-  html`
-    <div>
-      <button class="buttons" onClick=${() => localState.clicks++}>
-        Click me
-      </button>
-      <div>${() => localState.clicks}</div>
-    </div>
-  `
-})
-
-// Create a component, using the template
-const app = component(myTemplate)
-
-// Render the component
+// Render
+const app = compose(
+  Counter({ buttonText: 'Click me' })
+)
 app.paint('#app')
-
-// Or, generate HTML string
-const htmlCode = app.html()
-
-// Observe state changes if you want
-on(globalState.clicks).change((event) => {
-  console.log(`Clicked ${event.value} times`)
-})
 ```
 
-## Why?
+#### Generate HTML code (for Server-Side Rendering)
 
-### Cults? No.
+```javascript
+// To generate HTML code, instead of paint(), use html()
+const htmlCode = app.html()
+```
 
-I don't like React. As a JavaScript developer, every time I was curious enough
-to see and understand what React offers, I was disgusted. I couldn't stand
-looking at React code for more than a few minutes. There is something in it that
-is not intuitive for me. I think the learning curve of React is too steep for
-the problems it aims to solve. To the point that everyone who manages to endure
-the learning process, eventually becomes a cult follower. This is how I think
-about Angular and other over-hyped, but complex solutions.
+#### Observe state changes
 
-### "Aha" and "Wow"
+```javascript
+import { state, on } from 'paintor'
 
-I much prefer Vue or Svelte, which at the time I first stared hearing about
-React were probably less popular than Angular. But when I looked at them,
-I quickly had this "aha" moment, and for me Svelte even has that "wow" factor.
-For me, the quick "aha" and the "wow" are very important.
+// Create state
+const myState = state({ count: 0 })
 
-### To transpile? How about No?
+// Make state changes
+setInterval(() => {
+  myState.count++
+}, 1000)
 
-However, I'm not a big fan of the idea to write something in a non-native format
-and transpile it on every small change in order to use it. This is usually a
-deal-breaker for me.
+// Observe state changes
+on(myState.count).change((data) => {
+  console.log(data.value)
+})
 
-### Vanilla
-
-Then I was inspired by Mithril, which is fairly easy to understand and vanilla,
-although it doesn't really have the "wow" factor. As I often do in such cases,
-I decided to quickly write something like it, tailored for my needs. Well, this
-took some years and it's still an ongoing process.
+// The result in the console will be:
+// 1
+// 2
+// 3
+// ...
+```
