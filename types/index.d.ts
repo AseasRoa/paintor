@@ -36,10 +36,16 @@ export function isComponent(component: any) : boolean
 export function isTemplate(func: any) : boolean
 
 /**
- * Create a component.
+ * @deprecated
  */
 export function component(...from: (Template | Component)[]): Component
 export function component(from: (Template | Component)[]): Component
+
+/**
+ * Compose a component.
+ */
+export function compose(...from: (Template | Component)[]): Component
+export function compose(from: (Template | Component)[]): Component
 
 /**
  * Create a state, which is a proxy of the input object or array.
@@ -260,6 +266,7 @@ export function off(
 
 export const paintor: {
   component: typeof component,
+  compose: typeof compose,
   fetchTranslations: typeof fetchTranslations,
   on: typeof on,
   off: typeof off,

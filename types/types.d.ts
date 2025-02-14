@@ -18,15 +18,15 @@ export type TargetObject = (Array<any> | Record<keyof any, any>)
 export type State = (Array<any> | Record<keyof any, any>)
 export type States = Record<string, State>
 
-export interface Component {
-  clear: () => void,
-  html: (options?: { indent?: string }) => string,
-  paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void,
-  static: (on?: boolean) => Component,
-  staticHtml: (options?: { indent?: string }) => string,
-  useTranslations : (...translations: Translation[]) => Component,
-  state?: State,
-  template?: Template,
+export class Component {
+  clear: () => void
+  html: (options?: { indent?: string }) => string
+  paint: (container: string | HTMLElement | HTMLElement[] | HTMLCollection) => void
+  static: (on?: boolean) => Component
+  staticHtml: (options?: { indent?: string }) => string
+  useTranslations : (...translations: Translation[]) => Component
+  state?: State
+  template: Template
 }
 
 export type ObserverType = ('create'|'change'|'delete'|'set')
