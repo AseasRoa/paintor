@@ -108,3 +108,10 @@ on(myState.count).change((data) => {
 // 3
 // ...
 ```
+
+#### Performance
+
+Paintor is faster than React in many aspects,
+and slower than Svelte, Vue and Angular.
+
+![js-framework-benchmark-comparison](https://github.com/AseasRoa/paintor/blob/main/js-framework-benchmark-comparison.png?raw=true)
