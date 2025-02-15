@@ -1,4 +1,4 @@
-import { TextArray, Reactive, StringConvertible } from './common'
+import { FormatArray, Reactive, StringConvertible } from './common'
 import {
   AnchorElementProps,
   AreaElementProps,
@@ -84,7 +84,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/a)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: AnchorElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -108,7 +108,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/abbr)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -122,7 +122,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/address)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -154,7 +154,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/article)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -169,7 +169,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/aside)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -186,7 +186,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/audio)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: AudioElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -206,7 +206,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/b)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -236,7 +236,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/bdi)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -250,7 +250,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/bdo)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: BdoElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -267,7 +267,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/blockquote)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: BlockquoteElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -281,7 +281,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/body)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -316,7 +316,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/button)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: ButtonElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -330,7 +330,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/canvas)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: CanvasElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -344,7 +344,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/caption)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -360,7 +360,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/cite)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -376,7 +376,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/code)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -415,7 +415,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/data)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: DataElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -430,7 +430,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/datalist)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: DataElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -445,7 +445,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/dd)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -462,7 +462,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/del)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: DelElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -485,7 +485,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/details)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: DetailsElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -505,7 +505,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/dfn)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -532,7 +532,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/dialog)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: DialogElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -560,7 +560,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/div)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -596,7 +596,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/dt)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -611,7 +611,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/em)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -649,7 +649,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/figcaption)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -665,7 +665,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/figure)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -681,7 +681,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/footer)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -695,7 +695,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/form)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: FormElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -712,7 +712,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/h1)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -729,7 +729,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/h1)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -746,7 +746,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/h1)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -763,7 +763,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/h1)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -780,7 +780,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/h1)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -797,7 +797,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/h1)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -827,7 +827,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/header)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -889,7 +889,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/i)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -937,7 +937,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/ins)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: InsElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -954,7 +954,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/kbd)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -968,7 +968,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/label)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: LabelElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -982,7 +982,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/legend)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1000,7 +1000,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/li)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: LiElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1030,7 +1030,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/main)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1056,7 +1056,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/mark)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1115,7 +1115,7 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/meter)
      */
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: MeterElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1130,7 +1130,7 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/nav)
      */
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
   };
@@ -1154,7 +1154,7 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/noscript)
      */
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1212,9 +1212,9 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/option)
      */
-    (textArray: TextArray): HTMLElement
+    (formatArray: FormatArray): HTMLElement
     (text: Reactive<StringConvertible>): HTMLElement
-    (props: OptionElementProps, textArray: TextArray): HTMLElement
+    (props: OptionElementProps, formatArray: FormatArray): HTMLElement
     (props: OptionElementProps, text: Reactive<StringConvertible>): HTMLElement
   };
 
@@ -1226,7 +1226,7 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/output)
      */
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: OutputElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1247,7 +1247,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/p)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1292,7 +1292,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/pre)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1306,7 +1306,7 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/progress)
      */
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: ProgressElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1323,7 +1323,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/q)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: QElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1342,7 +1342,7 @@ export interface Elements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/rp)
      */
-    (textArray: TextArray): HTMLElement
+    (formatArray: FormatArray): HTMLElement
     (text: Reactive<StringConvertible>): HTMLElement
   };
 
@@ -1356,7 +1356,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/rt)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1377,7 +1377,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/ruby)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1394,7 +1394,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/s)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1410,7 +1410,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/samp)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1426,7 +1426,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/script)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: ScriptElementProps, ...children: Children): HTMLElement
     (
@@ -1450,7 +1450,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/search)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1466,7 +1466,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/section)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1497,7 +1497,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/slot)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: SlotElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1513,7 +1513,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/small)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1547,7 +1547,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/span)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1562,7 +1562,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/strong)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1577,7 +1577,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/style)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: StyleElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1592,7 +1592,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/sub)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1607,7 +1607,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/summary)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1622,7 +1622,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/sup)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1688,7 +1688,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/td)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: TdElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1703,7 +1703,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/template)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1721,9 +1721,9 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/textarea)
      */
     (): HTMLElement
-    (textArray: TextArray): HTMLElement
+    (formatArray: FormatArray): HTMLElement
     (text: Reactive<StringConvertible>): HTMLElement
-    (props: TextAreaElementProps, textArray: TextArray): HTMLElement
+    (props: TextAreaElementProps, formatArray: FormatArray): HTMLElement
     (props: TextAreaElementProps, text: Reactive<StringConvertible>): HTMLElement
   };
 
@@ -1754,7 +1754,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/th)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: ThElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1796,7 +1796,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/time)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: TimeElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1814,7 +1814,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/title)
      */
     (): HTMLElement
-    (textArray: TextArray): HTMLElement
+    (formatArray: FormatArray): HTMLElement
     (text: Reactive<StringConvertible>): HTMLElement
   };
 
@@ -1867,7 +1867,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/u)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1898,7 +1898,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/var)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
@@ -1923,7 +1923,7 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/video)
      */
     (): HTMLElement
-    (textArray: TextArray, ...children: Children): HTMLElement
+    (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: VideoElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
