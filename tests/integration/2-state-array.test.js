@@ -2,7 +2,7 @@
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { component, state } from '#paintor'
+import { compose, state } from '#paintor'
 
 /**
  * 'for' loops in Paintor contain these 'begin' and 'end' Comment elements.
@@ -44,7 +44,7 @@ describe('State: Array', () => {
 
       const arrayState = state([])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -66,7 +66,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -88,7 +88,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -110,7 +110,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -132,7 +132,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -154,7 +154,7 @@ describe('State: Array', () => {
 
       const arrayState = state([])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -186,7 +186,7 @@ describe('State: Array', () => {
         { name: 'e' }
       ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (item) => {
           x.div(item.name)
         })
@@ -220,7 +220,7 @@ describe('State: Array', () => {
 
       const arrayState = state(new Array(3))
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(() => value.label)
         })
@@ -243,7 +243,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -262,7 +262,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -296,7 +296,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -318,7 +318,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ { val: 'a' } ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(() => value.val)
         })
@@ -347,7 +347,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -366,7 +366,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'b', 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -388,7 +388,7 @@ describe('State: Array', () => {
 
       let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -407,7 +407,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'a', 'c', 'd' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -446,7 +446,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'c' ])
 
-      component((x) => {
+      compose((x) => {
         x.$each(arrayState, (value) => {
           x.div(value)
         })
@@ -468,7 +468,7 @@ describe('State: Array', () => {
 
       const arrayState = state([ 'c' ])
 
-      component((x) => {
+      compose((x) => {
         arrayState.forEach((value) => {
           x.div(value)
         })

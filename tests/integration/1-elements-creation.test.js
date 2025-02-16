@@ -2,7 +2,7 @@
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { component, Component, state, template } from '#paintor'
+import { compose, Component, state, template } from '#paintor'
 
 describe('Elements Creation', () => {
   const id = 'container'
@@ -13,7 +13,7 @@ describe('Elements Creation', () => {
 
   describe('Destructured method names', () => {
     test('(SSR) Destructured template tree', () => {
-      const html = component(({ a, button, div }) => {
+      const html = compose(({ a, button, div }) => {
         a('a')
         button('button')
         div('div')
@@ -27,7 +27,7 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component(({ a, button, div }) => {
+      compose(({ a, button, div }) => {
         a('a')
         button('button')
         div('div')
@@ -41,7 +41,7 @@ describe('Elements Creation', () => {
 
   describe('Paint in elements, selected in different ways', () => {
     test('(SSR) 3 divs', () => {
-      const html = component((x) => {
+      const html = compose((x) => {
         x.div('div 1')
         x.div('div 2')
         x.div('div 3')
@@ -55,7 +55,7 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component((x) => {
+      compose((x) => {
         x.div('div 1')
         x.div('div 2')
         x.div('div 3')
@@ -69,7 +69,7 @@ describe('Elements Creation', () => {
       container.id = id
       document.body.appendChild(container)
 
-      component((x) => {
+      compose((x) => {
         x.div('div 1')
         x.div('div 2')
         x.div('div 3')
@@ -79,14 +79,14 @@ describe('Elements Creation', () => {
     })
 
     test('(DOM) 3 divs, element is a Custom Element', () => {
-      const container = document.createElement('component-element')
+      const container = document.createElement('compose-element')
       document.body.appendChild(container)
 
-      component((x) => {
+      compose((x) => {
         x.div('div 1')
         x.div('div 2')
         x.div('div 3')
-      }).paint('component-element')
+      }).paint('compose-element')
 
       expect(container.shadowRoot?.children.length).toBe(3)
     })
@@ -95,7 +95,7 @@ describe('Elements Creation', () => {
   describe('Check Order of Rendered Elements', () => {
     describe('Table', () => {
       test('SSR', () => {
-        const html = component((x) => {
+        const html = compose((x) => {
           x.table(
             x.tr(
               x.td('Row 1, Column 1'),
@@ -114,7 +114,7 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        component((x) => {
+        compose((x) => {
           x.table(
             x.tr(
               x.td('Row 1, Column 1'),
@@ -156,12 +156,12 @@ describe('Elements Creation', () => {
 
     describe('Automatically calling a Component', () => {
       test('SSR', () => {
-        const liFragments = component((x) => {
+        const liFragments = compose((x) => {
           x.li('li-fragment-1')
           x.li('li-fragment-2')
         })
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.li('li-1'),
             liFragments,
@@ -176,12 +176,12 @@ describe('Elements Creation', () => {
       test('DOM', () => {
         const container = document.body
 
-        const liFragments = component((x) => {
+        const liFragments = compose((x) => {
           x.li('li-fragment-1')
           x.li('li-fragment-2')
         })
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.li('li-1'),
             liFragments,
@@ -210,7 +210,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         })
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.li('li-1'),
             liFragments,
@@ -230,7 +230,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         })
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.li('li-1'),
             liFragments,
@@ -259,7 +259,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         }
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.li('li-1'),
             liFragments(x),
@@ -279,7 +279,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         }
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.li('li-1'),
             liFragments(x),
@@ -310,7 +310,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         }
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.$each(array, (value) => {
               x.li(`li-${value}`)
@@ -331,7 +331,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         }
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$each(array, (value) => {
               x.li(`li-${value}`)
@@ -357,7 +357,7 @@ describe('Elements Creation', () => {
       test('SSR', () => {
         const array = ['1', '2', '3', '4']
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.$each(array, (value, key) => {
               if (key === '2') return false
@@ -374,7 +374,7 @@ describe('Elements Creation', () => {
         const container = document.body
         const array = ['1', '2', '3', '4']
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$each(array, (value, key) => {
               if (key === '2') return false
@@ -399,7 +399,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         }
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.$each(globalState, (value) => {
               x.li(`li-${value}`)
@@ -420,7 +420,7 @@ describe('Elements Creation', () => {
           x.li('li-fragment-2')
         }
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$each(globalState, (value) => {
               x.li(`li-${value}`)
@@ -453,7 +453,7 @@ describe('Elements Creation', () => {
           x.li('else')
         })
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.$if(true, ifCallback, elseCallback),
           )
@@ -478,7 +478,7 @@ describe('Elements Creation', () => {
           x.li('else')
         })
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$if(true, ifCallback, elseCallback),
           )
@@ -515,7 +515,7 @@ describe('Elements Creation', () => {
           x.li(`li-${value}`)
         })
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.$each(array, callback),
           )
@@ -544,7 +544,7 @@ describe('Elements Creation', () => {
           x.li(`li-${value}`)
         })
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$each(array, callback),
           )
@@ -580,11 +580,11 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Component}
          */
-        const callback = (value) => component((x) => {
+        const callback = (value) => compose((x) => {
           x.li(`li-${value}`)
         })
 
-        const html = component((x) => {
+        const html = compose((x) => {
           x.ul(
             x.$each(globalState, callback),
           )
@@ -601,11 +601,11 @@ describe('Elements Creation', () => {
          * @param {string} value
          * @returns {Component}
          */
-        const callback = (value) => component((x) => {
+        const callback = (value) => compose((x) => {
           x.li(`li-${value}`)
         })
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$each(globalState, callback),
           )
@@ -627,7 +627,7 @@ describe('Elements Creation', () => {
     test('(SSR) staticHtml()', () => {
       let counter = 0
 
-      const app = component((x) => {
+      const app = compose((x) => {
         x.div(counter)
         counter += 1
       })
@@ -644,7 +644,7 @@ describe('Elements Creation', () => {
     test('(SSR) static(true)', () => {
       let counter = 0
 
-      const app = component((x) => {
+      const app = compose((x) => {
         x.div(counter)
         counter += 1
       })

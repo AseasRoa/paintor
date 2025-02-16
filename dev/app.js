@@ -1,4 +1,4 @@
 import { Counter } from './Counter.js'
-import { component } from '#paintor'
+import { compose } from '#paintor'
 
-component(Counter).paint('#app')
+compose(Counter).paint('#app')

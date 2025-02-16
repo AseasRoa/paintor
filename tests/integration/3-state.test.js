@@ -2,7 +2,7 @@
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { component, setState, state, template } from '#paintor'
+import { compose, setState, state, template } from '#paintor'
 
 describe('State', () => {
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe('State', () => {
 
       const globalState = state({ clicks: 0 })
 
-      component((x) => {
+      compose((x) => {
         x.button({
           textContent: 'Click me',
           onClick: () => {
@@ -44,7 +44,7 @@ describe('State', () => {
 
       const globalState = state({ clicks: 0 })
 
-      component((x) => {
+      compose((x) => {
         x.$html`
 <button onclick="${() => globalState.clicks += 1}">Click me</button>
 <p>${() => (globalState.clicks)}</p>
@@ -82,7 +82,7 @@ describe('State', () => {
         x.p(tick)
       })
 
-      component(buttonTpl, paragraphTpl).paint(container)
+      compose(buttonTpl, paragraphTpl).paint(container)
 
       globalState.tick += 1
       globalState.tick += 1
@@ -105,7 +105,7 @@ describe('State', () => {
         const globalState = state([false])
         let count = 0
 
-        component((x) => {
+        compose((x) => {
           x.$if(() => globalState[0], () => {
             count += 1
             x.div(count)
@@ -137,7 +137,7 @@ describe('State', () => {
         const globalState = state([0, 0])
         let count = 0
 
-        component((x) => {
+        compose((x) => {
           x.$repeat(
             () => globalState[0],
             () => globalState[1],
@@ -176,7 +176,7 @@ describe('State', () => {
         /** @type {Record<string, {color: string}>} */
         const globalState = state({})
 
-        component((x) => {
+        compose((x) => {
           x.$each(globalState, (item, key) => {
             if (!item) return
 
@@ -213,7 +213,7 @@ describe('State', () => {
         /** @type {Record<string, {color: string}>} */
         const globalState = state({})
 
-        component((x) => {
+        compose((x) => {
           x.$each(globalState, (item, key) => {
             if (!item) return
 
@@ -251,7 +251,7 @@ describe('State', () => {
         /** @type {{ a: number }[]} */
         const theState = state([{ a: 0 }])
 
-        component((x) => {
+        compose((x) => {
           x.div(
             x.$each(theState, (value) => {
               x.div(() => {
@@ -297,7 +297,7 @@ describe('State', () => {
         /** @type {string[]} */
         const globalState = state([])
 
-        component((x) => {
+        compose((x) => {
           x.ul(
             x.$each(
               globalState,
@@ -366,7 +366,7 @@ describe('State', () => {
 
         const theState = state({ items: [ 'a', 'b', 'c'] })
 
-        component((x) => {
+        compose((x) => {
           x.$each(theState.items, (value) => {
             x.div(value)
           })
@@ -391,7 +391,7 @@ describe('State', () => {
         /** @type {{items: Object<string, string>}} */
         const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
 
-        component((x) => {
+        compose((x) => {
           x.$each(theState, (value) => {
             if (typeof value === 'object') {
               for (const k in value) {
@@ -420,7 +420,7 @@ describe('State', () => {
         /** @type {{a: {b: Object<string, string>}}} */
         const theState = state({ a: { b: { c: 'C' } } })
 
-        component((x) => {
+        compose((x) => {
           x.div(
             x.$each(theState, (a) => {
               // @ts-expect-error
@@ -486,7 +486,7 @@ describe('State', () => {
         /** @type {{a: {b: Object<string, string>}}} */
         const theState = state({ a: { b: { c: 'C' } } })
 
-        component((x) => {
+        compose((x) => {
           x.div(
             x.$each(theState, (a) => {
               // @ts-expect-error
@@ -547,7 +547,7 @@ describe('State', () => {
             { label: 'two' }
           ])
 
-          component((x) => {
+          compose((x) => {
             x.$each(globalState, (item) => {
               x.div(() => item.label)
             })
@@ -588,7 +588,7 @@ describe('State', () => {
             two: { label: 'two' }
           })
 
-          component((x) => {
+          compose((x) => {
             x.$each(globalState, (item) => {
               // @ts-expect-error
               x.div(() => item.label)
@@ -629,7 +629,7 @@ describe('State', () => {
         let passes1 = 0
         let passes2 = 0
 
-        component((x) => {
+        compose((x) => {
           x.div(
             x.$each(theState, (value) => {
               passes1 += 1
@@ -661,7 +661,7 @@ describe('State', () => {
         /** @type {{items: Object<string, string>}} */
         const theState = state({ items: { a: 'a', b: 'b', c: 'c' } })
 
-        component((x) => {
+        compose((x) => {
           x.$state(theState.items, (items) => {
             for (const item in items) {
               // @ts-expect-error
@@ -699,7 +699,7 @@ describe('State', () => {
         /** @type {Object<string, string>} */
         const theState = state({ a: 'a', b: 'b', c: 'c' })
 
-        component((x) => {
+        compose((x) => {
           x.$state(theState, (state) => {
             for (const k in state) {
               x.div(state[k])
@@ -734,7 +734,7 @@ describe('State', () => {
           mainState: { innerArrayState: [] },
         })
 
-        component((x) => {
+        compose((x) => {
           let counter = 0
 
           x.$state(theState.mainState.innerArrayState, () => {
