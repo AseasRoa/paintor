@@ -24,7 +24,7 @@ type CallbackForFunction = (
 type StatementBindFn = (element?: HTMLElement | undefined) => boolean
 
 type Loopable = Array<any> | Record<keyof any, any> | Map<any, any> | Set<any>
-type ForLoopCallback = (value: any, key: any) => boolean | void | Template | Component
+type ForLoopCallback = (value: any, key: any) => boolean | void | Template
 type ForLoopCallbackOnEmpty = () => undefined
 type ForLoopIterableCallback = (index?: number | undefined) => boolean | undefined
 

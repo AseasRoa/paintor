@@ -41,7 +41,6 @@ describe('State: Array', () => {
   describe('actions', () => {
     test('create', () => {
       const container = document.body
-
       const arrayState = state([])
 
       compose((x) => {

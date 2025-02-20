@@ -3,7 +3,7 @@
  */
 
 import {
-  Component,
+  Composition,
   ObserverListener,
   ObserverType,
   State,
@@ -26,9 +26,14 @@ import {
 export function fetchTranslations(...defaultPaths: string[]) : Promise<Translation[]>
 
 /**
- * Checks whether the input value is a component.
+ * @deprecated
  */
-export function isComponent(component: any) : boolean
+export function isComponent(composition: any) : boolean
+
+/**
+ * Checks whether the input value is a composition.
+ */
+export function isComposition(composition: any) : boolean
 
 /**
  * Checks whether the input value is a template.
@@ -38,14 +43,18 @@ export function isTemplate(func: any) : boolean
 /**
  * @deprecated
  */
-export function component(...from: (Template | Component)[]): Component
-export function component(from: (Template | Component)[]): Component
+export function component(...from: (Template | Composition)[]): Composition
+export function component(from: (Template | Composition)[]): Composition
 
 /**
  * Compose a component.
  */
-export function compose(...from: (Template | Component)[]): Component
-export function compose(from: (Template | Component)[]): Component
+export function compose(
+  ...from: Composable[]
+): Composition
+export function compose(
+  from: Composable[]
+): Composition
 
 /**
  * Create a state, which is a proxy of the input object or array.

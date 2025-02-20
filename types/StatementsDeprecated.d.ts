@@ -147,8 +147,8 @@ export interface StatementsDeprecated {
 
   forState: {
     /**
-     * Calls the handler function for each element in the state,
-     * when the state is an Array.
+     * Calls the handler function initially, and then in case the input state
+     * changes.
      *
      * @deprecated Replaced with $state() in 1.5.0
      */
@@ -160,17 +160,27 @@ export interface StatementsDeprecated {
       handlerOnEmpty?: () => void
     ): HTMLElement[] | Error
 
-    /**
-     * Calls the handler function for each element in the state,
-     * when the state is an Object.
-     *
-     * @deprecated Replaced with $state() in 1.5.0
-     */
+    <
+      Input extends Array<any>
+    >(
+      array: Input,
+      handler: Template,
+      handlerOnEmpty?: () => void
+    ): HTMLElement[] | Error
+
     <
       Input extends Record<(string | number | symbol), any>,
     >(
       object: Input,
       handler: ((state: Input) => (Template|void)),
+      handlerOnEmpty?: () => void
+    ): HTMLElement[] | Error
+
+    <
+      Input extends Record<(string | number | symbol), any>,
+    >(
+      object: Input,
+      handler: Template,
       handlerOnEmpty?: () => void
     ): HTMLElement[] | Error
   }

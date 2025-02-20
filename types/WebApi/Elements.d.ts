@@ -54,7 +54,6 @@ type Child = (
   | HTMLElement
   | HTMLElement[]
   | Template
-  | Component
   | Reactive<StringConvertible>
   // The result of calling a function like this: (x) => void
   | void

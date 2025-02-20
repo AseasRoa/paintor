@@ -2,7 +2,7 @@
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { compose, Component, state, template } from '#paintor'
+import { compose, state, template } from '#paintor'
 
 describe('Elements Creation', () => {
   const id = 'container'
@@ -151,55 +151,6 @@ describe('Elements Creation', () => {
         expect(table?.children[1]?.children[1]?.tagName).toBe('TD')
         expect(table?.children[1]?.children[1]?.children.length).toBe(0)
         expect(table?.children[1]?.children[1]?.textContent).toBe('Row 2, Column 2')
-      })
-    })
-
-    describe('Automatically calling a Component', () => {
-      test('SSR', () => {
-        const liFragments = compose((x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
-        })
-
-        const html = compose((x) => {
-          x.ul(
-            x.li('li-1'),
-            liFragments,
-            x.li('li-2'),
-            liFragments,
-          )
-        }).html()
-
-        expect(html).toBe('<ul><li>li-1</li><li>li-fragment-1</li><li>li-fragment-2</li><li>li-2</li><li>li-fragment-1</li><li>li-fragment-2</li></ul>')
-      })
-
-      test('DOM', () => {
-        const container = document.body
-
-        const liFragments = compose((x) => {
-          x.li('li-fragment-1')
-          x.li('li-fragment-2')
-        })
-
-        compose((x) => {
-          x.ul(
-            x.li('li-1'),
-            liFragments,
-            x.li('li-2'),
-            liFragments,
-          )
-        }).paint(container)
-
-        const ul = container.getElementsByTagName('ul')[0]
-
-        expectTextContentsToBeLike(ul?.childNodes, [
-          'li-1',
-          'li-fragment-1',
-          'li-fragment-2',
-          'li-2',
-          'li-fragment-1',
-          'li-fragment-2',
-        ])
       })
     })
 
@@ -562,56 +513,6 @@ describe('Elements Creation', () => {
         ])
 
         ul = container.getElementsByTagName('ul')[1]
-
-        expectTextContentsToBeLike(ul?.childNodes, [
-          'reactive-begin',
-          'li-1',
-          'li-2',
-          'reactive-end',
-        ])
-      })
-    })
-
-    describe('$each() with a callback, returning a Component', () => {
-      test('SSR', () => {
-        const globalState = state(['1', '2'])
-
-        /**
-         * @param {string} value
-         * @returns {Component}
-         */
-        const callback = (value) => compose((x) => {
-          x.li(`li-${value}`)
-        })
-
-        const html = compose((x) => {
-          x.ul(
-            x.$each(globalState, callback),
-          )
-        }).html()
-
-        expect(html).toBe('<ul><!--reactive-begin--><li>li-1</li><li>li-2</li><!--reactive-end--></ul>')
-      })
-
-      test('DOM', () => {
-        const container = document.body
-        const globalState = state(['1', '2'])
-
-        /**
-         * @param {string} value
-         * @returns {Component}
-         */
-        const callback = (value) => compose((x) => {
-          x.li(`li-${value}`)
-        })
-
-        compose((x) => {
-          x.ul(
-            x.$each(globalState, callback),
-          )
-        }).paint(container)
-
-        const ul = container.getElementsByTagName('ul')[0]
 
         expectTextContentsToBeLike(ul?.childNodes, [
           'reactive-begin',

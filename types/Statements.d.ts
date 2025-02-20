@@ -150,8 +150,8 @@ export interface Statements extends StatementsDeprecated {
 
   $state: {
     /**
-      * Calls a callback function for each element in the state,
-      * when the state is an Array.
+      * Calls the handler function initially, and then every time
+      * the input state changes.
       *
       * @since 1.5.0
       */
@@ -161,15 +161,21 @@ export interface Statements extends StatementsDeprecated {
       handlerOnEmpty?: () => void,
     ): (HTMLElement[]|Error)
 
-    /**
-     * Calls a callback function for each element in the state,
-     * when the state is an Object.
-     *
-     * @since 1.5.0
-     */
+    <Input extends Array<any>>(
+      arrayState: Input,
+      handler: Template,
+      handlerOnEmpty?: () => void,
+    ): (HTMLElement[]|Error)
+
     <Input extends Record<keyof any, any>>(
       objectState: Input,
       handler: ((state: Input) => (Template|void)),
+      handlerOnEmpty?: () => void,
+    ): (HTMLElement[]|Error)
+
+    <Input extends Record<keyof any, any>>(
+      objectState: Input,
+      handler: Template,
       handlerOnEmpty?: () => void,
     ): (HTMLElement[]|Error)
   }
