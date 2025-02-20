@@ -96,7 +96,7 @@ describe('State', () => {
     })
   })
 
-  describe('Reactive .if()', () => {
+  describe('Reactive .$if()', () => {
     describe('Basic test', () => {
       test('DOM', () => {
         const container = document.body
@@ -128,7 +128,7 @@ describe('State', () => {
     })
   })
 
-  describe('Reactive .$for()', () => {
+  describe('Reactive .$repeat()', () => {
     describe('Basic test', () => {
       test('DOM', () => {
         const container = document.body
