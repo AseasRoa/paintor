@@ -62,7 +62,17 @@ type Children = Child[]
 
 export interface Elements {
   /**
-   * A function to create a custom HTML element
+   * Create custom HTML element
+   */
+  $element(
+    tagName: string,
+    props?: HTMLElementProps,
+    ...children: (Children | string)[]
+  ): HTMLElement;
+
+  /**
+   * Create custom HTML element
+   * @deprecated
    */
   createElement(
     tagName: string,
