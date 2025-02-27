@@ -21,6 +21,7 @@ export type Composable = Template | ClassComponent
 
 export class ClassComponent {
   state?: State
+  css: () => CSSStyleSheet | string
   template: Template
 }
 
