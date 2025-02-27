@@ -21,7 +21,8 @@ export type Composable = Template | ClassComponent
 
 export class ClassComponent {
   state?: State
-  css: () => CSSStyleSheet | string
+  onMount?: () => void
+  css?: () => CSSStyleSheet | string
   template: Template
 }
 

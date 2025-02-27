@@ -78,6 +78,11 @@ export function template(from: Template) : Template
  */
 export function css(sheet: CSSStyleSheet | string | string[]): void
 
+/**
+ * Create CSS for the current component.
+ */
+export function onMount(event: () => void): void
+
 export function on<
   Input extends Array<any>
 >(from: Input) : {
@@ -235,6 +240,7 @@ export const paintor: {
   component: typeof component,
   compose: typeof compose,
   fetchTranslations: typeof fetchTranslations,
+  onMount: typeof onMount,
   on: typeof on,
   off: typeof off,
   state: typeof state,
