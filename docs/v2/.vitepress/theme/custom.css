@@ -1,0 +1,21 @@
+:root {
+  --vp-c-brand-1: deeppink;
+  --vp-c-brand-2: deeppink;
+}
+
+.example {
+  margin: 0.7rem 0.7rem;
+  max-height: 100vh;
+  overflow: auto;
+
+  & * {
+    all: revert;
+    box-sizing: border-box;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: revert;
+    margin: revert;
+  }
+}

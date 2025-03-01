@@ -1,0 +1,22 @@
+#many-elements {
+  & label {
+    margin-right: 0.5rem;
+  }
+
+  & input, label {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  #elements-container {
+    margin: 1.0rem;
+
+    & span {
+      margin: 0.1rem;
+      padding: 0.3rem;
+      border: 0.1rem solid deepskyblue;
+      background: aliceblue;
+      color: #444;
+    }
+  }
+}

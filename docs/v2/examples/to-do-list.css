@@ -1,0 +1,80 @@
+#to-do-list {
+  color: black;
+
+  & h3 {
+    margin: 0;
+    color: deepskyblue;
+    font-weight: bold;
+  }
+
+  & .header {
+    padding: 1rem;
+    background: deepskyblue;
+
+    & input {
+      float: left;
+      width: 75%;
+      padding: 0.3rem;
+      background: white;
+      color: black;
+
+      &::placeholder {
+        color: gray
+      }
+    }
+
+    & button {
+      width: 25%;
+      padding: 0.3rem;
+      background: #d9d9d9;
+      text-align: center;
+      color: #555;
+
+      &:hover {
+        background: #ccc;
+      }
+    }
+  }
+
+  & ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    & li {
+      position: relative;
+      user-select: none;
+      margin: 0;
+      padding: 0.3rem;
+      background: #eee;
+      cursor: pointer;
+
+      &:nth-child(odd) {
+        background: #f9f9f9;
+      }
+
+      &:hover {
+        background: #ddd;
+      }
+
+      & button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0.3rem 0.6rem;
+        background: transparent;
+        border: none;
+        font-size: larger;
+
+        &:hover {
+          background: deepskyblue;
+        }
+      }
+
+      &.completed {
+        background: #888;
+        text-decoration: line-through;
+      }
+    }
+  }
+}

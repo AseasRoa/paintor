@@ -1,0 +1,23 @@
+#reactive-for {
+  & label {
+    margin: 0.5rem;
+  }
+
+  & input {
+    font-size: larger;
+    width: 5.0rem;
+  }
+
+  #elements-container {
+    margin: 1.0rem;
+
+    & span {
+      display: inline-block;
+      margin: 0.1rem;
+      padding: 0.3rem;
+      border: 0.1rem solid deepskyblue;
+      background: aliceblue;
+      color: #444;
+    }
+  }
+}

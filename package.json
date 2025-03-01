@@ -6,7 +6,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "npm run v1:build && npm run v0:build",
+    "build": "npm run v2:build && npm run v1:build && npm run v0:build",
+    "v2:dev": "vitepress dev docs/v2",
+    "v2:build": "vitepress build docs/v2",
+    "v2:preview": "vitepress preview docs/v2",
     "v1:dev": "vitepress dev docs/v1",
     "v1:build": "vitepress build docs/v1",
     "v1:preview": "vitepress preview docs/v1",

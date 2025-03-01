@@ -1,28 +1,28 @@
 ---
-title: Using forState()
+title: Using $state()
 ---
 
 <script setup>
   import { onMounted } from 'vue'
   
   onMounted(async () => {
-    await import('./using-forState-1.js')
-    await import('./using-forState-2.js')
+    await import('./using-$state-1.js')
+    await import('./using-$state-2.js')
   })
 </script>
 
-# Using forState()
+# Using $state()
 
 ::: info
-`forState()` is a method, used in the [Template Tree](../templates/template-tree.md).
+`$state()` is a method, used in the [Template Tree](../templates/template-tree.md).
 :::
 
-`forState()` accepts a [State](./states.md) as an input, and it calls the provided
+`$state()` accepts a [State](./states.md) as an input, and it calls the provided
 callback function once, so you can render some DOM elements, representing
 the state. The callback function provides one argument - the input state.
 
 ```js
-x.forState(myState, (myState) => {
+x.$state(myState, (myState) => {
   // ...
 })
 ```
@@ -67,27 +67,27 @@ setState(myState, ['two'])
 ## Sub-State Example
 
 ::: code-group
-<<< @/./reactivity/using-forState-1.js [JavaScript]
+<<< @/./reactivity/using-$state-1.js [JavaScript]
 ```html [HTML]
-<div id="using-forstate-1"></div>
+<div id="using-state-1"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <div id="using-forstate-1"></div>
+  <div id="using-state-1"></div>
 </div>
 
 ## `setState()` Example
 
 ::: code-group
-<<< @/./reactivity/using-forState-2.js [JavaScript]
+<<< @/./reactivity/using-$state-2.js [JavaScript]
 ```html [HTML]
-<div id="using-forstate-2"></div>
+<div id="using-state-2"></div>
 ```
 :::
 
 <Badge type="warning" text="example" />
 <div class="example">
-  <div id="using-forstate-2"></div>
+  <div id="using-state-2"></div>
 </div>

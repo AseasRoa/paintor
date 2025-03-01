@@ -1,0 +1,5 @@
+#states-scope-global {
+  & span {
+    padding: 0 0.5rem;
+  }
+}

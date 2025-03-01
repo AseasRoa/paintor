@@ -6,9 +6,9 @@ title: Template Tree Elements
 
 ## The Argument
 
-The argument `x` (or however you name it) is an instance of a class, containing
-methods for each valid HTML element. For example, `.div()` is for creating
-\<div\> elements, `.p()` is for creating \<p\> elements, and so on. Each of
+The argument `x` (or however you name it) is an object, containing methods
+for each valid HTML element. For example, `.div()` is for creating
+`<div>` elements, `.p()` is for creating `<p>` elements, and so on. Each of
 these methods accepts multiple arguments, used for creating text content or
 child elements.
 
@@ -42,7 +42,7 @@ The first argument also accepts an object, containing global element properties
   x.a(
     {
       class: 'anchors', // "class" is valid for all elements
-      href: 'https://github.com/' // "href" is specific for <a> elements
+      href: 'https://github.com/' // "href" is specific for <a> elements only
     },
     'Go to GitHub'
   )
@@ -154,50 +154,41 @@ Each argument can be any of the following.
   x.p(
     'The quick brown ',
     x.strong('fox'),
-    [' jumped', 3, 'times '],
+    [' jumped', 3, 'times'],
     [' over the lazy '],
     x.strong('dog')
   )
 }
 ```
 ```html
-<p>The quick brown <strong>fox</strong> jumped 3 times  over the lazy <strong>dog</strong></p>
+<p>The quick brown <strong>fox</strong> jumped 3 times over the lazy <strong>dog</strong></p>
 ```
 
-## Destructuring
+### Format Array
 
-If you don't like the `x.` prefix, you can use the
-[destructuring assignment](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
-syntax:
+Where the type of the accepted argument or property is `string`, you can use
+format array instead. The idea is similar to the
+[Node's format()](https://nodejs.org/api/util.html#utilformatformat-args)
+function. The first element in the array is the `printf`-like format string,
+and the format arguments.
 
-```js
-({ table, tr, td }) => {
-  table(
-    tr(
-      td('Row 1, Column 1'),
-      td('Row 1, Column 2'),
-    )
-  )
-}
-```
-
-Or like this:
 ```js
 (x) => {
-  const { table, tr, td } = x
-
-  table( 
-    tr(
-      td('Row 1, Column 1'),
-      x.td('Row 1, Column 2'), // x. can still be used
-    )
+  x.p(
+    {
+      class: ['a', 'b', 'c']
+    },
+    ['The quick %s jumped %d times over the %s', 'brown fox', 3, 'lazy dog']
   )
 }
+```
+```html
+<p class="a b c">The quick brown fox jumped 3 times over the lazy dog</p>
 ```
 
 ## The Template Tree is Synchronous
 
-In the following example the \<h2\> element will not be rendered,
+In the following example the `<h2>` element will not be rendered,
 because `.h2()` is executed after the tree has already been rendered:
 ```js
 (x) => {
