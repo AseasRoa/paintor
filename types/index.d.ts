@@ -223,54 +223,6 @@ export function on<
     ) => void
   ) : void,
 }
-export function on<
-  Input extends any
->(from: Input) : {
-  create(
-    listener: (
-      event: {
-        target: Input,
-        state: Input,
-        key: string,
-        value: Input,
-        oldValue: Input | undefined
-      }
-    ) => void
-  ) : void,
-  change(
-    listener: (
-      event: {
-        target: Input,
-        state: Input,
-        key: string,
-        value: Input,
-        oldValue: Input | undefined
-      }
-    ) => void
-  ) : void,
-  delete(
-    listener: (
-      event: {
-        target: Input,
-        state: Input,
-        key: string,
-        value: Input,
-        oldValue: Input | undefined
-      }
-    ) => void
-  ) : void,
-  set(
-    listener: (
-      event: {
-        target: Input,
-        state: Input,
-        key: string,
-        value: Input,
-        oldValue: Input | undefined
-      }
-    ) => void
-  ) : void,
-}
 
 export function off(
   stateOrProp: State | any,
