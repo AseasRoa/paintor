@@ -5,12 +5,8 @@
 
 import { Reactive } from './common'
 import { Template } from './types'
-import { StatementsDeprecated } from './StatementsDeprecated'
 
-export interface Statements extends StatementsDeprecated {
-  /**
-   * @since 1.5.0
-   */
+export interface Statements {
   $if: {
     (
       condition: Reactive<boolean>,
@@ -22,8 +18,6 @@ export interface Statements extends StatementsDeprecated {
   $each: {
     /**
      * Calls the handler function for each element in the input Object or Map.
-     *
-     * @since 1.5.0
      */
     <
       Input extends (...args: any[]) => Array<any>
@@ -38,8 +32,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
      * Calls the handler function for each element in the input Object or Map.
-     *
-     * @since 1.5.0
      */
     <
       Input extends (...args: any[]) => Set<any>
@@ -54,8 +46,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
      * Calls the handler function for each element in the input Object or Map.
-     *
-     * @since 1.5.0
      */
       <
         Input extends (...args: any[]) => Map<any, any>
@@ -70,8 +60,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
      * Calls the handler function for each element in the input Object or Map.
-     *
-     * @since 1.5.0
      */
       <
         Input extends (...args: any[]) => Record<keyof any, any>
@@ -86,8 +74,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
       * Calls the handler function for each element in the input Array.
-      *
-      * @since 1.5.0
       */
     <
       Input extends Array<any>
@@ -102,8 +88,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
       * Calls the handler function for each element in the input Set.
-      *
-      * @since 1.5.0
       */
     <
       Input extends Set<any>
@@ -118,8 +102,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
       * Calls the handler function for each element in the input Map.
-      *
-      * @since 1.5.0
       */
     <
       Input extends Map<any, any>,
@@ -135,8 +117,6 @@ export interface Statements extends StatementsDeprecated {
 
     /**
       * Calls the handler function for each element in the input Object.
-      *
-      * @since 1.5.0
       */
     <
       Input extends Record<keyof any, any>,
@@ -152,8 +132,6 @@ export interface Statements extends StatementsDeprecated {
     /**
       * Calls the handler function initially, and then every time
       * the input state changes.
-      *
-      * @since 1.5.0
       */
     <Input extends Array<any>>(
       arrayState: Input,
@@ -183,8 +161,6 @@ export interface Statements extends StatementsDeprecated {
   /**
    * Run the handler repeatedly for each number between "from"
    * and "to", including "from" and "to".
-   *
-   * @since 1.5.0
    */
   $repeat(
     from: Reactive<number>,
@@ -192,18 +168,9 @@ export interface Statements extends StatementsDeprecated {
     handler: (key: number) => boolean | any
   ): (HTMLElement[]|Error)
 
-  /**
-   * @since 1.5.0
-   */
   $css(sheet: CSSStyleSheet | string | string[]): void
 
-  /**
-   * @since 1.5.0
-   */
   $html(htmlString: string): HTMLElement[];
 
-  /**
-   * @since 1.5.0
-   */
   $html(str: TemplateStringsArray, ...keys: any[]): HTMLElement[];
 }
