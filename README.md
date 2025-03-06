@@ -36,23 +36,23 @@ tree structure (HyperScript) or HTML syntax in [template literals](https://devel
 
 #### Clicks counter
 ```javascript
-import { compose, state, template } from 'paintor'
+import { css, compose, state, template } from 'paintor'
 
 // Component
 function Counter(/* Props */ { buttonText }) {
+  // Scoped CSS
+  css`
+    div {
+      span {
+        color: blue;
+      }
+    }
+  `
+
   // Template
   return template((x) => {
     // Local state
     const counter = state({ clicks: 0 })
-
-    // Scoped CSS
-    x.$css`
-      div {
-        span {
-          color: blue;
-        }
-      }
-    `
 
     // HTML elements
     x.div(
