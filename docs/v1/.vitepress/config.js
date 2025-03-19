@@ -1,10 +1,10 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  base: '/paintor',
-  outDir: '../../dist',
+  base: '/paintor/v1',
+  outDir: '../../dist/v1',
   lang: 'en-US',
-  title: 'Paintor Docs',
+  title: 'Paintor Docs (v1.x)',
   description: 'Paintor View Library Documentation',
   cleanUrls: true,
   lastUpdated: false,
