@@ -1,10 +1,10 @@
 import { template } from 'paintor'
 
-function deleteTask(task) {
-  tasks.splice(getTaskIndex(task), 1)
+function deleteTask(tasks, task) {
+  tasks.splice(getTaskIndex(tasks, task), 1)
 }
 
-function getTaskIndex(task) {
+function getTaskIndex(tasks, task) {
   return tasks.indexOf(task)
 }
 
@@ -12,7 +12,7 @@ function toggleCompleted(task) {
   task.completed = !task.completed
 }
 
-export function ToDoTaskItem(task) {
+export function ToDoTaskItem(tasks, task) {
   return template((x) => {
     x.li({
         class: () => (task.completed ? 'completed' : ''),
@@ -21,7 +21,7 @@ export function ToDoTaskItem(task) {
       task.title,
       x.button(
         {
-          onClick: () => deleteTask(task)
+          onClick: () => deleteTask(tasks, task)
         },
         '\u00D7'
       )

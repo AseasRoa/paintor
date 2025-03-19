@@ -4,7 +4,7 @@ import { ToDoTaskItem } from './ToDoTaskItem.js'
 export function ToDoTasks(props) {
   return template((x) => {
     x.ul(
-      x.$each(props.tasks, ToDoTaskItem)
+      x.$each(props.tasks, ToDoTaskItem.bind(null, props.tasks))
     )
   })
 }

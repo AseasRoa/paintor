@@ -2,7 +2,7 @@ import { template } from 'paintor'
 
 const newTask = { title: '', completed: false }
 
-function addTask() {
+function addTask(tasks, newTask) {
   if (!newTask.title) {
     alert('You must write a title for your new task!')
   }
@@ -24,7 +24,10 @@ export function ToDoHeader(props) {
             }
           }
         ),
-        x.button({ onClick: addTask }, 'Add')
+        x.button({
+          onClick: () => addTask(props.tasks, newTask) },
+          'Add'
+        )
       )
   })
 }
