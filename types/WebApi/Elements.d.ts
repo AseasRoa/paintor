@@ -14,6 +14,7 @@ import {
   DetailsElementProps,
   DialogElementProps,
   EmbedElementProps,
+  FencedFrameProps,
   FieldSetElementProps,
   FormElementProps,
   IFrameElementProps,
@@ -582,6 +583,33 @@ export interface Elements {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/embed)
      */
     (props: EmbedElementProps): HTMLElement
+  };
+
+  fencedframe: {
+    /**
+     * The `<fencedframe>` HTML element represents a nested browsing context,
+     * embedding another HTML page into the current one. `<fencedframe>`s are
+     * very similar to `<iframe>` elements in form and function, except that:
+     *
+     * - Communication is restricted between the `<fencedframe>` content
+     * and its embedding site.
+     * - A `<fencedframe>` can access cross-site data, but only in a very
+     * specific set of controlled circumstances that preserve user privacy.
+     * - A `<fencedframe>` cannot be manipulated or have its data accessed
+     * via regular scripting (for example reading or setting the source URL).
+     * `<fencedframe>` content can only be embedded via specific APIs.
+     * - A `<fencedframe>` cannot access the embedding context's DOM,
+     * nor can the embedding context access the `<fencedframe>`'s DOM.
+     *
+     * The `<fencedframe>` element is a type of `<iframe>` with more native
+     * privacy features built in. It addresses shortcomings of `<iframe>`s
+     * such as reliance on third-party cookies and other privacy risks.
+     *
+     * TODO Change the return type to HTMLFencedFrameElement eventually
+     *
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/fencedframe)
+     */
+    (props: FencedFrameProps): HTMLElement
   };
 
   fieldset: {

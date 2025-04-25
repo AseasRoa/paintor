@@ -1035,6 +1035,34 @@ export interface EmbedElementProps extends HTMLElementProps {
   width?: Bindable<number>,
 }
 
+export interface FencedFrameProps extends HTMLElementProps {
+  /**
+   * Specifies a
+   * [Permissions Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Permissions_Policy)
+   * for the `<fencedframe>`, which defines what features are available to
+   * the `<fencedframe>` based on the origin of the request.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFencedFrameElement/allow)
+   */
+  allow?: Bindable<string>,
+
+  /**
+   * A unitless integer representing the height of the fenced frame in
+   * CSS pixels. The default is `150`.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFencedFrameElement/height)
+   */
+  height?: Bindable<number>,
+
+  /**
+   * A unitless integer representing the width of the fenced frame in
+   * CSS pixels. The default is `300`.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFencedFrameElement/width)
+   */
+  width?: Bindable<number>,
+}
+
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFieldSetElement)
  */
