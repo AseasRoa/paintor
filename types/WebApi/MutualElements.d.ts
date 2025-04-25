@@ -40,11 +40,11 @@ export interface MutualElements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/a)
      */
-    (): HTMLElement
-    (formatArray: FormatArray, ...children: Children): HTMLElement
-    (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
-    (props: AnchorElementProps, ...children: Children): HTMLElement
-    (...children: Children): HTMLElement
+    (): HTMLAnchorElement
+    (formatArray: FormatArray, ...children: Children): HTMLAnchorElement
+    (text: Reactive<StringConvertible>, ...children: Children): HTMLAnchorElement
+    (props: AnchorElementProps, ...children: Children): HTMLAnchorElement
+    (...children: Children): HTMLAnchorElement
 
     (): SVGAElement
     (formatArray: FormatArray, ...children: SVGChildren): SVGAElement
@@ -93,11 +93,11 @@ export interface MutualElements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/style)
      */
-    (): HTMLElement
-    (formatArray: FormatArray, ...children: Children): HTMLElement
-    (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
-    (props: StyleElementProps, ...children: Children): HTMLElement
-    (...children: Children): HTMLElement
+    (): HTMLStyleElement
+    (formatArray: FormatArray, ...children: Children): HTMLStyleElement
+    (text: Reactive<StringConvertible>, ...children: Children): HTMLStyleElement
+    (props: StyleElementProps, ...children: Children): HTMLStyleElement
+    (...children: Children): HTMLStyleElement
 
     (): SVGStyleElement
     (formatArray: FormatArray, ...children: SVGChildren): SVGStyleElement
@@ -117,9 +117,9 @@ export interface MutualElements {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/title)
      */
-    (): HTMLElement
-    (formatArray: FormatArray): HTMLElement
-    (text: Reactive<StringConvertible>): HTMLElement
+    (): HTMLTitleElement
+    (formatArray: FormatArray): HTMLTitleElement
+    (text: Reactive<StringConvertible>): HTMLTitleElement
 
     /**
      * The `<title>` SVG element provides an accessible, short-text description
