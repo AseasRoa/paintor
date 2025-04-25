@@ -1,6 +1,5 @@
-import { FormatArray, Reactive, StringConvertible } from './common'
+import { Children, FormatArray, Reactive, StringConvertible } from './common'
 import {
-  AnchorElementProps,
   AreaElementProps,
   AudioElementProps,
   BaseElementProps,
@@ -34,61 +33,19 @@ import {
   OutputElementProps,
   ProgressElementProps,
   QElementProps,
-  ScriptElementProps,
   SelectElementProps,
   SlotElementProps,
   SourceElementProps,
-  StyleElementProps,
-  SvgElementProps,
   TdElementProps,
   TextAreaElementProps,
   ThElementProps,
   TimeElementProps,
   TrackElementProps,
   VideoElementProps,
-} from './elementProps'
+} from './props/htmlElementProps'
 import { HTMLElementProps } from './standard/HTMLElementProps'
 
-type Child = (
-  Error
-  | HTMLElement
-  | HTMLElement[]
-  | Template
-  | Reactive<StringConvertible>
-  // The result of calling a function like this: (x) => void
-  | void
-)
-type Children = Child[]
-
 export interface Elements {
-  /**
-   * Create custom HTML element
-   */
-  $element(
-    tagName: string,
-    props?: HTMLElementProps,
-    ...children: (Children | string)[]
-  ): HTMLElement;
-
-  a: {
-    /**
-     * The `<a>` HTML element (or anchor element), with its `href` attribute,
-     * creates a hyperlink to web pages, files, email addresses, locations in
-     * the same page, or anything else a URL can address.
-     *
-     * Content within each `<a>` should indicate the link's destination.
-     * If the `href` attribute is present, pressing the enter key while
-     * focused on the `<a>` element will activate it.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/a)
-     */
-    (): HTMLElement
-    (formatArray: FormatArray, ...children: Children): HTMLElement
-    (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
-    (props: AnchorElementProps, ...children: Children): HTMLElement
-    (...children: Children): HTMLElement
-  };
-
   abbr: {
     /**
      * The `<abbr>` HTML element represents an abbreviation or acronym.
@@ -1415,27 +1372,6 @@ export interface Elements {
     (...children: Children): HTMLElement
   };
 
-  script: {
-    /**
-     * The `<script>` HTML element is used to embed executable code or data;
-     * this is typically used to embed or refer to JavaScript code.
-     * The `<script>` element can also be used with other languages, such as
-     * WebGL's GLSL shader programming language and JSON.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/script)
-     */
-    (): HTMLElement
-    (formatArray: FormatArray, ...children: Children): HTMLElement
-    (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
-    (props: ScriptElementProps, ...children: Children): HTMLElement
-    (
-      props: ScriptElementProps,
-      clientCode: () => void,
-      ...children: Children[]
-    ): HTMLElement
-    (...children: Children): HTMLElement
-  };
-
   search: {
     /**
      * The `<search>` HTML element is a container representing the parts of
@@ -1567,21 +1503,6 @@ export interface Elements {
     (...children: Children): HTMLElement
   };
 
-  style: {
-    /**
-     * The `<style>` HTML element contains style information for a document,
-     * or part of a document. It contains CSS, which is applied to the contents
-     * of the document containing the `<style>` element.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/style)
-     */
-    (): HTMLElement
-    (formatArray: FormatArray, ...children: Children): HTMLElement
-    (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
-    (props: StyleElementProps, ...children: Children): HTMLElement
-    (...children: Children): HTMLElement
-  };
-
   sub: {
     /**
      * The `<sub>` HTML element specifies inline text which should be displayed
@@ -1624,19 +1545,6 @@ export interface Elements {
     (formatArray: FormatArray, ...children: Children): HTMLElement
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: HTMLElementProps, ...children: Children): HTMLElement
-    (...children: Children): HTMLElement
-  };
-
-  svg: {
-    /**
-     * SVG drawings and images are created using a wide array
-     * of elements which are dedicated to the construction,
-     * drawing, and layout of vector images and diagrams.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Element)
-     */
-    (): HTMLElement
-    (props: SvgElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
   };
 
@@ -1799,22 +1707,6 @@ export interface Elements {
     (text: Reactive<StringConvertible>, ...children: Children): HTMLElement
     (props: TimeElementProps, ...children: Children): HTMLElement
     (...children: Children): HTMLElement
-  };
-
-  title: {
-    /**
-     * The `<title>` HTML element defines the document's title that is shown in
-     * a browser's title bar or a page's tab. It only contains text; tags within
-     * the element are ignored.
-     *
-     * ###### Permitted content
-     * Text that is not inter-element whitespace.
-     *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/title)
-     */
-    (): HTMLElement
-    (formatArray: FormatArray): HTMLElement
-    (text: Reactive<StringConvertible>): HTMLElement
   };
 
   tr: {

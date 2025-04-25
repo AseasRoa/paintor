@@ -1,6 +1,6 @@
-import { HTMLElementProps } from './standard/HTMLElementProps'
-import { HTMLMediaElementProps } from './standard/HTMLMediaElementProps'
-import { Bindable, StringConvertible } from './common'
+import { HTMLElementProps } from '../standard/HTMLElementProps'
+import { HTMLMediaElementProps } from '../standard/HTMLMediaElementProps'
+import { Bindable, StringConvertible } from '../common'
 
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLAnchorElement)
@@ -541,6 +541,7 @@ export interface BaseElementProps extends HTMLElementProps {
    *
    * - `_parent`: Show the result in the parent browsing context of
    * the current one, if the current page is inside a frame.
+   * If there is no parent, acts the same as `_self`.
    * If there is no parent, acts the same as `_self`.
    *
    * - `_top`: Show the result in the topmost browsing context
@@ -4084,113 +4085,6 @@ export interface StyleElementProps extends HTMLElementProps {
    * [MDN Reference](https://developer.mozilla.org/docs/Web/HTML/Element/style#title)
    */
   title?: Bindable<string>,
-}
-
-export interface SvgElementProps extends HTMLElementProps {
-  /**
-   * The displayed height of the rectangular viewport.
-   * (Not the height of its coordinate system.)
-   *
-   * Default value: `auto`; Animatable: **yes**.
-   *
-   * > **_NOTE:_**
-   * Starting with SVG2, `x`, `y`, `width`, and `height`
-   * are *Geometry Properties*, meaning these attributes
-   * can also be used as CSS properties.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Attribute/height)
-   */
-  height?: Bindable<number|string|'auto'>,
-
-  /**
-   * Indicates how an element with a `viewBox` providing a given aspect ratio
-   * must fit into a viewport with a different aspect ratio.
-   *
-   * The aspect ratio of an SVG image is defined by the `viewBox` attribute.
-   * Therefore, if viewBox isn't set, the `preserveAspectRatio` attribute
-   * has no effect on SVG's scaling (except in the case of the `<image>`
-   * element, where `preserveAspectRatio` behaves differently).
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Attribute/preserveAspectRatio)
-   */
-  preserveAspectRatio?: Bindable<
-    'none'
-    |'xMinYMin meet'|'xMinYMin slice'
-    |'xMidYMin meet'|'xMidYMin slice'
-    |'xMaxYMin meet'|'xMaxYMin slice'
-    |'xMinYMid meet'|'xMinYMid slice'
-    |'xMidYMid meet'|'xMidYMid slice'
-    |'xMaxYMid meet'|'xMaxYMid slice'
-    |'xMinYMax meet'|'xMinYMax slice'
-    |'xMidYMax meet'|'xMidYMax slice'
-    |'xMaxYMax meet'|'xMaxYMax slice'
-  >,
-
-  /**
-   * The `viewBox` attribute defines the position and dimension,
-   * in user space, of an SVG viewport.
-   *
-   * The value of the `viewBox` attribute is a list of four numbers separated
-   * by whitespace and/or a comma: `min-x`, `min-y`, `width`, and `height`.
-   * `min-x` and `min-y` represent the smallest X and Y coordinates that
-   * the `viewBox` may have (the origin coordinates of the `viewBox`)
-   * and the width and height specify the `viewBox` size.
-   * The resulting `viewBox` is a rectangle in user space mapped to the bounds
-   * of the viewport of an SVG element (not the browser viewport).
-   * When an SVG contains a viewBox attribute (often in combination with a
-   * `preserveAspectRatio` attribute), a transform stretches or resizes
-   * the SVG viewport to fit a particular container element.
-   *
-   * @example
-   * ```html
-   * <svg viewBox="-5 -5 10 10" xmlns="http://www.w3.org/2000/svg">
-   *   <rect x="0" y="0" width="100%" height="100%" />
-   *   <circle cx="50%" cy="50%" r="4" fill="white" />
-   * </svg>
-   * ```
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Attribute/viewBox)
-   */
-  viewBox?: Bindable<string|'none'>,
-
-  /**
-   * The displayed width of the rectangular viewport.
-   * (Not the width of its coordinate system.)
-   *
-   * Default value: `auto`; Animatable: **yes**.
-   *
-   * > **_NOTE:_**
-   * Starting with SVG2, `x`, `y`, `width`, and `height`
-   * are *Geometry Properties*, meaning these attributes
-   * can also be used as CSS properties.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Attribute/width)
-   */
-  width?: Bindable<number|string|'auto'>,
-
-  /**
-   * Defines an x-axis coordinate in the user coordinate system.
-   *
-   * > **_NOTE:_**
-   * Starting with SVG2, `x`, `y`, `width`, and `height`
-   * are *Geometry Properties*, meaning these attributes
-   * can also be used as CSS properties.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Attribute/x)
-   */
-  x?: Bindable<number|string>,
-
-  /**
-   * Defines a y-axis coordinate in the user coordinate system.
-   *
-   * > **_NOTE:_**
-   * Starting with SVG2, `x`, `y`, `width`, and `height`
-   * are *Geometry Properties*, meaning these attributes
-   * can also be used as CSS properties.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/SVG/Attribute/y)
-   */
-  y?: Bindable<number|string>,
 }
 
 export interface TdElementProps extends HTMLElementProps {
