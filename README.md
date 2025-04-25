@@ -21,10 +21,10 @@ can be written in JavaScript.
 ## Key Features
 - **JavaScript syntax**: The code you write is the code to run
 - **No dependencies**
-- **No Virtual DOM**: Reactivity is achieved through [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+- **No Virtual DOM**: Reactivity is achieved through [Proxy](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
   and DOM events
 - **Templates in JavaScript or HTML (experimental)**: JavaScript HTML-like
-tree structure (HyperScript) or HTML syntax in [template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
+tree structure (HyperScript) or HTML syntax in [template literals](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Template_literals)
 - **Scoped CSS**: Each component can have its own style
 - **Observers**: Receive events on state changes
 - **Server-Side Rendering (SSR)**: Generate HTML code on the server
