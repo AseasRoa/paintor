@@ -618,14 +618,14 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/className)
    * */
-  class?: Bindable<string>,
+  class?: Bindable<string | string[]>,
 
   /**
    * Sets the value of the class attribute of the specified element.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/className)
    * */
-  className?: Bindable<string>,
+  className?: Bindable<string | string[]>,
 
   /**
    * Identifies elements for observation in the
