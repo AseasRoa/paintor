@@ -143,6 +143,93 @@ describe('Elements Creation', () => {
       })
     })
 
+    describe('Passing element in a component, which returns it', () => {
+      /**
+       * @param {HTMLElement} element
+       * @returns {Template}
+       */
+      function Component(element) {
+        return template(() => {
+          return element
+        })
+      }
+
+      const App = function() {
+        return template((x) => {
+          const li2 = x.li('li-2')
+
+          x.ul(
+            x.li('li-1'),
+            Component(li2),
+          )
+        })
+      }
+
+      test('SSR', () => {
+        const html = compose(App()).html()
+
+        expect(html).toBe('<ul><li>li-1</li><li>li-2</li></ul>')
+      })
+
+      test('DOM', () => {
+        const container = document.body
+
+        compose(App()).paint(container)
+
+        const ul = container.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-2',
+        ])
+      })
+    })
+
+    describe('Passing element in a component', () => {
+      /**
+       * @param {HTMLElement} element
+       * @returns {Template}
+       */
+      function Component(element) {
+        return template((x) => {
+          return x.ul(
+            x.li('li-1'),
+            element,
+          )
+        })
+      }
+
+      const App = function() {
+        return template((x) => {
+          const li2 = x.li('li-2')
+
+          x.div(
+            Component(li2)
+          )
+        })
+      }
+
+      test('SSR', () => {
+        const html = compose(App()).html()
+
+        expect(html).toBe('<div><ul><li>li-1</li><li>li-2</li></ul></div>')
+      })
+
+      test('DOM', () => {
+        const container = document.body
+
+        compose(App()).paint(container)
+
+        const div = container?.getElementsByTagName('div')[0]
+        const ul = div?.getElementsByTagName('ul')[0]
+
+        expectTextContentsToBeLike(ul?.childNodes, [
+          'li-1',
+          'li-2',
+        ])
+      })
+    })
+
     describe('Automatically calling template functions', () => {
       const liFragments = template((x) => {
         x.li('li-fragment-1')
