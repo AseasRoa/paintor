@@ -6,6 +6,13 @@ import { Bindable } from '../common'
  */
 export interface ElementProps extends NodeProps {
   /**
+   * Sets the value of the class attribute of the specified element.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/className)
+   * */
+  class?: Bindable<string | string[]>,
+
+  /**
    * Reflects the value of the `aria-atomic` attribute, which indicates whether
    * assistive technologies will present all, or only parts of, the changed
    * region based on the change notifications defined by the `aria-relevant`
@@ -612,13 +619,6 @@ export interface ElementProps extends NodeProps {
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/ariaValueText)
    */
   ariaValueText?: Bindable<string>,
-
-  /**
-   * Sets the value of the class attribute of the specified element.
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/className)
-   * */
-  class?: Bindable<string | string[]>,
 
   /**
    * Sets the value of the class attribute of the specified element.
