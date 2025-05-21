@@ -423,7 +423,6 @@ describe('State', () => {
         compose((x) => {
           x.div(
             x.$each(theState, (a) => {
-              // @ts-expect-error
               x.$each(a.b, (value, key) => {
                 x.button(`${key}-${value}`)
               })
@@ -489,7 +488,6 @@ describe('State', () => {
         compose((x) => {
           x.div(
             x.$each(theState, (a) => {
-              // @ts-expect-error
               x.$each(a.b, (value, key) => {
                 x.button(`${key}-${value}`)
               })
@@ -590,7 +588,6 @@ describe('State', () => {
 
           compose((x) => {
             x.$each(globalState, (item) => {
-              // @ts-expect-error
               x.div(() => item.label)
             })
           }).paint(container)
