@@ -77,6 +77,30 @@ describe('observers', () => {
       })
     })
 
+    test('objects - change string with an object', () => {
+      /**
+       * @type {{a: string | Record<any, any>}}
+       */
+      const myObject = { a: 'a' }
+      const myState = state((myObject))
+
+      let event = {}
+
+      on(myState).change((e) => {
+        event = e
+      })
+
+      myState.a = {}
+
+      expect(event).toMatchObject({
+        key: 'a',
+        value: {},
+        oldValue: 'a',
+        state: { a: {} },
+        target: { a: {} }
+      })
+    })
+
     test('arrays', () => {
       const myObject = ['a']
       const myState = state((myObject))
@@ -95,6 +119,30 @@ describe('observers', () => {
         oldValue: 'a',
         state: ['A'],
         target: ['A']
+      })
+    })
+
+    test('arrays - change string with an object', () => {
+      /**
+       * @type {(string | Record<any, any>)[]}
+       */
+      const myObject = ['a']
+      const myState = state((myObject))
+
+      let event = {}
+
+      on(myState).change((e) => {
+        event = e
+      })
+
+      myState[0] = {}
+
+      expect(event).toMatchObject({
+        key: '0',
+        value: {},
+        oldValue: 'a',
+        state: [{}],
+        target: [{}]
       })
     })
   })
