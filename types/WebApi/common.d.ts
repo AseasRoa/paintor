@@ -26,6 +26,9 @@ type Child = (
   Error
   | HTMLElement
   | HTMLElement[]
+  | SVGElement
+  | SVGElement[]
+  | Set<Node>
   | Template
   | Template[]
   | Reactive<StringConvertible>
@@ -38,6 +41,7 @@ type SVGChild = (
   Error
   | SVGElement
   | SVGElement[]
+  | Set<Node>
   | Template
   // The result of calling a function like this: (x) => void
   | void

@@ -12,7 +12,7 @@ export interface Statements {
       condition: Reactive<boolean>,
       handler: Template,
       elseHandler?: Template,
-    ): HTMLElement[]
+    ): Set<Node>
   }
 
   $each: {
@@ -28,7 +28,7 @@ export interface Statements {
         key: string
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
      * Calls the handler function for each element in the input Object or Map.
@@ -42,7 +42,7 @@ export interface Statements {
         key: number
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
      * Calls the handler function for each element in the input Object or Map.
@@ -56,7 +56,7 @@ export interface Statements {
         key: ReturnType<Input> extends Map<infer K, any> ? K : never
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
      * Calls the handler function for each element in the input Object or Map.
@@ -70,7 +70,7 @@ export interface Statements {
         key: ReturnType<Input> extends Record<infer K, infer V> ? K : never
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
       * Calls the handler function for each element in the input Array.
@@ -84,7 +84,7 @@ export interface Statements {
         key: string
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
       * Calls the handler function for each element in the input Set.
@@ -98,7 +98,7 @@ export interface Statements {
         key: number
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
       * Calls the handler function for each element in the input Map.
@@ -113,7 +113,7 @@ export interface Statements {
         key: Input extends Map<infer K, any> ? K : never
       ) => boolean | any,
       handlerOnEmpty?: () => void
-    ): HTMLElement[] | Error
+    ): (Set<Node>|Error)
 
     /**
       * Calls the handler function for each element in the input Object.
@@ -125,7 +125,7 @@ export interface Statements {
       object: Input,
       handler: ((value: Input[Key], key: Key) => (boolean | any)),
       handlerOnEmpty?: () => void,
-    ): (HTMLElement[]|Error)
+    ): (Set<Node>|Error)
   }
 
   $state: {
@@ -137,25 +137,25 @@ export interface Statements {
       arrayState: Input,
       handler: ((state: Input) => (Template|void)),
       handlerOnEmpty?: () => void,
-    ): (HTMLElement[]|Error)
+    ): (Set<Node>|Error)
 
     <Input extends Array<any>>(
       arrayState: Input,
       handler: Template,
       handlerOnEmpty?: () => void,
-    ): (HTMLElement[]|Error)
+    ): (Set<Node>|Error)
 
     <Input extends Record<keyof any, any>>(
       objectState: Input,
       handler: ((state: Input) => (Template|void)),
       handlerOnEmpty?: () => void,
-    ): (HTMLElement[]|Error)
+    ): (Set<Node>|Error)
 
     <Input extends Record<keyof any, any>>(
       objectState: Input,
       handler: Template,
       handlerOnEmpty?: () => void,
-    ): (HTMLElement[]|Error)
+    ): (Set<Node>|Error)
   }
 
   /**
@@ -166,7 +166,7 @@ export interface Statements {
     from: Reactive<number>,
     to: Reactive<number>,
     handler: (key: number) => boolean | any
-  ): (HTMLElement[]|Error)
+  ): (Set<Node>|Error)
 
   $css(sheet: CSSStyleSheet | string | string[]): void
 
