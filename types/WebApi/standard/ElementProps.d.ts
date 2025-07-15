@@ -1,5 +1,5 @@
-import { NodeProps } from './NodeProps'
-import { Bindable } from '../common'
+import type { NodeProps } from './NodeProps.d.ts'
+import type { Bindable } from '../common.d.ts'
 
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element)

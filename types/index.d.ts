@@ -2,7 +2,7 @@
  * This file contains types, exported and used by other modules.
  */
 
-import {
+import type {
   Composable,
   Composition,
   ObserverListener,
@@ -11,8 +11,8 @@ import {
   StyleRules,
   Template,
   Translation
-} from './types'
-import './global'
+} from './types.d.ts'
+import './global.d.ts'
 
 /**
  * Try to fetch one or more translations, depending on the user's locale.

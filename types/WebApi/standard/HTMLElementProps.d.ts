@@ -1,6 +1,6 @@
-import { ElementProps } from './ElementProps'
-import { Bindable, StringConvertible } from '../common'
-import { CSSProperties } from '../CSSProperties'
+import type { ElementProps } from './ElementProps.d.ts'
+import type { Bindable, StringConvertible } from '../common.d.ts'
+import type { CSSProperties } from '../CSSProperties.d.ts'
 
 /**
  * The HTMLElement interface represents any HTML element.

@@ -1,8 +1,8 @@
-import { CSSPropertiesJsStyle } from './WebApi/CSSProperties'
-import { Elements } from './WebApi/Elements'
-import { Statements } from './Statements'
-import { SVGElements } from './WebApi/SVGElements'
-import { MutualElements } from './WebApi/MutualElements'
+import type { CSSPropertiesJsStyle } from './WebApi/CSSProperties.d.ts'
+import type { Elements } from './WebApi/Elements.d.ts'
+import type { Statements } from './Statements.d.ts'
+import type { SVGElements } from './WebApi/SVGElements.d.ts'
+import type { MutualElements } from './WebApi/MutualElements.d.ts'
 
 export interface StyleRules extends CSSPropertiesJsStyle {}
 export interface TemplateTree extends Elements, SVGElements, MutualElements, Statements {}

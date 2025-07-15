@@ -1,4 +1,4 @@
-import { SVGElementProps } from './SVGElementProps'
+import type { SVGElementProps } from './SVGElementProps.d.ts'
 
 /**
  * Represents SVG elements whose primary purpose is to directly render

@@ -1,5 +1,5 @@
-import { HTMLElementProps } from './HTMLElementProps'
-import { Bindable } from '../common'
+import type { HTMLElementProps } from './HTMLElementProps.d.ts'
+import type { Bindable } from '../common.d.ts'
 
 /**
  * [MDN Reference]([MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/abort_event))

@@ -1,5 +1,5 @@
-import { Bindable } from './common'
-import { CSSColors } from './CSSColors'
+import type { Bindable } from './common.d.ts'
+import type { CSSColors } from './CSSColors.d.ts'
 
 export type Positions =
   |'top'

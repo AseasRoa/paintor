@@ -3,8 +3,8 @@
  * @see https://www.typescriptlang.org/docs/handbook/utility-types.html
  */
 
-import { Reactive } from './common'
-import { Template } from './types'
+import type { Reactive } from './common.d.ts'
+import type { Template } from './types.d.ts'
 
 export interface Statements {
   $if: {

@@ -5,11 +5,11 @@
  * @see https://www.typescriptlang.org/docs/handbook/modules/reference.html#ambient-modules
  */
 
-type Composable = import('./types').Composable
-type Composition = import('./types').Composition
-type State = import('./types').State
-type States = import('./types').States
-type Template = import('./types').Template
-type TemplateTree = import('./types').TemplateTree
-type Translation = import('./types').Translation
-type ObserverListener = import('./types').ObserverListener
+type Composable = import('./types.d.ts').Composable
+type Composition = import('./types.d.ts').Composition
+type State = import('./types.d.ts').State
+type States = import('./types.d.ts').States
+type Template = import('./types.d.ts').Template
+type TemplateTree = import('./types.d.ts').TemplateTree
+type Translation = import('./types.d.ts').Translation
+type ObserverListener = import('./types.d.ts').ObserverListener

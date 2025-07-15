@@ -1,8 +1,15 @@
-import { Bindable } from '../common'
-import { svgCommonAttributes, svgPresentationAttributes } from './common'
-import { SVGGraphicsElementProps } from '../standard/SVGGraphicsElementProps'
-import { SVGAnimationElementProps } from '../standard/SVGAnimationElementProps'
-import { SVGElementProps } from '../standard/SVGElementProps'
+import type { Bindable } from '../common.d.ts'
+import type {
+  svgCommonAttributes,
+  svgPresentationAttributes,
+} from './common.d.ts'
+import type {
+  SVGGraphicsElementProps,
+} from '../standard/SVGGraphicsElementProps.d.ts'
+import type {
+  SVGAnimationElementProps,
+} from '../standard/SVGAnimationElementProps.d.ts'
+import type { SVGElementProps } from '../standard/SVGElementProps.d.ts'
 
 export interface aAttributes extends SVGGraphicsElementProps {
   /**

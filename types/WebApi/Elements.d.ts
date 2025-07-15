@@ -1,5 +1,10 @@
-import { Children, FormatArray, Reactive, StringConvertible } from './common'
-import {
+import type {
+  Children,
+  FormatArray,
+  Reactive,
+  StringConvertible,
+} from './common.d.ts'
+import type {
   AreaElementProps,
   AudioElementProps,
   BaseElementProps,
@@ -43,8 +48,8 @@ import {
   TimeElementProps,
   TrackElementProps,
   VideoElementProps,
-} from './props/htmlElementProps'
-import { HTMLElementProps } from './standard/HTMLElementProps'
+} from './props/htmlElementProps.d.ts'
+import type { HTMLElementProps } from './standard/HTMLElementProps.d.ts'
 
 export interface Elements {
   abbr: {

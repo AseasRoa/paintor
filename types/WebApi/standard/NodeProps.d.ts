@@ -1,4 +1,4 @@
-import { Bindable, StringConvertible } from '../common'
+import type { Bindable, StringConvertible } from '../common.d.ts'
 
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Node)

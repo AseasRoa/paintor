@@ -1,6 +1,6 @@
-import { ElementProps } from './ElementProps'
-import { Bindable } from '../common'
-import { svgCommonAttributes } from '../attributes/common'
+import type { ElementProps } from './ElementProps.d.ts'
+import type { Bindable } from '../common.d.ts'
+import type { svgCommonAttributes } from '../attributes/common.d.ts'
 
 /**
  * @see https://developer.mozilla.org/docs/Web/API/SVGElement

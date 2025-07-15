@@ -1,4 +1,4 @@
-import { SVGElementProps } from './SVGElementProps'
+import type { SVGElementProps } from './SVGElementProps.d.ts'
 
 declare class TimeEvent {
   /**

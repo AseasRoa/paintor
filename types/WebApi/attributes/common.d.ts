@@ -1,6 +1,6 @@
-import { Bindable, StringConvertible } from '../common'
-import { CSSColors } from '../CSSColors'
-import { CSSProperties } from '../CSSProperties'
+import type { Bindable, StringConvertible } from '../common.d.ts'
+import type { CSSColors } from '../CSSColors.d.ts'
+import type { CSSProperties } from '../CSSProperties.d.ts'
 
 export interface svgCommonAttributes {
   /**

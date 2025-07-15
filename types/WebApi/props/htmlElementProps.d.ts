@@ -1,6 +1,8 @@
-import { HTMLElementProps } from '../standard/HTMLElementProps'
-import { HTMLMediaElementProps } from '../standard/HTMLMediaElementProps'
-import { Bindable, StringConvertible } from '../common'
+import type { HTMLElementProps } from '../standard/HTMLElementProps.d.ts'
+import type {
+  HTMLMediaElementProps,
+} from '../standard/HTMLMediaElementProps.d.ts'
+import type { Bindable, StringConvertible } from '../common.d.ts'
 
 /**
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLAnchorElement)

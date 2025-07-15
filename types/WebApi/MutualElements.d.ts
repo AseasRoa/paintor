@@ -1,22 +1,22 @@
-import {
+import type {
+  Children,
   FormatArray,
   Reactive,
   StringConvertible,
   SVGChildren,
-} from './common'
-import {
+} from './common.d.ts'
+import type {
   AnchorElementProps,
   ScriptElementProps,
   StyleElementProps,
-} from './props/htmlElementProps'
-import {
+} from './props/htmlElementProps.d.ts'
+import type {
   aAttributes,
   scriptAttributes,
   styleAttributes,
   titleAttributes,
-} from './attributes/svg'
-import { Children } from './common'
-import { HTMLElementProps } from './standard/HTMLElementProps'
+} from './attributes/svg.d.ts'
+import type { HTMLElementProps } from './standard/HTMLElementProps.d.ts'
 
 export interface MutualElements {
   /**

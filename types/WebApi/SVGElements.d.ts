@@ -1,18 +1,19 @@
-import {
+import type {
   FormatArray,
   Reactive,
   StringConvertible,
   SVGChildren
-} from './common'
-import { SVGElementProps } from './standard/SVGElementProps'
-import {
+} from './common.d.ts'
+import type { SVGElementProps } from './standard/SVGElementProps.d.ts'
+import type {
   animateAttributes,
   animateMotionAttributes,
   animateTransformAttributes,
   circleAttributes,
   clipPathAttributes,
   defsAttributes,
-  descAttributes, discardAttributes,
+  descAttributes,
+  discardAttributes,
   ellipseAttributes,
   feBlendAttributes,
   feColorMatrixAttributes,
@@ -43,7 +44,8 @@ import {
   foreignObjectAttributes,
   gAttributes,
   imageAttributes,
-  linearGradientAttributes, lineAttributes,
+  linearGradientAttributes,
+  lineAttributes,
   markerAttributes,
   maskAttributes,
   metadataAttributes,
@@ -56,13 +58,15 @@ import {
   rectAttributes,
   setAttributes,
   stopAttributes,
-  svgAttributes, switchAttributes, symbolAttributes,
+  svgAttributes,
+  switchAttributes,
+  symbolAttributes,
   textAttributes,
   textPathAttributes,
   tspanAttributes,
   useAttributes,
   viewAttributes
-} from './attributes/svg'
+} from './attributes/svg.d.ts'
 
 export interface SVGElements {
   animate: {
