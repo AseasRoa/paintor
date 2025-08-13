@@ -539,7 +539,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/beforetoggle_event)
    */
-  onBeforeToggle?(this: GlobalEventHandlers, event: ToggleEvent): any,
+  onBeforeToggle?:
+    ((this: GlobalEventHandlers, event: ToggleEvent) => any)
+    | null,
 
   /**
    * The `change` event is fired for `<input>`, `<select>`, and `<textarea>`
@@ -567,7 +569,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/change_event)
    */
-  onChange?(this: GlobalEventHandlers, event: Event): any,
+  onChange?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `copy` event fires when the user initiates a copy action through
@@ -575,7 +579,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/copy_event)
    */
-  onCopy?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onCopy?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * The `cut` event fires when the user initiates a cut action through
@@ -583,7 +589,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/cut_event)
    */
-  onCut?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onCut?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * The `drag` event is fired every few hundred milliseconds as an element
@@ -594,7 +602,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/drag_event)
    */
-  onDrag?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDrag?:
+    ((his: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `dragend` event is fired when a drag operation ends (by releasing
@@ -605,7 +615,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/dragend_event)
    */
-  onDragEnd?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDragEnd?:
+    ((this: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `dragenter` event is fired when a dragged element or text selection
@@ -618,7 +630,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/dragenter_event)
    */
-  onDragEnter?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDragEnter?:
+    ((this: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `dragleave` event is fired when a dragged element or text selection
@@ -629,7 +643,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/dragleave_event)
    */
-  onDragLeave?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDragLeave?:
+    ((this: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `dragover` event is fired when an element or text selection is being
@@ -640,7 +656,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/dragover_event)
    */
-  onDragOver?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDragOver?:
+    ((this: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `dragstart` event is fired when the user starts dragging an element
@@ -651,7 +669,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/dragstart_event)
    */
-  onDragStart?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDragStart?:
+    ((this: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `drop` event is fired when an element or text selection is dropped
@@ -664,7 +684,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/drop_event)
    */
-  onDrop?(this: GlobalEventHandlers, event: DragEvent): any,
+  onDrop?:
+    ((this: GlobalEventHandlers, event: DragEvent) => any)
+    | null,
 
   /**
    * The `error` event is fired on an element when a resource failed to load,
@@ -675,7 +697,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/error_event)
    */
-  onError?(this: GlobalEventHandlers, event: UIEvent): any,
+  onError?:
+    ((this: GlobalEventHandlers, event: UIEvent) => any)
+    | null,
 
   /**
    * The `load` event fires for elements containing a resource when the resource
@@ -693,7 +717,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/load_event)
    */
-  onLoad?(this: GlobalEventHandlers, event: Event): any,
+  onLoad?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `paste` event fires when the user initiates a paste action through
@@ -701,7 +727,9 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/paste_event)
    */
-  onPaste?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onPaste?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * The `toggle` event fires on a popover element, `<dialog>` element,
@@ -718,5 +746,7 @@ export interface HTMLElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLElement/toggle_event)
    */
-  onToggle?(this: GlobalEventHandlers, event: ToggleEvent): any,
+  onToggle?:
+    ((this: GlobalEventHandlers, event: ToggleEvent) => any)
+    | null,
 }

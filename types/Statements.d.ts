@@ -133,6 +133,12 @@ export interface Statements {
       * Calls the handler function initially, and then every time
       * the input state changes.
       */
+      <Input extends Array<any>>(
+      arrayState: Input,
+      handler: ((state: Input) => (Template[]|void)),
+      handlerOnEmpty?: () => void,
+    ): (Set<Node>|Error)
+
     <Input extends Array<any>>(
       arrayState: Input,
       handler: ((state: Input) => (Template|void)),
@@ -142,6 +148,12 @@ export interface Statements {
     <Input extends Array<any>>(
       arrayState: Input,
       handler: Template,
+      handlerOnEmpty?: () => void,
+    ): (Set<Node>|Error)
+
+    <Input extends Record<keyof any, any>>(
+      objectState: Input,
+      handler: ((state: Input) => (Template[]|void)),
       handlerOnEmpty?: () => void,
     ): (Set<Node>|Error)
 

@@ -46,7 +46,9 @@ export interface SVGElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGElement)
    */
-  onAbort?(this: GlobalEventHandlers, event: Event): any,
+  onAbort?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * Fired when an SVG element does not load properly or when an error occurs
@@ -54,28 +56,36 @@ export interface SVGElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGElement)
    */
-  onError?(this: GlobalEventHandlers, event: Event): any,
+  onError?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * Fires on an `SVGElement` when it is loaded in the browser.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGElement)
    */
-  onLoad?(this: GlobalEventHandlers, event: Event): any,
+  onLoad?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * Fired when an SVG document is being resized.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGElement)
    */
-  onResize?(this: GlobalEventHandlers, event: Event): any,
+  onResize?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * Fired when an SVG document view is being shifted along the X and/or Y axes.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGElement)
    */
-  onScroll?(this: GlobalEventHandlers, event: Event): any,
+  onScroll?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * Fired when the DOM implementation removes an SVG document from a window
@@ -83,5 +93,7 @@ export interface SVGElementProps extends ElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGElement)
    */
-  onUnload?(this: GlobalEventHandlers, event: Event): any,
+  onUnload?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 }

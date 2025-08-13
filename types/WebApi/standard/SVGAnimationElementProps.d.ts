@@ -22,7 +22,9 @@ declare class TimeEvent {
    * the `TimeEvent` has been dispatched via the `dispatchEvent` method,
    * though it may be called multiple times during that phase if necessary.
    */
-  initTimeEvent?(): any
+  initTimeEvent?:
+    (() => any)
+    | null
 }
 
 /**
@@ -47,7 +49,9 @@ export interface SVGAnimationElementProps extends SVGElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGAnimationElement/beginEvent_event)
    */
-  onBegin?(this: GlobalEventHandlers, event: TimeEvent): any,
+  onBegin?:
+    ((this: GlobalEventHandlers, event: TimeEvent) => any)
+    | null,
 
   /**
    * Fired when at the active end of the animation is reached.
@@ -62,7 +66,9 @@ export interface SVGAnimationElementProps extends SVGElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGAnimationElement/endEvent_event)
    */
-  onEnd?(this: GlobalEventHandlers, event: TimeEvent): any,
+  onEnd?:
+    ((this: GlobalEventHandlers, event: TimeEvent) => any)
+    | null,
 
   /**
    * Fired when the element's local timeline repeats. It will be fired each time
@@ -79,5 +85,7 @@ export interface SVGAnimationElementProps extends SVGElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGAnimationElement/repeatEvent_event)
    */
-  onRepeat?(this: GlobalEventHandlers, event: TimeEvent): any,
+  onRepeat?:
+    ((this: GlobalEventHandlers, event: TimeEvent) => null)
+    | null,
 }

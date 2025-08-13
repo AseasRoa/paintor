@@ -25,7 +25,9 @@ export interface SVGGraphicsElementProps extends SVGElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGGraphicsElement/copy_event)
    */
-  onCopy?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onCopy?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * Fired when the user has initiated a "cut" action through the browser's user
@@ -53,7 +55,9 @@ export interface SVGGraphicsElementProps extends SVGElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGGraphicsElement/cut_event)
    */
-  onCut?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onCut?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * Fired when the user has initiated a "paste" action through the browser's user interface.
@@ -76,5 +80,7 @@ export interface SVGGraphicsElementProps extends SVGElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SVGGraphicsElement/paste_event)
    */
-  onPaste?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onPaste?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 }

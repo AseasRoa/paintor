@@ -226,7 +226,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/abort_event)
    */
-  onAbort?(this: GlobalEventHandlers, event: Event): any,
+  onAbort?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `canplay` event is fired when the user agent can play the media, but
@@ -237,7 +239,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/canplay_event)
    */
-  onCanPlay?(this: GlobalEventHandlers, event: Event): any,
+  onCanPlay?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `canplaythrough` event is fired when the user agent can play the media,
@@ -248,7 +252,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/canplaythrough_event)
    */
-  onCanPlayThrough?(this: GlobalEventHandlers, event: Event): any,
+  onCanPlayThrough?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `durationchange` event is fired when the duration attribute has been
@@ -256,7 +262,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/durationchange_event)
    */
-  onDurationChange?(this: GlobalEventHandlers, event: Event): any,
+  onDurationChange?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `emptied` event is fired when the media has become empty; for example,
@@ -267,7 +275,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/emptied_event)
    */
-  onEmptied?(this: GlobalEventHandlers, event: Event): any,
+  onEmptied?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `encrypted` event is fired when initialization data is found in the
@@ -277,7 +287,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/emptied_event)
    */
-  onEncrypted?(this: GlobalEventHandlers, event: MediaEncryptedEvent): any,
+  onEncrypted?:
+    ((this: GlobalEventHandlers, event: MediaEncryptedEvent) => any)
+    | null,
 
   /**
    * The `ended` event is fired when playback or streaming has stopped because
@@ -294,7 +306,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/ended_event)
    */
-  onEnded?(this: GlobalEventHandlers, event: Event): any,
+  onEnded?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `error` event is fired when the resource could not be loaded due to an error (for example, a network connectivity problem).
@@ -303,7 +317,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/error_event)
    */
-  onError?(this: GlobalEventHandlers, event: Event): any,
+  onError?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `loadeddata` event is fired when the frame at the current playback
@@ -311,14 +327,18 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/loadeddata_event)
    */
-  onLoadedData?(this: GlobalEventHandlers, event: Event): any,
+  onLoadedData?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `loadedmetadata` event is fired when the metadata has been loaded.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/loadedmetadata_event)
    */
-  onLoadedMetadata?(this: GlobalEventHandlers, event: Event): any,
+  onLoadedMetadata?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `loadstart` event is fired when the browser has started to load a
@@ -326,7 +346,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/loadstart_event)
    */
-  onLoadStart?(this: GlobalEventHandlers, event: Event): any,
+  onLoadStart?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `pause` event is sent when a request to pause an activity is handled
@@ -340,7 +362,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/pause_event)
    */
-  onPause?(this: GlobalEventHandlers, event: Event): any,
+  onPause?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `play` event is fired when the `paused` property is changed from `true`
@@ -350,7 +374,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/play_event)
    */
-  onPlay?(this: GlobalEventHandlers, event: Event): any,
+  onPlay?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `playing` event is fired after playback is first started, and whenever it is restarted. For example it is fired when playback resumes after having been paused or delayed due to lack of data.
@@ -359,7 +385,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/playing_event)
    */
-  onPlaying?(this: GlobalEventHandlers, event: Event): any,
+  onPlaying?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `progress` event is fired periodically as the browser loads a resource.
@@ -368,7 +396,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/progress_event)
    */
-  onProgress?(this: GlobalEventHandlers, event: Event): any,
+  onProgress?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `ratechange` event is fired when the playback rate has changed.
@@ -377,7 +407,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/ratechange_event)
    */
-  onRateChange?(this: GlobalEventHandlers, event: Event): any,
+  onRateChange?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `seeked` event is fired when a seek operation completed, the current
@@ -388,7 +420,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/seeked_event)
    */
-  onSeeked?(this: GlobalEventHandlers, event: Event): any,
+  onSeeked?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `seeking` event is fired when a seek operation starts, meaning the
@@ -399,7 +433,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/seeking_event)
    */
-  onSeeking?(this: GlobalEventHandlers, event: Event): any,
+  onSeeking?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `stalled` event is fired when the user agent is trying to fetch media
@@ -409,7 +445,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/stalled_event)
    */
-  onStalled?(this: GlobalEventHandlers, event: Event): any,
+  onStalled?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `suspend` event is fired when media data loading has been suspended.
@@ -418,7 +456,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/suspend_event)
    */
-  onSuspend?(this: GlobalEventHandlers, event: Event): any,
+  onSuspend?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `timeupdate` event is fired when the time indicated by the
@@ -435,7 +475,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/timeupdate_event)
    */
-  onTimeUpdate?(this: GlobalEventHandlers, event: Event): any,
+  onTimeUpdate?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `volumechange` event is fired when either the `volume` attribute or the
@@ -445,7 +487,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/volumechange_event)
    */
-  onVolumeChange?(this: GlobalEventHandlers, event: Event): any,
+  onVolumeChange?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `waiting` event is fired when playback has stopped because
@@ -455,7 +499,9 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/waiting_event)
    */
-  onWaiting?(this: GlobalEventHandlers, event: Event): any,
+  onWaiting?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `waitingforkey` event is fired at a media element when it is first
@@ -469,5 +515,7 @@ export interface HTMLMediaElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLMediaElement/waitingforkey_event)
    */
-  onWaitingForKey?(this: GlobalEventHandlers, event: Event): any,
+  onWaitingForKey?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 }

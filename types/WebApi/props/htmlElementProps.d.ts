@@ -795,7 +795,9 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/contextlost_event)
    */
-  onContextLost?(this: GlobalEventHandlers, event: Event): any,
+  onContextLost?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `contextrestored` event of the
@@ -807,7 +809,9 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/contextrestored_event)
    */
-  onContextMenuRestored?(this: GlobalEventHandlers, event: Event): any,
+  onContextMenuRestored?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `webglcontextcreationerror` event of the WebGL API is fired if the user
@@ -821,10 +825,9 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/webglcontextcreationerror_event)
    */
-  onWebGLContextCreationError?(
-    this: GlobalEventHandlers,
-    event: WebGLContextEvent
-  ): any,
+  onWebGLContextCreationError?:
+    ((this: GlobalEventHandlers, event: WebGLContextEvent) => any)
+    | null,
 
   /**
    * The `webglcontextlost` event of the WebGL API is fired if the user
@@ -835,10 +838,9 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/webglcontextlost_event)
    */
-  onWebGLContextLost?(
-    this: GlobalEventHandlers,
-    event: WebGLContextEvent
-  ): any,
+  onWebGLContextLost?:
+    ((this: GlobalEventHandlers, event: WebGLContextEvent) => any)
+    | null,
 
   /**
    * The `webglcontextrestored` event of the WebGL API is fired if the user
@@ -853,10 +855,9 @@ export interface CanvasElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLCanvasElement/webglcontextlost_event)
    */
-  onWebGLContextRestored?(
-    this: GlobalEventHandlers,
-    event: WebGLContextEvent
-  ): any,
+  onWebGLContextRestored?:
+    ((this: GlobalEventHandlers, event: WebGLContextEvent) => any)
+    | null,
 }
 
 export interface ColElementProps extends HTMLElementProps {
@@ -992,7 +993,9 @@ export interface DialogElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/cancel_event)
    */
-  onCancel?(this: GlobalEventHandlers, event: Event): any,
+  onCancel?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `close` event is fired on an `HTMLDialogElement` object when the
@@ -1002,7 +1005,9 @@ export interface DialogElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLDialogElement/close_event)
    */
-  onClose?(this: GlobalEventHandlers, event: Event): any,
+  onClose?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 }
 
 export interface EmbedElementProps extends HTMLElementProps {
@@ -1256,14 +1261,18 @@ export interface FormElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/formdata_event)
    */
-  onFormData?(this : GlobalEventHandlers, event : FormDataEvent): any,
+  onFormData?:
+    ((this : GlobalEventHandlers, event : FormDataEvent) => any)
+    | null,
 
   /**
    * The `reset` event fires when a <form> is reset.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/reset_event)
    */
-  onReset?(this : GlobalEventHandlers, event : Event): any,
+  onReset?:
+    ((this : GlobalEventHandlers, event : Event) => any)
+    | null,
 
   /**
    * The `submit` event fires when a `<form>` is submitted.
@@ -1291,7 +1300,9 @@ export interface FormElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLFormElement/submit_event)
    */
-  onSubmit?(this: GlobalEventHandlers, event: SubmitEvent): any,
+  onSubmit?:
+    ((this: GlobalEventHandlers, event: SubmitEvent) => any)
+    | null,
 }
 
 /**
@@ -2582,7 +2593,9 @@ export interface InputElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLInputElement/cancel_event)
    */
-  onCancel?(this: GlobalEventHandlers, event: Event): any,
+  onCancel?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `invalid` event fires when a submittable element has been checked for
@@ -2598,7 +2611,9 @@ export interface InputElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLInputElement/invalid_event)
    */
-  onInvalid?(this: GlobalEventHandlers, event: Event): any,
+  onInvalid?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `search` event is fired when a search is initiated using an `<input>`
@@ -2619,14 +2634,18 @@ export interface InputElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLInputElement/search_event)
    */
-  onSearch?(this: GlobalEventHandlers, event: Event): any,
+  onSearch?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `select` event fires when some text has been selected.
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLInputElement/select_event)
    */
-  onSelect?(this: GlobalEventHandlers, event: Event): any,
+  onSelect?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `selectionchange` event of the
@@ -2648,7 +2667,9 @@ export interface InputElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLInputElement/selectionchange_event)
    */
-  onSelectionChange?(this: GlobalEventHandlers, event: Event): any,
+  onSelectionChange?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 }
 
 export interface InsElementProps extends HTMLElementProps {
@@ -3941,7 +3962,9 @@ export interface SlotElementProps extends HTMLElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLSlotElement/slotchange_event)
    */
-  onSlotChange?(this : GlobalEventHandlers, event : Event): any,
+  onSlotChange?:
+    ((this : GlobalEventHandlers, event : Event) => any)
+    | null,
 }
 
 /**
@@ -4609,10 +4632,9 @@ export interface VideoElementProps extends HTMLMediaElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLVideoElement/resize_event)
    */
-  onEnterPictureInPicture?(
-    this: GlobalEventHandlers,
-    event: PictureInPictureEvent
-  ): any,
+  onEnterPictureInPicture?:
+    ((this: GlobalEventHandlers, event: PictureInPictureEvent) => any)
+    | null,
 
   /**
    * The `leavepictureinpicture` event is fired when the `HTMLVideoElement`
@@ -4622,10 +4644,9 @@ export interface VideoElementProps extends HTMLMediaElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLVideoElement/leavepictureinpicture_event)
    */
-  onLeavePictureInPicture?(
-    this: GlobalEventHandlers,
-    event: PictureInPictureEvent
-  ): any,
+  onLeavePictureInPicture?:
+    ((this: GlobalEventHandlers, event: PictureInPictureEvent) => any)
+    | null,
 
   /**
    * The `resize` event of the `HTMLVideoElement` interface fires when one or
@@ -4636,5 +4657,7 @@ export interface VideoElementProps extends HTMLMediaElementProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLVideoElement/resize_event)
    */
-  onResize?(this: GlobalEventHandlers, event: Event): any,
+  onResize?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 }

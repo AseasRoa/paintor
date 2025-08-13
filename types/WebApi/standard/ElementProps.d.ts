@@ -774,7 +774,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/animationcancel_event)
    */
-  onAnimationCancel?(this: GlobalEventHandlers, event: AnimationEvent): any,
+  onAnimationCancel?:
+    ((this: GlobalEventHandlers, event: AnimationEvent) => any)
+    | null,
 
   /**
    * The `animationend` event is fired when a
@@ -785,7 +787,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/animationend_event)
    */
-  onAnimationEnd?(this: GlobalEventHandlers, event: AnimationEvent): any,
+  onAnimationEnd?:
+    ((this: GlobalEventHandlers, event: AnimationEvent) => any)
+    | null,
 
   /**
    * The `animationiteration` event is fired when an iteration of a
@@ -796,7 +800,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/animationiteration_event)
    */
-  onAnimationIteration?(this: GlobalEventHandlers, event: AnimationEvent): any,
+  onAnimationIteration?:
+    ((this: GlobalEventHandlers, event: AnimationEvent) => any)
+    | null,
 
   /**
    * The `animationstart` event is fired when a
@@ -809,7 +815,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/animationstart_event)
    */
-  onAnimationStart?(this: GlobalEventHandlers, event: AnimationEvent): any,
+  onAnimationStart?:
+    ((this: GlobalEventHandlers, event: AnimationEvent) => any)
+    | null,
 
   /**
    * The `auxclick` event is fired at an `Element` when a non-primary pointing
@@ -822,7 +830,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/auxclick_event)
    */
-  onAuxClick?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onAuxClick?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The DOM `beforeinput` event fires when the value of an `<input>` or
@@ -841,7 +851,10 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/beforeinput_event)
    */
-  onBeforeInput?(this: GlobalEventHandlers, event: InputEvent): any,
+  onBeforeInput?:
+    ((this: GlobalEventHandlers, event: InputEvent) => any)
+    | null
+  ,
 
   /**
    * An element receives a `beforematch` event when it is in the hidden until
@@ -851,7 +864,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/beforematch_event)
    */
-  onBeforeMatch?(this: GlobalEventHandlers, event: Event): any,
+  onBeforeMatch?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `blur` event fires when an element has lost focus. The event does not
@@ -870,7 +885,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/blur_event)
    */
-  onBlur?(this: GlobalEventHandlers, event: FocusEvent): any,
+  onBlur?:
+    ((this: GlobalEventHandlers, event: FocusEvent) => any)
+    | null,
 
   /**
    * An element receives a `click` event when any of the following occurs:
@@ -897,7 +914,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/click_event)
    */
-  onClick?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onClick?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `compositionend` event is fired when a text composition system such
@@ -912,7 +931,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/compositionend_event)
    */
-  onCompositionEnd?(this: GlobalEventHandlers, event: CompositionEvent): any,
+  onCompositionEnd?:
+    ((this: GlobalEventHandlers, event: CompositionEvent) => any)
+    | null,
 
   /**
    * The `compositionstart` event is fired when a text composition system such
@@ -927,7 +948,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/compositionend_event)
    */
-  onCompositionStart?(this: GlobalEventHandlers, event: CompositionEvent): any,
+  onCompositionStart?:
+    ((this: GlobalEventHandlers, event: CompositionEvent) => any)
+    | null,
 
   /**
    * The `compositionupdate` event is fired when a new character is received
@@ -943,7 +966,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/compositionend_event)
    */
-  onCompositionUpdate?(this: GlobalEventHandlers, event: CompositionEvent): any,
+  onCompositionUpdate?:
+    ((this: GlobalEventHandlers, event: CompositionEvent) => any)
+    | null,
 
   /**
    * The `contextmenu` event fires when the user attempts to open a context
@@ -960,7 +985,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/contextmenu_event)
    */
-  onContextMenu?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onContextMenu?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `copy` event of the
@@ -983,7 +1010,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/copy_event)
    */
-  onCopy?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onCopy?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * The `cut` event of the
@@ -1015,7 +1044,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/cut_event)
    */
-  onCut?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onCut?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * The `dblclick` event fires when a pointing device button (such as a mouse's
@@ -1027,7 +1058,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/dblclick_event)
    */
-  onDblClick?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onDblClick?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `focus` event fires when an element has received focus. The event does
@@ -1040,7 +1073,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/focus_event)
    */
-  onFocus?(this: GlobalEventHandlers, event: FocusEvent): any,
+  onFocus?:
+    ((this: GlobalEventHandlers, event: FocusEvent) => any)
+    | null,
 
   /**
    * The `focusin` event fires when an element has received focus, after the
@@ -1054,7 +1089,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/focusin_event)
    */
-  onFocusIn?(this: GlobalEventHandlers, event: FocusEvent): any,
+  onFocusIn?:
+    ((this: GlobalEventHandlers, event: FocusEvent) => any)
+    | null,
 
   /**
    * The `focusout` event fires when an element has lost focus, after the `blur`
@@ -1068,7 +1105,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/focusout_event)
    */
-  onFocusOut?(this: GlobalEventHandlers, event: FocusEvent): any,
+  onFocusOut?:
+    ((this: GlobalEventHandlers, event: FocusEvent) => any)
+    | null,
 
   /**
    * The `fullscreenchange` event is fired immediately after an `Element`
@@ -1085,7 +1124,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/fullscreenchange_event)
    */
-  onFullScreenChange?(this: GlobalEventHandlers, event: Event): any,
+  onFullScreenChange?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `fullscreenerror` event is fired when the browser cannot switch to
@@ -1099,7 +1140,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/fullscreenerror_event)
    */
-  onFullScreenError?(this: GlobalEventHandlers, event: Event): any,
+  onFullScreenError?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `gotpointercapture` event is fired when an element captures a pointer
@@ -1107,7 +1150,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/gotpointercapture_event)
    */
-  onGotPointerCapture?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onGotPointerCapture?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The input event fires when the value of an `<input>`, `<select>`, or
@@ -1139,7 +1184,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/input_event)
    */
-  onInput?(this: GlobalEventHandlers, event: InputEvent): any,
+  onInput?:
+    ((this: GlobalEventHandlers, event: InputEvent) => any)
+    | null,
 
   /**
    * The `keydown` event is fired when a key is pressed.
@@ -1167,7 +1214,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/keydown_event)
    */
-  onKeyDown?(this: GlobalEventHandlers, event: KeyboardEvent): any,
+  onKeyDown?:
+    ((this: GlobalEventHandlers, event: KeyboardEvent) => any)
+    | null,
 
   /**
    * The `keypress` event is fired when a letter, number, punctuation, or symbol
@@ -1181,7 +1230,9 @@ export interface ElementProps extends NodeProps {
    *
    * @deprecated
    */
-  onKeyPress?(this: GlobalEventHandlers, event: KeyboardEvent): any,
+  onKeyPress?:
+    ((this: GlobalEventHandlers, event: KeyboardEvent) => any)
+    | null,
 
   /**
    * The `keyup` event is fired when a key is released.
@@ -1206,7 +1257,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/keyup_event)
    */
-  onKeyUp?(this: GlobalEventHandlers, event: KeyboardEvent): any,
+  onKeyUp?:
+    ((this: GlobalEventHandlers, event: KeyboardEvent) => any)
+    | null,
 
   /**
    * The `lostpointercapture` event is fired when a
@@ -1215,7 +1268,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/lostpointercapture_event)
    */
-  onLostPointerCapture?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onLostPointerCapture?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `mousedown` event is fired at an `Element` when a pointing device
@@ -1229,7 +1284,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mousedown_event)
    */
-  onMouseDown?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseDown?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `mouseenter` event is fired at an `Element` when a pointing device
@@ -1244,7 +1301,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mouseenter_event)
    */
-  onMouseEnter?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseEnter?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `mouseleave` event is fired at an `Element` when the cursor of a
@@ -1269,7 +1328,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mouseleave_event)
    */
-  onMouseLeave?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseLeave?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `mousemove` event is fired at an element when a pointing device
@@ -1277,7 +1338,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mousemove_event)
    */
-  onMouseMove?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseMove?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `mouseout` event is fired at an `Element` when a pointing device
@@ -1290,7 +1353,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mouseout_event)
    */
-  onMouseOut?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseOut?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `mouseover` event is fired at an `Element` when a pointing device
@@ -1299,7 +1364,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mouseover_event)
    */
-  onMouseOver?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseOver?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The `mouseup` event is fired at an `Element` when a button on a pointing
@@ -1310,7 +1377,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/mouseup_event)
    */
-  onMouseUp?(this: GlobalEventHandlers, event: MouseEvent): any,
+  onMouseUp?:
+    ((this: GlobalEventHandlers, event: MouseEvent) => any)
+    | null,
 
   /**
    * The *obsolete* and *non-standard* `mousewheel` event is fired
@@ -1326,7 +1395,9 @@ export interface ElementProps extends NodeProps {
    *
    * @deprecated
    */
-  onMouseWheel?(this: GlobalEventHandlers, event: WheelEvent): any,
+  onMouseWheel?:
+    ((this: GlobalEventHandlers, event: WheelEvent) => any)
+    | null,
 
   /**
    * The `paste` event of the
@@ -1354,7 +1425,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/paste_event)
    */
-  onPaste?(this: GlobalEventHandlers, event: ClipboardEvent): any,
+  onPaste?:
+    ((this: GlobalEventHandlers, event: ClipboardEvent) => any)
+    | null,
 
   /**
    * The `pointercancel` event is fired when the browser determines that there
@@ -1383,7 +1456,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointercancel_event)
    */
-  onPointerCancel?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerCancel?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointerdown` event is fired when a pointer becomes active. For mouse,
@@ -1404,7 +1479,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointerdown_event)
    */
-  onPointerDown?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerDown?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointerenter` event fires when a pointing device is moved into the hit
@@ -1414,7 +1491,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointerenter_event)
    */
-  onPointerEnter?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerEnter?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointerleave` event is fired when a pointing device is moved out of
@@ -1423,7 +1502,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointerleave_event)
    */
-  onPointerLeave?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerLeave?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointermove` event is fired when a pointer changes coordinates, and
@@ -1431,7 +1512,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointermove_event)
    */
-  onPointerMove?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerMove?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointerout` event is fired for several reasons including: pointing
@@ -1443,7 +1526,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointerout_event)
    */
-  onPointerOut?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerOut?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointerover` event is fired when a pointing device is moved into an
@@ -1451,7 +1536,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointerover_event)
    */
-  onPointerOver?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerOver?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `pointerup` event is fired when a pointer is no longer active.
@@ -1459,7 +1546,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/pointerup_event)
    */
-  onPointerUp?(this: GlobalEventHandlers, event: PointerEvent): any,
+  onPointerUp?:
+    ((this: GlobalEventHandlers, event: PointerEvent) => any)
+    | null,
 
   /**
    * The `scroll` event fires when an element has been scrolled. To detect when
@@ -1467,7 +1556,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/scroll_event)
    */
-  onScroll?(this: GlobalEventHandlers, event: Event): any,
+  onScroll?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `scrollend` event fires when element scrolling has completed.
@@ -1482,7 +1573,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/scrollend_event)
    */
-  onScrollEnd?(this: GlobalEventHandlers, event: Event): any,
+  onScrollEnd?:
+    ((this: GlobalEventHandlers, event: Event) => any)
+    | null,
 
   /**
    * The `securitypolicyviolation` event is fired when a
@@ -1503,10 +1596,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/securitypolicyviolation_event)
    */
-  onSecurityPolicyViolation?(
-    this: GlobalEventHandlers,
-    event: SecurityPolicyViolationEvent
-  ): any,
+  onSecurityPolicyViolation?:
+    ((this: GlobalEventHandlers, event: SecurityPolicyViolationEvent) => any)
+    | null,
 
   /**
    * The `touchcancel` event is fired when one or more touch points have been
@@ -1529,7 +1621,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/touchcancel_event)
    */
-  onTouchCancel?(this: GlobalEventHandlers, event: TouchEvent): any,
+  onTouchCancel?:
+    ((this: GlobalEventHandlers, event: TouchEvent) => any)
+    | null,
 
   /**
    * The touchend event fires when one or more touch points are removed
@@ -1538,7 +1632,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/touchend_event)
    */
-  onTouchEnd?(this: GlobalEventHandlers, event: TouchEvent): any,
+  onTouchEnd?:
+    ((this: GlobalEventHandlers, event: TouchEvent) => any)
+    | null,
 
   /**
    * The `touchmove` event is fired when one or more touch points
@@ -1546,7 +1642,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/touchmove_event)
    */
-  onTouchMove?(this: GlobalEventHandlers, event: TouchEvent): any,
+  onTouchMove?:
+    ((this: GlobalEventHandlers, event: TouchEvent) => any)
+    | null,
 
   /**
    * The `touchstart` event is fired when one or more touch points
@@ -1554,7 +1652,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/touchstart_event)
    */
-  onTouchStart?(this: GlobalEventHandlers, event: TouchEvent): any,
+  onTouchStart?:
+    ((this: GlobalEventHandlers, event: TouchEvent) => any)
+    | null,
 
   /**
    * The `transitioncancel` event is fired when a
@@ -1563,7 +1663,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/transitioncancel_event)
    */
-  onTransitionCancel?(this: GlobalEventHandlers, event: TransitionEvent): any,
+  onTransitionCancel?:
+    ((this: GlobalEventHandlers, event: TransitionEvent) => any)
+    | null,
 
   /**
    * The `transitionend` event is fired when a
@@ -1584,7 +1686,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/transitionend_event)
    */
-  onTransitionEnd?(this: GlobalEventHandlers, event: TransitionEvent): any,
+  onTransitionEnd?:
+    ((this: GlobalEventHandlers, event: TransitionEvent) => any)
+    | null,
 
   /**
    * The `transitionrun` event is fired when a
@@ -1595,7 +1699,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/transitionrun_event)
    */
-  onTransitionRun?(this: GlobalEventHandlers, event: TransitionEvent): any,
+  onTransitionRun?:
+    ((this: GlobalEventHandlers, event: TransitionEvent) => any)
+    | null,
 
   /**
    * The `transitionstart` event is fired when a
@@ -1606,7 +1712,9 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/transitionstart_event)
    */
-  onTransitionStart?(this: GlobalEventHandlers, event: TransitionEvent): any,
+  onTransitionStart?:
+    ((this: GlobalEventHandlers, event: TransitionEvent) => any)
+    | null,
 
   /**
    * The `wheel` event fires when the user rotates a wheel button on a pointing
@@ -1639,5 +1747,7 @@ export interface ElementProps extends NodeProps {
    *
    * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Element/wheel_event)
    */
-  onWheel?(this: GlobalEventHandlers, event: WheelEvent): any,
+  onWheel?:
+    ((this: GlobalEventHandlers, event: WheelEvent) => any)
+    | null,
 }
