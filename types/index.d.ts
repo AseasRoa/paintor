@@ -38,6 +38,11 @@ export function isComponent(composition: any) : boolean
 export function isComposition(composition: any) : boolean
 
 /**
+ * Checks whether the input value is a state.
+ */
+export function isState(value: any) : boolean
+
+/**
  * Checks whether the input value is a template.
  */
 export function isTemplate(func: any) : boolean
@@ -242,6 +247,9 @@ export const paintor: {
   component: typeof component,
   compose: typeof compose,
   fetchTranslations: typeof fetchTranslations,
+  isComposition: typeof isComposition,
+  isState: typeof isState,
+  isTemplate: typeof isTemplate,
   onMount: typeof onMount,
   on: typeof on,
   off: typeof off,
