@@ -101,6 +101,28 @@ describe('observers', () => {
       })
     })
 
+    test('objects - change object', () => {
+      const myObject = { a: { value: 'a' } }
+      const myState = state(myObject)
+
+      let event = {}
+
+      on(myState).change((e) => {
+        event = e
+      })
+
+      myState.a.value = 'A'
+
+      expect(event).toMatchObject({
+        key: 'value',
+        path: ['a', 'value'],
+        value: 'A',
+        oldValue: 'a',
+        state: { a: { value: 'A' } },
+        target: { value: 'A' }
+      })
+    })
+
     test('arrays', () => {
       const myObject = ['a']
       const myState = state((myObject))

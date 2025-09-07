@@ -42,6 +42,7 @@ export type ObserverType = ('create'|'change'|'delete'|'set')
 export type ObserverListener = (
   event: {
     key: keyof any,
+    path: (string | number | Symbol)[],
     value: any,
     oldValue: any,
     target: TargetObject,
