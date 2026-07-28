@@ -23,8 +23,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "check": "npm run check:tsc & npm run check:eslint & npm run check:dpdm -- --no-warning --no-tree",
-    "check:eslint": "eslint --config eslint.config.js ./",
+    "check": "npm run check:tsc & npm run check:oxlint & npm run check:dpdm -- --no-warning --no-tree",
+    "check:oxlint": "oxlint --format=stylish",
     "check:tsc": "tsc --noEmit",
     "check:dpdm": "dpdm --exit-code circular:1 ./lib/index.js",
     "depencency-graph": "npx depcruise lib --output-type archi | dot -T svg > dependency-graph.svg",
@@ -34,17 +34,12 @@
     "prepublishOnly": "npm run test && npm run build"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/node": "^26.1.1",
     "@vitest/coverage-v8": "^4.1.10",
-    "@vitest/eslint-plugin": "^1.6.24",
     "dependency-cruiser": "^18.1.0",
     "dpdm": "^4.2.0",
-    "eslint": "^10.8.0",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsdoc": "^63.2.2",
-    "globals": "^17.7.0",
     "jsdom": "^29.1.1",
+    "oxlint": "^1.75.0",
     "typescript": "^5.8.3",
     "vite": "8.0.16",
     "vitest": "^4.1.10"
