@@ -34,7 +34,7 @@
     "prepublishOnly": "npm run test && npm run build"
   },
   "devDependencies": {
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.1.2",
     "@vitest/coverage-v8": "^4.1.10",
     "dependency-cruiser": "^18.1.0",
     "dpdm": "^4.2.0",
