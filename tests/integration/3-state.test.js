@@ -1,4 +1,4 @@
-/* eslint-disable vitest/expect-expect */
+/* oxlint-disable vitest/expect-expect */
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
@@ -45,6 +45,7 @@ describe('State', () => {
       const globalState = state({ clicks: 0 })
 
       compose((x) => {
+        // oxlint-disable-next-line no-unused-expressions
         x.$html`
 <button onclick="${() => globalState.clicks += 1}">Click me</button>
 <p>${() => (globalState.clicks)}</p>
@@ -217,6 +218,7 @@ describe('State', () => {
           x.$each(globalState, (item, key) => {
             if (!item) return
 
+            // oxlint-disable-next-line no-unused-expressions
             x.$html`
 <div style="color: ${() => item.color}">${() => `${key}:${item.color}`}</div>
 `

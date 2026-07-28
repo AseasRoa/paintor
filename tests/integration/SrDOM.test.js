@@ -1,4 +1,4 @@
-/* eslint-disable vitest/expect-expect */
+/* oxlint-disable vitest/expect-expect */
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { DOMException } from '../../lib/SrDOM/exceptions/DOMException.js'

@@ -1,4 +1,4 @@
-/* eslint-disable vitest/expect-expect */
+/* oxlint-disable vitest/expect-expect, unicorn/consistent-function-scoping */
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'

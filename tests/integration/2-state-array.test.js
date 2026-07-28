@@ -1,4 +1,4 @@
-/* eslint-disable vitest/expect-expect */
+/* oxlint-disable vitest/expect-expect */
 
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
@@ -15,17 +15,20 @@ function expectSpecialCommentElementsInStatement(elements) {
 
   if (length > 0) {
     // @ts-expect-error
+    // oxlint-disable-next-line vitest/no-conditional-expect
     expect(elements[0].previousSibling instanceof Comment).toBe(true)
 
     let i = 0
 
     for (i = 0; i < length - 1; i++) {
+      // oxlint-disable-next-line vitest/no-conditional-expect
       expect(
         // @ts-expect-error
         elements[i].nextSibling
       ).toBe(elements[i + 1])
     }
 
+    // oxlint-disable-next-line vitest/no-conditional-expect
     expect(
       // @ts-expect-error
       elements[i].nextSibling instanceof Comment
@@ -470,6 +473,7 @@ describe('State: Array', () => {
       const arrayState = state([ 'c' ])
 
       compose((x) => {
+        // oxlint-disable-next-line unicorn/no-array-for-each
         arrayState.forEach((value) => {
           x.div(value)
         })
