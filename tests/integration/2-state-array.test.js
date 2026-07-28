@@ -217,7 +217,9 @@ describe('State: Array', () => {
     test('fill', () => {
       const container = document.body
 
-      const arrayState = state(new Array(3))
+      const arrayForState = []
+      arrayForState.length = 3
+      const arrayState = state(arrayForState)
 
       compose((x) => {
         x.$each(arrayState, (value) => {
