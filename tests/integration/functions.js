@@ -14,9 +14,10 @@ export function expectTextContentsToBeLike(elements, values) {
   if (Array.isArray(values)) {
     expect(elements.length).toBe(values.length)
 
-    values.forEach((value, index) => {
+    for (const index in values) {
+      const value = values[index]
       expect(elements[index]?.textContent).toBe(value)
-    })
+    }
   }
   else if (values instanceof Object) {
     expect(elements.length).toBe(Object.keys(values).length)
