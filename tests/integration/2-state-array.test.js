@@ -1,8 +1,8 @@
 /* oxlint-disable vitest/expect-expect */
 
+import { compose, state } from '#paintor'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { compose, state } from '#paintor'
 
 /**
  * 'for' loops in Paintor contain these 'begin' and 'end' Comment elements.
@@ -329,8 +329,7 @@ describe('State: Array', () => {
         x.span(() => arrayState.length)
       }).paint(container)
 
-      arrayState.push({ val: 'b' })
-      arrayState.push({ val: 'c' })
+      arrayState.push({ val: 'b' }, { val: 'c' })
 
       const divElements = container.querySelectorAll('div')
       expectTextContentsToBeLike(divElements, ['a', 'b', 'c'])

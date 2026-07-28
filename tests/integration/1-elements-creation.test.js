@@ -1,8 +1,8 @@
 /* oxlint-disable vitest/expect-expect, unicorn/consistent-function-scoping */
 
+import { compose, state, template } from '#paintor'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { compose, state, template } from '#paintor'
 
 describe('Elements Creation', () => {
   const id = 'container'

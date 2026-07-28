@@ -1,8 +1,8 @@
 /* oxlint-disable vitest/expect-expect */
 
+import { compose, setState, state, template } from '#paintor'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { expectTextContentsToBeLike } from './functions.js'
-import { compose, setState, state, template } from '#paintor'
 
 describe('State', () => {
   beforeEach(() => {
