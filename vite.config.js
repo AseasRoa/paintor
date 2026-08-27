@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     host: 'localhost',
     port: 8080,
-    hmr: true,
+    hmr: true
   },
   /**
    * When building in Library Mode (lib), the minified 'es' build
@@ -29,13 +29,13 @@ export default defineConfig({
       preserveEntrySignatures: 'exports-only',
       // https://rollupjs.org/guide/en/#big-list-of-options
       input: {
-        bundle: 'lib/index.js',
+        bundle: 'lib/index.js'
       },
       output: [{
         entryFileNames: '[name].js',
         format: 'es',
-        exports: 'named',
-      }],
-    },
-  },
+        exports: 'named'
+      }]
+    }
+  }
 })

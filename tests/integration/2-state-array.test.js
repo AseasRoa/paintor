@@ -15,6 +15,7 @@ function expectSpecialCommentElementsInStatement(elements) {
 
   if (length > 0) {
     // @ts-expect-error
+
     // oxlint-disable-next-line vitest/no-conditional-expect
     expect(elements[0].previousSibling instanceof Comment).toBe(true)
 
@@ -66,7 +67,7 @@ describe('State: Array', () => {
     test('delete', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -88,7 +89,7 @@ describe('State: Array', () => {
     test('update', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -110,7 +111,7 @@ describe('State: Array', () => {
     test('update after delete', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -132,7 +133,7 @@ describe('State: Array', () => {
     test('length', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -245,7 +246,7 @@ describe('State: Array', () => {
     test('copyWithin()', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c', 'd', 'e' ])
+      const arrayState = state(['a', 'b', 'c', 'd', 'e'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -264,7 +265,7 @@ describe('State: Array', () => {
     test('pop()', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -298,7 +299,7 @@ describe('State: Array', () => {
     test('push()', () => {
       const container = document.body
 
-      const arrayState = state([ 'a' ])
+      const arrayState = state(['a'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -320,7 +321,7 @@ describe('State: Array', () => {
     test('push() object and test reactivity', () => {
       const container = document.body
 
-      const arrayState = state([ { val: 'a' } ])
+      const arrayState = state([{ val: 'a' }])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -340,7 +341,6 @@ describe('State: Array', () => {
 
       expectTextContentsToBeLike(divElements, ['a', 'b', 'c2'])
 
-
       const lengthElement = container.querySelectorAll('span')
       expectTextContentsToBeLike(lengthElement, ['3'])
     })
@@ -348,7 +348,7 @@ describe('State: Array', () => {
     test('reverse()', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -367,7 +367,7 @@ describe('State: Array', () => {
     test('shift()', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'b', 'c' ])
+      const arrayState = state(['a', 'b', 'c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -389,7 +389,7 @@ describe('State: Array', () => {
     test('sort()', () => {
       const container = document.body
 
-      let arrayState = state([ 'March', 'Jan', 'Feb', 'Dec' ])
+      let arrayState = state(['March', 'Jan', 'Feb', 'Dec'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -408,7 +408,7 @@ describe('State: Array', () => {
     test('splice()', () => {
       const container = document.body
 
-      const arrayState = state([ 'a', 'c', 'd' ])
+      const arrayState = state(['a', 'c', 'd'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -447,7 +447,7 @@ describe('State: Array', () => {
     test('unshift()', () => {
       const container = document.body
 
-      const arrayState = state([ 'c' ])
+      const arrayState = state(['c'])
 
       compose((x) => {
         x.$each(arrayState, (value) => {
@@ -469,7 +469,7 @@ describe('State: Array', () => {
     test('unshift() - using array.forEach()', () => {
       const container = document.body
 
-      const arrayState = state([ 'c' ])
+      const arrayState = state(['c'])
 
       compose((x) => {
         // oxlint-disable-next-line unicorn/no-array-for-each

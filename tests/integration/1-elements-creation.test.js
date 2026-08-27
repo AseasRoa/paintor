@@ -39,7 +39,7 @@ describe('Elements Creation', () => {
 
       const elements = container.querySelectorAll('*')
 
-      expectTextContentsToBeLike(elements, ['a', 'button', 'div',])
+      expectTextContentsToBeLike(elements, ['a', 'button', 'div'])
     })
   })
 
@@ -95,12 +95,12 @@ describe('Elements Creation', () => {
           x.table(
             x.tr(
               x.td('Row 1, Column 1'),
-              x.td('Row 1, Column 2'),
+              x.td('Row 1, Column 2')
             ),
             x.tr(
               x.td('Row 2, Column 1'),
-              x.td('Row 2, Column 2'),
-            ),
+              x.td('Row 2, Column 2')
+            )
           )
         })
       }
@@ -160,7 +160,7 @@ describe('Elements Creation', () => {
 
           x.ul(
             x.li('li-1'),
-            Component(li2),
+            Component(li2)
           )
         })
       }
@@ -180,7 +180,7 @@ describe('Elements Creation', () => {
 
         expectTextContentsToBeLike(ul?.childNodes, [
           'li-1',
-          'li-2',
+          'li-2'
         ])
       })
     })
@@ -194,7 +194,7 @@ describe('Elements Creation', () => {
         return template((x) => {
           return x.ul(
             x.li('li-1'),
-            element,
+            element
           )
         })
       }
@@ -225,7 +225,7 @@ describe('Elements Creation', () => {
 
         expectTextContentsToBeLike(ul?.childNodes, [
           'li-1',
-          'li-2',
+          'li-2'
         ])
       })
     })
@@ -242,7 +242,7 @@ describe('Elements Creation', () => {
             x.li('li-1'),
             liFragments,
             x.li('li-2'),
-            liFragments,
+            liFragments
           )
         })
       }
@@ -266,7 +266,7 @@ describe('Elements Creation', () => {
           'li-fragment-2',
           'li-2',
           'li-fragment-1',
-          'li-fragment-2',
+          'li-fragment-2'
         ])
       })
     })
@@ -283,7 +283,7 @@ describe('Elements Creation', () => {
             x.li('li-1'),
             liFragments(x),
             x.li('li-2'),
-            liFragments(x),
+            liFragments(x)
           )
         })
       }
@@ -307,7 +307,7 @@ describe('Elements Creation', () => {
           'li-fragment-2',
           'li-2',
           'li-fragment-1',
-          'li-fragment-2',
+          'li-fragment-2'
         ])
       })
     })
@@ -319,7 +319,7 @@ describe('Elements Creation', () => {
             x.li('li-1'),
             [
               x.li('li-fragment-1'),
-              x.li('li-fragment-2'),
+              x.li('li-fragment-2')
             ],
             x.li('li-2'),
             [
@@ -328,8 +328,8 @@ describe('Elements Creation', () => {
               }),
               template((x) => {
                 x.li('li-fragment-2')
-              }),
-            ],
+              })
+            ]
           )
         })
       }
@@ -353,7 +353,7 @@ describe('Elements Creation', () => {
           'li-fragment-2',
           'li-2',
           'li-fragment-1',
-          'li-fragment-2',
+          'li-fragment-2'
         ])
       })
     })
@@ -372,7 +372,7 @@ describe('Elements Creation', () => {
             x.$each(array, (value) => {
               x.li(`li-${value}`)
               liFragments(x)
-            }),
+            })
           )
         })
       }
@@ -473,7 +473,7 @@ describe('Elements Creation', () => {
           'li-2',
           'li-fragment-1',
           'li-fragment-2',
-          'reactive-end',
+          'reactive-end'
         ])
       })
     })
@@ -489,10 +489,10 @@ describe('Elements Creation', () => {
       const App = function() {
         return template((x) => {
           x.ul(
-            x.$if(true, ifCallback, elseCallback),
+            x.$if(true, ifCallback, elseCallback)
           )
           x.ul(
-            x.$if(false, ifCallback, elseCallback),
+            x.$if(false, ifCallback, elseCallback)
           )
         })
       }
@@ -502,7 +502,7 @@ describe('Elements Creation', () => {
 
         expect(html).toBe(
           '<ul><li>if</li></ul>'
-          + '<ul><li>else</li></ul>',
+          + '<ul><li>else</li></ul>'
         )
       })
 
@@ -513,15 +513,11 @@ describe('Elements Creation', () => {
 
         let ul = container.getElementsByTagName('ul')[0]
 
-        expectTextContentsToBeLike(ul?.childNodes, [
-          'if',
-        ])
+        expectTextContentsToBeLike(ul?.childNodes, ['if'])
 
         ul = container.getElementsByTagName('ul')[1]
 
-        expectTextContentsToBeLike(ul?.childNodes, [
-          'else',
-        ])
+        expectTextContentsToBeLike(ul?.childNodes, ['else'])
       })
     })
 
@@ -540,11 +536,11 @@ describe('Elements Creation', () => {
       const App = function() {
         return template((x) => {
           x.ul(
-            x.$each(array, callback),
+            x.$each(array, callback)
           )
 
           x.ul(
-            x.$each(globalState, callback),
+            x.$each(globalState, callback)
           )
         })
       }
@@ -567,7 +563,7 @@ describe('Elements Creation', () => {
 
         expectTextContentsToBeLike(ul?.childNodes, [
           'li-1',
-          'li-2',
+          'li-2'
         ])
 
         ul = container.getElementsByTagName('ul')[1]
@@ -576,7 +572,7 @@ describe('Elements Creation', () => {
           'reactive-begin',
           'li-1',
           'li-2',
-          'reactive-end',
+          'reactive-end'
         ])
       })
     })

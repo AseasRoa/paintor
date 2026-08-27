@@ -61,7 +61,7 @@ export default {
       },
       to: {
         dependencyTypes: [
-          'npm-dev',
+          'npm-dev'
         ],
         // type only dependencies are not a problem as they don't end up in the
         // production code or are ignored by the runtime.
@@ -110,15 +110,13 @@ export default {
     tsPreCompilationDeps: true,
 
     tsConfig: {
-      fileName: './tsconfig.json',
+      fileName: './tsconfig.json'
     },
 
     enhancedResolveOptions: {
       exportsFields: ['exports'],
-
       conditionNames: ['import', 'require', 'node', 'default', 'types'],
-
-      mainFields: ['module', 'main', 'types', 'typings'],
+      mainFields: ['module', 'main', 'types', 'typings']
     },
 
     externalModuleResolutionStrategy: 'node_modules',
@@ -134,7 +132,7 @@ export default {
             {
               criteria: { collapsed: true },
               attributes: { shape: 'tab' }
-            },
+            }
           ],
           graph: {
             splines: 'ortho',
@@ -143,22 +141,22 @@ export default {
             bgcolor: '#222222',
             color: '#222222',
             fontcolor: '#cccccc',
-            fillcolor: '#444444',
+            fillcolor: '#444444'
           },
           node: {
             color: 'black',
             fillcolor: '#aaaaaa',
-            fontcolor: '#000000',
+            fontcolor: '#000000'
           },
           edge: {
             arrowhead: 'vee',
             arrowsize: '0.5',
             penwidth: '0.5',
             color: '#aaaaaa',
-            fontcolor: '#aaaaaa',
-          },
-        },
-      },
-    },
-  },
+            fontcolor: '#aaaaaa'
+          }
+        }
+      }
+    }
+  }
 }

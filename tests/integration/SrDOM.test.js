@@ -10,7 +10,7 @@ describe('SrDom Tests', () => {
     const { document } = window
 
     test('document contains HTML, HTML contains HEAD and BODY', () => {
-      const [ html ] = document.children
+      const [html] = document.children
 
       expect(document.children.length).toBe(1)
       expect(html?.tagName).toBe('HTML')
@@ -74,7 +74,7 @@ describe('SrDom Tests', () => {
     test('fail on appendChild with wrong input', () => {
       expect(
         // @ts-expect-error
-        () => document.body.appendChild(123),
+        () => document.body.appendChild(123)
       ).toThrow(TypeError)
     })
 
@@ -82,7 +82,7 @@ describe('SrDom Tests', () => {
       const el = document.createElement('div')
 
       expect(
-        () => document.appendChild(el),
+        () => document.appendChild(el)
       ).toThrow(DOMException)
     })
 
@@ -91,7 +91,7 @@ describe('SrDom Tests', () => {
       const comment = document.createComment('Foo')
 
       expect(
-        () => comment.appendChild(div),
+        () => comment.appendChild(div)
       ).toThrow(window.DOMException)
     })
 
@@ -99,7 +99,7 @@ describe('SrDom Tests', () => {
       const el = document.createElement('button')
 
       expect(
-        () => el.appendChild(el),
+        () => el.appendChild(el)
       ).toThrow(window.DOMException)
     })
   })

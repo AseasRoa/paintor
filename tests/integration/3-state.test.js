@@ -20,7 +20,7 @@ describe('State', () => {
           textContent: 'Click me',
           onClick: () => {
             globalState.clicks += 1
-          },
+          }
         })
         x.p({ textContent: () => (globalState.clicks) })
       }).paint(container)
@@ -183,7 +183,7 @@ describe('State', () => {
 
             x.div(
               { style: { color: () => item.color } },
-              () => `${key}:${item.color}`,
+              () => `${key}:${item.color}`
             )
           })
         }).paint(container)
@@ -267,7 +267,7 @@ describe('State', () => {
         expectTextContentsToBeLike(div?.childNodes, [
           'reactive-begin',
           '0',
-          'reactive-end',
+          'reactive-end'
         ])
 
         // Update the whole element
@@ -277,7 +277,7 @@ describe('State', () => {
         expectTextContentsToBeLike(div?.childNodes, [
           'reactive-begin',
           '1',
-          'reactive-end',
+          'reactive-end'
         ])
 
         // Update key in the element
@@ -287,7 +287,7 @@ describe('State', () => {
         expectTextContentsToBeLike(div?.childNodes, [
           'reactive-begin',
           '2',
-          'reactive-end',
+          'reactive-end'
         ])
       })
     })
@@ -304,8 +304,8 @@ describe('State', () => {
             x.$each(
               globalState,
               (item) => x.li(item),
-              () => x.li('initial'),
-            ),
+              () => x.li('initial')
+            )
           )
         }).paint(container)
 
@@ -315,7 +315,7 @@ describe('State', () => {
         expectTextContentsToBeLike(ul?.childNodes, [
           'reactive-begin',
           'initial',
-          'reactive-end',
+          'reactive-end'
         ])
 
         globalState.push('something')
@@ -325,7 +325,7 @@ describe('State', () => {
         expectTextContentsToBeLike(ul?.childNodes, [
           'reactive-begin',
           'something',
-          'reactive-end',
+          'reactive-end'
         ])
 
         globalState.pop()
@@ -335,7 +335,7 @@ describe('State', () => {
         expectTextContentsToBeLike(ul?.childNodes, [
           'reactive-begin',
           'initial',
-          'reactive-end',
+          'reactive-end'
         ])
 
         // Now try when .length is used to clear the array
@@ -347,7 +347,7 @@ describe('State', () => {
         expectTextContentsToBeLike(ul?.childNodes, [
           'reactive-begin',
           'something',
-          'reactive-end',
+          'reactive-end'
         ])
 
         globalState.length = 0
@@ -357,7 +357,7 @@ describe('State', () => {
         expectTextContentsToBeLike(ul?.childNodes, [
           'reactive-begin',
           'initial',
-          'reactive-end',
+          'reactive-end'
         ])
       })
     })
@@ -366,7 +366,7 @@ describe('State', () => {
       test('DOM', () => {
         const container = document.body
 
-        const theState = state({ items: [ 'a', 'b', 'c'] })
+        const theState = state({ items: ['a', 'b', 'c'] })
 
         compose((x) => {
           x.$each(theState.items, (value) => {
@@ -378,7 +378,7 @@ describe('State', () => {
 
         expectTextContentsToBeLike(elements, ['a', 'b', 'c'])
 
-        theState.items = [ 'd', 'e' ]
+        theState.items = ['d', 'e']
 
         elements = container.querySelectorAll('*')
 
@@ -439,7 +439,7 @@ describe('State', () => {
           'reactive-begin',
           'c-C',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
 
         theState.a = { b: { d: 'D' } }
@@ -451,7 +451,7 @@ describe('State', () => {
           'reactive-begin',
           'd-D',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
 
         theState.a.b = { e: 'E' }
@@ -463,7 +463,7 @@ describe('State', () => {
           'reactive-begin',
           'e-E',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
 
         theState.a = { b: { f: 'F' } }
@@ -475,7 +475,7 @@ describe('State', () => {
           'reactive-begin',
           'f-F',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
       })
     })
@@ -504,7 +504,7 @@ describe('State', () => {
           'reactive-begin',
           'c-C',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
 
         theState.a.b = { c1: 'C1', c2: 'C2', c3: 'C3' }
@@ -518,7 +518,7 @@ describe('State', () => {
           'c2-C2',
           'c3-C3',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
 
         theState.a = { b: { d: 'D' } }
@@ -530,7 +530,7 @@ describe('State', () => {
           'reactive-begin',
           'd-D',
           'reactive-end',
-          'reactive-end',
+          'reactive-end'
         ])
       })
     })
@@ -730,7 +730,7 @@ describe('State', () => {
 
         /** @type {{mainState: {innerArrayState: any[]}}} */
         const theState = state({
-          mainState: { innerArrayState: [] },
+          mainState: { innerArrayState: [] }
         })
 
         compose((x) => {
@@ -747,7 +747,7 @@ describe('State', () => {
         expectTextContentsToBeLike(elements, { innerArrayState: '1' })
 
         // Array length set to 2. Only one div should remain, but updated.
-        theState.mainState = { innerArrayState: [ 1, 2 ] }
+        theState.mainState = { innerArrayState: [1, 2] }
 
         elements = container.querySelectorAll('*')
 
